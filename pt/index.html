@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guilherme Henrique, engenheiro de backend</title>
+  <meta name="description" content="Engenheiro de backend autodidata no Rio de Janeiro. Sistemas transacionais, plataformas multi-tenant e dados com uso eficiente de memória, com a evidência de cada afirmação.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="alternate" hreflang="en" href="../">
+  <link rel="alternate" hreflang="pt" href="./">
+  <link rel="alternate" hreflang="x-default" href="../">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Ir para o conteúdo</a>
+  <div class="page">
+    <header class="top">
+      <span class="name">Guilherme Henrique</span>
+      <nav aria-label="Idioma">
+        <a href="../" lang="en" hreflang="en">English</a><span aria-hidden="true">/</span><a href="./" aria-current="page" lang="pt">Português</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>Construo sistemas de backend e mostro a evidência.</h1>
+      <p class="lede">Sou engenheiro autodidata no Rio de Janeiro. Trabalho com backends transacionais e com a forma como os dados são representados na memória: lugares onde uma resposta errada custa dinheiro ou confiança. Uso ferramentas de IA o tempo todo e trato o que elas produzem como não verificado até que um teste, uma medição ou uma consulta diga o contrário.</p>
+
+      <section aria-labelledby="work">
+        <h2 id="work">Trabalhos selecionados</h2>
+
+        <article>
+          <h3>Pexiscale</h3>
+          <p class="where">Plataforma multi-tenant para empresas, em <a href="https://pexiscale.com">pexiscale.com</a></p>
+          <p>Clientes, catálogo, estoque, orçamentos e pedidos para pequenas e médias empresas, numa plataforma em que os dados de cada empresa ficam isolados. Eu projeto e construo.</p>
+          <ul>
+            <li>O PostgreSQL é a fonte da verdade comercial. Preço, estoque e estado do pedido são decididos no servidor. A IA interpreta o pedido e sugere; quem decide é o domínio comercial.</li>
+            <li>O isolamento entre empresas vive no banco. Toda linha de uma empresa carrega o id da organização e é protegida por row-level security, e não por filtro no cliente.</li>
+            <li>Guardas de CI em script quebram o build quando as fronteiras de legado, de deploy ou de marketing regridem, e quando segredos são commitados.</li>
+          </ul>
+          <dl class="ledger">
+            <div class="ok"><dt>Evidência</dt><dd>Pull requests para a branch principal passam por um gate de CI que inclui guardas de fronteira e varredura de segredos.</dd></div>
+            <div class="open"><dt>Em aberto</dt><dd>Nem toda capacidade implementada está ativa em produção. Algumas dependem de aprovação de provedores e de rollout, e só listo uma capacidade como ativa quando ela é.</dd></div>
+          </dl>
+        </article>
+
+        <article>
+          <h3>PXIR</h3>
+          <p class="where">Pesquisa sobre dados e computação com menos memória, pública em <a href="https://github.com/guilhermehrcst/PXIR">github.com/guilhermehrcst/PXIR</a></p>
+          <p>Um projeto aberto que pergunta se software e dados podem ser representados com menos memória e menos movimentação de dados sem perder correção. A primeira regra: nenhuma afirmação de otimização sem medição.</p>
+          <ul>
+            <li>Um verificador é o único caminho para obter um programa executável. O sistema de tipos torna impossível escrever a execução de uma IR não verificada.</li>
+            <li>Cada marco declara uma hipótese, a medição e o resultado, inclusive as hipóteses que foram falsificadas.</li>
+            <li>Núcleo em C++20 com uma base em C. O CI compila em Linux, macOS e Windows e roda os testes com AddressSanitizer e UBSan.</li>
+          </ul>
+          <dl class="ledger">
+            <div class="ok"><dt>Evidência</dt><dd>Código, benchmarks e um texto por marco são públicos. Em um benchmark, reaproveitar um buffer morto reduziu os page faults de 2.016 para 0 por chamada (1M de elementos, medido).</dd></div>
+            <div class="open"><dt>Em aberto</dt><dd>Pesquisa inicial. Sem afirmações de desempenho para produção ou universais; os resultados valem para as cargas e máquinas descritas.</dd></div>
+          </dl>
+        </article>
+
+        <article>
+          <h3>Paulex</h3>
+          <p class="where">Backend de comércio da minha marca de varejo. O repositório é privado.</p>
+          <p>O núcleo de pedidos e pagamentos da loja online da Paulex. Pedidos nascem só no servidor, e uma requisição repetida nunca cria um segundo pedido.</p>
+          <ul>
+            <li>Uma única função no banco cria pedidos. O cliente envia só produto, variação e quantidade; o servidor decide o preço.</li>
+            <li>A reserva de estoque trava linhas numa ordem fixa, então pedidos concorrentes não vendem a mais nem se travam entre si.</li>
+            <li>O webhook de pagamento verifica a assinatura, relê o pagamento no provedor e compara pedido, valor e moeda. Se não aplicou o efeito, responde com status de erro para que o provedor reenvie.</li>
+          </ul>
+          <dl class="ledger">
+            <div class="ok"><dt>Evidência</dt><dd>Testes SQL rodam contra um Postgres real, incluindo sessões concorrentes disputando o mesmo estoque. As asserções de segurança são testadas quebrando-as de propósito e conferindo que o teste falha.</dd></div>
+            <div class="open"><dt>Em aberto</dt><dd>O código é privado, então isto é uma descrição que você não pode executar. Posso explicar com detalhes.</dd></div>
+          </dl>
+        </article>
+      </section>
+
+      <section aria-labelledby="learning">
+        <h2 id="learning">Formação e cursos</h2>
+        <ul class="plain">
+          <li>CS50, Harvard<span class="detail">Parcialmente concluído</span></li>
+          <li>Sistemas de Informação, UNISUAM<span class="detail">Iniciado; matrícula trancada</span></li>
+          <li>Tecnologia da Informação, Microlins</li>
+          <li>Tecnologia da Informação, Fundação Bradesco</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="contact">
+        <h2 id="contact">Contato</h2>
+        <ul class="plain">
+          <li><a href="mailto:guilhermehrcst@gmail.com">E-mail</a><span class="detail">guilhermehrcst@gmail.com</span></li>
+          <li><a href="https://www.linkedin.com/in/guilherme-henrique-8927093b6">LinkedIn</a><span class="detail">Guilherme Henrique</span></li>
+          <li><a href="https://www.instagram.com/guilhermehrcst/">Instagram</a><span class="detail">@guilhermehrcst</span></li>
+          <li><a href="https://github.com/guilhermehrcst">GitHub</a><span class="detail">guilhermehrcst</span></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>Atualizado em 2026-10-01.</footer>
+  </div>
+</body>
+</html>

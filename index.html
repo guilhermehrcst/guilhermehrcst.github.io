@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guilherme Henrique, backend engineer</title>
+  <meta name="description" content="Self-taught backend engineer in Rio de Janeiro. Transactional systems, multi-tenant platforms and memory-efficient data, with the evidence for each claim.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="alternate" hreflang="en" href="./">
+  <link rel="alternate" hreflang="pt" href="pt/">
+  <link rel="alternate" hreflang="x-default" href="./">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="page">
+    <header class="top">
+      <span class="name">Guilherme Henrique</span>
+      <nav aria-label="Language">
+        <a href="./" aria-current="page" lang="en">English</a><span aria-hidden="true">/</span><a href="pt/" lang="pt" hreflang="pt">Português</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>I build backend systems, and I show the evidence.</h1>
+      <p class="lede">I'm a self-taught engineer in Rio de Janeiro. I work on transactional backends and on how data is represented in memory: places where a wrong answer costs money or trust. I use AI tools heavily and treat what they produce as unverified until a test, a measurement or a query says otherwise.</p>
+
+      <section aria-labelledby="work">
+        <h2 id="work">Selected work</h2>
+
+        <article>
+          <h3>Pexiscale</h3>
+          <p class="where">Multi-tenant business platform, live at <a href="https://pexiscale.com">pexiscale.com</a></p>
+          <p>Customers, catalog, inventory, quotes and orders for small and medium businesses, on one platform where each company's data stays its own. I design and build it.</p>
+          <ul>
+            <li>PostgreSQL is the source of commercial truth. Price, stock and order state are decided on the server. The AI interprets a request and suggests; the commercial domain decides.</li>
+            <li>Tenant isolation lives in the database. Every tenant-owned row carries an organization id and is protected by row-level security, not by filtering in the client.</li>
+            <li>Scripted CI guards fail the build when the legacy, deploy or marketing boundaries regress, and when secrets are committed.</li>
+          </ul>
+          <dl class="ledger">
+            <div class="ok"><dt>Evidence</dt><dd>Pull requests into the main branch go through a CI gate that includes boundary and secret-scanning guards.</dd></div>
+            <div class="open"><dt>Still open</dt><dd>Not every implemented capability is switched on in production. Some depend on provider approval and rollout, and I list a capability as live only when it is.</dd></div>
+          </dl>
+        </article>
+
+        <article>
+          <h3>PXIR</h3>
+          <p class="where">Research on memory-efficient data and computation, public at <a href="https://github.com/guilhermehrcst/PXIR">github.com/guilhermehrcst/PXIR</a></p>
+          <p>An open project asking whether software and data can be represented with less memory and less data movement without losing correctness. The first rule: no optimization claim without a measurement.</p>
+          <ul>
+            <li>A verifier is the only way to obtain an executable program. The type system makes running unverified IR impossible to write.</li>
+            <li>Each milestone states a hypothesis, the measurement and the outcome, including the hypotheses that were falsified.</li>
+            <li>C++20 core with a C baseline. CI builds on Linux, macOS and Windows, and runs the tests under AddressSanitizer and UBSan.</li>
+          </ul>
+          <dl class="ledger">
+            <div class="ok"><dt>Evidence</dt><dd>Code, benchmarks and a write-up per milestone are public. In one benchmark, reusing a dead buffer cut page faults from 2,016 to 0 per call (1M elements, measured).</dd></div>
+            <div class="open"><dt>Still open</dt><dd>Early research. No production or universal performance claims; results hold for the stated workloads and machines.</dd></div>
+          </dl>
+        </article>
+
+        <article>
+          <h3>Paulex</h3>
+          <p class="where">Commerce backend for my retail brand. The repository is private.</p>
+          <p>The order and payment core of the Paulex online store. Orders are created only on the server, and a retried request never creates a second order.</p>
+          <ul>
+            <li>One database function creates orders. The client sends only product, variant and quantity; the server decides the price.</li>
+            <li>Stock reservation takes row locks in a fixed order, so concurrent orders can't oversell or deadlock each other.</li>
+            <li>The payment webhook verifies the signature, re-reads the payment from the provider, and compares order, amount and currency. If it hasn't applied the effect, it answers with an error status so the provider retries.</li>
+          </ul>
+          <dl class="ledger">
+            <div class="ok"><dt>Evidence</dt><dd>SQL tests run against a real Postgres, including concurrent sessions competing for the same stock. Security assertions are tested by breaking them on purpose and checking that the test fails.</dd></div>
+            <div class="open"><dt>Still open</dt><dd>The code is private, so this is a description you can't run. I'm happy to walk through it.</dd></div>
+          </dl>
+        </article>
+      </section>
+
+      <section aria-labelledby="learning">
+        <h2 id="learning">Education and courses</h2>
+        <ul class="plain">
+          <li>CS50, Harvard<span class="detail">Partially completed</span></li>
+          <li>Information Systems, UNISUAM<span class="detail">Started; enrollment on hold</span></li>
+          <li>Information Technology, Microlins</li>
+          <li>Information Technology, Fundação Bradesco</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="contact">
+        <h2 id="contact">Contact</h2>
+        <ul class="plain">
+          <li><a href="mailto:guilhermehrcst@gmail.com">Email</a><span class="detail">guilhermehrcst@gmail.com</span></li>
+          <li><a href="https://www.linkedin.com/in/guilherme-henrique-8927093b6">LinkedIn</a><span class="detail">Guilherme Henrique</span></li>
+          <li><a href="https://www.instagram.com/guilhermehrcst/">Instagram</a><span class="detail">@guilhermehrcst</span></li>
+          <li><a href="https://github.com/guilhermehrcst">GitHub</a><span class="detail">guilhermehrcst</span></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>Last updated 2026-10-01.</footer>
+  </div>
+</body>
+</html>
