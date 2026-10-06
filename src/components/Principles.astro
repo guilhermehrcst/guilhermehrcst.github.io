@@ -32,14 +32,16 @@ const t = dicts[Astro.props.lang].principles;
   }
   .item:last-child { border-bottom: 1px solid var(--ink); }
   .idx { grid-column: 1 / -1; align-self: start; color: var(--muted); margin-bottom: clamp(8px, 2vw, 28px); }
-  /* Sized to the longest word across both languages (CORRECTNESS/ = 6.81em),
+  /* Sized to the longest word across both languages (CORRECTNESS/, --fit-word),
      confined to ~3/4 of the width so the text can sit beside it. */
   .word {
     grid-column: 1 / span 9;
-    font-size: calc((100vw - 2 * var(--margin)) * 0.74 / 6.95);
+    font-size: calc((100vw - 2 * var(--margin)) * 0.74 / var(--fit-word));
     font-weight: 600;
     line-height: 0.82;
-    letter-spacing: -0.05em;
+    /* a touch looser than the 700 display lines: at 600 the same tracking lets R-R and T-N touch */
+    letter-spacing: calc(var(--display-track) + 0.008em);
+    font-variation-settings: var(--display-opsz);
     text-transform: uppercase;
     margin-left: -0.04em;
   }
@@ -47,7 +49,7 @@ const t = dicts[Astro.props.lang].principles;
   .pbody { grid-column: 10 / span 3; font-size: var(--fs-small); color: var(--muted); max-width: 26em; text-wrap: pretty; }
 
   @media (max-width: 1024px) {
-    .word { grid-column: 1 / -1; font-size: calc((100vw - 2 * var(--margin)) / 6.95); }
+    .word { grid-column: 1 / -1; font-size: calc((100vw - 2 * var(--margin)) / var(--fit-word)); }
     .pbody { grid-column: 3 / span 4; margin-top: 20px; }
   }
   @media (max-width: 640px) {

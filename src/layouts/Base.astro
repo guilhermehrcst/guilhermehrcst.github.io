@@ -1,8 +1,10 @@
 ---
-import '@fontsource-variable/inter-tight/wght.css';
+// Google Sans Flex (OFL-1.1), self-hosted from @fontsource-variable. The opsz build carries
+// weight + optical size only; width, grade, roundness and slant axes are deliberately not shipped.
+import '@fontsource-variable/google-sans-flex/opsz.css';
 import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
-import interLatin from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
+import sansLatin from '@fontsource-variable/google-sans-flex/files/google-sans-flex-latin-opsz-normal.woff2?url';
 import Header from '../components/Header.astro';
 import { dicts, routes, hreflang } from '../i18n/routes';
 import type { Lang, PageId } from '../i18n/types';
@@ -42,7 +44,7 @@ const canonical = abs(routes[page][lang]);
   <meta property="og:locale" content={t.meta.ogLocale}>
   <meta property="og:site_name" content="Guilherme Henrique">
   <meta name="twitter:card" content="summary">
-  <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href={sansLatin} as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <!-- Motion gate. Runs before first paint. Without JS, or with reduced motion,
        the page renders in its final, composed state: motion is enrichment only.

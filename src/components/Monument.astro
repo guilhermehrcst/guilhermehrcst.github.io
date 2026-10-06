@@ -35,14 +35,15 @@ const other: Lang = lang === 'en' ? 'pt' : 'en';
   .f2 { grid-column: 7 / span 3; }
   .f3 { grid-column: 10 / span 3; justify-self: end; }
   .name {
-    --size: calc((100vw - 2 * var(--margin)) / 5.13);
+    --size: calc((100vw - 2 * var(--margin)) / var(--fit-name));
     display: flex;
     flex-direction: column;
     padding-inline: var(--margin);
     font-size: var(--size);
-    font-weight: 680;
+    font-weight: var(--display-wght);
     line-height: 0.8;
-    letter-spacing: -0.055em;
+    letter-spacing: var(--display-track);
+    font-variation-settings: var(--display-opsz);
     text-transform: uppercase;
     margin-left: -0.045em;
     /* Cut through the second line: the document edge is the mask. */

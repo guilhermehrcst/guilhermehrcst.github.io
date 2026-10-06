@@ -15,7 +15,7 @@
   --void-rule: #262931;
   --void-signal: #6b76ff; /* 5.3:1 on void */
 
-  --sans: 'Inter Tight Variable', 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* Grid: 12 / 6 / 4 columns. A guide, not a cage. */
@@ -38,6 +38,17 @@
   --t-ui: 260ms;
   --t-medium: 500ms;
   --t-hero: 850ms;
+
+  /* Display type: the all-caps monumental lines (names, project titles, principles).
+     opsz is pinned to the display cut so the width-fit below is identical at every viewport;
+     with optical sizing left on auto the same word would be ~5% wider on a phone than on a desktop.
+     --fit-name is the measured advance of GUILHERME (5.335em at 700 / -0.02em / opsz 144, Chromium)
+     plus ~0.7%: font-size = content width / --fit-name makes the line span the grid exactly. */
+  --display-wght: 700;
+  --display-track: -0.02em;
+  --display-opsz: 'opsz' 144;
+  --fit-name: 5.30;
+  --fit-word: 7.06; /* CORRECTNESS/ at 600 / -0.012em: the longest principle, EN or PT */
 
   /* Vertical rhythm */
   --space-section: clamp(96px, 16vh, 220px);
@@ -66,7 +77,6 @@ body {
   font-family: var(--sans);
   font-size: var(--fs-body);
   line-height: 1.5;
-  font-feature-settings: 'ss01', 'cv11';
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
