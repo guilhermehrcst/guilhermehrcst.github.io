@@ -101,7 +101,7 @@ ul, ol { padding: 0; list-style: none; }
 img, svg, canvas { display: block; max-width: 100%; }
 
 a { color: inherit; }
-::selection { background: var(--signal); color: var(--gh-white); }
+::selection { background: var(--signal); color: var(--gh-black); } /* 5.9:1; white on the blue is only 3.35:1 */
 
 :focus-visible {
   outline: 2px solid var(--signal);
