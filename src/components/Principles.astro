@@ -1,0 +1,56 @@
+---
+import Label from './Label.astro';
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const t = dicts[Astro.props.lang].principles;
+---
+<section class="principles" aria-labelledby="principles-label">
+  <div class="grid">
+    <Label text={t.label} class="pr-label" />
+  </div>
+  <h2 id="principles-label" class="sr-only">{t.label.replace(/^\d+\s*\/\s*/, '')}</h2>
+  <ol>
+    {t.items.map((it, i) => (
+      <li class="item grid">
+        <span class="meta idx">0{i + 1}</span>
+        <h3 class="word">{it.title}<span class="slash" aria-hidden="true">/</span></h3>
+        <p class="pbody">{it.body}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .principles { padding-block: var(--space-section); }
+  .pr-label { grid-column: 1 / -1; margin-bottom: clamp(24px, 4vw, 56px); }
+  .item {
+    border-top: 1px solid var(--ink);
+    padding-block: 14px clamp(28px, 4vw, 64px);
+    align-items: end;
+  }
+  .item:last-child { border-bottom: 1px solid var(--ink); }
+  .idx { grid-column: 1 / -1; align-self: start; color: var(--muted); margin-bottom: clamp(8px, 2vw, 28px); }
+  /* Sized to the longest word across both languages (CORRECTNESS/ = 6.81em),
+     confined to ~3/4 of the width so the text can sit beside it. */
+  .word {
+    grid-column: 1 / span 9;
+    font-size: calc((100vw - 2 * var(--margin)) * 0.74 / 6.95);
+    font-weight: 600;
+    line-height: 0.82;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    margin-left: -0.04em;
+  }
+  .slash { color: var(--signal); }
+  .pbody { grid-column: 10 / span 3; font-size: var(--fs-small); color: var(--muted); max-width: 26em; text-wrap: pretty; }
+
+  @media (max-width: 1024px) {
+    .word { grid-column: 1 / -1; font-size: calc((100vw - 2 * var(--margin)) / 6.95); }
+    .pbody { grid-column: 3 / span 4; margin-top: 20px; }
+  }
+  @media (max-width: 640px) {
+    .pbody { grid-column: 1 / -1; }
+  }
+</style>

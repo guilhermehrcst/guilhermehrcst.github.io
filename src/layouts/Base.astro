@@ -1,0 +1,67 @@
+---
+import '@fontsource-variable/inter-tight/wght.css';
+import '@fontsource-variable/jetbrains-mono/wght.css';
+import '../styles/global.css';
+import interLatin from '@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url';
+import Header from '../components/Header.astro';
+import { dicts, routes, hreflang } from '../i18n/routes';
+import type { Lang, PageId } from '../i18n/types';
+
+interface Props {
+  lang: Lang;
+  page: PageId;
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+const { lang, page, title, description, noindex = false } = Astro.props;
+const t = dicts[lang];
+const site = Astro.site ?? new URL('https://guilhermehrcst.github.io');
+const abs = (path: string) => new URL(path, site).href;
+const canonical = abs(routes[page][lang]);
+---
+<!doctype html>
+<html lang={t.htmlLang}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  {noindex && <meta name="robots" content="noindex">}
+  <meta name="theme-color" content="#f2f1ec">
+  <meta name="color-scheme" content="light only">
+  <link rel="canonical" href={canonical}>
+  <link rel="alternate" hreflang={hreflang.en} href={abs(routes[page].en)}>
+  <link rel="alternate" hreflang={hreflang.pt} href={abs(routes[page].pt)}>
+  <link rel="alternate" hreflang="x-default" href={abs(routes[page].en)}>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={canonical}>
+  <meta property="og:locale" content={t.meta.ogLocale}>
+  <meta property="og:site_name" content="Guilherme Henrique">
+  <meta name="twitter:card" content="summary">
+  <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Motion gate. Runs before first paint. Without JS, or with reduced motion,
+       the page renders in its final, composed state: motion is enrichment only.
+       The timeout is a fail-open: content is never left hidden. -->
+  <script is:inline>
+    (function () {
+      var d = document.documentElement;
+      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      d.classList.add('motion');
+      setTimeout(function () { d.classList.add('loaded'); }, 1400);
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">{t.skip}</a>
+  <Header lang={lang} page={page} />
+  <slot />
+  <script>
+    import '../scripts/motion';
+  </script>
+</body>
+</html>

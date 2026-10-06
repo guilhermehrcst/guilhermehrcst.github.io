@@ -1,0 +1,64 @@
+---
+// Facts and the evidence ledger shared by Lume and Pexiscale. The ledger keeps
+// the substance of the previous site: what is shown, and what is still open.
+import type { Project } from '../i18n/types';
+
+interface Props { project: Project; num: string }
+const { project: p, num } = Astro.props;
+---
+<ol class="facts grid">
+  {p.facts.map((f, i) => (
+    <li class="fact">
+      <span class="meta n">{num}.{i + 1}</span>
+      <h3 class="f-title">{f.title}</h3>
+      <p class="f-body">{f.body}</p>
+    </li>
+  ))}
+</ol>
+<dl class="ledger grid">
+  <div class="l l-ok">
+    <dt class="meta"><span class="mark" aria-hidden="true"></span>{p.ledger.evidenceLabel}</dt>
+    <dd>{p.ledger.evidence}</dd>
+  </div>
+  <div class="l l-open">
+    <dt class="meta"><span class="mark" aria-hidden="true"></span>{p.ledger.openLabel}</dt>
+    <dd>{p.ledger.open}</dd>
+  </div>
+</dl>
+
+<style>
+  .facts { margin-top: clamp(72px, 10vw, 160px); row-gap: 40px; }
+  .fact {
+    grid-column: span 4;
+    border-top: 1px solid var(--line, var(--rule));
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .n { color: var(--soft, var(--muted)); }
+  .f-title {
+    font-size: clamp(1.25rem, 1.6vw, 1.625rem);
+    font-weight: 560;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-top: 18px;
+  }
+  .f-body { color: var(--soft, var(--muted)); font-size: var(--fs-small); line-height: 1.55; max-width: 32em; }
+
+  .ledger { margin-top: clamp(56px, 7vw, 112px); row-gap: 32px; }
+  .l { grid-column: span 6; padding-top: 14px; border-top: 2px solid var(--accent, var(--signal)); }
+  .l-open { border-top: 2px dashed var(--soft, var(--muted)); }
+  .l dt { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .mark { width: 7px; height: 7px; background: var(--accent, var(--signal)); }
+  .l-open .mark { background: transparent; box-shadow: inset 0 0 0 1px var(--soft, var(--muted)); }
+  .l dd { margin: 0; font-size: var(--fs-lead); line-height: 1.3; letter-spacing: -0.012em; max-width: 30em; text-wrap: pretty; }
+
+  @media (max-width: 1024px) {
+    .fact { grid-column: span 2; }
+    .l { grid-column: span 3; }
+  }
+  @media (max-width: 640px) {
+    .fact, .l { grid-column: 1 / -1; }
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const t = dicts[Astro.props.lang];
+---
+<section class="hero" aria-labelledby="hero-title">
+  <dl class="hero-meta grid">
+    {t.hero.meta.map((value, i) => (
+      <div class={`m m${i}`}>
+        <dt class="meta">{t.hero.metaLabels[i]}</dt>
+        <dd class="meta">{value}</dd>
+      </div>
+    ))}
+  </dl>
+  <h1 id="hero-title" class="hero-name">
+    <span class="line"><span class="rise" style="--d: 0ms">Guilherme</span></span>
+    <span class="line"><span class="rise" style="--d: 80ms">Henrique<span class="slash" aria-hidden="true">/</span></span></span>
+  </h1>
+</section>
+
+<style>
+  .hero {
+    min-height: 100svh;
+    padding-top: var(--header-h);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .hero-meta {
+    padding-top: clamp(20px, 3.2vh, 40px);
+    row-gap: 14px;
+  }
+  .m { display: flex; flex-direction: column; gap: 4px; }
+  .m dt { color: var(--muted); }
+  .m0 { grid-column: 1 / span 3; }
+  .m1 { grid-column: 5 / span 3; }
+  .m2 { grid-column: 9 / span 3; }
+
+  /* The name is the protagonist. Size is derived from the measured advance
+     width of the longest line (GUILHERME = 5.075em at wght 680, -0.055em tracking; measured in Chromium),
+     so the line spans the grid without overflowing it. */
+  .hero-name {
+    --fit: 5.13;
+    padding-inline: var(--margin);
+    padding-bottom: clamp(8px, 1.4vw, 24px);
+    font-size: calc((100vw - 2 * var(--margin)) / var(--fit));
+    font-weight: 680;
+    line-height: 0.8;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+    margin-left: -0.045em; /* optical: pull the G's side bearing onto the grid edge */
+  }
+  .line {
+    display: block;
+    /* Mask for the load reveal. Padding gives the Q tail room; the negative
+       margin keeps the measured line height. */
+    overflow: clip;
+    padding-bottom: 0.11em;
+    margin-bottom: -0.11em;
+  }
+  .rise { display: block; }
+  .slash { color: var(--signal); margin-left: 0.02em; }
+
+  :global(.motion) .rise { transform: translate3d(0, 104%, 0); }
+  :global(.motion.loaded) .rise {
+    transform: none;
+    transition: transform var(--t-hero) var(--ease) var(--d);
+  }
+  :global(.motion) .hero-meta .m { opacity: 0; }
+  :global(.motion.loaded) .hero-meta .m {
+    opacity: 1;
+    transition: opacity var(--t-medium) linear 520ms;
+  }
+
+  @media (max-width: 1024px) {
+    .m0 { grid-column: 1 / span 2; }
+    .m1 { grid-column: 3 / span 2; }
+    .m2 { grid-column: 5 / span 2; }
+  }
+
+  @media (max-width: 640px) {
+    /* Mobile is its own composition: width-bound name, so a shorter hero
+       keeps the name dominant instead of floating in an empty screen. */
+    .hero { justify-content: flex-start; min-height: 74svh; }
+    .m0 { grid-column: 1 / -1; }
+    .m1 { grid-column: 1 / span 2; }
+    .m2 { grid-column: 3 / span 2; }
+    .hero-meta { padding-top: 20px; }
+    .hero-name { margin-top: auto; }
+  }
+</style>

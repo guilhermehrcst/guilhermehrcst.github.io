@@ -1,0 +1,62 @@
+---
+import { dicts, routes } from '../i18n/routes';
+import type { Lang, PageId } from '../i18n/types';
+
+interface Props { lang: Lang; page: PageId }
+const { lang, page } = Astro.props;
+const t = dicts[lang];
+const other: Lang = lang === 'en' ? 'pt' : 'en';
+---
+<footer class="monument">
+  <div class="grid foot">
+    <p class="meta f0">{t.footer.place}</p>
+    <p class="meta f1">{t.footer.updated}</p>
+    <p class="meta f2">
+      <a class="u" href={routes[page][other]} lang={other === 'en' ? 'en' : 'pt-BR'} hreflang={other === 'en' ? 'en' : 'pt-BR'}>
+        {other === 'en' ? 'English' : 'Português'}
+      </a>
+    </p>
+    <p class="meta f3"><a class="u" href="#top">{t.footer.top}</a> <span class="arrow up" aria-hidden="true">↑</span></p>
+  </div>
+  <!-- The bookend. The hero rises into view; the page ends by cutting the name. -->
+  <p class="name" aria-hidden="true">
+    <span>Guilherme</span>
+    <span>Henrique<span class="slash">/</span></span>
+  </p>
+</footer>
+
+<style>
+  .monument { border-top: 1px solid var(--ink); overflow: clip; }
+  .foot { padding-block: 16px clamp(48px, 9vw, 160px); row-gap: 10px; }
+  .foot p { color: var(--muted); }
+  .foot a { color: var(--ink); }
+  .f0 { grid-column: 1 / span 3; }
+  .f1 { grid-column: 4 / span 3; }
+  .f2 { grid-column: 7 / span 3; }
+  .f3 { grid-column: 10 / span 3; justify-self: end; }
+  .name {
+    --size: calc((100vw - 2 * var(--margin)) / 5.13);
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--margin);
+    font-size: var(--size);
+    font-weight: 680;
+    line-height: 0.8;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+    margin-left: -0.045em;
+    /* Cut through the second line: the document edge is the mask. */
+    height: calc(var(--size) * 1.42);
+    user-select: none;
+  }
+  .slash { color: var(--signal); }
+  @media (max-width: 1024px) {
+    .f0 { grid-column: 1 / span 3; }
+    .f1 { grid-column: 4 / span 3; }
+    .f2 { grid-column: 1 / span 3; }
+    .f3 { grid-column: 4 / span 3; justify-self: start; }
+  }
+  @media (max-width: 640px) {
+    .f0, .f1, .f2, .f3 { grid-column: 1 / -1; }
+  }
+</style>
