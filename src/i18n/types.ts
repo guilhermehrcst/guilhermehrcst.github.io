@@ -48,7 +48,7 @@ export interface Dict {
     cta: string;
     photoAlt: string;
   };
-  statement: { label: string; text: string; aside: string };
+  statement: { label: string; text: string; mark: string; aside: string };
   lume: Project;
   pexiscale: Project;
   principles: { label: string; items: [Fact, Fact, Fact] };

@@ -15,7 +15,7 @@ const t = dicts[lang].about;
       <p>{t.body}</p>
       <p class="also">{t.also}</p>
       <a class="cta" href={routes.resume[lang]}>
-        <span class="u">{t.cta}/</span> <span class="arrow" aria-hidden="true">→</span>
+        <span class="u">{t.cta}</span><span class="sl" aria-hidden="true">/</span> <span class="arrow" aria-hidden="true">→</span>
       </a>
     </div>
   </div>
@@ -23,7 +23,7 @@ const t = dicts[lang].about;
 
 <style>
   .about { padding-block: var(--space-section) calc(var(--space-section) * 0.6); }
-  .a-label { grid-column: 1 / -1; margin-bottom: clamp(24px, 3vw, 40px); }
+  :global(.a-label) { grid-column: 1 / -1; margin-bottom: clamp(24px, 3vw, 40px); }
   .a-heading {
     grid-column: 1 / span 7;
     font-size: var(--fs-h3);

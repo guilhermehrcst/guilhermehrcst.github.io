@@ -1,18 +1,18 @@
 ---
-// Mono section label. The visible copy may "decode" once on first view
-// (scripts/scramble.ts); assistive tech reads the stable text only.
+// Section label: "NN / Name". The slash is the site's mark: blue, and it slides in once on
+// first view (scripts/motion.ts). Assistive tech reads the stable text only.
 interface Props { text: string; class?: string }
 const { text, class: cls } = Astro.props;
+const [num, ...rest] = text.split(' / ');
+const name = rest.join(' / ');
 ---
 <p class:list={['meta', 'label', cls]}>
   <span class="sr-only">{text}</span>
-  <span aria-hidden="true" data-scramble>{text}</span>
-  <span class="sq" aria-hidden="true"></span>
+  <span aria-hidden="true">{num}</span>
+  <span class="sl rv-slash" aria-hidden="true" data-reveal>/</span>
+  <span aria-hidden="true">{name}</span>
 </p>
 
 <style>
-  .label { display: flex; align-items: center; gap: 8px; color: inherit; }
-  .sq { width: 7px; height: 7px; background: var(--signal); flex: none; }
-  :global(.lume) .sq { background: var(--void-signal); }
-  [data-scramble] { white-space: pre; }
+  .label { display: flex; align-items: baseline; gap: 0.7em; color: inherit; }
 </style>

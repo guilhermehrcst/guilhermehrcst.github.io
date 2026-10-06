@@ -20,6 +20,7 @@ export const pt: Dict = {
   },
   statement: {
     label: '01 / Manifesto',
+    mark: 'evidência',
     text: 'Construo software, sistemas e experimentos, e mostro a evidência.',
     aside:
       'Trabalho com backends transacionais e com a forma como os dados são representados na memória: lugares onde uma resposta errada custa dinheiro ou confiança. Uso ferramentas de IA o tempo todo e trato o que elas produzem como não verificado até que um teste, uma medição ou uma consulta diga o contrário.',

@@ -5,11 +5,15 @@ import type { Lang } from '../i18n/types';
 
 interface Props { lang: Lang }
 const t = dicts[Astro.props.lang].statement;
+// The one word that carries the claim gets a blue rule that draws once (see motion.ts).
+const at = t.text.lastIndexOf(t.mark);
+const pre = t.text.slice(0, at);
+const post = t.text.slice(at + t.mark.length);
 ---
 <section class="statement" aria-labelledby="statement-text">
   <div class="grid">
     <Label text={t.label} class="s-label" />
-    <h2 id="statement-text" class="s-text">{t.text}</h2>
+    <h2 id="statement-text" class="s-text">{pre}<span class="mark rv-line" data-reveal>{t.mark}</span>{post}</h2>
     <p class="s-aside">{t.aside}</p>
   </div>
 </section>
@@ -18,15 +22,21 @@ const t = dicts[Astro.props.lang].statement;
   /* No reveal animation here on purpose: the sentence is already composed in
      the document and enters through the bottom edge of the viewport. */
   .statement { padding-block: var(--space-section) calc(var(--space-section) * 0.9); }
-  .s-label { grid-column: 1 / -1; margin-bottom: clamp(20px, 3vw, 40px); }
+  :global(.s-label) { grid-column: 1 / -1; margin-bottom: clamp(20px, 3vw, 40px); }
   .s-text {
     grid-column: 1 / span 11;
     font-size: var(--fs-statement);
-    font-weight: 500;
+    font-weight: 540;
     line-height: 0.93;
     letter-spacing: -0.032em;
     text-wrap: balance;
   }
+  /* A 0.06em blue rule under one word. Static final state without JS or under reduced motion. */
+  .mark {
+    background: linear-gradient(var(--signal), var(--signal)) 0 88% / 100% 0.06em no-repeat;
+  }
+  :global(.reveal-ready) .mark:not(:global(.is-in)) { background-size: 0 0.06em; }
+  .mark { transition: background-size 900ms var(--ease) 200ms; }
   .s-aside {
     grid-column: 8 / span 4;
     margin-top: clamp(56px, 9vw, 140px);

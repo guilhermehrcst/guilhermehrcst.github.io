@@ -20,6 +20,7 @@ export const en: Dict = {
   },
   statement: {
     label: '01 / Statement',
+    mark: 'evidence',
     text: 'I build software, systems and experiments, and I show the evidence.',
     aside:
       'I work on transactional backends and on how data is represented in memory: places where a wrong answer costs money or trust. I use AI tools heavily and treat what they produce as unverified until a test, a measurement or a query says otherwise.',

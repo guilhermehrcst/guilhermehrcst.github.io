@@ -32,10 +32,12 @@ const t = dicts[Astro.props.lang].contact;
 
 <style>
   .contact { padding-block: calc(var(--space-section) * 0.4) var(--space-section); }
-  .c-label { grid-column: 1 / -1; margin-bottom: clamp(24px, 3vw, 40px); }
+  :global(.c-label) { grid-column: 1 / -1; margin-bottom: clamp(24px, 3vw, 40px); }
   li { border-top: 1px solid var(--rule); }
   li:last-child { border-bottom: 1px solid var(--rule); }
+  li { position: relative; }
   .row {
+    position: static;
     align-items: baseline;
     padding-block: clamp(14px, 1.8vw, 26px);
     text-decoration: none;
@@ -55,7 +57,7 @@ const t = dicts[Astro.props.lang].contact;
   /* Fixed slot: every row's text starts at the same x, whatever the glyph. */
   /* Only the text takes part in baseline alignment, so the row keeps exactly the
      geometry it had before the icons; the icon is centred on the text line. */
-  .c-i { flex: none; align-self: center; width: 24px; height: 24px; display: grid; place-items: center; }
+  .c-i { flex: none; align-self: center; width: 20px; height: 20px; display: grid; place-items: center; }
   /* Fit the longest side to the slot; Gmail is wider than tall, the others square. */
   .c-i :global(.ci) { max-width: 100%; max-height: 100%; width: auto; height: auto; }
   .c-t { min-width: 0; align-self: baseline; overflow-wrap: anywhere; }
@@ -84,7 +86,23 @@ const t = dicts[Astro.props.lang].contact;
     margin-right: -3.1px;
     transition: transform var(--t-arrow) var(--ease);
   }
-  .row:hover .c-v, .row:focus-visible .c-v { color: var(--signal); }
+  /* Hover and focus: a 2px blue rule draws along the row's top edge (scaleX), the text slides 6px,
+     the arrow turns blue. Blue is graphic here; the text itself only turns blue where it is 24px+. */
+  li::before {
+    content: '';
+    position: absolute;
+    inset: -1px 0 auto 0;
+    height: 2px;
+    background: var(--signal);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 600ms var(--ease);
+    pointer-events: none;
+  }
+  li:hover::before, li:focus-within::before { transform: scaleX(1); }
+  .c-v { transition: color var(--t-fast) linear, transform var(--t-ui) var(--ease); }
+  .row:hover .c-v, .row:focus-visible .c-v { transform: translateX(6px); }
+  @media (min-width: 641px) { .row:hover .c-t, .row:focus-visible .c-t { color: var(--signal); } }
   .row:hover .c-a, .row:focus-visible .c-a { color: var(--signal); opacity: 1; }
   .row:hover .c-a svg, .row:focus-visible .c-a svg { transform: translate(2px, -2px); }
   /* The row spans the viewport edge to edge; keep the focus ring inside it. */
@@ -97,10 +115,10 @@ const t = dicts[Astro.props.lang].contact;
   @media (max-width: 640px) {
     .c-k { grid-column: 1 / span 3; grid-row: 1; margin-bottom: 8px; }
     .c-a { grid-column: 4; grid-row: 1; font-size: 1.125rem; }
-    /* On mobile the arrow shares a line with the small mono label, so it centres on that instead. */
+    /* On mobile the arrow shares a line with the small label, so it centres on that instead. */
     .c-a svg { width: 18px; height: 18px; margin-right: -2.8px; top: 0.07em; }
     .c-v { grid-column: 1 / -1; grid-row: 2; gap: 12px; font-size: clamp(1.25rem, 6vw, 1.75rem); }
-    .c-i { width: 20px; height: 20px; }
+    .c-i { width: 18px; height: 18px; }
     .c-t { overflow-wrap: normal; }
   }
 </style>

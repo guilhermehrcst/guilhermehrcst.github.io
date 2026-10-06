@@ -96,7 +96,7 @@ const icons = [
     grid-column: 1 / span 6;
     aspect-ratio: 4 / 5;
     overflow: clip;
-    background: #e6e4dd; /* the box is reserved (no layout shift); a quiet tone until the image arrives */
+    background: var(--surface); /* the box is reserved (no layout shift); a quiet tone until the image arrives */
   }
   .hero-photo :global(img) {
     width: 100%;
@@ -141,7 +141,7 @@ const icons = [
     gap: 16px;
     min-height: 56px;
     padding: 0 22px;
-    background: var(--signal);
+    background: var(--ink);
     color: var(--paper);
     font-size: 1.125rem;
     font-weight: 560;
@@ -150,7 +150,7 @@ const icons = [
     transition: background-color 180ms var(--ease);
   }
   .cta svg { flex: none; width: 22px; height: 22px; transition: transform 180ms var(--ease); }
-  .cta:hover, .cta:focus-visible { background: var(--ink); }
+  .cta:hover, .cta:focus-visible { background: var(--signal); color: var(--ink); } /* ink on the blue is 5.9:1; white would be 3.35:1 */
   .cta:hover svg, .cta:focus-visible svg { transform: translate(2px, -2px); }
   .cta:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
 
