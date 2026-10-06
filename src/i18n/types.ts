@@ -47,7 +47,11 @@ export interface Dict {
   pexiscale: Project;
   principles: { label: string; items: [Fact, Fact, Fact] };
   about: { label: string; heading: string; body: string; also: string; cta: string };
-  contact: { label: string; heading: string; items: { label: string; value: string; href: string }[] };
+  contact: {
+    label: string;
+    heading: string;
+    items: { icon: 'email' | 'linkedin' | 'github' | 'instagram'; label: string; value: string; href: string }[];
+  };
   footer: { place: string; updated: string; top: string };
   shell: {
     resume: { title: string; description: string; heading: string; body: string };

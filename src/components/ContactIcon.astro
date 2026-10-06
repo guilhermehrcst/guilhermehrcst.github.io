@@ -1,0 +1,18 @@
+---
+// Decorative brand marks for the contact rows, from the author's own artwork
+// (src/assets/contact, trimmed and resized to 96px = 4x the 24px slot).
+// The row text already names the destination, so the image is decorative:
+// empty alt, no role. Colour is the brand's own; it does not follow hover.
+import gmail from '../assets/contact/gmail.png';
+import github from '../assets/contact/github.png';
+import instagram from '../assets/contact/instagram.png';
+import linkedin from '../assets/contact/linkedin.png';
+
+export type ContactIconName = 'email' | 'linkedin' | 'github' | 'instagram';
+
+const images: Record<ContactIconName, ImageMetadata> = { email: gmail, linkedin, github, instagram };
+
+interface Props { name: ContactIconName }
+const img = images[Astro.props.name];
+---
+<img class="ci" src={img.src} width={img.width} height={img.height} alt="" decoding="async" draggable="false" />
