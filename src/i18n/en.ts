@@ -13,8 +13,10 @@ export const en: Dict = {
   skip: 'Skip to content',
   nav: { label: 'Main', home: 'Home', resume: 'Résumé', courses: 'Courses', language: 'Language' },
   hero: {
-    metaLabels: ['Practice', 'Based in', 'Currently'],
-    meta: ['Software engineering / Systems / AI', 'Rio de Janeiro, Brazil', 'Pexiscale + Lume'],
+    meta: ['Rio de Janeiro, Brazil', 'Software engineering / Systems / AI', 'Now / Pexiscale + Lume'],
+    blurb: 'I build software, systems and experiments to solve real problems and explore new possibilities.',
+    cta: 'View résumé',
+    photoAlt: 'Guilherme Henrique in an olive work jacket, with a black backpack, taking a photo of himself in a mirror.',
   },
   statement: {
     label: '01 / Statement',

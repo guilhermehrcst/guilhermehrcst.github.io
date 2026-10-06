@@ -32,9 +32,9 @@ Tokens live once, in `:root` of `src/styles/global.css`: `--gh-blue #078EFB`, `-
 
 The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nudges 0.12em on link hover and slides in once when a section label or giant heading enters.
 
-## Hero portrait
+## Hero photo
 
-Drop one file named `portrait.jpg|jpeg|png|webp|avif` into `src/assets/hero/`. It renders in the free band above the name (right columns, sharp rectangle). With no file, nothing is rendered and the hero is the type alone.
+`src/assets/hero/guilherme.jpg` is the only image of a person on the site: a 4:5 crop (980x1225) of the original, with no colour grading and **no metadata** (EXIF/GPS stripped). It was cropped on purpose to leave out the posters on the elevator walls. Astro generates the WebP sizes and the JPEG fallback at build time. Never commit the uncropped original: it is a phone photo and this repository's history is permanent.
 
 ## Structure
 
