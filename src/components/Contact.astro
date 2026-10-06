@@ -54,7 +54,8 @@ const t = dicts[Astro.props.lang].contact;
   /* Only the text takes part in baseline alignment, so the row keeps exactly the
      geometry it had before the icons; the icon is centred on the text line. */
   .c-i { flex: none; align-self: center; width: 24px; height: 24px; display: grid; place-items: center; }
-  .c-i :global(.ci) { width: 24px; height: 24px; }
+  /* Fit the longest side to the slot; Gmail is wider than tall, the others square. */
+  .c-i :global(.ci) { max-width: 100%; max-height: 100%; width: auto; height: auto; }
   .c-t { min-width: 0; align-self: baseline; overflow-wrap: anywhere; }
   .c-a { grid-column: 12; justify-self: end; font-size: clamp(1.25rem, 2vw, 2rem); transition: transform var(--t-ui) var(--ease), color var(--t-fast) linear; }
   .row:hover .c-v, .row:hover .c-a,
@@ -72,7 +73,7 @@ const t = dicts[Astro.props.lang].contact;
     .c-k { grid-column: 1 / span 3; grid-row: 1; margin-bottom: 8px; }
     .c-a { grid-column: 4; grid-row: 1; font-size: 1.125rem; }
     .c-v { grid-column: 1 / -1; grid-row: 2; gap: 12px; font-size: clamp(1.25rem, 6vw, 1.75rem); }
-    .c-i, .c-i :global(.ci) { width: 20px; height: 20px; }
+    .c-i { width: 20px; height: 20px; }
     .c-t { overflow-wrap: normal; }
   }
 </style>
