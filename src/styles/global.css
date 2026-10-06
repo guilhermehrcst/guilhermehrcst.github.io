@@ -1,23 +1,36 @@
 /* Global tokens and base. Component styles live in their .astro files. */
 
 :root {
-  /* Palette: one editorial direction, no automatic dark mode. */
-  --paper: #f2f1ec;
-  --ink: #0c0c0b;
-  --muted: #5d5d58;
-  --rule: #d5d3cb;
-  --signal: #2430e8; /* ultramarine; 6.9:1 on paper */
+  /* Brand tokens: the only place hex codes live. Roughly 70% white, 20% black, 10% blue.
+     Electric blue is a signature, not a fill. Contrast on white is 3.35:1: enough for graphics,
+     focus rings and text of 24px+, NOT for small text, so small text is never set in blue.
+     On the void it is 5.9:1. */
+  --gh-blue: #078efb;
+  --gh-black: #0a0a0a;
+  --gh-white: #ffffff;
+  --gh-gray-50: #f7f8fa;
+  --gh-gray-200: #e8eaed;
+  --gh-gray-300: #bdc1c6; /* decorative bars in the Pexiscale composition */
+  --gh-gray-600: #5f6368; /* 6.2:1 on white */
+  --gh-void: #08090b;
+
+  /* Palette roles (semantic aliases of the tokens above). No automatic dark mode. */
+  --paper: var(--gh-white);
+  --ink: var(--gh-black);
+  --muted: var(--gh-gray-600);
+  --rule: var(--gh-gray-200);
+  --surface: var(--gh-gray-50);
+  --signal: var(--gh-blue);
 
   /* Lume module (dark). Not a theme: a single section. */
-  --void: #0a0b0f;
-  --void-ink: #eceef2;
-  --void-muted: #8d929c;
-  --void-rule: #262931;
-  --void-signal: #6b76ff; /* 5.3:1 on void */
+  --void: var(--gh-void);
+  --void-ink: var(--gh-white);
+  --void-muted: #9aa0a6; /* 7.3:1 on void */
+  --void-rule: #24272d;
+  --void-signal: var(--gh-blue);
 
   --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
-
+  
   /* Grid: 12 / 6 / 4 columns. A guide, not a cage. */
   --cols: 12;
   --margin: clamp(16px, 2.2vw, 36px);
@@ -88,7 +101,7 @@ ul, ol { padding: 0; list-style: none; }
 img, svg, canvas { display: block; max-width: 100%; }
 
 a { color: inherit; }
-::selection { background: var(--signal); color: var(--paper); }
+::selection { background: var(--signal); color: var(--gh-white); }
 
 :focus-visible {
   outline: 2px solid var(--signal);
@@ -121,26 +134,47 @@ a { color: inherit; }
   padding-inline: var(--margin);
 }
 
-/* Mono metadata. Small, uppercase, technical. */
+/* Metadata. Small, uppercase, technical: Google Sans with tabular figures. */
 .meta {
-  font-family: var(--mono);
   font-size: var(--fs-micro);
-  font-weight: 450;
+  font-weight: 500;
   line-height: 1.4;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Text link: underline that draws, arrow that shifts. */
+/* The slash: the site's graphic mark. Always blue, always aria-hidden at the call site.
+   It nudges a few pixels when the link or row that holds it is hovered or focused. */
+.sl, .slash {
+  display: inline-block;
+  color: var(--signal);
+  transition: transform var(--t-ui) var(--ease), opacity var(--t-ui) var(--ease);
+}
+a:hover > .sl, a:focus-visible > .sl,
+a:hover .sl.hov, a:focus-visible .sl.hov { transform: translateX(0.12em); }
+
+/* Text link: a 1px ink underline at rest (links stay distinguishable without colour);
+   on hover or focus a 2px blue line draws over it, left to right. */
 .u {
   text-decoration: none;
-  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
-  transition: background-size var(--t-ui) var(--ease), color var(--t-fast) linear;
+  background:
+    linear-gradient(var(--signal), var(--signal)) 0 100% / 0 2px no-repeat,
+    linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 2px;
+  transition: background-size var(--t-ui) var(--ease);
 }
-.u:hover { background-size: 0 1px; background-position: 100% 100%; }
+a:hover .u, a:focus-visible .u, .u:hover, .u:focus-visible { background-size: 100% 2px, 100% 1px; }
 .arrow { display: inline-block; transition: transform var(--t-ui) var(--ease); }
-a:hover .arrow { transform: translateX(4px); }
-a:hover .arrow.ne { transform: translate(3px, -3px); }
+a:hover .arrow, a:focus-visible .arrow { transform: translateX(4px); color: var(--signal); }
+a:hover .arrow.ne, a:focus-visible .arrow.ne { transform: translate(3px, -3px); }
+.arrow { transition: transform var(--t-ui) var(--ease), color var(--t-fast) linear; }
+
+/* Reveal: the initial hidden state exists only once motion.ts has run (.reveal-ready), so a
+   failed script can never leave content hidden. Default state = final state. Transform and opacity only. */
+:root.reveal-ready .rv:not(.is-in) { opacity: 0; }
+:root.reveal-ready .rv-slash:not(.is-in) { opacity: 0; transform: translateX(-0.18em); }
+.rv, .rv-slash { transition: opacity var(--t-medium) linear, transform var(--t-medium) var(--ease); }
 
 /* Cross-document view transitions: progressive enhancement, ready for Résumé and Courses. */
 @view-transition { navigation: auto; }
@@ -159,5 +193,5 @@ a:hover .arrow.ne { transform: translate(3px, -3px); }
 
 @media print {
   .site-header, .band, .monument { display: none !important; }
-  body { background: #fff; }
+  body { background: var(--gh-white); }
 }

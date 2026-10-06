@@ -2,7 +2,6 @@
 // Google Sans Flex (OFL-1.1), self-hosted from @fontsource-variable. The opsz build carries
 // weight + optical size only; width, grade, roundness and slant axes are deliberately not shipped.
 import '@fontsource-variable/google-sans-flex/opsz.css';
-import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
 import sansLatin from '@fontsource-variable/google-sans-flex/files/google-sans-flex-latin-opsz-normal.woff2?url';
 import Header from '../components/Header.astro';
@@ -31,7 +30,7 @@ const canonical = abs(routes[page][lang]);
   <title>{title}</title>
   <meta name="description" content={description}>
   {noindex && <meta name="robots" content="noindex">}
-  <meta name="theme-color" content="#f2f1ec">
+  <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light only">
   <link rel="canonical" href={canonical}>
   <link rel="alternate" hreflang={hreflang.en} href={abs(routes[page].en)}>

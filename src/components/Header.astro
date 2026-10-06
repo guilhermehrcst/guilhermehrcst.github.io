@@ -21,7 +21,7 @@ const langs: Lang[] = lang === 'en' ? ['en', 'pt'] : ['pt', 'en'];
         {items.map((it) => (
           <li>
             <a href={routes[it.id][lang]} aria-current={it.id === page ? 'page' : undefined}>
-              {it.text}<span class="slash" aria-hidden="true">/</span>
+              {it.text}<span class="sl" aria-hidden="true">/</span>
             </a>
           </li>
         ))}
@@ -52,7 +52,7 @@ const langs: Lang[] = lang === 'en' ? ['en', 'pt'] : ['pt', 'en'];
     inset: 0 0 auto 0;
     z-index: 50;
     background: var(--paper);
-    border-bottom: 1px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.01em;
@@ -79,14 +79,24 @@ const langs: Lang[] = lang === 'en' ? ['en', 'pt'] : ['pt', 'en'];
   .nav li { flex: 1 1 0; border-left: 1px solid var(--rule); }
   .nav li:last-child { border-right: 1px solid var(--rule); }
   .nav a {
+    position: relative;
     height: 100%;
     padding-inline: 12px;
     color: var(--muted);
     transition: color var(--t-fast) linear;
   }
-  .nav a:hover, .nav a[aria-current='page'] { color: var(--ink); }
-  .slash { transition: color var(--t-fast) linear; }
-  .nav a[aria-current='page'] .slash { color: var(--signal); }
+  .nav a:hover, .nav a:focus-visible, .nav a[aria-current='page'] { color: var(--ink); }
+  /* The slash is quiet on inactive items, blue and nudged on hover, blue at rest on the current page. */
+  .nav .sl { margin-left: 1px; color: var(--gh-gray-300); transition: transform var(--t-ui) var(--ease), color var(--t-fast) linear; }
+  .nav a:hover .sl, .nav a:focus-visible .sl, .nav a[aria-current='page'] .sl { color: var(--signal); }
+  /* Current page: a 2px rule as well, so blue is never the only signal. */
+  .nav a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -1px 0;
+    height: 2px;
+    background: var(--ink);
+  }
 
   .lang {
     grid-column: 11 / span 2;
@@ -97,7 +107,27 @@ const langs: Lang[] = lang === 'en' ? ['en', 'pt'] : ['pt', 'en'];
   }
   .lang a { color: var(--muted); min-width: 24px; justify-content: center; height: 100%; }
   .lang a:hover, .lang a[aria-current='true'] { color: var(--ink); }
-  .lang .sep { color: var(--rule); }
+  .lang .sep { color: var(--muted); opacity: 0.5; }
+  .lang a[aria-current='true'] { font-weight: 700; }
+
+  /* Reading progress: a 1px blue line on the header's lower edge, driven by the document scroll
+     with a CSS scroll timeline (no JS). Browsers without it simply show no line. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      .site-header::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 -1px 0;
+        height: 2px;
+        background: var(--signal);
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: progress linear both;
+        animation-timeline: scroll(root block);
+      }
+    }
+  }
+  @keyframes progress { to { transform: scaleX(1); } }
 
   :global(.motion) .site-header .bar > * { opacity: 0; transition: opacity var(--t-medium) linear 450ms; }
   :global(.motion.loaded) .site-header .bar > * { opacity: 1; }
@@ -120,6 +150,7 @@ const langs: Lang[] = lang === 'en' ? ['en', 'pt'] : ['pt', 'en'];
       border-top: 1px solid var(--rule);
     }
     .nav li:first-child { border-left: 0; }
+    .nav a[aria-current='page']::after { inset-inline: 0; bottom: 0; }
     .nav li:last-child { border-right: 0; }
     .nav a { padding-inline: var(--margin); }
     .nav li + li a { padding-inline: 12px; }

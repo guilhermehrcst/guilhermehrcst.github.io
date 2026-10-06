@@ -42,7 +42,7 @@ export interface Dict {
   skip: string;
   nav: { label: string; home: string; resume: string; courses: string; language: string };
   hero: { meta: [string, string, string]; metaLabels: [string, string, string] };
-  statement: { label: string; text: string; aside: string };
+  statement: { label: string; text: string; mark: string; aside: string };
   lume: Project;
   pexiscale: Project;
   principles: { label: string; items: [Fact, Fact, Fact] };

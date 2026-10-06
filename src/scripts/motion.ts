@@ -3,7 +3,7 @@
 // What moves, and only this:
 //   1. The hero name rises once through its line masks (CSS; this file only
 //      decides *when*, after fonts are ready).
-//   2. Mono section labels decode once on first view.
+//   2. Section slashes, rules and the Lume grid reveal once on first view.
 //   3. The dither band between paper and Lume follows scroll position.
 //   4. The Lume schematic compacts with scroll position.
 //   5. The Pexiscale composition assembles once when in view (CSS transitions).
@@ -77,48 +77,23 @@ function fitCanvas(canvas: HTMLCanvasElement, onResize: () => void) {
   ro.observe(canvas);
 }
 
-/* 2. Label decode --------------------------------------------------------- */
-const GLYPHS = '0123456789ABCDEF/_<>';
-function decode(el: HTMLElement) {
-  const text = el.textContent ?? '';
-  const done = document.createTextNode('');
-  const rest = document.createElement('span');
-  rest.style.opacity = '0.45';
-  el.replaceChildren(done, rest);
-  const duration = 420 + text.length * 22;
-  const start = performance.now();
-  let lastStep = -1;
-  const tick = (now: number) => {
-    const k = clamp01((now - start) / duration);
-    const step = Math.floor((now - start) / 45); // glyphs change in steps, not every frame
-    if (step !== lastStep || k === 1) {
-      lastStep = step;
-      const n = Math.floor(k * text.length);
-      done.data = text.slice(0, n);
-      let r = '';
-      for (let i = n; i < text.length; i++) {
-        const c = text[i]!;
-        r += c === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
-      }
-      rest.textContent = r;
-    }
-    if (k < 1) requestAnimationFrame(tick);
-    else el.textContent = text;
-  };
-  requestAnimationFrame(tick);
-}
+/* 2. Reveal ---------------------------------------------------------------
+   Elements marked data-reveal get .is-in once, the first time they enter the viewport.
+   CSS decides what that means (slash slides in, rule draws, grid surfaces); the hidden
+   starting state exists only after .reveal-ready is set here, so it is fail-open. */
 if (animate) {
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
         io.unobserve(e.target);
-        decode(e.target as HTMLElement);
+        e.target.classList.add('is-in');
       }
     },
-    { rootMargin: '0px 0px -10% 0px' },
+    { rootMargin: '0px 0px -12% 0px' },
   );
-  document.querySelectorAll<HTMLElement>('[data-scramble]').forEach((el) => io.observe(el));
+  root.classList.add('reveal-ready');
+  document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
 }
 
 /* 3. Dither band ---------------------------------------------------------- */

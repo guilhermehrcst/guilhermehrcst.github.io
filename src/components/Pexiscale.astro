@@ -32,7 +32,7 @@ const dividers = [TOP + 3 * ROW, TOP + 6 * ROW];
 <section class="pexi" id="pexiscale" aria-labelledby="pexi-title">
   <div class="grid head">
     <Label text={t.label} class="p-label" />
-    <h2 id="pexi-title" class="giant">{t.name}<span class="slash" aria-hidden="true">/</span></h2>
+    <h2 id="pexi-title" class="giant">{t.name}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
     <p class="question">{t.question}</p>
   </div>
 
@@ -47,6 +47,11 @@ const dividers = [TOP + 3 * ROW, TOP + 6 * ROW];
 
     <figure class="fig" data-assemble>
       <svg class="comp" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={t.figure.alt}>
+        <g class="reg" aria-hidden="true">
+          {[[0, 0, 1, 1], [W, 0, -1, 1], [0, H, 1, -1], [W, H, -1, -1]].map(([cx, cy, dx, dy]) => (
+            <path d={`M${cx! - dx! * 14} ${cy! + 0.5}H${cx! + dx! * 0}M${cx! + 0.5} ${cy! - dy! * 14}V${cy! + 0}`} />
+          ))}
+        </g>
         <g class="draw-set">
           <path class="draw" pathLength="1" d={`M0.5 0.5H${W - 0.5}V${H - 0.5}H0.5Z`} />
           <path class="draw" pathLength="1" style="--i: 1" d={`M0 52.5H${W}`} />
@@ -119,7 +124,7 @@ const dividers = [TOP + 3 * ROW, TOP + 6 * ROW];
 
 <style>
   .pexi { padding-block: var(--space-section); }
-  .p-label { grid-column: 1 / -1; color: var(--muted); }
+  .pexi :global(.p-label) { grid-column: 1 / -1; color: var(--muted); }
   .giant {
     grid-column: 1 / -1;
     font-size: calc((100vw - 2 * var(--margin)) / var(--fit-name));
@@ -130,7 +135,6 @@ const dividers = [TOP + 3 * ROW, TOP + 6 * ROW];
     text-transform: uppercase;
     margin: clamp(16px, 2vw, 32px) 0 0 -0.045em;
   }
-  .slash { color: var(--signal); }
   .question {
     grid-column: 4 / span 9;
     margin-top: clamp(48px, 7vw, 120px);
@@ -149,19 +153,21 @@ const dividers = [TOP + 3 * ROW, TOP + 6 * ROW];
   .note { color: var(--muted); }
 
   .fig { grid-column: 4 / span 9; }
-  .comp { width: 100%; height: auto; background: #fbfaf7; }
+  .comp { width: 100%; height: auto; background: var(--surface); }
   .cap { margin-top: 12px; color: var(--muted); text-transform: none; letter-spacing: 0; }
 
   /* SVG vocabulary */
   .comp :global(.ink) { fill: var(--ink); }
-  .comp :global(.soft) { fill: #b9b7ae; }
+  .comp :global(.soft) { fill: var(--gh-gray-300); }
   .comp :global(.sig) { fill: var(--signal); }
   .comp :global(.out), .comp :global(.out-soft) { fill: none; stroke: var(--ink); stroke-width: 1; }
-  .comp :global(.out-soft) { stroke: #b9b7ae; }
+  .comp :global(.out-soft) { stroke: var(--gh-gray-300); }
   .comp :global(.hair) { stroke: var(--rule); stroke-width: 1; fill: none; }
   .comp :global(.org-a) { fill: var(--ink); }
   .comp :global(.org-b) { fill: var(--signal); }
   .comp :global(.org-c) { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+  .comp { overflow: visible; }
+  .comp :global(.reg path) { fill: none; stroke: var(--ink); stroke-width: 1; }
   .draw { fill: none; stroke: var(--ink); stroke-width: 1; }
   .draw.thin { stroke: var(--rule); }
   .divider { fill: none; stroke: var(--ink); stroke-width: 2; }
