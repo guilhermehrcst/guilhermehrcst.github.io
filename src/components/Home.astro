@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from './Hero.astro';
+import Statement from './Statement.astro';
+import DitherBand from './DitherBand.astro';
+import Lume from './Lume.astro';
+import Pexiscale from './Pexiscale.astro';
+import Principles from './Principles.astro';
+import About from './About.astro';
+import Contact from './Contact.astro';
+import Monument from './Monument.astro';
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = dicts[lang];
+---
+<Base lang={lang} page="home" title={t.meta.title} description={t.meta.description}>
+  <main id="main">
+    <Hero lang={lang} />
+    <Statement lang={lang} />
+    <DitherBand />
+    <Lume lang={lang} />
+    <Pexiscale lang={lang} />
+    <Principles lang={lang} />
+    <About lang={lang} />
+    <Contact lang={lang} />
+  </main>
+  <Monument lang={lang} page="home" />
+</Base>

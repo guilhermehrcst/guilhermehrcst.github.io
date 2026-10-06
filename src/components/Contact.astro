@@ -1,0 +1,59 @@
+---
+import Label from './Label.astro';
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const t = dicts[Astro.props.lang].contact;
+---
+<section class="contact" id="contact" aria-labelledby="contact-heading">
+  <div class="grid">
+    <Label text={t.label} class="c-label" />
+    <h2 id="contact-heading" class="sr-only">{t.heading}</h2>
+  </div>
+  <ul>
+    {t.items.map((c) => (
+      <li>
+        <a class="row grid" href={c.href}>
+          <span class="meta c-k">{c.label}</span>
+          <span class="c-v">{c.value}</span>
+          <span class="arrow ne c-a" aria-hidden="true">↗</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .contact { padding-block: calc(var(--space-section) * 0.4) var(--space-section); }
+  .c-label { grid-column: 1 / -1; margin-bottom: clamp(24px, 3vw, 40px); }
+  li { border-top: 1px solid var(--rule); }
+  li:last-child { border-bottom: 1px solid var(--rule); }
+  .row {
+    align-items: baseline;
+    padding-block: clamp(14px, 1.8vw, 26px);
+    text-decoration: none;
+  }
+  .c-k { grid-column: 1 / span 3; color: var(--muted); }
+  .c-v {
+    grid-column: 4 / span 8;
+    font-size: clamp(1.5rem, 3.1vw, 3.25rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    overflow-wrap: anywhere;
+    transition: color var(--t-fast) linear;
+  }
+  .c-a { grid-column: 12; justify-self: end; font-size: clamp(1.25rem, 2vw, 2rem); transition: transform var(--t-ui) var(--ease), color var(--t-fast) linear; }
+  .row:hover .c-v, .row:hover .c-a { color: var(--signal); }
+  @media (max-width: 1024px) {
+    .c-k { grid-column: 1 / span 2; }
+    .c-v { grid-column: 3 / span 3; }
+    .c-a { grid-column: 6; }
+  }
+  @media (max-width: 640px) {
+    .c-k { grid-column: 1 / span 3; grid-row: 1; margin-bottom: 8px; }
+    .c-a { grid-column: 4; grid-row: 1; font-size: 1.125rem; }
+    .c-v { grid-column: 1 / -1; grid-row: 2; font-size: clamp(1.25rem, 6vw, 1.75rem); overflow-wrap: normal; }
+  }
+</style>

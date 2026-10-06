@@ -1,0 +1,200 @@
+---
+import Label from './Label.astro';
+import ProjectDetail from './ProjectDetail.astro';
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const t = dicts[Astro.props.lang].pexiscale;
+
+// Abstract composition of a work interface. Nothing here is a screenshot or a
+// real feature: rails, lists, a document and a table, drawn as lines.
+// The server renders the final state: table rows grouped by organization.
+const W = 1200, H = 780;
+const rail = Array.from({ length: 8 }, (_, i) => ({ y: 92 + i * 40, w: [70, 96, 58, 84, 64, 90, 52, 76][i]!, active: i === 2 }));
+const list = Array.from({ length: 6 }, (_, i) => ({ y: 112 + i * 76, w: [190, 150, 210, 170, 130, 200][i]!, m: [96, 120, 80, 110, 90, 70][i]!, org: (['a', 'b', 'c', 'a', 'b', 'a'] as const)[i]!, sel: i === 1 }));
+const para = [610, 560, 630, 420];
+const cols = [532, 700, 860, 1020];
+type Org = 'a' | 'b' | 'c';
+const grouped: Org[] = ['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c'];
+const interleaved: Org[] = ['a', 'b', 'c', 'a', 'b', 'c', 'a', 'b'];
+const ROW = 44, TOP = 424;
+// For each grouped row, where its twin sits in the interleaved order.
+const seen: Record<Org, number> = { a: 0, b: 0, c: 0 };
+const rows = grouped.map((org, i) => {
+  const nth = seen[org]++;
+  let k = -1;
+  for (let j = 0, c = 0; j < interleaved.length; j++) if (interleaved[j] === org && c++ === nth) { k = j; break; }
+  return { org, y: TOP + i * ROW, from: (k - i) * ROW, w: [[120, 70, 90, 50], [96, 84, 60, 64], [140, 56, 80, 40], [110, 90, 70, 58]][i % 4]! };
+});
+const dividers = [TOP + 3 * ROW, TOP + 6 * ROW];
+---
+<section class="pexi" id="pexiscale" aria-labelledby="pexi-title">
+  <div class="grid head">
+    <Label text={t.label} class="p-label" />
+    <h2 id="pexi-title" class="giant">{t.name}<span class="slash" aria-hidden="true">/</span></h2>
+    <p class="question">{t.question}</p>
+  </div>
+
+  <div class="grid body">
+    <div class="aside">
+      <p class="lead">{t.body}</p>
+      <p class="link">
+        <a href={t.link.href}><span class="u">{t.link.text}</span> <span class="arrow ne" aria-hidden="true">↗</span></a>
+        <span class="meta note">{t.link.note}</span>
+      </p>
+    </div>
+
+    <figure class="fig" data-assemble>
+      <svg class="comp" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={t.figure.alt}>
+        <g class="draw-set">
+          <path class="draw" pathLength="1" d={`M0.5 0.5H${W - 0.5}V${H - 0.5}H0.5Z`} />
+          <path class="draw" pathLength="1" style="--i: 1" d={`M0 52.5H${W}`} />
+          <path class="draw" pathLength="1" style="--i: 2" d={`M190.5 52V${H}`} />
+          <path class="draw" pathLength="1" style="--i: 3" d={`M500.5 52V${H}`} />
+          <path class="draw" pathLength="1" style="--i: 4" d={`M500 380.5H${W}`} />
+          <path class="draw thin" pathLength="1" style="--i: 5" d={`M500 424.5H${W}`} />
+        </g>
+
+        <g class="mod" style="--i: 0">
+          <rect x="24" y="21" width="140" height="10" class="ink" />
+          {[1110, 1132, 1154].map((x) => <rect x={x + 0.5} y="20.5" width="12" height="12" class="out" />)}
+        </g>
+
+        <g class="mod" style="--i: 1">
+          {rail.map((r) => (
+            <g>
+              <rect x="24" y={r.y} width="10" height="10" class={r.active ? 'sig' : 'out-soft'} />
+              <rect x="46" y={r.y + 2} width={r.w} height="6" class={r.active ? 'ink' : 'soft'} />
+            </g>
+          ))}
+        </g>
+
+        <g class="mod" style="--i: 2">
+          <rect x="214" y="72" width="120" height="10" class="ink" />
+          {list.map((r) => (
+            <g>
+              {r.sel && <rect x="190" y={r.y - 12} width="3" height="76" class="sig" />}
+              <rect x="214" y={r.y + 4} width="10" height="10" class={`org-${r.org}`} />
+              <rect x="238" y={r.y + 4} width={r.w} height="8" class="ink" />
+              <rect x="238" y={r.y + 26} width={r.m} height="6" class="soft" />
+              <path d={`M190 ${r.y + 63.5}H500`} class="hair" />
+            </g>
+          ))}
+        </g>
+
+        <g class="mod" style="--i: 3">
+          <rect x="532" y="92" width="360" height="22" class="ink" />
+          {para.map((w, i) => <rect x="532" y={146 + i * 22} width={w} height="7" class="soft" />)}
+          {[0, 1, 2, 3].map((i) => (
+            <g>
+              <rect x={532 + (i % 2) * 320} y={270 + Math.floor(i / 2) * 50} width="70" height="6" class="soft" />
+              <rect x={532 + (i % 2) * 320} y={286 + Math.floor(i / 2) * 50} width={[180, 140, 210, 120][i]} height="9" class="ink" />
+            </g>
+          ))}
+        </g>
+
+        <g class="mod" style="--i: 4">
+          {cols.map((x) => <rect x={x} y="399" width="60" height="6" class="soft" />)}
+        </g>
+
+        <g class="rows">
+          {rows.map((r, i) => (
+            <g class="row" style={`--from: ${r.from}px; --i: ${i}`}>
+              <rect x="512" y={r.y + 17} width="10" height="10" class={`org-${r.org}`} />
+              {cols.map((x, c) => <rect x={x} y={r.y + 19} width={r.w[c]} height="6" class={c === 0 ? 'ink' : 'soft'} />)}
+              <path d={`M500 ${r.y + ROW - 0.5}H${W}`} class="hair" />
+            </g>
+          ))}
+        </g>
+
+        {dividers.map((y, i) => <path class="divider" pathLength="1" style={`--i: ${i}`} d={`M500 ${y}H${W}`} />)}
+      </svg>
+      <figcaption class="meta cap">{t.figure.caption}</figcaption>
+    </figure>
+  </div>
+
+  <ProjectDetail project={t} num="03" />
+</section>
+
+<style>
+  .pexi { padding-block: var(--space-section); }
+  .p-label { grid-column: 1 / -1; color: var(--muted); }
+  .giant {
+    grid-column: 1 / -1;
+    font-size: calc((100vw - 2 * var(--margin)) / 5.13);
+    font-weight: 680;
+    line-height: 0.8;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+    margin: clamp(16px, 2vw, 32px) 0 0 -0.045em;
+  }
+  .slash { color: var(--signal); }
+  .question {
+    grid-column: 4 / span 9;
+    margin-top: clamp(48px, 7vw, 120px);
+    font-size: var(--fs-h3);
+    font-weight: 460;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .body { margin-top: clamp(56px, 8vw, 128px); row-gap: 48px; align-items: end; }
+  .aside { grid-column: 1 / span 3; display: flex; flex-direction: column; gap: 32px; }
+  .lead { font-size: var(--fs-lead); line-height: 1.3; letter-spacing: -0.012em; text-wrap: pretty; }
+  .link { display: flex; flex-direction: column; gap: 6px; }
+  .link a { text-decoration: none; font-weight: 500; }
+  .note { color: var(--muted); }
+
+  .fig { grid-column: 4 / span 9; }
+  .comp { width: 100%; height: auto; background: #fbfaf7; }
+  .cap { margin-top: 12px; color: var(--muted); text-transform: none; letter-spacing: 0; }
+
+  /* SVG vocabulary */
+  .comp :global(.ink) { fill: var(--ink); }
+  .comp :global(.soft) { fill: #b9b7ae; }
+  .comp :global(.sig) { fill: var(--signal); }
+  .comp :global(.out), .comp :global(.out-soft) { fill: none; stroke: var(--ink); stroke-width: 1; }
+  .comp :global(.out-soft) { stroke: #b9b7ae; }
+  .comp :global(.hair) { stroke: var(--rule); stroke-width: 1; fill: none; }
+  .comp :global(.org-a) { fill: var(--ink); }
+  .comp :global(.org-b) { fill: var(--signal); }
+  .comp :global(.org-c) { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+  .draw { fill: none; stroke: var(--ink); stroke-width: 1; }
+  .draw.thin { stroke: var(--rule); }
+  .divider { fill: none; stroke: var(--ink); stroke-width: 2; }
+
+  /* Assembly: lives inside the figure, runs once when it is in view.
+     The initial state exists only once motion.ts has run (.assemble-ready), so a
+     failed script can never leave the figure hidden. Default = final state. */
+  :global(.assemble-ready) .fig:not(:global(.is-in)) .draw,
+  :global(.assemble-ready) .fig:not(:global(.is-in)) .divider { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  :global(.assemble-ready) .fig:not(:global(.is-in)) .mod { opacity: 0; transform: translateY(14px); }
+  :global(.assemble-ready) .fig:not(:global(.is-in)) .row { transform: translateY(var(--from)); }
+  :global(.assemble-ready) .fig:not(:global(.is-in)) .rows { opacity: 0; }
+
+  :global(.assemble-ready) .fig:global(.is-in) .draw {
+    stroke-dasharray: 1;
+    transition: stroke-dashoffset 900ms var(--ease) calc(var(--i, 0) * 70ms);
+  }
+  :global(.assemble-ready) .fig:global(.is-in) .mod {
+    transition: opacity 300ms linear calc(250ms + var(--i) * 80ms), transform var(--t-medium) var(--ease) calc(250ms + var(--i) * 80ms);
+  }
+  :global(.assemble-ready) .fig:global(.is-in) .rows { transition: opacity 300ms linear 600ms; }
+  /* Rows hold their interleaved order for a beat, then each one rejoins its organization. */
+  :global(.assemble-ready) .fig:global(.is-in) .row { transition: transform 700ms var(--ease) calc(1300ms + var(--i) * 45ms); }
+  :global(.assemble-ready) .fig:global(.is-in) .divider {
+    stroke-dasharray: 1;
+    transition: stroke-dashoffset 600ms var(--ease) calc(1900ms + var(--i) * 120ms);
+  }
+
+  @media (max-width: 1024px) {
+    .question { grid-column: 1 / -1; }
+    .fig { grid-column: 1 / -1; order: -1; }
+    .aside { grid-column: 1 / span 4; }
+  }
+  @media (max-width: 640px) {
+    .aside { grid-column: 1 / -1; }
+  }
+</style>

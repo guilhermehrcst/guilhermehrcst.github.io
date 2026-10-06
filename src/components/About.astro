@@ -1,0 +1,58 @@
+---
+import Label from './Label.astro';
+import { dicts, routes } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = dicts[lang].about;
+---
+<section class="about" id="about" aria-labelledby="about-heading">
+  <div class="grid">
+    <Label text={t.label} class="a-label" />
+    <h2 id="about-heading" class="a-heading">{t.heading}</h2>
+    <div class="a-text">
+      <p>{t.body}</p>
+      <p class="also">{t.also}</p>
+      <a class="cta" href={routes.resume[lang]}>
+        <span class="u">{t.cta}/</span> <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about { padding-block: var(--space-section) calc(var(--space-section) * 0.6); }
+  .a-label { grid-column: 1 / -1; margin-bottom: clamp(24px, 3vw, 40px); }
+  .a-heading {
+    grid-column: 1 / span 7;
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .a-text {
+    grid-column: 8 / span 4;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 8px;
+    text-wrap: pretty;
+  }
+  .also { color: var(--muted); font-size: var(--fs-small); }
+  .cta {
+    margin-top: 20px;
+    font-size: var(--fs-lead);
+    font-weight: 560;
+    letter-spacing: -0.015em;
+    text-decoration: none;
+  }
+  @media (max-width: 1024px) {
+    .a-heading { grid-column: 1 / span 5; }
+    .a-text { grid-column: 3 / span 4; margin-top: 48px; }
+  }
+  @media (max-width: 640px) {
+    .a-heading, .a-text { grid-column: 1 / -1; }
+  }
+</style>
