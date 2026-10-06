@@ -27,9 +27,10 @@ const s = t.shell[page];
   .h {
     grid-column: 1 / -1;
     font-size: calc((100vw - 2 * var(--margin)) / 6.4);
-    font-weight: 680;
+    font-weight: var(--display-wght);
     line-height: 0.82;
-    letter-spacing: -0.055em;
+    letter-spacing: var(--display-track);
+    font-variation-settings: var(--display-opsz);
     text-transform: uppercase;
     margin-left: -0.045em;
   }
