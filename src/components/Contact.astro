@@ -1,5 +1,6 @@
 ---
 import Label from './Label.astro';
+import ContactIcon from './ContactIcon.astro';
 import { dicts } from '../i18n/routes';
 import type { Lang } from '../i18n/types';
 
@@ -16,7 +17,10 @@ const t = dicts[Astro.props.lang].contact;
       <li>
         <a class="row grid" href={c.href}>
           <span class="meta c-k">{c.label}</span>
-          <span class="c-v">{c.value}</span>
+          <span class="c-v">
+            <span class="c-i"><ContactIcon name={c.icon} /></span>
+            <span class="c-t">{c.value}</span>
+          </span>
           <span class="arrow ne c-a" aria-hidden="true">↗</span>
         </a>
       </li>
@@ -37,15 +41,28 @@ const t = dicts[Astro.props.lang].contact;
   .c-k { grid-column: 1 / span 3; color: var(--muted); }
   .c-v {
     grid-column: 4 / span 8;
+    display: flex;
+    align-items: baseline;
+    gap: clamp(14px, 1.5vw, 24px);
     font-size: clamp(1.5rem, 3.1vw, 3.25rem);
     font-weight: 500;
     line-height: 1.05;
     letter-spacing: -0.03em;
-    overflow-wrap: anywhere;
     transition: color var(--t-fast) linear;
   }
+  /* Fixed slot: every row's text starts at the same x, whatever the glyph. */
+  /* Only the text takes part in baseline alignment, so the row keeps exactly the
+     geometry it had before the icons; the icon is centred on the text line. */
+  .c-i { flex: none; align-self: center; width: 24px; height: 24px; display: grid; place-items: center; }
+  .c-i :global(.ci) { width: 24px; height: 24px; }
+  .c-t { min-width: 0; align-self: baseline; overflow-wrap: anywhere; }
   .c-a { grid-column: 12; justify-self: end; font-size: clamp(1.25rem, 2vw, 2rem); transition: transform var(--t-ui) var(--ease), color var(--t-fast) linear; }
-  .row:hover .c-v, .row:hover .c-a { color: var(--signal); }
+  .row:hover .c-v, .row:hover .c-a,
+  .row:focus-visible .c-v, .row:focus-visible .c-a { color: var(--signal); }
+  /* 2px, not the global 3px: the row is large, the gesture should be small. */
+  .row:hover .c-a, .row:focus-visible .c-a { transform: translate(2px, -2px); }
+  /* The row spans the viewport edge to edge; keep the focus ring inside it. */
+  .row:focus-visible { outline-offset: -2px; }
   @media (max-width: 1024px) {
     .c-k { grid-column: 1 / span 2; }
     .c-v { grid-column: 3 / span 3; }
@@ -54,6 +71,8 @@ const t = dicts[Astro.props.lang].contact;
   @media (max-width: 640px) {
     .c-k { grid-column: 1 / span 3; grid-row: 1; margin-bottom: 8px; }
     .c-a { grid-column: 4; grid-row: 1; font-size: 1.125rem; }
-    .c-v { grid-column: 1 / -1; grid-row: 2; font-size: clamp(1.25rem, 6vw, 1.75rem); overflow-wrap: normal; }
+    .c-v { grid-column: 1 / -1; grid-row: 2; gap: 12px; font-size: clamp(1.25rem, 6vw, 1.75rem); }
+    .c-i, .c-i :global(.ci) { width: 20px; height: 20px; }
+    .c-t { overflow-wrap: normal; }
   }
 </style>
