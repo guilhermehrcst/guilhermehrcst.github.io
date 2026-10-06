@@ -13,8 +13,10 @@ export const pt: Dict = {
   skip: 'Ir para o conteúdo',
   nav: { label: 'Principal', home: 'Home', resume: 'Currículo', courses: 'Cursos', language: 'Idioma' },
   hero: {
-    metaLabels: ['Prática', 'Base', 'Agora'],
-    meta: ['Engenharia de software / Sistemas / IA', 'Rio de Janeiro, Brasil', 'Pexiscale + Lume'],
+    meta: ['Rio de Janeiro, Brasil', 'Engenharia de software / Sistemas / IA', 'Agora / Pexiscale + Lume'],
+    blurb: 'Construo software, sistemas e experimentos para resolver problemas reais e explorar novas possibilidades.',
+    cta: 'Ver currículo',
+    photoAlt: 'Guilherme Henrique de jaqueta verde-oliva e mochila preta, fotografando-se em um espelho.',
   },
   statement: {
     label: '01 / Manifesto',

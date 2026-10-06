@@ -26,6 +26,10 @@ npx astro check  # type check, including EN/PT parity
 - Licences are published with the site at `/licenses/`.
 - Monumental all-caps lines use the `--display-*` and `--fit-*` tokens in `src/styles/global.css`. Their optical size is pinned to the display cut so the fit-to-grid maths is identical on every viewport; `--fit-name` is the measured advance of `GUILHERME` at the display weight and tracking. If the display weight, tracking or font changes, re-measure it (render `GUILHERME` at 250px with the same weight, tracking and `opsz 144`, divide its width by 250, and add ~0.7%) or the names stop spanning the grid.
 
+## Hero photo
+
+`src/assets/hero/guilherme.jpg` is the only image of a person on the site: a 4:5 crop (980x1225) of the original, with no colour grading and **no metadata** (EXIF/GPS stripped). It was cropped on purpose to leave out the posters on the elevator walls. Astro generates the WebP sizes and the JPEG fallback at build time. Never commit the uncropped original: it is a phone photo and this repository's history is permanent.
+
 ## Structure
 
 - `src/i18n/` — `types.ts` defines one `Dict` shape; `en.ts` and `pt.ts` implement it. A key missing in either language is a type error. `routes.ts` is the single source of truth for URLs and `hreflang` pairs.

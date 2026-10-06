@@ -41,7 +41,13 @@ export interface Dict {
   meta: { title: string; description: string; ogLocale: string };
   skip: string;
   nav: { label: string; home: string; resume: string; courses: string; language: string };
-  hero: { meta: [string, string, string]; metaLabels: [string, string, string] };
+  hero: {
+    /** Location, practice, current work. Rendered in this order, each with its own icon. */
+    meta: [string, string, string];
+    blurb: string;
+    cta: string;
+    photoAlt: string;
+  };
   statement: { label: string; text: string; aside: string };
   lume: Project;
   pexiscale: Project;
