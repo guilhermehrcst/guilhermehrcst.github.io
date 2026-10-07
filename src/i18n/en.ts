@@ -316,6 +316,14 @@ export const en: Dict = {
       privacy: 'Privacy and Security',
       'cloud-ai': 'Cloud and AI',
     },
+    imageAlts: {
+      cs50x: 'The CS50 lecture hall at Harvard during the course presentation.',
+      cs50p: 'A CS50 instructor during a presentation at Harvard.',
+      'mit-6100l': 'The MIT OpenCourseWare page for the course Introduction to Computer Science and Programming in Python.',
+      cs50ai: 'A CS50 AI lecture presenting a decision tree.',
+      fluencia: 'Fundação Bradesco material about an artificial intelligence course offered with Microsoft.',
+      'fgv-datasci': 'FGV material about data science and artificial intelligence.',
+    },
     levels: { beginner: 'Beginner', 'beginner-intermediate': 'Beginner to intermediate', intermediate: 'Intermediate' },
     languages: { en: 'English', pt: 'Portuguese' },
     certificates: {
