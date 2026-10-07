@@ -9,6 +9,7 @@ import Monument from './Monument.astro';
 import CourseCard from './CourseCard.astro';
 import { dicts } from '../i18n/routes';
 import { published, sectionOrder } from '../lib/courses';
+import type { Course, CourseImageLayout } from '../lib/courses';
 import type { CourseNavId, Lang } from '../i18n/types';
 
 interface Props { lang: Lang }
@@ -25,6 +26,13 @@ const spans = (n: number): number[] =>
     if (rest === 0 || i < n - rest) return 4;
     return rest === 1 ? 12 : 6;
   });
+
+// A cell with an image takes the span its layout needs (lib/courses.ts); the others share the row.
+const layoutSpan: Record<CourseImageLayout, number> = { opening: 12, 'media-right': 7, tile: 5, half: 8, tall: 4, band: 12 };
+const spanOf = (c: Course, fallback: number): number => {
+  const layout = c.curated?.image?.layout;
+  return layout ? layoutSpan[layout] : fallback;
+};
 
 let index = 0;
 const firstData = published.find((c) => c.section === 'data' && c.category === 'datasci')?.id;
@@ -89,7 +97,7 @@ const navOrder: CourseNavId[] = ['all', 'programming', 'ai', 'data', 'systems', 
             {s.features.length > 0 && (
               <ul class="cg cg-f">
                 {s.features.map(({ c, n }, i) => {
-                  const span = spans(s.features.length)[i]!;
+                  const span = spanOf(c, spans(s.features.length)[i]!);
                   return <CourseCard course={c} t={t} n={n} anchor={c.id === firstData ? t.anchors.data : undefined} wide={span === 12} style={`--span: ${span}; --i: ${i}`} />;
                 })}
               </ul>
@@ -97,7 +105,7 @@ const navOrder: CourseNavId[] = ['all', 'programming', 'ai', 'data', 'systems', 
             {s.compacts.length > 0 && (
               <ul class="cg cg-c">
                 {s.compacts.map(({ c, n }, i) => {
-                  const span = spans(s.compacts.length)[i]!;
+                  const span = spanOf(c, spans(s.compacts.length)[i]!);
                   return <CourseCard course={c} t={t} n={n} anchor={c.id === firstData ? t.anchors.data : undefined} wide={span === 12} style={`--span: ${span}; --i: ${i}`} />;
                 })}
               </ul>

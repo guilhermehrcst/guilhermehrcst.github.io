@@ -68,6 +68,13 @@ for (const pg of PAGES) {
   if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(pg.path, 'skip link or main landmark missing');
   if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(pg.path, 'expected exactly one <h1>');
 
+  // Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare `alt`) and reserves its box (width and
+  // height), so nothing shifts when it loads.
+  for (const tag of html.match(/<img\b[^>]*>/g) ?? []) {
+    if (!/\salt(?=[\s=>])/.test(tag)) fail(pg.path, `<img> without alt: ${tag.slice(0, 80)}`);
+    if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) fail(pg.path, `<img> without width and height: ${tag.slice(0, 80)}`);
+  }
+
   // Resources must be first-party: no third-party requests.
   for (const src of attrs(html, /<(?:script|img|source|video|iframe)[^>]*\ssrc="([^"]+)"/g)) {
     if (!src.startsWith('/')) fail(pg.path, `external resource ${src}`);
@@ -117,6 +124,14 @@ const files = walk(DIST);
 for (const f of files.filter((f) => /\.(html|css|js)$/.test(f))) {
   const text = readFileSync(f, 'utf8');
   const refs = [...text.matchAll(/(?:src|href)="(\/_astro\/[^"]+)"|url\((\/_astro\/[^)]+)\)/g)].map((m) => m[1] ?? m[2]);
+  // Every candidate of a srcset (the responsive images) must exist too.
+  for (const m of text.matchAll(/srcset="([^"]+)"/g)) {
+    for (const cand of m[1].split(',')) {
+      const url = cand.trim().split(/\s+/)[0];
+      if (url.startsWith('/_astro/')) refs.push(url);
+      else if (url) fail(f, `srcset candidate outside /_astro/: ${url}`);
+    }
+  }
   for (const ref of refs) {
     if (!existsSync(join(DIST, ref))) fail(f, `missing asset ${ref}`);
   }

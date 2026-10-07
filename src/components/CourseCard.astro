@@ -1,11 +1,16 @@
 ---
 // One course in the catalogue grid. Not a floating card: a cell of the grid, sharing its hairlines
 // with its neighbours. Two variants:
-//   feature  curator's pick: a typographic plate (the course's short name, set large), then the facts
+//   feature  curator's pick: a typographic plate (the course's short name, set large), then the facts.
+//            When the course declares an image (lib/courses.ts) the cell is composed around it: the
+//            image sits in the grid, touching its hairlines, and the plate becomes the cell's head.
+//            `layout` says how (opening, media-right, tile, half, tall, band); phone and tablet
+//            re-compose each one.
 //   compact  the facts only
 // The call to action is a solid blue button inset in the cell's foot (the one primary action of
 // the cell): it opens the institution's own page in a new tab.
-import type { Course } from '../lib/courses';
+import { Picture } from 'astro:assets';
+import type { Course, CourseImageLayout } from '../lib/courses';
 import type { CoursesPage } from '../i18n/types';
 
 interface Props {
@@ -29,8 +34,37 @@ const facts: [string, string][] = [
 if (c.duration) facts.push([t.labels.duration, `${c.duration.value} ${c.duration.unit === 'hours' ? t.units.hours : t.units.weeks}`]);
 if (c.certificate) facts.push([t.labels.certificate, t.certificates[c.certificate]]);
 const titleId = `course-${c.id}`;
+
+const img = c.curated?.image;
+// Sizes the browser picks from, per layout: the cell's share of the window at each width.
+const sizes: Record<CourseImageLayout, string> = {
+  opening: '(min-width: 1025px) calc(100vw - 72px), 100vw',
+  'media-right': '(min-width: 1025px) 38vw, (min-width: 641px) 56vw, 100vw',
+  tile: '(min-width: 1025px) 40vw, 100vw',
+  half: '(min-width: 1025px) 64vw, 100vw',
+  tall: '(min-width: 1025px) 32vw, (min-width: 641px) 40vw, 100vw',
+  band: '(min-width: 1025px) 62vw, 100vw',
+};
+// Never upscale: the supplied files are the largest we have, so the last width is the file's own.
+const widths = img ? [...[480, 768, 1152].filter((w) => w < img.src.width), img.src.width] : [];
+const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img.position ?? '50% 50%'}` : undefined;
 ---
-<li class:list={['cc rv', c.curated ? 'cc-f' : 'cc-c', wide && 'is-wide']} id={anchor} style={style} data-reveal>
+<li class:list={['cc rv', c.curated ? 'cc-f' : 'cc-c', wide && !img && 'is-wide', img && ['has-img', `lay-${img.layout}`, `k-${img.kind}`]]} id={anchor} style={style} data-reveal>
+  {img && (
+    <figure class="media" style={mediaStyle}>
+      <Picture
+        src={img.src}
+        formats={['avif', 'webp']}
+        fallbackFormat="jpeg"
+        quality={85}
+        widths={widths}
+        sizes={sizes[img.layout]}
+        alt={t.imageAlts[img.alt]}
+        loading={img.priority ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    </figure>
+  )}
   {c.curated && (
     <div class="plate" aria-hidden="true">
       <p class="meta pl-top"><span class="pl-pick"><span class="slash">/</span>{t.labels.curated}</span><span>{String(n).padStart(2, '0')}</span></p>
@@ -168,5 +202,86 @@ const titleId = `course-${c.id}`;
     .is-wide { display: flex; }
     .is-wide .plate { border-right: 0; border-bottom: 1px solid var(--rule); aspect-ratio: 16 / 9; min-height: 0; }
     .plate { aspect-ratio: 16 / 9; }
+  }
+
+  /* ---- Cells with an image ------------------------------------------------------------------
+     The grid is drawn around the image: it fills its area edge to edge, so it touches the cell's
+     hairlines (no frame, no radius, no shadow). The plate stays, as the head of the text: the
+     label above and the short name set large. Desktop first; tablet and phone re-compose below. */
+  .has-img {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas: 'media' 'plate' 'body' 'cta';
+  }
+  /* justify-self and min-width: an item with an aspect-ratio and an auto width otherwise derives its width from a stretched height and spills into the next cell. */
+  .has-img .media { grid-area: media; justify-self: stretch; min-width: 0; position: relative; margin: 0; overflow: hidden; background: var(--surface); border-bottom: 1px solid var(--rule); aspect-ratio: var(--ar, var(--ar-photo, 3 / 2)); }
+  .has-img .media :global(picture) { position: absolute; inset: 0; display: block; }
+  .has-img .media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%); }
+  .has-img .plate { grid-area: plate; aspect-ratio: auto; min-height: 0; background: none; border-bottom: 0; padding: var(--space-md) var(--space-md) 0; gap: var(--space-md); }
+  .has-img .cc-body { grid-area: body; padding-top: var(--space-sm); }
+  .has-img .cc-cta { grid-area: cta; }
+
+  /* Photographs lean in a hair on hover (never the graphics, which carry their own text). */
+  .k-photo .media :global(img) { transition: transform 600ms var(--ease); }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .k-photo:hover .media :global(img) { transform: scale(1.015); }
+  }
+
+  /* opening: the whole row. A wide frame, then the plate (its mark at display size) beside the facts. */
+  .lay-opening { --ar-photo: 2.4; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'media media' 'plate body' 'plate cta'; }
+  .lay-opening .plate { border-right: 1px solid var(--rule); padding: var(--space-lg); }
+  .lay-opening .pl-mark { font-size: min(var(--fs-display-l), calc(88cqi / (var(--len) * 0.6 + 0.5))); }
+  .lay-opening .cc-body { padding: var(--space-lg) var(--space-md) var(--space-lg); }
+
+  /* media-right: text on the left, a tall frame filling the right (the photo is cropped to the row). */
+  .lay-media-right { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'plate media' 'body media' 'cta media'; }
+  .lay-media-right .media { aspect-ratio: auto; border-bottom: 0; border-left: 1px solid var(--rule); min-height: 340px; }
+
+  /* tile: a third of a row. The graphic's own frame on top, the text under it. */
+  .lay-tile .media { align-self: start; }
+
+  /* half: two thirds of a row. The photo takes whatever height the row has, never less than 3:2. */
+  .lay-half { --ar-photo: 1.5; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr); grid-template-rows: minmax(auto, 1fr) auto auto; grid-template-areas: 'media media' 'plate body' 'plate cta'; }
+  .lay-half .plate { border-right: 1px solid var(--rule); }
+  .lay-half .media { align-self: stretch; } /* an aspect-ratio item does not stretch by default: this one takes the row's height */
+
+  /* tall: a third of a row. The portrait poster, whole, then the text. */
+  .lay-tall .media { align-self: start; }
+
+  /* band: the whole row. The graphic on the left, the text beside it. */
+  .lay-band { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'media plate' 'media body' 'media cta'; }
+  .lay-band .media { align-self: start; border-bottom: 0; border-right: 1px solid var(--rule); }
+
+  /* Tablet: every cell runs the full row; the composition changes with the width. */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .lay-opening, .lay-half { --ar-photo: 2; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'media media' 'plate body' 'plate cta'; }
+    .lay-half { grid-template-rows: auto auto auto; }
+    .cc-f.lay-media-right { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+    .cc-f.lay-media-right .media { min-height: 300px; }
+    /* The text columns are narrow here: two facts per line, not one under another. */
+    .has-img .cc-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* tile and band: the graphic keeps its frame, so on a tablet it runs the width and the plate sits beside the facts. */
+    .lay-tile, .lay-band { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'media media' 'plate body' 'plate cta'; }
+    .lay-tile .media, .lay-band .media { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .lay-tile .plate, .lay-band .plate { border-right: 1px solid var(--rule); }
+    /* tall: the poster beside the text, whole. */
+    .lay-tall { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'plate plate' 'media body' 'media cta'; }
+    .lay-tall .plate { border-bottom: 1px solid var(--rule); padding-bottom: var(--space-md); }
+    .lay-tall .media { border-bottom: 0; border-right: 1px solid var(--rule); }
+  }
+
+  /* Phone: one column. The image first, at its own proportion, then the plate, the facts, the action. */
+  @media (max-width: 640px) {
+    .has-img, .lay-opening, .lay-media-right, .lay-tile, .lay-half, .lay-tall, .lay-band {
+      --ar-photo: 3 / 2;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto 1fr auto;
+      grid-template-areas: 'media' 'plate' 'body' 'cta';
+    }
+    .has-img .media { aspect-ratio: var(--ar, 3 / 2); min-height: 0; border-left: 0; border-right: 0; border-bottom: 1px solid var(--rule); align-self: start; }
+    .has-img .plate { border-right: 0; padding: var(--space-md) var(--space-md) 0; }
+    .has-img .cc-body { padding: var(--space-sm) var(--space-md) var(--space-md); }
+    .lay-opening .pl-mark { font-size: min(var(--fs-sec), calc(88cqi / (var(--len) * 0.6 + 0.5))); }
   }
 </style>

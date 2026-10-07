@@ -83,6 +83,10 @@ Without JS, the server-rendered SVGs show the final state. Under reduced motion,
 
 `/resume/` and `/pt/curriculo/` render `Resume.astro` from `dict.resume` (typed in `i18n/types.ts`; project bullets, method, workflow and study rows are fixed-length tuples, so EN and PT cannot drift). Each section opens with a small monospaced command (system monospace stack, no font shipped) and answers it in the Home's type. All content is text in the DOM. There is no contact section on purpose: contact lives on the Home. `@media print` turns it into a plain black-on-white document (no header, footer, motion or dark block) for Print → Save as PDF; the *Print résumé* button appears only when JavaScript runs.
 
+## Course images
+
+The six curator's picks on `/courses/` and `/pt/cursos/` carry an image: the supplied files, unmodified, in `src/assets/courses/` (Astro makes the AVIF/WebP/JPEG sizes at build, never upscaled: the largest is the file itself, 1536px). Each is declared in `src/lib/courses.ts` (`curated.image`: `layout`, `kind`, `position`, `ratio`; the alt text is a key into `courses.imageAlts`, so EN and PT both have one), and `CourseCard.astro` composes the cell around it. There is no logic by title anywhere. A **photo** may be cropped by its frame (`position` keeps its focus) and leans in 1.5% on hover; a **graphic** (it has its own text) keeps its frame, never zooms, and the black letterbox bars of the supplied MIT and FGV frames are trimmed by that frame, not by editing the files. `scripts/verify-dist.mjs` fails the build if any `<img>` lacks `alt`, `width` or `height`, or any srcset candidate is missing.
+
 ## Deploy
 
 The site is deployed by `.github/workflows/deploy.yml` (build → verify → upload `dist/` → deploy). This requires a one-time manual change:

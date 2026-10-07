@@ -168,6 +168,8 @@ export type CourseLanguageId = 'en' | 'pt';
 /** Only what the course's own page states. Unknown is simply absent from the data. */
 export type CourseCertificateId = 'none' | 'statement' | 'available';
 export type CourseNavId = 'all' | 'programming' | 'ai' | 'data' | 'systems' | 'security';
+/** The courses that carry an image (the curator's picks). Each has an alt text in both languages. */
+export type CourseImageId = 'cs50x' | 'cs50p' | 'mit-6100l' | 'cs50ai' | 'fluencia' | 'fgv-datasci';
 
 export interface CoursesPage {
   meta: { title: string; description: string };
@@ -182,6 +184,8 @@ export interface CoursesPage {
   /** title doubles as the section's anchor id (it is already a slug: aprender-e-construir). */
   sections: Record<CourseSectionId, { title: string; intro: string }>;
   categories: Record<CourseCategoryId, string>;
+  /** Alt text of each course image: what it shows, not what it is called. */
+  imageAlts: Record<CourseImageId, string>;
   levels: Record<CourseLevelId, string>;
   languages: Record<CourseLanguageId, string>;
   certificates: Record<CourseCertificateId, string>;
