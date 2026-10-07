@@ -10,8 +10,8 @@ const SITE = 'https://guilhermehrcst.github.io';
 const PAGES = [
   { path: '/', lang: 'en', noindex: false, pair: '/pt/' },
   { path: '/pt/', lang: 'pt-BR', noindex: false, pair: '/' },
-  { path: '/resume/', lang: 'en', noindex: true, pair: '/pt/curriculo/' },
-  { path: '/pt/curriculo/', lang: 'pt-BR', noindex: true, pair: '/resume/' },
+  { path: '/resume/', lang: 'en', noindex: false, pair: '/pt/curriculo/' },
+  { path: '/pt/curriculo/', lang: 'pt-BR', noindex: false, pair: '/resume/' },
   { path: '/courses/', lang: 'en', noindex: true, pair: '/pt/cursos/' },
   { path: '/pt/cursos/', lang: 'pt-BR', noindex: true, pair: '/courses/' },
 ];

@@ -1,12 +1,12 @@
 ---
 // Minimal placeholder for routes that exist in navigation but are not built
-// yet. noindex until they have real content. No invented content here.
+// yet (Courses). noindex until they have real content. No invented content here.
 import Base from '../layouts/Base.astro';
 import Monument from './Monument.astro';
 import { dicts, routes } from '../i18n/routes';
 import type { Lang } from '../i18n/types';
 
-interface Props { lang: Lang; page: 'resume' | 'courses' }
+interface Props { lang: Lang; page: 'courses' }
 const { lang, page } = Astro.props;
 const t = dicts[lang];
 const s = t.shell[page];

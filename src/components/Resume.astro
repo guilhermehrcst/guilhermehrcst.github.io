@@ -1,0 +1,470 @@
+---
+// The résumé. One page, two languages from the same dictionary shape (i18n/types.ts: Resume).
+// Each section opens with a small command (Command.astro) and answers it in the type of the Home.
+// Everything a reader or a recruiter's tool needs is text in the DOM: no canvas, no images.
+import Base from '../layouts/Base.astro';
+import Command from './Command.astro';
+import Monument from './Monument.astro';
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const r = dicts[lang].resume;
+const { pexiscale: px, lume, paulex } = r.work;
+// "Software Engineer | Backend, Systems & AI": two lines on screen, one string in the DOM.
+const [roleA, roleB] = r.whoami.role.split(' | ');
+---
+<Base lang={lang} page="resume" title={r.meta.title} description={r.meta.description}>
+  <main id="main" class="resume">
+    <!-- 01: who. The page title rises once on load, like the Home's name. -->
+    <section class="r-hero" aria-labelledby="r-title">
+      <h1 id="r-title" class="r-title">
+        <span class="line"><span class="rise">{r.heading}<span class="slash" aria-hidden="true">/</span></span></span>
+      </h1>
+      <div class="grid r-who">
+        <div class="r-bar">
+          <Command n="01" cmd="whoami" />
+          <button type="button" class="r-print meta" data-print hidden>{r.print}</button>
+        </div>
+        <div class="r-id">
+          <h2 class="r-name">Guilherme Henrique</h2>
+          <p class="r-role"><span class="r-role-a">{roleA}</span><span class="sr-sep"> | </span><span class="r-role-b">{roleB}</span></p>
+          <p class="meta r-place">{r.whoami.place}</p>
+        </div>
+        <p class="r-summary">{r.whoami.summary}</p>
+      </div>
+    </section>
+
+    <!-- 02: selected work. Three projects, three compositions on one system. -->
+    <section class="r-sec r-work" aria-labelledby="work-title">
+      <div class="grid r-head">
+        <Command n="02" cmd="selected-work" />
+        <h2 id="work-title" class="r-h2">{r.work.title}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+        <p class="r-note">{r.work.note}</p>
+      </div>
+
+      <!-- Pexiscale: light, product and architecture. Two figures, then what was built. -->
+      <article class="proj px grid" aria-labelledby="px-name">
+        <header class="p-head">
+          <h3 id="px-name" class="p-name">{px.name}<span class="slash" aria-hidden="true">/</span></h3>
+          <p class="p-kind">{px.kind}</p>
+          <p class="meta p-stack">{px.stack}</p>
+          <p class="p-link"><a href={px.link.href} rel="noopener"><span class="u">{px.link.text}</span></a></p>
+        </header>
+        <dl class="px-figs">
+          {px.figures.map((f) => (
+            <div><dt class="meta">{f.label}</dt><dd>{f.value}</dd></div>
+          ))}
+        </dl>
+        <ul class="p-points">
+          {px.points.map((p) => <li>{p}</li>)}
+        </ul>
+      </article>
+
+      <!-- Lume: the dark block, as on the Home. Research: method and one controlled result. -->
+      <article class="proj lm" aria-labelledby="lm-name">
+        <div class="grid lm-top">
+          <header class="p-head">
+            <h3 id="lm-name" class="p-name">{lume.name}<span class="slash" aria-hidden="true">/</span></h3>
+            <p class="p-kind">{lume.kind}</p>
+            <p class="meta p-stack">{lume.stack}</p>
+            <p class="p-link"><a href={lume.link.href} rel="noopener"><span class="u">{lume.link.text}</span></a></p>
+            <p class="lm-desc">{lume.description}</p>
+          </header>
+          <div class="lm-body">
+            <ul class="p-points">
+              {lume.points.map((p) => <li>{p}</li>)}
+            </ul>
+          </div>
+        </div>
+        <div class="grid lm-method">
+          <p class="meta lm-label">{lume.method.label}</p>
+          <dl>
+            {lume.method.items.map((m) => (
+              <div><dt>{m.term}</dt><dd>{m.definition}</dd></div>
+            ))}
+          </dl>
+        </div>
+        <div class="grid lm-exp">
+          <p class="meta lm-label">{lume.experiment.label}</p>
+          <dl class="lm-figs">
+            <div><dt class="meta">{lume.experiment.movement.label}</dt><dd>{lume.experiment.movement.value}</dd></div>
+            <div><dt class="meta">{lume.experiment.time.label}</dt><dd>{lume.experiment.time.value}</dd></div>
+          </dl>
+          <p class="lm-exp-text">{lume.experiment.text}</p>
+        </div>
+      </article>
+
+      <!-- Paulex: commerce and operations. The domains run across the page; the name sits right. -->
+      <article class="proj pl grid" aria-labelledby="pl-name">
+        <header class="p-head">
+          <h3 id="pl-name" class="p-name">{paulex.name}<span class="slash" aria-hidden="true">/</span></h3>
+          <p class="p-kind">{paulex.kind}</p>
+          <p class="meta p-stack">{paulex.stack}</p>
+          <p class="meta p-private">{paulex.note}</p>
+        </header>
+        <ul class="pl-domains">
+          {paulex.domains.map((d) => <li>{d}</li>)}
+        </ul>
+        <ul class="p-points">
+          {paulex.points.map((p) => <li>{p}</li>)}
+        </ul>
+      </article>
+    </section>
+
+    <!-- 03: capabilities. Groups of plain words; no levels, bars or pills. -->
+    <section class="r-sec" aria-labelledby="cap-title">
+      <div class="grid r-head">
+        <Command n="03" cmd="capabilities" />
+        <h2 id="cap-title" class="r-h2">{r.capabilities.title}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+      </div>
+      <div class="grid caps">
+        {r.capabilities.groups.map((g) => (
+          <div class="cap">
+            <h3 class="cap-title">{g.title}<span class="sl" aria-hidden="true">/</span></h3>
+            <ul class="slashes">{g.items.map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 04: AI. The workflow is the strong element; tools are listed without levels. -->
+    <section class="r-sec" aria-labelledby="ai-title">
+      <div class="grid r-head">
+        <Command n="04" cmd="ai-workflow" />
+        <h2 id="ai-title" class="r-h2">{r.ai.title}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+      </div>
+      <div class="grid ai">
+        <p class="meta ai-label">{r.ai.flowLabel}</p>
+        <ol class="flow">
+          {r.ai.flow.map((step, i) => (
+            <li>
+              <span class="meta f-n" aria-hidden="true">0{i + 1}</span>
+              <span class="f-w">{step}</span>
+              {i < r.ai.flow.length - 1 && (
+                <svg class="f-arrow" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 12h43M35 3l10 9-10 9" /></svg>
+              )}
+            </li>
+          ))}
+        </ol>
+        <p class="ai-body">{r.ai.body}</p>
+        <div class="ai-tools">
+          {[r.ai.models, r.ai.agents].map((g) => (
+            <div>
+              <h3 class="meta ai-tl">{g.label}</h3>
+              <ul class="slashes">{g.items.map((i) => <li>{i}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 and 06: education and coursework. Ruled rows: who, what, status in plain words. -->
+    {[
+      { n: '05', cmd: 'education', id: 'edu', s: r.education },
+      { n: '06', cmd: 'coursework', id: 'course', s: r.coursework },
+    ].map(({ n, cmd, id, s }) => (
+      <section class="r-sec r-study" aria-labelledby={`${id}-title`}>
+        <div class="grid r-head">
+          <Command n={n} cmd={cmd} />
+          <h2 id={`${id}-title`} class="r-h2">{s.title}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+        </div>
+        <ul class="rows">
+          {s.items.map((it) => (
+            <li class="grid row">
+              <h3 class="row-school">{it.school}</h3>
+              <p class="row-program">{it.program}</p>
+              {it.status && <p class="meta row-status">{it.status}</p>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </main>
+  <Monument lang={lang} page="resume" />
+</Base>
+
+<script>
+  // The print action exists only when it can work: without JS the button stays hidden.
+  document.querySelectorAll<HTMLButtonElement>('[data-print]').forEach((b) => {
+    b.hidden = false;
+    b.addEventListener('click', () => window.print());
+  });
+</script>
+
+<style>
+  .resume {
+    --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+    --fs-cmd: clamp(0.75rem, 0.9vw, 0.875rem); /* 12-14px: the command sits with the metadata */
+    /* CURRÍCULO/ is the widest title (EN RÉSUMÉ/ is narrower); both languages share its size so the
+       page has one scale. Measured advance at 700 / -0.02em / opsz 144, plus ~1%. */
+    --fit-title: 5.68;
+    /* The widest single word of any section heading (SELECIONADOS/, COMPETÊNCIAS/, ENGINEERING/...). */
+    --fit-h2: 7.7;
+  }
+
+  /* 01 ------------------------------------------------------------------- */
+  .r-hero { padding-top: calc(var(--header-h) + 1px + var(--space-sm)); }
+  .r-title {
+    padding-inline: var(--margin);
+    padding-top: 0.1em; /* the accents (Í, É) rise above the cap height; keep them clear of the fixed header */
+    /* The Home's display XL at 1440x900 (~180px), bounded by the window height so the title
+       stays a title and not the page, and by the width of the grid. */
+    font-size: min(calc((100vw - 2 * var(--margin)) / var(--fit-title)), max(3.25rem, 20svh));
+    font-weight: var(--display-wght);
+    line-height: 0.84;
+    letter-spacing: var(--display-track);
+    font-variation-settings: var(--display-opsz);
+    text-transform: uppercase;
+    margin-left: -0.045em;
+  }
+  .line {
+    display: block;
+    overflow: clip;
+    /* Mask for the load reveal, with room for the accents above (Í, É) and the descent below. */
+    padding-block: 0.16em 0.1em;
+    margin-block: -0.16em -0.1em;
+  }
+  .rise { display: block; }
+  :global(.motion) .rise { transform: translate3d(0, 104%, 0); }
+  :global(.motion.loaded) .rise { transform: none; transition: transform var(--t-hero) var(--ease); }
+
+  .r-who {
+    margin-top: var(--space-md);
+    padding-top: var(--space-sm);
+    padding-bottom: var(--space-section);
+    border-top: 1px solid var(--rule);
+    row-gap: var(--space-lg);
+    align-items: start;
+  }
+  .r-bar { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-md); }
+  .r-print {
+    padding: 0 0 2px;
+    border: 0;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+    color: var(--ink);
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .r-print:hover, .r-print:focus-visible { background-image: linear-gradient(var(--signal), var(--signal)); background-size: 100% 2px; }
+  .r-print[hidden] { display: none; }
+  .r-id { grid-column: 1 / span 7; }
+  .r-name {
+    font-size: var(--fs-statement);
+    font-weight: var(--display-wght);
+    line-height: 0.9;
+    letter-spacing: var(--display-track);
+    font-variation-settings: var(--display-opsz);
+    text-transform: uppercase;
+  }
+  .r-role { margin-top: var(--space-md); font-size: var(--fs-h3); font-weight: 450; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance; }
+  .r-role-a, .r-role-b { display: block; }
+  .r-role-b { color: var(--muted); }
+  .sr-sep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .r-place { margin-top: var(--space-md); color: var(--muted); }
+  .r-summary { grid-column: 8 / span 5; font-size: var(--fs-lead); line-height: 1.42; text-wrap: pretty; }
+
+  /* Sections ---------------------------------------------------------------- */
+  .r-sec { padding-bottom: var(--space-section); }
+  .r-head { row-gap: var(--space-md); padding-top: var(--space-sm); border-top: 1px solid var(--ink); }
+  .r-head > :global(.cmd), .r-note { grid-column: 1 / -1; }
+  .r-h2 {
+    grid-column: 1 / span 10;
+    font-size: min(var(--fs-display-l), calc((100vw - 2 * var(--margin)) / var(--fit-h2)));
+    font-weight: var(--display-wght);
+    line-height: 0.86;
+    letter-spacing: var(--display-track);
+    font-variation-settings: var(--display-opsz);
+    text-transform: uppercase;
+    margin-left: -0.04em;
+    text-wrap: balance;
+  }
+  .r-note { max-width: 36em; color: var(--muted); font-size: var(--fs-lead); line-height: 1.38; }
+
+  /* Projects: shared parts --------------------------------------------------- */
+  .proj { padding-block: var(--space-xl); row-gap: var(--space-lg); align-items: start; }
+  .proj.pl { padding-bottom: 0; }
+  .p-name {
+    font-size: var(--fs-statement);
+    font-weight: var(--display-wght);
+    line-height: 0.9;
+    letter-spacing: var(--display-track);
+    font-variation-settings: var(--display-opsz);
+    text-transform: uppercase;
+    margin-left: -0.04em;
+  }
+  .p-kind { margin-top: var(--space-sm); font-size: var(--fs-lead); font-weight: 500; line-height: 1.3; }
+  .p-stack { margin-top: var(--space-sm); color: var(--muted); }
+  .p-link { margin-top: var(--space-md); font-size: var(--fs-body); font-weight: 500; }
+  .p-link a { text-decoration: none; }
+  .p-points li {
+    padding-block: var(--space-sm) var(--space-md);
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-lead);
+    line-height: 1.38;
+    text-wrap: pretty;
+  }
+  .p-points li:last-child { padding-bottom: 0; }
+
+  /* Pexiscale */
+  .px { margin-top: var(--space-lg); }
+  .px .p-head { grid-column: 1 / span 5; }
+  .px-figs { grid-column: 1 / span 5; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+  .px-figs > div, .lm-figs > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: var(--space-xs); padding-top: var(--space-sm); border-top: 2px solid var(--signal); }
+  .px-figs dt { color: var(--muted); }
+  .px-figs dd, .lm-figs dd {
+    margin: 0;
+    font-size: var(--fs-statement);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .px .p-points { grid-column: 7 / span 6; grid-row: 1 / span 2; }
+
+  /* Lume: full-bleed dark block */
+  .lm { margin-block: var(--space-lg); padding-block: var(--space-xl); background: var(--void); color: var(--void-ink); }
+  .lm .p-stack, .lm .lm-label, .lm dt.meta { color: var(--void-muted); }
+  .lm .p-points li { border-top-color: var(--void-rule); }
+  .lm-top { row-gap: var(--space-lg); align-items: start; }
+  .lm .p-head { grid-column: 1 / span 5; }
+  .lm-body { grid-column: 7 / span 6; }
+  .lm-desc { font-size: var(--fs-h3); font-weight: 450; line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; margin-top: var(--space-lg); }
+  .lm-method, .lm-exp { margin-top: var(--space-xl); row-gap: var(--space-md); }
+  .lm-label { grid-column: 1 / -1; }
+  .lm-method dl { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+  .lm-method dl > div { padding-top: var(--space-sm); border-top: 1px solid var(--void-ink); }
+  .lm-method dt { font-size: var(--fs-lead); font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.2; }
+  .lm-method dd { margin: var(--space-xs) 0 0; color: var(--void-muted); font-size: var(--fs-body); line-height: 1.45; }
+  .lm-method div:first-child { border-top: 2px solid var(--void-signal); }
+  .lm-figs dd { font-size: var(--fs-h3); }
+  .lm-figs { grid-column: 1 / span 6; display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+  .lm-exp-text { grid-column: 7 / span 6; font-size: var(--fs-lead); line-height: 1.42; color: var(--void-ink); text-wrap: pretty; }
+
+  /* Paulex: mirrored. Name on the right, domains across, points on the left. */
+  .pl .p-head { grid-column: 8 / span 5; grid-row: 1; }
+  .pl-domains {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    padding-block: var(--space-md);
+    border-block: 1px solid var(--ink);
+    font-size: var(--fs-h3);
+    font-weight: 450;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .pl .p-points { grid-column: 1 / span 6; grid-row: 1; }
+  .p-private { margin-top: var(--space-xs); color: var(--muted); }
+
+  /* Slash-separated lists (capabilities, tools). The separator is the site's mark; it is not read. */
+  .slashes, .pl-domains { display: flex; flex-wrap: wrap; }
+  .slashes li:not(:last-child)::after, .pl-domains li:not(:last-child)::after {
+    content: '/' / '';
+    margin-inline: 0.35em;
+    color: var(--signal);
+  }
+
+  /* 03 */
+  .caps { margin-top: var(--space-xl); row-gap: var(--space-xl); }
+  .cap { grid-column: span 4; padding-top: var(--space-sm); border-top: 1px solid var(--rule); }
+  .cap-title { font-size: var(--fs-body); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.3; }
+  .cap-title .sl { margin-left: 0.15em; }
+  .cap ul { margin-top: var(--space-sm); font-size: var(--fs-lead); line-height: 1.45; }
+
+  /* 04 */
+  .ai { margin-top: var(--space-xl); row-gap: var(--space-lg); }
+  .ai-label { grid-column: 1 / -1; color: var(--muted); }
+  .flow { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+  .flow li { position: relative; display: flex; flex-direction: column; gap: var(--space-xs); padding-top: var(--space-sm); border-top: 1px solid var(--ink); }
+  .flow li:first-child { border-top: 2px solid var(--signal); }
+  .f-n { color: var(--muted); }
+  .f-w {
+    font-size: min(var(--fs-h3), calc((100vw - 2 * var(--margin) - 3 * var(--gap)) / 4 / 6.65));
+    font-weight: var(--display-wght);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variation-settings: var(--display-opsz);
+    text-transform: uppercase;
+  }
+  .f-arrow { position: absolute; right: 0; top: var(--space-sm); width: 32px; height: 16px; color: var(--signal); }
+  .ai-body { grid-column: 1 / span 6; font-size: var(--fs-lead); line-height: 1.42; text-wrap: pretty; }
+  .ai-tools { grid-column: 8 / span 5; display: grid; row-gap: var(--space-lg); }
+  .ai-tl { color: var(--muted); }
+  .ai-tools ul { margin-top: var(--space-xs); font-size: var(--fs-lead); line-height: 1.45; }
+
+  /* 05, 06 */
+  .rows { margin-top: var(--space-lg); }
+  .row { padding-block: var(--space-sm) var(--space-md); border-top: 1px solid var(--rule); row-gap: var(--space-xs); align-items: baseline; }
+  .row:last-child { border-bottom: 1px solid var(--rule); }
+  .row-school { grid-column: 1 / span 4; font-size: var(--fs-lead); font-weight: 600; line-height: 1.3; }
+  .row-program { grid-column: 5 / span 5; font-size: var(--fs-lead); line-height: 1.3; }
+  .row-status { grid-column: 10 / span 3; color: var(--muted); }
+
+  /* Tablet: the 6-column grid. */
+  @media (max-width: 1024px) {
+    .r-id, .r-summary { grid-column: 1 / -1; }
+    .r-h2 { grid-column: 1 / -1; }
+    .px .p-head, .px-figs, .px .p-points,
+    .lm .p-head, .lm-body, .lm-figs, .lm-exp-text,
+    .pl .p-head, .pl .p-points { grid-column: 1 / -1; grid-row: auto; }
+    .lm-method dl { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-md); }
+    .cap { grid-column: span 3; }
+    .ai-body, .ai-tools { grid-column: 1 / -1; }
+    .row-school { grid-column: 1 / -1; }
+    .row-program { grid-column: 1 / span 4; }
+    .row-status { grid-column: 5 / span 2; }
+  }
+
+  /* Mobile: one column; the workflow runs down the page. */
+  @media (max-width: 640px) {
+    .cap { grid-column: 1 / -1; }
+    .lm-method dl { grid-template-columns: 1fr; }
+    .lm-figs { grid-template-columns: 1fr; row-gap: var(--space-md); }
+    .flow { grid-template-columns: 1fr; row-gap: var(--space-md); }
+    .f-w { font-size: var(--fs-h3); }
+    .f-arrow { transform: rotate(90deg); }
+    .row-program, .row-status { grid-column: 1 / -1; }
+  }
+
+  /* Print → Save as PDF: white paper, black text, no monument, no motion, no hidden starting states.
+     The global print rules already drop the header and the footer. */
+  @media print {
+    @page { margin: 14mm 14mm 16mm; }
+    .resume { --fs-cmd: 8pt; }
+    .r-hero { padding-top: 0; }
+    .r-title { font-size: 40pt; margin-left: 0; padding-top: 10pt; }
+    .line { overflow: visible; margin-block: 0; padding-block: 0; }
+    :global(.motion) .rise { transform: none !important; }
+    .r-print { display: none !important; }
+    .r-who { padding-bottom: 14pt; row-gap: 8pt; }
+    .r-name { font-size: 22pt; }
+    .r-role { font-size: 13pt; margin-top: 4pt; }
+    .r-place { margin-top: 4pt; }
+    .r-summary, .r-note, .p-points li, .lm-exp-text, .ai-body, .cap ul, .ai-tools ul, .row-school, .row-program { font-size: 10pt; }
+    .r-sec { padding-bottom: 14pt; }
+    .r-h2 { font-size: 20pt; }
+    .proj, .lm { padding-block: 12pt; margin-block: 0; }
+    .p-name { font-size: 18pt; }
+    .p-kind { font-size: 11pt; }
+    .px-figs dd, .lm-figs dd { font-size: 16pt; }
+    .lm { background: none; color: var(--gh-black); border-block: 1px solid var(--gh-black); }
+    .lm-exp-text { color: var(--gh-black); }
+    .lm .p-stack, .lm .lm-label, .lm dt.meta, .lm-method dd { color: var(--gh-gray-600); }
+    .lm .p-points li { border-top-color: var(--gh-gray-200); }
+    .lm-method dl > div { border-top-color: var(--gh-black); }
+    .lm-method dt { font-size: 10pt; }
+    .lm-method dd { font-size: 9pt; }
+    .lm-desc, .pl-domains, .f-w { font-size: 13pt; }
+    .flow { gap: 8pt; }
+    .p-points li { padding-block: 4pt; }
+    :global(.cmd .c) { clip-path: none !important; }
+    .r-head, .p-head, .p-points li, .cap, .flow, .row, .lm-method, .lm-exp, .px-figs { break-inside: avoid; }
+    .r-head, .r-h2, .p-name, .p-head { break-after: avoid; }
+    .ai { break-inside: avoid; }
+    a { color: inherit; }
+  }
+</style>
