@@ -108,6 +108,9 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
           <p class="p-kind">{paulex.kind}</p>
           <p class="meta p-stack">{paulex.stack}</p>
           <p class="meta p-private">{paulex.note}</p>
+          <dl class="pl-figs">
+            <div><dt class="meta">{paulex.figure.label}</dt><dd>{paulex.figure.value}</dd></div>
+          </dl>
         </header>
         <ul class="pl-domains">
           {paulex.domains.map((d) => <li>{d}</li>)}
@@ -339,9 +342,9 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
   .px { margin-top: var(--space-lg); }
   .px .p-head { grid-column: 1 / span 5; }
   .px-figs { grid-column: 1 / span 5; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
-  .px-figs > div, .lm-figs > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: var(--space-xs); padding-top: var(--space-sm); border-top: 2px solid var(--signal); }
-  .px-figs dt { color: var(--muted); }
-  .px-figs dd, .lm-figs dd {
+  .px-figs > div, .lm-figs > div, .pl-figs > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: var(--space-xs); padding-top: var(--space-sm); border-top: 2px solid var(--signal); }
+  .px-figs dt, .pl-figs dt { color: var(--muted); }
+  .px-figs dd, .lm-figs dd, .pl-figs dd {
     margin: 0;
     font-size: var(--fs-statement);
     font-weight: 600;
@@ -387,6 +390,7 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
   }
   .pl .p-points { grid-column: 1 / span 6; grid-row: 1; }
   .p-private { margin-top: var(--space-xs); color: var(--muted); }
+  .pl-figs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); margin-top: var(--space-lg); }
 
   /* Slash-separated lists (capabilities, tools). The separator is the site's mark; it is not read. */
   .slashes, .pl-domains { display: flex; flex-wrap: wrap; }
@@ -504,7 +508,7 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
     .proj, .lm { padding-block: 12pt; margin-block: 0; }
     .p-name { font-size: 18pt; }
     .p-kind { font-size: 11pt; }
-    .px-figs dd, .lm-figs dd { font-size: 16pt; }
+    .px-figs dd, .lm-figs dd, .pl-figs dd { font-size: 16pt; }
     .lm { background: none; color: var(--gh-black); border-block: 1px solid var(--gh-black); }
     .lm-exp-text { color: var(--gh-black); }
     .lm .p-stack, .lm .lm-label, .lm dt.meta, .lm-method dd { color: var(--gh-gray-600); }
@@ -516,7 +520,7 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
     .flow { gap: 8pt; }
     .p-points li { padding-block: 4pt; }
     :global(.cmd .c) { clip-path: none !important; }
-    .r-head, .p-head, .p-points li, .cap, .flow, .row, .lm-method, .lm-exp, .px-figs { break-inside: avoid; }
+    .r-head, .p-head, .p-points li, .cap, .flow, .row, .lm-method, .lm-exp, .px-figs, .pl-figs { break-inside: avoid; }
     .r-head, .r-h2, .p-name, .p-head { break-after: avoid; }
     .ai { break-inside: avoid; }
     /* Names are text and always print. Icons stay small and go grayscale: the brand colours add

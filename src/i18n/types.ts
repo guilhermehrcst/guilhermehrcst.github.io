@@ -90,6 +90,8 @@ export interface Resume {
       points: [string, string, string, string];
       domains: [string, string, string, string, string, string];
       note: string;
+      /** One scale indicator, styled like the Pexiscale figures. */
+      figure: { value: string; label: string };
     };
   };
   capabilities: ResumeSection & {
