@@ -1,7 +1,7 @@
 # Builds the static site and deploys dist/ to GitHub Pages.
 # Requires Settings → Pages → Source = "GitHub Actions" (see README, "Deploy").
-# Until that switch is made, the deploy job fails harmlessly and Pages keeps
-# serving the legacy root files from the branch.
+# Two jobs on purpose: the build runs third-party code (npm packages) with a
+# read-only token; only the deploy job holds pages: write and id-token: write.
 name: Build and deploy
 
 on:
@@ -19,7 +19,13 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # A pinned image, not ubuntu-latest, so that a move of that label cannot change the build
+    # environment at an arbitrary commit (sharp installs native binaries for the runner's OS and libc).
+    # ubuntu-latest is ubuntu-24.04 today (checked in the run logs), so this changes nothing now.
+    runs-on: ubuntu-24.04
+    # A normal build takes 1-2 minutes. With cancel-in-progress off on main, a hung job would hold the
+    # concurrency group and queue every later deploy behind it for up to six hours.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,7 +45,9 @@ jobs:
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    # Above deploy-pages' own 10-minute wait for the deployment to finish.
+    timeout-minutes: 15
     permissions:
       pages: write
       id-token: write

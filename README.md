@@ -101,11 +101,11 @@ On the Courses page each course's institution is shown as its mark, not its name
 
 ## Deploy
 
-The site is deployed by `.github/workflows/deploy.yml` (build → verify → upload `dist/` → deploy). This requires a one-time manual change:
+The site is deployed by `.github/workflows/deploy.yml` (build → verify → upload `dist/` → deploy), with **Settings → Pages → Build and deployment → Source: GitHub Actions**. A push to `main` (or a manual run on `main`) deploys; a pull request only builds and verifies. There are two jobs on purpose: the build runs third-party code (npm packages) with a read-only token, and only the deploy job has `pages: write` and `id-token: write`. Both run on a pinned `ubuntu-24.04` image.
 
-**Settings → Pages → Build and deployment → Source: GitHub Actions.**
+**If the deploy job fails without starting** (the annotation reads "The job was not started because it was repeatedly not acquired"), GitHub could not give it a runner: it is not the site, the build or the workflow (the build job above it is green, and the same workflow has deployed on every other push). Use *Re-run failed jobs* on that run (it reuses the build's artifact, which lives one day) or *Re-run all jobs*; the next push to `main` deploys anyway.
 
-Until that switch is made, Pages keeps publishing the branch root, where the **legacy static site** (`index.html`, `pt/index.html`, `assets/style.css`, with `.nojekyll`) still lives. So merging does not break the live site; the workflow's deploy job simply fails until the source is switched. Rollback is the same switch in reverse.
+**Rollback**: revert the commit on `main`; the push deploys the previous state. As an emergency, switching Source back to "Deploy from a branch" publishes the legacy static site that is still in the repository root (`index.html`, `pt/index.html`, `assets/style.css`, with `.nojekyll`); the Astro build does not use those files.
 
 After the new site is confirmed live from Actions, delete the legacy root files in a follow-up change.
 
