@@ -34,17 +34,18 @@ const spanOf = (c: Course, fallback: number): number => {
   return layout ? layoutSpan[layout] : fallback;
 };
 
-let index = 0;
+// The curator's picks are numbered on their own, 01 to 06 in reading order: their place in the
+// catalogue says nothing about the pick (it would skip 04 to 06, which are not picks).
+let pick = 0;
 const firstData = published.find((c) => c.section === 'data' && c.category === 'datasci')?.id;
 const sections = sectionOrder.map((id) => {
   const all = published.filter((c) => c.section === id);
-  const withIndex = all.map((c) => ({ c, n: ++index }));
   return {
     id,
     ...t.sections[id],
     count: all.length,
-    features: withIndex.filter((x) => x.c.curated),
-    compacts: withIndex.filter((x) => !x.c.curated),
+    features: all.filter((c) => c.curated).map((c) => ({ c, n: ++pick })),
+    compacts: all.filter((c) => !c.curated),
   };
 });
 
@@ -104,9 +105,9 @@ const navOrder: CourseNavId[] = ['all', 'programming', 'ai', 'data', 'systems', 
             )}
             {s.compacts.length > 0 && (
               <ul class="cg cg-c">
-                {s.compacts.map(({ c, n }, i) => {
+                {s.compacts.map((c, i) => {
                   const span = spanOf(c, spans(s.compacts.length)[i]!);
-                  return <CourseCard course={c} t={t} n={n} anchor={c.id === firstData ? t.anchors.data : undefined} wide={span === 12} style={`--span: ${span}; --i: ${i}`} />;
+                  return <CourseCard course={c} t={t} anchor={c.id === firstData ? t.anchors.data : undefined} wide={span === 12} style={`--span: ${span}; --i: ${i}`} />;
                 })}
               </ul>
             )}
@@ -150,8 +151,8 @@ const navOrder: CourseNavId[] = ['all', 'programming', 'ai', 'data', 'systems', 
   .cell { padding: var(--space-lg) var(--space-lg) var(--space-lg); display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-md); min-width: 0; }
   .cell-r { border-left: 1px solid var(--rule); }
   .hero .cell { min-height: clamp(360px, 52svh, 620px); }
-  .cs .head .cell { min-height: clamp(220px, 26vw, 400px); }
-  .closing .cell { min-height: clamp(200px, 22vw, 340px); }
+  .cs .head .cell { min-height: clamp(200px, 21vw, 320px); }
+  .closing .cell { min-height: clamp(180px, 18vw, 280px); }
 
   .eyebrow { display: flex; gap: 0.75em; margin-bottom: auto; color: var(--muted); }
   .count { color: var(--muted); }
@@ -201,8 +202,11 @@ const navOrder: CourseNavId[] = ['all', 'programming', 'ai', 'data', 'systems', 
   /* Entrance: each cell fades in once, a little staggered (opacity only; see global .rv). */
   .cg > :global(li) { transition-delay: calc(var(--i, 0) * 60ms); }
 
-  /* Tablet: features run full width, plate beside the facts; the other courses two by two. */
-  @media (max-width: 1024px) {
+  /* Tablet (and a narrow desktop window): features run full width, plate beside the facts; the other
+     courses two by two. The page composes itself at 1180px, the width of an iPad in landscape: three
+     cells across are too tight below it. CourseCard.astro and CourseProvider.astro use the same
+     boundary. */
+  @media (max-width: 1180px) {
     .cg-f > :global(li) { grid-column: 1 / -1; }
     .cg-c > :global(li) { grid-column: span 6; }
     .cg-c > :global(li:last-child:nth-child(odd)) { grid-column: 1 / -1; }

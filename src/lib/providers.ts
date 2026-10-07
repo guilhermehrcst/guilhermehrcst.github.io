@@ -18,7 +18,7 @@ export interface Mark {
   /**
    * The visible artwork inside the supplied canvas, in canvas pixels [left, top, right, bottom]:
    * measured (alpha > 8). The canvases carry a lot of empty margin (FGV is 59% empty above and below
-   * the mark, the Microsoft file has a 41px frame); the frame of the mark is the artwork itself, so
+   * the mark, the Microsoft file has a 64px margin on the left); the frame of the mark is the artwork itself, so
    * sizes are the artwork's and not the canvas's. Nothing visible is cut.
    */
   bbox: [number, number, number, number];
@@ -32,15 +32,16 @@ export interface Mark {
 }
 
 export const marks = {
-  harvard: { src: harvard, alt: 'Harvard University', bbox: [7, 5, 2098, 2040], h: 36 },
+  harvard: { src: harvard, alt: 'Harvard University', bbox: [7, 5, 2098, 2040], h: 40 },
   // White artwork on transparency: on the page's white it would vanish, so it sits on the ink.
   mit: { src: mit, alt: 'MIT OpenCourseWare', bbox: [60, 186, 1540, 444], h: 18, ground: 'ink' },
   fgv: { src: fgv, alt: 'FGV', bbox: [15, 142, 728, 270], h: 22 },
   cisco: { src: cisco, alt: 'Cisco Networking Academy', bbox: [0, 9, 867, 203], h: 28 },
   bradesco: { src: bradesco, alt: 'Fundação Bradesco', bbox: [323, 324, 4639, 1287], h: 24 },
-  // The supplied file is opaque (#F3F3F3 around and between the four squares), so the frame is
-  // trimmed by the box below and the pale gaps remain part of the artwork.
-  microsoft: { src: microsoft, alt: 'Microsoft', bbox: [41, 41, 919, 919], h: 20 },
+  // The horizontal signature (the four squares and the wordmark), as supplied: 2172 x 724, RGBA,
+  // transparent around the artwork. The box is the visible area (alpha > 8); the height is that of
+  // the squares, which is what sits beside Fundação Bradesco's mark in the partnership.
+  microsoft: { src: microsoft, alt: 'Microsoft', bbox: [64, 147, 2110, 579], h: 22 },
 } satisfies Record<string, Mark>;
 
 /** The marks that stand for each institution name used in the catalogue, in reading order. */
