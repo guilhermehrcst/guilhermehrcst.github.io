@@ -215,6 +215,6 @@ a:hover .arrow.ne, a:focus-visible .arrow.ne { transform: translate(3px, -3px); 
 }
 
 @media print {
-  .site-header, .band, .monument { display: none !important; }
+  .site-header, .band, .monument, .skip { display: none !important; }
   body { background: var(--gh-white); }
 }

@@ -1,0 +1,54 @@
+---
+// A section's prompt: "02  > selected-work". Small, monospaced, low in the hierarchy: it labels
+// the section, and the heading that follows is the answer. The command is the same word in both
+// languages (it reads as code), so it is marked lang="en" and hidden from assistive tech, which
+// reads the heading instead. On first view the command is revealed through a short mask and a
+// cursor shows for a few frames, then stays off (scripts/motion.ts adds .is-in; fail-open).
+interface Props { n: string; cmd: string; class?: string }
+const { n, cmd, class: cls } = Astro.props;
+---
+<p class:list={['cmd', cls]} aria-hidden="true" data-reveal style={`--len: ${cmd.length}`}>
+  <span class="n">{n}</span>
+  <span class="p">&gt;</span>
+  <span class="c" lang="en">{cmd}</span>
+</p>
+
+<style>
+  .cmd {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9em;
+    font-family: var(--mono);
+    font-size: var(--fs-cmd);
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+  .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .p { color: var(--signal); font-weight: 600; margin-right: -0.4em; }
+  .c { position: relative; white-space: nowrap; }
+
+  /* Hidden starting state only once motion.ts has run (it sets .reveal-ready), so a failed script
+     never hides the command. The mask opens in one step per character, then a cursor blinks twice
+     and turns off: a few frames, not a loop. */
+  :global(.reveal-ready) .cmd:not(:global(.is-in)) .c { clip-path: inset(0 100% 0 0); }
+  .c { transition: clip-path calc(var(--len) * 28ms) steps(var(--len)); }
+  .c::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 0.12em;
+    bottom: 0.12em;
+    width: 0.55em;
+    margin-left: 0.15em;
+    background: var(--signal);
+    opacity: 0;
+  }
+  :global(.reveal-ready) .cmd:global(.is-in) .c::after {
+    animation: cursor 960ms steps(1, end) calc(var(--len) * 28ms) 1 both;
+  }
+  @keyframes cursor {
+    0%, 50% { opacity: 1; }
+    25%, 75%, 100% { opacity: 0; }
+  }
+</style>

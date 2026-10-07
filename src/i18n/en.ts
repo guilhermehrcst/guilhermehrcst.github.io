@@ -1,7 +1,9 @@
 import type { Dict } from './types';
 
 // Factual limit: every claim here already existed on the previous version of
-// this site (see git history). Do not add metrics, users or titles.
+// this site (see git history), or, for the résumé, was supplied by Guilherme
+// for it (the migration and Edge Function counts, the M7 result, education and
+// coursework). Do not add metrics, users, clients, titles or levels.
 export const en: Dict = {
   htmlLang: 'en',
   meta: {
@@ -132,13 +134,124 @@ export const en: Dict = {
     ],
   },
   footer: { place: 'Rio de Janeiro, Brazil', updated: 'Last updated October 6, 2026', top: 'Back to top' },
-  shell: {
-    resume: {
+  resume: {
+    meta: {
       title: 'Résumé — Guilherme Henrique',
-      description: "Guilherme Henrique's résumé. In preparation.",
-      heading: 'Résumé',
-      body: 'In preparation. The full résumé will be published on this page.',
+      description:
+        'Résumé of Guilherme Henrique, a software engineer in Rio de Janeiro working on backend, systems, and AI: selected work on Pexiscale, Lume, and Paulex, capabilities, education, and coursework.',
     },
+    heading: 'Résumé',
+    print: 'Print résumé',
+    whoami: {
+      role: 'Software Engineer | Backend, Systems & AI',
+      place: 'Rio de Janeiro, Brazil',
+      summary:
+        'Software engineer, largely self-taught, with hands-on experience in backend, systems, databases, security, and building products. I build end-to-end applications with TypeScript, React, and PostgreSQL, and explore systems programming and performance in C++. My work covers multi-tenant architecture, authorization, transactions, concurrency, idempotency, automated testing, and CI/CD. I use AI as a structured part of the engineering process and validate its output with tests, measurements, and evidence.',
+    },
+    work: {
+      title: 'Selected work',
+      note: 'Independent projects I design and build. Not formal employment.',
+      pexiscale: {
+        name: 'Pexiscale',
+        kind: 'Multi-tenant SaaS / Product engineering',
+        stack: 'TypeScript / React / PostgreSQL / Supabase',
+        points: [
+          'Designed a multi-tenant SaaS architecture with PostgreSQL, RLS, RBAC, and server-side authorization, keeping organizations isolated and authentication explicitly separate from authorization.',
+          'Evolved the database through more than 100 PostgreSQL migrations, working on integrity, transactions, concurrency, idempotency, and the contracts between application and database.',
+          'Built about 25 Edge Functions and server-side flows for billing and subscriptions with Stripe, integrations, and AI-assisted features.',
+          'Automated CI checks for migrations, architectural boundaries, secret leaks, client/database contracts, deploy topology, security, and performance budgets.',
+        ],
+        figures: [
+          { value: '100+', label: 'PostgreSQL migrations' },
+          { value: '~25', label: 'Edge Functions' },
+        ],
+        link: { href: 'https://pexiscale.com', text: 'pexiscale.com' },
+      },
+      lume: {
+        name: 'Lume',
+        kind: 'Open-source experimental systems research',
+        stack: 'C++20 / CMake / GCC / Clang',
+        description: 'An experimental intermediate representation for memory-efficient software and AI systems.',
+        points: [
+          'Investigated how memory layout, buffer reuse, and operation fusion change data movement, measuring each hypothesis with benchmarks.',
+          'Built the core in C++20 with correctness enforced by a verifier: unverified IR cannot be executed.',
+          'Validated the code under AddressSanitizer and UBSan in CI on Linux, macOS, and Windows.',
+        ],
+        link: { href: 'https://github.com/guilhermehrcst/lume', text: 'github.com/guilhermehrcst/lume' },
+        method: {
+          label: 'Every result is labeled',
+          items: [
+            { term: 'Measured', definition: 'Observed in a benchmark.' },
+            { term: 'Inferred', definition: 'Derived from measurements, not measured directly.' },
+            { term: 'Falsified', definition: 'A hypothesis the data rejected.' },
+            { term: 'Not yet known', definition: 'Open. No claim is made.' },
+          ],
+        },
+        experiment: {
+          label: 'Controlled experiment / M7',
+          movement: { value: '24 → 16', label: 'bytes per element, logical data-movement model' },
+          time: { value: '≈0.79–0.82×', label: 'measured time relative to the baseline' },
+          text: 'In the controlled workload of experiment M7, fusion reduced the logical data-movement model from 24 to 16 bytes per element; measured execution time was about 0.79–0.82× that of the baseline. A result for that workload, not a general claim.',
+        },
+      },
+      paulex: {
+        name: 'Paulex',
+        kind: 'E-commerce / Retail product engineering',
+        stack: 'React / TypeScript / PostgreSQL / Supabase / Vitest / Playwright',
+        domains: ['Catalog', 'Inventory', 'Orders', 'Reservations', 'Payments', 'Webhooks'],
+        points: [
+          'Built an e-commerce system covering catalog, inventory, orders, reservations, payments, coupons, authentication, and an admin panel.',
+          'Implemented concurrency tests for scenarios such as two sessions competing for stock, simultaneous purchases of the last unit, and concurrent edits to pricing structures.',
+          'Structured payments so the backend remains the authority on amounts: orders are created only on the server, requests are idempotent, and confirmation arrives asynchronously by webhook.',
+          'Automated tests with Vitest, Playwright, SQL, and GitHub Actions.',
+        ],
+        note: 'Private repository.',
+      },
+    },
+    capabilities: {
+      title: 'Capabilities',
+      groups: [
+        { title: 'Languages', items: ['TypeScript', 'JavaScript', 'SQL', 'C++', 'HTML', 'CSS'] },
+        {
+          title: 'Backend & data',
+          items: ['PostgreSQL', 'Supabase', 'Edge Functions', 'APIs', 'Database modeling', 'Migrations', 'Transactions', 'Concurrency', 'Idempotency', 'Row Level Security', 'RBAC', 'Authentication', 'Authorization'],
+        },
+        { title: 'Frontend & product', items: ['React', 'Vite', 'TypeScript', 'Interface development', 'Product engineering'] },
+        {
+          title: 'Testing & infrastructure',
+          items: ['Git', 'GitHub', 'GitHub Actions', 'CI/CD', 'Vitest', 'Playwright', 'Integration testing', 'SQL testing', 'CMake', 'GCC', 'Clang', 'ASan', 'UBSan'],
+        },
+        {
+          title: 'Systems & performance',
+          items: ['C++', 'Memory', 'Buffers', 'Data movement', 'Performance engineering', 'Benchmarking', 'Intermediate representations', 'Experimental methodology'],
+        },
+      ],
+    },
+    ai: {
+      title: 'AI-assisted software engineering',
+      body: 'I choose models and agents according to the task: architecture, specification, assisted implementation, review, debugging, testing, security analysis, technical research, benchmarks, and refactoring. AI output is treated as unverified until code, tests, measurements, or technical review support it.',
+      flowLabel: 'Workflow',
+      flow: ['Specify', 'Implement', 'Verify', 'Measure'],
+      models: { label: 'Models and assistants', items: ['ChatGPT', 'Claude', 'Gemini', 'DeepSeek'] },
+      agents: { label: 'Agents and platforms', items: ['Claude Code', 'Google Antigravity', 'Hermes Agent'] },
+    },
+    education: {
+      title: 'Education',
+      items: [
+        { school: 'UNISUAM', program: 'Systems Analysis and Development', status: 'Undergraduate program, started and not completed' },
+        { school: 'Colégio Marques Rodrigues', program: 'High school', status: 'Completed' },
+        { school: 'Jardim Escola João Paulo de Bangu', program: 'First and second years of high school', status: 'First exposure to information technology' },
+      ],
+    },
+    coursework: {
+      title: 'Coursework',
+      items: [
+        { school: 'Harvard University', program: 'CS50: Introduction to Computer Science', status: 'Part of the course material completed' },
+        { school: 'Fundação Bradesco', program: 'Information technology studies' },
+      ],
+    },
+  },
+  shell: {
     courses: {
       title: 'Courses — Guilherme Henrique',
       description: 'A curated selection of free courses. In preparation.',

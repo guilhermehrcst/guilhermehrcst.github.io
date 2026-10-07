@@ -5,7 +5,7 @@ Personal site of Guilherme Henrique. Static output, built with [Astro](https://a
 | Page | English | Português |
 |---|---|---|
 | Home | `/` | `/pt/` |
-| Résumé (placeholder, `noindex`) | `/resume/` | `/pt/curriculo/` |
+| Résumé | `/resume/` | `/pt/curriculo/` |
 | Courses (placeholder, `noindex`) | `/courses/` | `/pt/cursos/` |
 
 ## Develop
@@ -46,7 +46,7 @@ The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nud
 ## Structure
 
 - `src/i18n/` — `types.ts` defines one `Dict` shape; `en.ts` and `pt.ts` implement it. A key missing in either language is a type error. `routes.ts` is the single source of truth for URLs and `hreflang` pairs.
-- `src/components/` — one component per section of the home (`Hero`, `Statement`, `DitherBand`, `Lume`, `Pexiscale`, `Principles`, `About`, `Contact`, `Monument`), plus `Header`, `Label`, `ProjectDetail` and `Shell` (placeholder pages).
+- `src/components/` — one component per section of the home (`Hero`, `Statement`, `DitherBand`, `Lume`, `Pexiscale`, `Principles`, `About`, `Contact`, `Monument`), plus `Header`, `Label`, `ProjectDetail`, `Resume` (the résumé page, with `Command` for its section prompts) and `Shell` (the Courses placeholder).
 - `src/lib/` — deterministic models shared by the server render and the canvas: `dither.ts` (8×8 Bayer band) and `lume-model.ts` (seeded schematic of memory compaction).
 - `src/scripts/motion.ts` — every runtime animation, in one file.
 - `src/styles/global.css` — tokens (palette, grid, type, motion) and base.
@@ -61,8 +61,13 @@ The page is complete without JavaScript and under `prefers-reduced-motion: reduc
 3. The dither band between the statement and Lume follows scroll position.
 4. The Lume schematic compacts with scroll position (reversible).
 5. The Pexiscale composition assembles once when in view; table rows then regroup by organization.
+6. Résumé: the title rises once on load; each section's command opens through a short mask on first view and a cursor shows for a few frames, then turns off.
 
 Without JS, the server-rendered SVGs show the final state. Under reduced motion, canvases draw the final state once and nothing else moves.
+
+## Résumé
+
+`/resume/` and `/pt/curriculo/` render `Resume.astro` from `dict.resume` (typed in `i18n/types.ts`; project bullets, method, workflow and study rows are fixed-length tuples, so EN and PT cannot drift). Each section opens with a small monospaced command (system monospace stack, no font shipped) and answers it in the Home's type. All content is text in the DOM. There is no contact section on purpose: contact lives on the Home. `@media print` turns it into a plain black-on-white document (no header, footer, motion or dark block) for Print → Save as PDF; the *Print résumé* button appears only when JavaScript runs.
 
 ## Deploy
 
