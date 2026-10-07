@@ -23,7 +23,7 @@ npx astro check  # type check, including EN/PT parity
 
 - **Google Sans Flex** (SIL OFL 1.1) is the only text and display family. It is self-hosted from `@fontsource-variable/google-sans-flex`, which republishes the Google Fonts release (`github.com/google/fonts`). Only the `opsz` build is shipped: weight and optical size. Width, grade, roundness and slant axes are deliberately left out.
 - Metadata, labels and section indices are the same family, small, uppercase, tracked, with tabular figures (`.meta`). JetBrains Mono is no longer shipped.
-- Licences are published with the site at `/licenses/`.
+- Licences are published with the site at `/licenses/` (Google Sans Flex, OFL; Radix Icons, MIT).
 - Monumental all-caps lines use the `--display-*` and `--fit-*` tokens in `src/styles/global.css`. Their optical size is pinned to the display cut so the fit-to-grid maths is identical on every viewport; `--fit-name` is the measured advance of `GUILHERME` at the display weight and tracking. If the display weight, tracking or font changes, re-measure it (render `GUILHERME` at 250px with the same weight, tracking and `opsz 144`, divide its width by 250, and add ~0.7%) or the names stop spanning the grid.
 
 ## Scale and rhythm
@@ -86,6 +86,10 @@ Without JS, the server-rendered SVGs show the final state. Under reduced motion,
 ## Course images
 
 The six curator's picks on `/courses/` and `/pt/cursos/` carry an image: the supplied files, unmodified, in `src/assets/courses/` (Astro makes the AVIF/WebP/JPEG sizes at build, never upscaled: the largest is the file itself, 1536px). Each is declared in `src/lib/courses.ts` (`curated.image`: `layout`, `kind`, `position`, `ratio`; the alt text is a key into `courses.imageAlts`, so EN and PT both have one), and `CourseCard.astro` composes the cell around it. There is no logic by title anywhere. A **photo** may be cropped by its frame (`position` keeps its focus) and leans in 1.5% on hover; a **graphic** (it has its own text) keeps its frame, never zooms, and the black letterbox bars of the supplied MIT and FGV frames are trimmed by that frame, not by editing the files. `scripts/verify-dist.mjs` fails the build if any `<img>` lacks `alt`, `width` or `height`, or any srcset candidate is missing.
+
+## Course call to action
+
+Each course has one action, "Acessar curso" / "Go to course": a 48px button in the action blue that closes the cell, inset by the cell's own padding, with the Radix Icons `ExternalLinkIcon` on the right (`ExternalLinkIcon.astro`: the glyph copied from `@radix-ui/react-icons` 1.3.2, MIT, licence in `/licenses/RadixIcons-MIT.txt`; the package itself is not a dependency because the project has no React). It opens the institution's page with `target="_blank" rel="noopener noreferrer"`; the icon is decorative and the link's text says where it goes.
 
 ## Institution marks
 
