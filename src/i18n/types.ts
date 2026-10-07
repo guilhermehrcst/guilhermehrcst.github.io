@@ -47,6 +47,9 @@ export interface ResumeProject {
   points: string[];
 }
 
+/** People in the résumé's influences section. Closed on purpose: src/lib/influences.ts holds their name, photo and brands. */
+export type InfluenceId = 'jensen' | 'elon' | 'mark' | 'steve' | 'larry-sergey';
+
 /** Institutions shown with a logo in the résumé (sections 05 and 06). Closed on purpose, like AiToolName. */
 export type InstitutionId = 'unisuam' | 'marques-rodrigues' | 'joao-paulo' | 'harvard' | 'bradesco';
 
@@ -101,6 +104,12 @@ export interface Resume {
   };
   education: ResumeSection & { items: [ResumeStudy, ResumeStudy, ResumeStudy] };
   coursework: ResumeSection & { items: [ResumeStudy, ResumeStudy] };
+  /** Web only: hidden in print. Descriptions are keyed by id, so EN and PT cannot drift apart. */
+  influences: ResumeSection & {
+    intro: string;
+    descriptions: Record<InfluenceId, string>;
+    quote: string;
+  };
 }
 
 /** Product names used in the résumé's AI section. Closed on purpose: src/lib/ai-tools.ts maps each one to its icon. */

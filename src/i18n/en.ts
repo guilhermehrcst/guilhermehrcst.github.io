@@ -250,6 +250,18 @@ export const en: Dict = {
         { institution: 'bradesco', school: 'Fundação Bradesco', program: 'Information technology studies' },
       ],
     },
+    influences: {
+      title: 'Influences',
+      intro: 'References that shape how I think about technology, product, systems, engineering and long-term building.',
+      descriptions: {
+        jensen: 'Systems thinking, computing and long-term execution.',
+        elon: 'Ambitious engineering, first principles and future-oriented building.',
+        mark: 'Product, platforms and building at scale.',
+        steve: 'Product, design, simplicity and integration between technology and experience.',
+        'larry-sergey': 'Information, systems, search and building at global scale.',
+      },
+      quote: 'References are not models to copy. They are lenses that expand what I consider possible to build.',
+    },
   },
   shell: {
     courses: {

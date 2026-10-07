@@ -1,0 +1,163 @@
+---
+// Résumé 07, influences: the body of the section (the command and the heading are in Resume.astro,
+// next to the other sections). Five ruled columns on the page grid: portrait, number, name, brand,
+// one line. Editorial, not a card deck: a hairline border, no shadow, no fill, no hover, and nothing
+// here is a link. Photographs are shown as supplied (no filter), cropped by a per-photo window
+// (src/lib/influences.ts); the brands are shown straight on the page.
+import { Image } from 'astro:assets';
+import { brands, brandStyle, cropStyle, influences } from '../lib/influences';
+import type { Resume } from '../i18n/types';
+
+interface Props { copy: Resume['influences'] }
+const { copy } = Astro.props;
+
+// Source widths: capped at the photo's own size, never upscaled.
+const photoWidths = (w: number) => [...new Set([480, 720, 960, 1280, 1600].filter((x) => x < w).concat(w))];
+const sizes = (w: number) =>
+  `(max-width: 480px) calc((100vw - 56px) / ${w}), (max-width: 700px) calc(50vw / ${w}), (max-width: 1024px) calc(33vw / ${w}), (max-width: 1179px) calc(30vw / ${w}), calc(19vw / ${w})`;
+---
+<div class="infl">
+  <div class="grid">
+    <p class="infl-intro">{copy.intro}</p>
+  </div>
+
+  <div class="grid">
+    <ol class="infl-grid">
+      {influences.map((p, i) => {
+        const st = cropStyle(p.photo, p.crop);
+        return (
+          <li class="infl-card" data-reveal style={`--i: ${i}`}>
+            <div class="infl-photo">
+              <Image
+                src={p.photo}
+                alt={p.alt}
+                widths={photoWidths(p.photo.width)}
+                sizes={sizes(p.crop.w)}
+                width={p.photo.width}
+                height={p.photo.height}
+                format="webp"
+                quality={82}
+                loading="lazy"
+                decoding="async"
+                draggable="false"
+                style={`width: ${st.width}; left: ${st.left}; top: ${st.top}`}
+              />
+            </div>
+            <p class="meta infl-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+            <h3 class="infl-name">{p.name}</h3>
+            <div class="infl-brands">
+              {p.brands.map((id) => {
+                const b = brands[id];
+                const s = brandStyle(b);
+                return (
+                  <span class="brand-mark" style={`width: ${s.wrapperW}px; height: ${b.height}px`}>
+                    <Image
+                      src={b.src}
+                      alt={b.name}
+                      width={s.imgW}
+                      height={Math.round((s.imgW * b.src.height) / b.src.width)}
+                      densities={[1, 2, 3]}
+                      format="webp"
+                      quality={90}
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                      style={`width: ${s.width}; left: ${s.left}; top: ${s.top}`}
+                    />
+                  </span>
+                );
+              })}
+            </div>
+            <p class="infl-desc">{copy.descriptions[p.id]}</p>
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+
+  <div class="grid infl-close">
+    <span class="infl-mark" aria-hidden="true">&ldquo;</span>
+    <p class="infl-quote">{copy.quote}</p>
+    <p class="meta infl-sign" aria-hidden="true">Guilherme Henrique</p>
+  </div>
+</div>
+
+<style>
+  .infl { display: grid; row-gap: var(--space-lg); margin-top: var(--space-lg); }
+  .infl-intro { grid-column: 1 / span 6; font-size: var(--fs-lead); line-height: 1.4; text-wrap: pretty; max-width: 34em; }
+
+  /* The five columns. Each card is a subgrid over five shared rows (portrait, number, name, brand,
+     line), so names, brands and lines start at the same height in every column even when a name wraps. */
+  .infl-grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    column-gap: var(--gap);
+    row-gap: 0;
+  }
+  .infl-card {
+    --pad: 12px;
+    grid-row: span 5;
+    display: grid;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+    padding: var(--pad);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    margin-bottom: var(--gap);
+    min-width: 0;
+  }
+  @supports not (grid-template-rows: subgrid) {
+    .infl-card { display: flex; flex-direction: column; }
+  }
+
+  /* Every portrait has the same frame; the <img> inside is placed so only its crop window shows. */
+  .infl-photo { position: relative; aspect-ratio: 8 / 9; overflow: hidden; border-radius: 4px; background: var(--surface); }
+  .infl-photo :global(img) { position: absolute; max-width: none; height: auto; }
+
+  /* A hairline, then the number at its end: small, grey, quiet. */
+  .infl-n { display: flex; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); }
+  .infl-n::before { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  .infl-name { margin-top: 8px; font-size: clamp(1rem, 1.25vw, 1.1875rem); font-weight: 650; line-height: 1.25; letter-spacing: -0.005em; text-wrap: balance; }
+
+  .infl-brands { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; min-height: 44px; margin-top: 12px; }
+  .brand-mark { position: relative; display: block; flex: none; }
+  .brand-mark :global(img) { position: absolute; max-width: none; height: auto; }
+
+  .infl-desc { margin-top: 10px; color: var(--muted); font-size: var(--fs-meta-l); line-height: 1.5; text-wrap: pretty; }
+
+  /* The closing line: a pale quotation mark, the sentence, and the site's name at the far end.
+     It is the site's own sentence, not attributed to anyone else. */
+  .infl-close { align-items: start; padding-top: var(--space-lg); border-top: 1px solid var(--rule); row-gap: var(--space-sm); }
+  .infl-mark { grid-column: 1 / span 1; font-size: clamp(3.5rem, 6vw, 6rem); font-weight: 700; line-height: 0.8; color: var(--gh-gray-300); }
+  .infl-quote { grid-column: 2 / span 8; font-size: clamp(1.375rem, 2.3vw, 2.25rem); font-weight: 420; line-height: 1.22; letter-spacing: -0.015em; text-wrap: balance; }
+  .infl-sign { grid-column: 10 / -1; justify-self: end; white-space: nowrap; align-self: end; display: flex; align-items: center; gap: 12px; color: var(--muted); }
+  .infl-sign::before { content: ''; width: 48px; height: 1px; background: var(--rule); }
+
+  /* Entrance, once per card, staggered a little: the portrait is revealed from the top. Opacity and
+     clip only. The hidden state exists only after .reveal-ready (scripts/motion.ts), so it is fail-open. */
+  :global(.reveal-ready) .infl-card:not(:global(.is-in)) .infl-photo { clip-path: inset(0 0 100% 0); }
+  :global(.reveal-ready) .infl-card:not(:global(.is-in)) > :not(.infl-photo) { opacity: 0; }
+  .infl-photo { clip-path: inset(0 0 0 0); transition: clip-path 900ms var(--ease) calc(var(--i, 0) * 70ms); }
+  .infl-card > :not(.infl-photo) { transition: opacity var(--t-medium) linear calc(250ms + var(--i, 0) * 70ms); }
+
+  /* Below 1180px five columns would make the portraits ~180px: three, then two, so they keep their size. */
+  @media (max-width: 1179px) {
+    .infl-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 1024px) {
+    .infl-intro { grid-column: 1 / -1; }
+    .infl-quote { grid-column: 2 / span 5; }
+    .infl-sign { grid-column: 1 / -1; justify-self: start; }
+  }
+  @media (max-width: 700px) {
+    .infl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  /* Phone: one column, the portrait full width, room to breathe. */
+  @media (max-width: 480px) {
+    .infl-grid { grid-template-columns: 1fr; }
+    .infl-card { --pad: 14px; }
+    .infl-quote { grid-column: 1 / -1; }
+    .infl-mark { grid-column: 1 / -1; }
+  }
+</style>

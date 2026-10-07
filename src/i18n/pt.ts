@@ -250,6 +250,18 @@ export const pt: Dict = {
         { institution: 'bradesco', school: 'Fundação Bradesco', program: 'Estudos em tecnologia da informação' },
       ],
     },
+    influences: {
+      title: 'Inspirações',
+      intro: 'Referências que influenciam como penso sobre tecnologia, produto, sistemas, engenharia e construção de longo prazo.',
+      descriptions: {
+        jensen: 'Visão sistêmica, computação e execução de longo prazo.',
+        elon: 'Engenharia ambiciosa, primeiros princípios e construção orientada ao futuro.',
+        mark: 'Produto, plataformas e construção em escala.',
+        steve: 'Produto, design, simplicidade e integração entre tecnologia e experiência.',
+        'larry-sergey': 'Informação, sistemas, pesquisa e construção em escala global.',
+      },
+      quote: 'Referências não são modelos para copiar. São lentes para expandir o que considero possível construir.',
+    },
   },
   shell: {
     courses: {
