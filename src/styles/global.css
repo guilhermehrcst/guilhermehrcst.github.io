@@ -35,15 +35,27 @@
   --cols: 12;
   --margin: clamp(16px, 2.2vw, 36px);
   --gap: clamp(12px, 1.6vw, 24px);
-  --header-h: 44px;
+  /* Fixed header: the bar's height; its 1px rule is added on top. 60-68px on desktop and tablet. */
+  --header-h: clamp(60px, 4.4vw, 68px);
 
-  /* Type */
-  --fs-micro: 0.6875rem;
-  --fs-small: 0.875rem;
-  --fs-body: 1.0625rem;
-  --fs-lead: clamp(1.25rem, 1.55vw, 1.625rem);
-  --fs-h3: clamp(1.875rem, 3.4vw, 3.75rem);
-  --fs-statement: clamp(2.75rem, 7.6vw, 9.25rem);
+  /* Type ladder. Values in comments are at 1440px. Each step is roughly 0.55-0.8 of the one above;
+     before, the scale jumped from 260px display straight to 49px headlines and 14px text.
+       display XL  the hero name        min(width fit, 50svh bound)   206px   (Hero.astro)
+       display L   project titles, footer       9.4vw                 135px
+       display M   the three principles         share of the row       109px
+       headline L  the manifesto                5.6vw                  81px
+       headline M  questions, about, contact    3.6vw                  52px
+       lead        supporting copy              1.55vw                 22px
+       body        technical copy               1.2vw                  17px
+       meta        labels, indices, captions    0.86vw                 12px */
+  --fs-meta: clamp(0.75rem, 0.86vw, 0.8125rem);
+  --fs-meta-l: clamp(0.8125rem, 0.95vw, 0.875rem);
+  --fs-body: clamp(1.0625rem, 1.2vw, 1.125rem);
+  --fs-lead: clamp(1.25rem, 1.55vw, 1.5rem);
+  --fs-h3: clamp(1.75rem, 3.6vw, 3.5rem);
+  --fs-statement: clamp(2.625rem, 5.6vw, 7rem);
+  --fs-display-l: min(9.4vw, 15rem);
+  --word-share: 0.56; /* width of the longest principle, as a share of the content width */
 
   /* Motion. Expo-out only: precise, no bounce. */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -56,22 +68,31 @@
      opsz is pinned to the display cut so the width-fit below is identical at every viewport;
      with optical sizing left on auto the same word would be ~5% wider on a phone than on a desktop.
      --fit-name is the measured advance of GUILHERME (5.335em at 700 / -0.02em / opsz 144, Chromium)
-     plus ~0.7%: font-size = content width / --fit-name makes the line span the grid exactly. */
+     plus ~0.7%: content width / --fit-name makes the line span the grid exactly. Only the hero name
+     uses it directly, as the upper bound of its size (Hero.astro adds a height bound); the other
+     display lines are steps of the ladder above (--fs-display-l, --word-share). */
   --display-wght: 700;
   --display-track: -0.02em;
   --display-opsz: 'opsz' 144;
   --fit-name: 5.30;
   --fit-word: 7.06; /* CORRECTNESS/ at 600 / -0.012em: the longest principle, EN or PT */
 
-  /* Vertical rhythm */
-  --space-section: clamp(96px, 16vh, 220px);
+  /* Spacing scale. Every gap on the home comes from here (or from --margin / --gap). */
+  --space-xs: clamp(0.5rem, 0.6vw, 0.625rem);   /*  8-10 */
+  --space-sm: clamp(0.75rem, 1vw, 1rem);        /* 12-16 */
+  --space-md: clamp(1rem, 1.7vw, 1.5rem);       /* 16-24 */
+  --space-lg: clamp(1.5rem, 2.8vw, 2.5rem);     /* 24-40 */
+  --space-xl: clamp(2.5rem, 5vw, 4.5rem);       /* 40-72 */
+  --space-2xl: clamp(4rem, 8.5vw, 7.5rem);      /* 64-120 */
+  --space-section: clamp(5rem, 9vw, 8.5rem);    /* between sections: 80-136 (was 16vh: it moved with the window's height) */
 }
 
 @media (max-width: 1024px) {
-  :root { --cols: 6; }
+  :root { --cols: 6; --fs-display-l: 12.5vw; --word-share: 0.8; }
 }
 @media (max-width: 640px) {
-  :root { --cols: 4; --header-h: 76px; --fs-body: 1rem; }
+  /* Mobile header: two rows (name + language, then the three pages) in 57px + 1px rule. */
+  :root { --cols: 4; --header-h: 57px; --fs-body: 1rem; --fs-display-l: 15.4vw; --word-share: 1; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -116,7 +137,7 @@ a { color: inherit; }
   padding: 10px 14px;
   background: var(--ink);
   color: var(--paper);
-  font: 500 var(--fs-small) / 1 var(--sans);
+  font: 500 var(--fs-body) / 1 var(--sans);
   transform: translateY(-200%);
 }
 .skip:focus { transform: none; }
@@ -136,7 +157,7 @@ a { color: inherit; }
 
 /* Metadata. Small, uppercase, technical: Google Sans with tabular figures. */
 .meta {
-  font-size: var(--fs-micro);
+  font-size: var(--fs-meta);
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: 0.07em;

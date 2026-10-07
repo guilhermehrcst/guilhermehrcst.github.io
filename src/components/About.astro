@@ -23,7 +23,7 @@ const t = dicts[lang].about;
 
 <style>
   .about { padding-block: var(--space-section) calc(var(--space-section) * 0.6); }
-  :global(.a-label) { grid-column: 1 / -1; margin-bottom: clamp(24px, 3vw, 40px); }
+  :global(.a-label) { grid-column: 1 / -1; margin-bottom: var(--space-lg); }
   .a-heading {
     grid-column: 1 / span 7;
     font-size: var(--fs-h3);
@@ -33,16 +33,19 @@ const t = dicts[lang].about;
     text-wrap: balance;
   }
   .a-text {
-    grid-column: 8 / span 4;
+    grid-column: 8 / span 5;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding-top: 8px;
+    gap: var(--space-md);
+    padding-top: var(--space-xs);
+    font-size: var(--fs-lead);
+    line-height: 1.38;
+    letter-spacing: -0.004em;
     text-wrap: pretty;
   }
-  .also { color: var(--muted); font-size: var(--fs-small); }
+  .also { color: var(--muted); font-size: var(--fs-body); line-height: 1.5; letter-spacing: 0; }
   .cta {
-    margin-top: 20px;
+    margin-top: var(--space-sm);
     font-size: var(--fs-lead);
     font-weight: 560;
     letter-spacing: -0.008em;
@@ -50,7 +53,7 @@ const t = dicts[lang].about;
   }
   @media (max-width: 1024px) {
     .a-heading { grid-column: 1 / span 5; }
-    .a-text { grid-column: 3 / span 4; margin-top: 48px; }
+    .a-text { grid-column: 3 / span 4; margin-top: var(--space-xl); }
   }
   @media (max-width: 640px) {
     .a-heading, .a-text { grid-column: 1 / -1; }

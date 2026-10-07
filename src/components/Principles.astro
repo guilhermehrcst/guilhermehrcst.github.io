@@ -24,10 +24,10 @@ const t = dicts[Astro.props.lang].principles;
 
 <style>
   .principles { padding-block: var(--space-section); }
-  :global(.pr-label) { grid-column: 1 / -1; margin-bottom: clamp(24px, 4vw, 56px); }
+  :global(.pr-label) { grid-column: 1 / -1; margin-bottom: var(--space-lg); }
   .item {
     position: relative;
-    padding-block: 14px clamp(28px, 4vw, 64px);
+    padding-block: var(--space-sm) var(--space-lg);
     align-items: end;
   }
   /* The rule is a drawn line (scaleX), with a short blue tick at its start: the section mark. */
@@ -38,12 +38,12 @@ const t = dicts[Astro.props.lang].principles;
   :global(.reveal-ready) .item:not(:global(.is-in))::after { transform: scaleX(0); }
   .item::before { transition: transform 900ms var(--ease); }
   .item::after { transition: transform 500ms var(--ease) 500ms; }
-  .idx { grid-column: 1 / -1; align-self: start; color: var(--muted); margin-bottom: clamp(8px, 2vw, 28px); }
-  /* Sized to the longest word across both languages (CORRECTNESS/, --fit-word),
-     confined to ~3/4 of the width so the text can sit beside it. */
+  .idx { grid-column: 1 / -1; align-self: start; color: var(--muted); margin-bottom: var(--space-sm); }
+  /* Sized to the longest word across both languages (CORRECTNESS/, --fit-word) as a share of the
+     content width (--word-share), so the explanation sits beside it as part of the composition. */
   .word {
-    grid-column: 1 / span 9;
-    font-size: calc((100vw - 2 * var(--margin)) * 0.74 / var(--fit-word));
+    grid-column: 1 / span 7;
+    font-size: calc((100vw - 2 * var(--margin)) * var(--word-share) / var(--fit-word));
     font-weight: 600;
     line-height: 0.82;
     /* a touch looser than the 700 display lines: at 600 the same tracking lets R-R and T-N touch */
@@ -52,11 +52,11 @@ const t = dicts[Astro.props.lang].principles;
     text-transform: uppercase;
     margin-left: -0.04em;
   }
-  .pbody { grid-column: 10 / span 3; font-size: var(--fs-small); color: var(--muted); max-width: 26em; text-wrap: pretty; }
+  .pbody { grid-column: 8 / span 5; font-size: var(--fs-lead); line-height: 1.35; color: var(--muted); max-width: 24em; text-wrap: pretty; }
 
   @media (max-width: 1024px) {
-    .word { grid-column: 1 / -1; font-size: calc((100vw - 2 * var(--margin)) / var(--fit-word)); }
-    .pbody { grid-column: 3 / span 4; margin-top: 20px; }
+    .word { grid-column: 1 / -1; }
+    .pbody { grid-column: 3 / span 4; margin-top: var(--space-md); }
   }
   @media (max-width: 640px) {
     .pbody { grid-column: 1 / -1; }
