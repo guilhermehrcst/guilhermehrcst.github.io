@@ -10,7 +10,6 @@ import nvidia from '../assets/influences/brands/nvidia.png';
 import spacex from '../assets/influences/brands/spacex.png';
 import meta from '../assets/influences/brands/meta.png';
 import apple from '../assets/influences/brands/apple.png';
-import pixar from '../assets/influences/brands/pixar.png';
 import google from '../assets/influences/brands/google.png';
 import type { InfluenceId } from '../i18n/types';
 
@@ -24,7 +23,7 @@ export const FRAME_ASPECT = 8 / 9;
  */
 export interface Crop { x: number; y: number; w: number }
 
-export type BrandId = 'nvidia' | 'spacex' | 'meta' | 'apple' | 'pixar' | 'google';
+export type BrandId = 'nvidia' | 'spacex' | 'meta' | 'apple' | 'google';
 
 export interface Brand {
   /** Shown as the image's alt text: the brand is only communicated by its logo. */
@@ -41,7 +40,6 @@ export const brands: Record<BrandId, Brand> = {
   spacex: { name: 'SpaceX', src: spacex, box: { x: 29, y: 550, w: 1177, h: 146 }, height: 18 },
   meta: { name: 'Meta', src: meta, box: { x: 58, y: 499, w: 1138, h: 248 }, height: 24 },
   apple: { name: 'Apple', src: apple, box: { x: 246, y: 203, w: 745, h: 901 }, height: 34 },
-  pixar: { name: 'Pixar', src: pixar, box: { x: 51, y: 525, w: 1150, h: 227 }, height: 17 },
   google: { name: 'Google', src: google, box: { x: 162, y: 80, w: 1835, h: 591 }, height: 28 },
 };
 
@@ -59,7 +57,7 @@ export const influences: [Influence, Influence, Influence, Influence, Influence]
   { id: 'jensen', name: 'Jensen Huang', alt: 'Jensen Huang', photo: jensen, crop: { x: 0.47, y: 0.312, w: 0.6 }, brands: ['nvidia'] },
   { id: 'elon', name: 'Elon Musk', alt: 'Elon Musk', photo: elon, crop: { x: 0.47, y: 0.302, w: 0.59 }, brands: ['spacex'] },
   { id: 'mark', name: 'Mark Zuckerberg', alt: 'Mark Zuckerberg', photo: mark, crop: { x: 0.51, y: 0.44, w: 0.61 }, brands: ['meta'] },
-  { id: 'steve', name: 'Steve Jobs', alt: 'Steve Jobs', photo: steve, crop: { x: 0.5, y: 0.45, w: 0.71 }, brands: ['apple', 'pixar'] },
+  { id: 'steve', name: 'Steve Jobs', alt: 'Steve Jobs', photo: steve, crop: { x: 0.5, y: 0.45, w: 0.71 }, brands: ['apple'] },
   { id: 'larry-sergey', name: 'Larry Page & Sergey Brin', alt: 'Larry Page and Sergey Brin', photo: larrySergey, crop: { x: 0.472, y: 0.5, w: 0.617 }, brands: ['google'] },
 ];
 
