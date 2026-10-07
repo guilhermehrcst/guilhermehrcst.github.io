@@ -171,11 +171,11 @@ export const pt: Dict = {
         name: 'Lume',
         kind: 'Pesquisa experimental em sistemas, open source',
         stack: 'C++20 / CMake / GCC / Clang',
-        description: 'Uma representação intermediária experimental para software e sistemas de IA eficientes no uso de memória.',
+        description: 'Plataforma experimental de pesquisa em sistemas, com IR tipada e foco em representação, memória, movimentação de dados e execução eficiente.',
         points: [
           'Investiguei como layout de memória, reaproveitamento de buffers e fusão de operações alteram a movimentação de dados, medindo cada hipótese com benchmarks.',
           'Desenvolvi o núcleo em C++20, com a correção garantida por um verificador: uma IR não verificada não pode ser executada.',
-          'Validei o código com AddressSanitizer e UBSan no CI, em Linux, macOS e Windows.',
+          'Validei o código em CI no Linux, macOS e Windows, com AddressSanitizer e UBSan em Ubuntu/GCC.',
         ],
         link: { href: 'https://github.com/guilhermehrcst/lume', text: 'github.com/guilhermehrcst/lume' },
         method: {
@@ -201,11 +201,12 @@ export const pt: Dict = {
         domains: ['Catálogo', 'Estoque', 'Pedidos', 'Reservas', 'Pagamentos', 'Webhooks'],
         points: [
           'Desenvolvi um sistema de e-commerce que cobre catálogo, estoque, pedidos, reservas, pagamentos, cupons, autenticação e painel administrativo.',
-          'Implementei testes de concorrência para cenários como duas sessões disputando estoque, compra simultânea da última unidade e edições concorrentes de estruturas de preços.',
+          'Implementei testes concorrentes em PostgreSQL para cenários como duas sessões disputando estoque, compra simultânea da última unidade e alterações concorrentes em estruturas de preços.',
           'Estruturei os pagamentos para manter o backend como autoridade sobre os valores: os pedidos são criados apenas no servidor, as requisições são idempotentes e a confirmação chega de forma assíncrona por webhook.',
           'Automatizei testes com Vitest, Playwright, SQL e GitHub Actions.',
         ],
         note: 'Repositório privado.',
+        figure: { value: '60+', label: 'migrations PostgreSQL' },
       },
     },
     capabilities: {

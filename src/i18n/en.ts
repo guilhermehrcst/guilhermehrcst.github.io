@@ -171,11 +171,11 @@ export const en: Dict = {
         name: 'Lume',
         kind: 'Open-source experimental systems research',
         stack: 'C++20 / CMake / GCC / Clang',
-        description: 'An experimental intermediate representation for memory-efficient software and AI systems.',
+        description: 'Experimental systems research platform with a typed IR, focused on representation, memory, data movement and efficient execution.',
         points: [
           'Investigated how memory layout, buffer reuse, and operation fusion change data movement, measuring each hypothesis with benchmarks.',
           'Built the core in C++20 with correctness enforced by a verifier: unverified IR cannot be executed.',
-          'Validated the code under AddressSanitizer and UBSan in CI on Linux, macOS, and Windows.',
+          'Validated the code in CI across Linux, macOS and Windows, with AddressSanitizer and UBSan running on Ubuntu/GCC.',
         ],
         link: { href: 'https://github.com/guilhermehrcst/lume', text: 'github.com/guilhermehrcst/lume' },
         method: {
@@ -201,11 +201,12 @@ export const en: Dict = {
         domains: ['Catalog', 'Inventory', 'Orders', 'Reservations', 'Payments', 'Webhooks'],
         points: [
           'Built an e-commerce system covering catalog, inventory, orders, reservations, payments, coupons, authentication, and an admin panel.',
-          'Implemented concurrency tests for scenarios such as two sessions competing for stock, simultaneous purchases of the last unit, and concurrent edits to pricing structures.',
+          'Implemented concurrent PostgreSQL tests for scenarios including two sessions competing for stock, simultaneous purchase of the last unit and concurrent updates to pricing structures.',
           'Structured payments so the backend remains the authority on amounts: orders are created only on the server, requests are idempotent, and confirmation arrives asynchronously by webhook.',
           'Automated tests with Vitest, Playwright, SQL, and GitHub Actions.',
         ],
         note: 'Private repository.',
+        figure: { value: '60+', label: 'PostgreSQL migrations' },
       },
     },
     capabilities: {
