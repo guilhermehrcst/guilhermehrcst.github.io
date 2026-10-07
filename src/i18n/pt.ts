@@ -238,16 +238,16 @@ export const pt: Dict = {
     education: {
       title: 'Formação',
       items: [
-        { school: 'UNISUAM', program: 'Análise e Desenvolvimento de Sistemas', status: 'Graduação iniciada, não concluída' },
-        { school: 'Colégio Marques Rodrigues', program: 'Ensino médio', status: 'Concluído' },
-        { school: 'Jardim Escola João Paulo de Bangu', program: '1º e 2º anos do ensino médio', status: 'Primeiro contato com tecnologia da informação' },
+        { institution: 'unisuam', school: 'UNISUAM', program: 'Análise e Desenvolvimento de Sistemas', status: 'Graduação iniciada, não concluída' },
+        { institution: 'marques-rodrigues', school: 'Colégio Marques Rodrigues', program: 'Ensino médio', status: 'Concluído' },
+        { institution: 'joao-paulo', school: 'Jardim Escola João Paulo de Bangu', program: '1º e 2º anos do ensino médio', status: 'Primeiro contato com tecnologia da informação' },
       ],
     },
     coursework: {
       title: 'Cursos e estudos',
       items: [
-        { school: 'Harvard University', program: 'CS50: Introduction to Computer Science', status: 'Conteúdo cursado parcialmente' },
-        { school: 'Fundação Bradesco', program: 'Estudos em tecnologia da informação' },
+        { institution: 'harvard', school: 'Harvard University', program: 'CS50: Introduction to Computer Science', status: 'Conteúdo cursado parcialmente' },
+        { institution: 'bradesco', school: 'Fundação Bradesco', program: 'Estudos em tecnologia da informação' },
       ],
     },
   },
