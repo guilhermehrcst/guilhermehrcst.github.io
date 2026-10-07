@@ -56,7 +56,9 @@ const t = dicts[Astro.props.lang].principles;
   .pbody { grid-column: 8 / span 5; font-size: var(--fs-lead); line-height: 1.35; color: var(--muted); max-width: 24em; text-wrap: pretty; }
 
   @media (max-width: 1024px) {
-    .word { grid-column: 1 / -1; font-size: min(var(--fs-display-l), calc((100vw - 2 * var(--margin)) / var(--fit-word))); }
+    /* Stacked, the word could be as wide as the window; the extra term holds it to the size it has
+       when the layout switches to the 7 columns at 1025px (80px), so the size does not jump there. */
+    .word { grid-column: 1 / -1; font-size: min(var(--fs-display-l), calc(37px + 4.2vw), calc((100vw - 2 * var(--margin)) / var(--fit-word))); }
     .pbody { grid-column: 3 / span 4; margin-top: var(--space-md); }
   }
   @media (max-width: 640px) {
