@@ -10,6 +10,7 @@
 // The call to action is a solid blue button inset in the cell's foot (the one primary action of
 // the cell): it opens the institution's own page in a new tab.
 import { Picture } from 'astro:assets';
+import CourseProvider from './CourseProvider.astro';
 import type { Course, CourseImageLayout } from '../lib/courses';
 import type { CoursesPage } from '../i18n/types';
 
@@ -73,7 +74,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
   )}
   <div class="cc-body">
     <p class="meta cc-top">
-      <span class="cc-inst">{c.institution}</span>
+      <CourseProvider name={c.institution} />
       {c.curated && <span class="sr-only">{t.labels.curated}</span>}
     </p>
     <h3 class="cc-title" id={titleId}>{c.title}</h3>
@@ -139,7 +140,6 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
 
   .cc-body { flex: 1 1 auto; display: flex; flex-direction: column; gap: var(--space-sm); padding: var(--space-md) var(--space-md) var(--space-lg); }
   .cc-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px var(--space-sm); }
-  .cc-inst { color: var(--muted); }
   .cc-title { font-size: clamp(1.125rem, 1.35vw, 1.3125rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.008em; text-wrap: balance; }
   .cc-f .cc-title { font-size: var(--fs-lead); line-height: 1.2; }
   .cc-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: var(--space-sm) var(--space-md); margin-top: auto; padding-top: var(--space-sm); }
