@@ -6,6 +6,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Command from './Command.astro';
+import ResumeInfluences from './ResumeInfluences.astro';
 import Monument from './Monument.astro';
 import { dicts } from '../i18n/routes';
 import { aiIcons } from '../lib/ai-tools';
@@ -199,6 +200,15 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
         </ul>
       </section>
     ))}
+
+    <!-- 07: influences. Web only: hidden in print, so the PDF stays about experience and evidence. -->
+    <section class="r-sec r-infl" aria-labelledby="infl-title">
+      <div class="grid r-head">
+        <Command n="07" cmd="influences" />
+        <h2 id="infl-title" class="r-h2">{r.influences.title}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+      </div>
+      <ResumeInfluences copy={r.influences} />
+    </section>
   </main>
   <Monument lang={lang} page="resume" />
 </Base>
@@ -483,6 +493,7 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
     .line { overflow: visible; margin-block: 0; padding-block: 0; }
     :global(.motion) .rise { transform: none !important; }
     .r-print { display: none !important; }
+    .r-infl { display: none !important; }
     .r-who { padding-bottom: 14pt; row-gap: 8pt; }
     .r-name { font-size: 22pt; }
     .r-role { font-size: 13pt; margin-top: 4pt; }

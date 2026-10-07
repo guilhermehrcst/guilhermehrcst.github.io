@@ -43,6 +43,10 @@ The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nud
 
 `src/assets/ai/*.png` are the supplied artworks for the eight tools, kept exactly as received (1254px; some carry EXIF or a C2PA manifest, which the build drops). Astro converts them at build time to 28/56/84px WebP (~1 KB each). They are decorative (`alt=""`, `aria-hidden`); every name stays text. `src/lib/ai-tools.ts` maps each `AiToolName` (a closed union in `i18n/types.ts`) to its icon and an optical scale, and the mapping is exhaustive: a missing icon fails `astro check`.
 
+## Résumé 07, influences (web only)
+
+`src/lib/influences.ts` holds the five people (name, photo, crop, brands) and the six brand marks; the one-line texts are in the dictionaries, keyed by `InfluenceId`, so EN and PT cannot drift. The photographs are wide shots, so each one has a crop window (centre and width as fractions of the photo, against the fixed 8:9 frame); a window that leaves the photo fails the build. Brand artworks sit on large transparent canvases, so each carries its measured content box and an optical height. Photos and logos are built by Astro (WebP, responsive, lazy). The section is hidden in print. The source photos and logos are kept as supplied; their EXIF is harmless and the build drops it.
+
 ## Hero photo
 
 `src/assets/hero/guilherme.jpg` is the only image of a person on the site: a 4:5 crop (980x1225) of the original, with no colour grading and **no metadata** (EXIF/GPS stripped). It was cropped on purpose to leave out the posters on the elevator walls. Astro generates the WebP sizes and the JPEG fallback at build time. Never commit the uncropped original: it is a phone photo and this repository's history is permanent.
