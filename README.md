@@ -87,6 +87,10 @@ Without JS, the server-rendered SVGs show the final state. Under reduced motion,
 
 The six curator's picks on `/courses/` and `/pt/cursos/` carry an image: the supplied files, unmodified, in `src/assets/courses/` (Astro makes the AVIF/WebP/JPEG sizes at build, never upscaled: the largest is the file itself, 1536px). Each is declared in `src/lib/courses.ts` (`curated.image`: `layout`, `kind`, `position`, `ratio`; the alt text is a key into `courses.imageAlts`, so EN and PT both have one), and `CourseCard.astro` composes the cell around it. There is no logic by title anywhere. A **photo** may be cropped by its frame (`position` keeps its focus) and leans in 1.5% on hover; a **graphic** (it has its own text) keeps its frame, never zooms, and the black letterbox bars of the supplied MIT and FGV frames are trimmed by that frame, not by editing the files. `scripts/verify-dist.mjs` fails the build if any `<img>` lacks `alt`, `width` or `height`, or any srcset candidate is missing.
 
+## Institution marks
+
+On the Courses page each course's institution is shown as its mark, not its name: the supplied logos, unmodified, in `src/assets/providers/`. `src/lib/providers.ts` is the one registry (each mark's artwork box, measured from the file, and its optical height; the catalogue's `institution` string is the key), and `CourseProvider.astro` draws it: the mark whole (`object-fit: contain`, its empty margin trimmed by the box, never the artwork), at one slot height so neighbouring titles line up, scaled down on tablet and phone. A partnership (Fundação Bradesco + Microsoft) is two marks and a quiet "+", with the full name as the group's accessible name. An institution without a mark renders its name as text. Two supplied files need care: the MIT OpenCourseWare logo is white, so it sits on the ink; the Microsoft file is opaque (#F3F3F3), so its frame is trimmed and its gaps stay pale.
+
 ## Deploy
 
 The site is deployed by `.github/workflows/deploy.yml` (build → verify → upload `dist/` → deploy). This requires a one-time manual change:
