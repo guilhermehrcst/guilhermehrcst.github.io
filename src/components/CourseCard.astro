@@ -3,7 +3,8 @@
 // with its neighbours. Two variants:
 //   feature  curator's pick: a typographic plate (the course's short name, set large), then the facts
 //   compact  the facts only
-// The call to action is the cell's bottom band: it opens the institution's own page in a new tab.
+// The call to action is a solid blue button inset in the cell's foot (the one primary action of
+// the cell): it opens the institution's own page in a new tab.
 import type { Course } from '../lib/courses';
 import type { CoursesPage } from '../i18n/types';
 
@@ -111,26 +112,37 @@ const titleId = `course-${c.id}`;
   .cc-facts dt { color: var(--muted); margin-bottom: 2px; }
   .cc-facts dd { margin: 0; font-size: var(--fs-meta-l); line-height: 1.35; }
 
-  /* The call to action is the cell's bottom band. At rest: a hairline, ink text, a blue arrow.
-     On hover and focus it fills with the site's blue (ink on blue: 5.9:1). */
+  /* The call to action: a solid button in the action blue, inset to the cell's text column, white
+     text (6.4:1) and an arrow at its right. Blue means "act": nothing else in the cell is blue
+     apart from the slash. Small radius, no shadow, no gradient. Compact cells get a shorter,
+     slightly smaller button and a tighter foot, so their density is the one they had. */
   .cc-cta {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-sm);
-    min-height: 56px;
+    min-height: 52px;
+    margin: 0 var(--space-md) var(--space-md);
     padding-inline: var(--space-md);
-    border-top: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--action);
+    color: var(--action-ink);
     font-size: var(--fs-body);
     font-weight: 600;
+    letter-spacing: -0.005em;
     text-decoration: none;
-    color: var(--ink);
-    transition: background-color var(--t-fast) linear;
+    transition: background-color var(--t-fast) var(--ease);
   }
-  .cc-cta svg { flex: none; width: 20px; height: 20px; color: var(--signal); transition: transform var(--t-ui) var(--ease), color var(--t-fast) linear; }
-  .cc-cta:hover, .cc-cta:focus-visible { background: var(--signal); }
-  .cc-cta:hover svg, .cc-cta:focus-visible svg { color: var(--ink); transform: translate(2px, -2px); }
-  .cc-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
+  .cc-cta svg { flex: none; width: 20px; height: 20px; transition: transform var(--t-ui) var(--ease); }
+  .cc-cta:hover, .cc-cta:focus-visible { background: var(--action-hover); }
+  .cc-cta:hover svg, .cc-cta:focus-visible svg { transform: translate(2px, -2px); }
+  .cc-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .cc-c .cc-cta { min-height: 44px; font-size: 1rem; }
+  .cc-c .cc-cta svg { width: 18px; height: 18px; }
+  .cc-c .cc-body { padding-bottom: var(--space-md); }
+  @media (forced-colors: active) {
+    .cc-cta { border: 1px solid ButtonText; }
+  }
 
   /* A cell alone on its row: plate (or title) and facts side by side; the band stays at the bottom. */
   .is-wide { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }

@@ -13,6 +13,10 @@
   --gh-gray-300: #bdc1c6; /* decorative bars in the Pexiscale composition */
   --gh-gray-600: #5f6368; /* 6.2:1 on white */
   --gh-void: #08090b;
+  /* Action: the deep blue of primary calls to action (Courses). White on it is 6.4:1 (hover 9.2:1);
+     it is a functional colour, separate from the signal blue above, which stays decorative. */
+  --gh-action: #0b57d0;
+  --gh-action-hover: #0842a0;
 
   /* Palette roles (semantic aliases of the tokens above). No automatic dark mode. */
   --paper: var(--gh-white);
@@ -21,6 +25,9 @@
   --rule: var(--gh-gray-200);
   --surface: var(--gh-gray-50);
   --signal: var(--gh-blue);
+  --action: var(--gh-action);
+  --action-hover: var(--gh-action-hover);
+  --action-ink: var(--gh-white);
 
   /* Lume module (dark). Not a theme: a single section. */
   --void: var(--gh-void);
