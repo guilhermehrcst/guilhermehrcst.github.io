@@ -45,7 +45,7 @@ The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nud
 
 ## Résumé 07, influences (web only)
 
-`src/lib/influences.ts` holds the five people (name, photo, crop, brands) and the six brand marks; the one-line texts are in the dictionaries, keyed by `InfluenceId`, so EN and PT cannot drift. The photographs are wide shots, so each one has a crop window (centre and width as fractions of the photo, against the fixed 8:9 frame); a window that leaves the photo fails the build. Brand artworks sit on large transparent canvases, so each carries its measured content box and an optical height. Photos and logos are built by Astro (WebP, responsive, lazy). The section is hidden in print. The source photos and logos are kept as supplied; their EXIF is harmless and the build drops it.
+`src/lib/influences.ts` holds the five people (name, photo, crop, brands) and the five brand marks; the one-line texts are in the dictionaries, keyed by `InfluenceId`, so EN and PT cannot drift. The photographs are wide shots, so each one has a crop window (centre and width as fractions of the photo, against the fixed 8:9 frame); a window that leaves the photo fails the build. Brand artworks sit on large transparent canvases, so each carries its measured content box and an optical height. Photos and logos are built by Astro (WebP, responsive, lazy). The section is hidden in print. The source photos and logos are kept as supplied; their EXIF is harmless and the build drops it.
 
 ## Hero photo
 

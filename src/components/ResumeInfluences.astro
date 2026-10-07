@@ -1,9 +1,9 @@
 ---
 // Résumé 07, influences: the body of the section (the command and the heading are in Resume.astro,
-// next to the other sections). Five ruled columns on the page grid: portrait, number, name, brand,
-// one line. Editorial, not a card deck: a hairline border, no shadow, no fill, no hover, and nothing
-// here is a link. Photographs are shown as supplied (no filter), cropped by a per-photo window
-// (src/lib/influences.ts); the brands are shown straight on the page.
+// next to the other sections). Five columns straight on the page grid: portrait, number, name, brand,
+// one line. Editorial, not a card deck: no box, border, shadow, fill or hover, and nothing here is a
+// link. Whitespace and alignment separate the columns. Photographs are shown as supplied (no filter),
+// cropped by a per-photo window (src/lib/influences.ts); the brands are shown straight on the page.
 import { Image } from 'astro:assets';
 import { brands, brandStyle, cropStyle, influences } from '../lib/influences';
 import type { Resume } from '../i18n/types';
@@ -92,19 +92,15 @@ const sizes = (w: number) =>
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    column-gap: var(--gap);
+    column-gap: var(--space-md); /* the columns are separated by whitespace alone: a little more than the page gap at small widths */
     row-gap: 0;
   }
   .infl-card {
-    --pad: 12px;
     grid-row: span 5;
     display: grid;
     grid-template-rows: subgrid;
     row-gap: 0;
-    padding: var(--pad);
-    border: 1px solid var(--rule);
-    border-radius: 6px;
-    margin-bottom: var(--gap);
+    margin-bottom: var(--space-lg);
     min-width: 0;
   }
   @supports not (grid-template-rows: subgrid) {
@@ -156,7 +152,7 @@ const sizes = (w: number) =>
   /* Phone: one column, the portrait full width, room to breathe. */
   @media (max-width: 480px) {
     .infl-grid { grid-template-columns: 1fr; }
-    .infl-card { --pad: 14px; }
+    .infl-card { margin-bottom: var(--space-xl); }
     .infl-quote { grid-column: 1 / -1; }
     .infl-mark { grid-column: 1 / -1; }
   }
