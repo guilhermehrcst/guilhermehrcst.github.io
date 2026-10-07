@@ -7,6 +7,7 @@ import claude from '../assets/ai/claude.png';
 import gemini from '../assets/ai/gemini.png';
 import deepseek from '../assets/ai/deepseek.png';
 import claudeCode from '../assets/ai/claude-code.png';
+import codex from '../assets/ai/codex.png';
 import antigravity from '../assets/ai/google-antigravity.png';
 import hermes from '../assets/ai/hermes-agent.png';
 import type { AiToolName } from '../i18n/types';
@@ -26,6 +27,7 @@ export const aiIcons: Record<AiToolName, AiIcon> = {
   Gemini: { src: gemini, scale: 1.1 }, // a star that uses less of its canvas than the others
   DeepSeek: { src: deepseek, scale: 1.08 }, // a wide, low shape
   'Claude Code': { src: claudeCode, scale: 0.96 }, // a solid block: heavier than its bounding box
+  Codex: { src: codex, scale: 1 },
   'Google Antigravity': { src: antigravity, scale: 1.06 }, // short glyph, small in height
   'Hermes Agent': { src: hermes, scale: 0.86 }, // detailed black-and-white illustration: kept a small identifier
 };

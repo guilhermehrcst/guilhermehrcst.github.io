@@ -233,7 +233,7 @@ export const en: Dict = {
       flowLabel: 'Workflow',
       flow: ['Specify', 'Implement', 'Verify', 'Measure'],
       models: { label: 'Models and assistants', items: ['ChatGPT', 'Claude', 'Gemini', 'DeepSeek'] },
-      agents: { label: 'Agents and platforms', items: ['Claude Code', 'Google Antigravity', 'Hermes Agent'] },
+      agents: { label: 'Agents and platforms', items: ['Claude Code', 'Codex', 'Google Antigravity', 'Hermes Agent'] },
     },
     education: {
       title: 'Education',

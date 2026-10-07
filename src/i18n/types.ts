@@ -101,7 +101,7 @@ export interface Resume {
 /** Product names used in the résumé's AI section. Closed on purpose: src/lib/ai-tools.ts maps each one to its icon. */
 export type AiToolName =
   | 'ChatGPT' | 'Claude' | 'Gemini' | 'DeepSeek'
-  | 'Claude Code' | 'Google Antigravity' | 'Hermes Agent';
+  | 'Claude Code' | 'Codex' | 'Google Antigravity' | 'Hermes Agent';
 
 export interface MethodItem {
   term: string;
