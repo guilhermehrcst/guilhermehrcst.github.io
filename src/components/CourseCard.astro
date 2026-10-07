@@ -11,6 +11,7 @@
 // the cell): it opens the institution's own page in a new tab.
 import { Picture } from 'astro:assets';
 import CourseProvider from './CourseProvider.astro';
+import ExternalLinkIcon from './ExternalLinkIcon.astro';
 import type { Course, CourseImageLayout } from '../lib/courses';
 import type { CoursesPage } from '../i18n/types';
 
@@ -86,7 +87,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
   </div>
   <a class="cc-cta" href={c.url} target="_blank" rel="noopener noreferrer">
     <span>{t.labels.cta}<span class="sr-only">: {c.title} ({t.labels.newTab})</span></span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 17.5 17.5 6.5M8.5 6.5h9v9" /></svg>
+    <ExternalLinkIcon />
   </a>
 </li>
 
@@ -146,16 +147,16 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
   .cc-facts dt { color: var(--muted); margin-bottom: 2px; }
   .cc-facts dd { margin: 0; font-size: var(--fs-meta-l); line-height: 1.35; }
 
-  /* The call to action: a solid button in the action blue, inset to the cell's text column, white
-     text (6.4:1) and an arrow at its right. Blue means "act": nothing else in the cell is blue
-     apart from the slash. Small radius, no shadow, no gradient. Compact cells get a shorter,
-     slightly smaller button and a tighter foot, so their density is the one they had. */
+  /* The call to action closes the cell: a solid button in the action blue, inset to the cell's own
+     padding (the same on both sides and below, so it reads as part of the cell and not as a piece
+     added to it). One height and one size for every cell, text on the left, Radix's external-link
+     icon on the right, white text (6.4:1). Small radius, no shadow, no gradient. */
   .cc-cta {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-sm);
-    min-height: 52px;
+    min-height: 48px;
     margin: 0 var(--space-md) var(--space-md);
     padding-inline: var(--space-md);
     border-radius: 3px;
@@ -167,12 +168,10 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
     text-decoration: none;
     transition: background-color var(--t-fast) var(--ease);
   }
-  .cc-cta svg { flex: none; width: 20px; height: 20px; transition: transform var(--t-ui) var(--ease); }
+  .cc-cta > :global(svg) { flex: none; width: 16px; height: 16px; transition: transform var(--t-ui) var(--ease); }
   .cc-cta:hover, .cc-cta:focus-visible { background: var(--action-hover); }
-  .cc-cta:hover svg, .cc-cta:focus-visible svg { transform: translate(2px, -2px); }
+  .cc-cta:hover > :global(svg), .cc-cta:focus-visible > :global(svg) { transform: translate(1.5px, -1.5px); }
   .cc-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .cc-c .cc-cta { min-height: 44px; font-size: 1rem; }
-  .cc-c .cc-cta svg { width: 18px; height: 18px; }
   .cc-c .cc-body { padding-bottom: var(--space-md); }
   @media (forced-colors: active) {
     .cc-cta { border: 1px solid ButtonText; }
