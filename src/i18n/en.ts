@@ -95,8 +95,12 @@ export const en: Dict = {
       open: 'Not every implemented capability is enabled in production. Some depend on provider approval and rollout, and I list a capability as live only once it is.',
     },
     figure: {
-      alt: 'Abstract composition of a work interface: panels, lists, and a table whose rows are grouped by organization.',
-      caption: 'Fig. 03 — Abstract composition, not a product screenshot. The modules come together; every row stays grouped with its organization.',
+      caption: 'Fig. 03 — The Pexiscale workspace: sales, the catalogue and the home page with the AI. The real product, with demo data.',
+      shots: {
+        sales: 'Pexiscale’s quotes screen: a list with customer, amount, status and date, and beside it the selected draft quote, with its item, subtotal, discounts, total and the actions to edit, send or discard it. The interface is in Portuguese.',
+        catalog: 'Pexiscale’s catalogue: search, filters by status and stock, and the product list with SKU, category, price and units available for sale. The interface is in Portuguese.',
+        home: 'The home page of the Pexiscale workspace: the question “How can I help today?” and a field to ask the AI, with the Lila assistant and shortcuts to documents and spreadsheets. The interface is in Portuguese.',
+      },
     },
   },
   principles: {

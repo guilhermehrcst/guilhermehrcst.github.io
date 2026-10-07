@@ -6,7 +6,6 @@
 //   2. Section slashes, rules and the Lume grid reveal once on first view.
 //   3. The dither band between paper and Lume follows scroll position.
 //   4. The Lume schematic compacts with scroll position.
-//   5. The Pexiscale composition assembles once when in view (CSS transitions).
 // Everything else moves only because the document scrolls.
 
 import { bandCell, bandCols, BAND_ROWS, BAND_STATIC_P, INK, SIGNAL } from '../lib/dither';
@@ -220,19 +219,3 @@ document.querySelectorAll<HTMLElement>('[data-lume]').forEach((fig) => {
     },
   });
 });
-
-/* 5. Assembly (Pexiscale) ------------------------------------------------- */
-if (animate) {
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (!e.isIntersecting) continue;
-        io.unobserve(e.target);
-        e.target.classList.add('is-in');
-      }
-    },
-    { threshold: 0.35 },
-  );
-  root.classList.add('assemble-ready');
-  document.querySelectorAll('[data-assemble]').forEach((el) => io.observe(el));
-}

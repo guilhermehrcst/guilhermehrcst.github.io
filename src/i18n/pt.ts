@@ -95,8 +95,12 @@ export const pt: Dict = {
       open: 'Nem toda funcionalidade implementada está ativa em produção. Algumas dependem de aprovação de provedores e de rollout, e só apresento uma funcionalidade como ativa quando ela de fato está.',
     },
     figure: {
-      alt: 'Composição abstrata de uma interface de trabalho: painéis, listas e uma tabela com as linhas agrupadas por organização.',
-      caption: 'Fig. 03 — Composição abstrata, não uma captura de tela do produto. Os módulos se encaixam; cada linha permanece agrupada com a sua organização.',
+      caption: 'Fig. 03 — O workspace do Pexiscale: vendas, catálogo e a página inicial com a IA. Produto real, dados de demonstração.',
+      shots: {
+        sales: 'Tela de orçamentos do Pexiscale: lista com cliente, valor, situação e data, e ao lado o orçamento selecionado em rascunho, com item, subtotal, descontos, total e as ações de editar, enviar e descartar.',
+        catalog: 'Catálogo do Pexiscale: busca, filtros por situação e estoque, e a lista de produtos com SKU, categoria, preço e unidades disponíveis para venda.',
+        home: 'Página inicial do workspace do Pexiscale: a pergunta “Como posso ajudar hoje?” e o campo para pedir à IA, com a assistente Lila e atalhos para documentos e planilhas.',
+      },
     },
   },
   principles: {
