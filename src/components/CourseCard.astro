@@ -7,6 +7,8 @@
 //            `layout` says how (opening, media-right, tile, half, tall, band); phone and tablet
 //            re-compose each one.
 //   compact  the facts only
+// Official names (the course title, the plate, the institution) are marked translate="no": a
+// browser's automatic translation would otherwise rewrite them. Copy around them stays translatable.
 // The call to action is a solid blue button inset in the cell's foot (the one primary action of
 // the cell): it opens the institution's own page in a new tab.
 import { Picture } from 'astro:assets';
@@ -18,8 +20,8 @@ import type { CoursesPage } from '../i18n/types';
 interface Props {
   course: Course & { url: string };
   t: CoursesPage;
-  /** Position in the catalogue, shown on the plate. */
-  n: number;
+  /** Position among the curator's picks (01 to 06), shown on the plate. Not set for the others. */
+  n?: number | undefined;
   /** Optional anchor id (the nav's "Data" stop lands on the first data course). */
   anchor?: string | undefined;
   /** The cell spans the whole row: plate and body sit side by side instead of stacked. */
@@ -38,14 +40,15 @@ if (c.certificate) facts.push([t.labels.certificate, t.certificates[c.certificat
 const titleId = `course-${c.id}`;
 
 const img = c.curated?.image;
-// Sizes the browser picks from, per layout: the cell's share of the window at each width.
+// Sizes the browser picks from, per layout: the cell's share of the window at each width. The
+// boundaries are the compositions' own: 1181 (desktop), 901 (wide tablet), 641 (tablet), phone below.
 const sizes: Record<CourseImageLayout, string> = {
-  opening: '(min-width: 1025px) calc(100vw - 72px), 100vw',
-  'media-right': '(min-width: 1025px) 38vw, (min-width: 641px) 56vw, 100vw',
-  tile: '(min-width: 1025px) 40vw, 100vw',
-  half: '(min-width: 1025px) 64vw, 100vw',
-  tall: '(min-width: 1025px) 32vw, (min-width: 641px) 40vw, 100vw',
-  band: '(min-width: 1025px) 62vw, 100vw',
+  opening: '(min-width: 1181px) calc(100vw - 72px), 100vw',
+  'media-right': '(min-width: 1181px) 38vw, (min-width: 641px) 58vw, 100vw',
+  tile: '(min-width: 1181px) 40vw, (min-width: 901px) 58vw, 100vw',
+  half: '(min-width: 1181px) 64vw, 100vw',
+  tall: '(min-width: 1181px) 32vw, (min-width: 901px) 42vw, (min-width: 641px) 50vw, 100vw',
+  band: '(min-width: 1181px) 62vw, (min-width: 901px) 58vw, 100vw',
 };
 // Never upscale: the supplied files are the largest we have, so the last width is the file's own.
 const widths = img ? [...[480, 768, 1152].filter((w) => w < img.src.width), img.src.width] : [];
@@ -69,8 +72,8 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
   )}
   {c.curated && (
     <div class="plate" aria-hidden="true">
-      <p class="meta pl-top"><span class="pl-pick"><span class="slash">/</span>{t.labels.curated}</span><span>{String(n).padStart(2, '0')}</span></p>
-      <p class="pl-mark" style={`--len: ${[...c.curated.plate].length}`}>{c.curated.plate}<span class="slash">/</span></p>
+      <p class="meta pl-top"><span class="pl-pick"><span class="slash">/</span>{t.labels.curated}</span>{n !== undefined && <span>{String(n).padStart(2, '0')}</span>}</p>
+      <p class="pl-mark" translate="no" style={`--len: ${[...c.curated.plate].length}`}>{c.curated.plate}<span class="slash">/</span></p>
     </div>
   )}
   <div class="cc-body">
@@ -78,7 +81,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
       <CourseProvider name={c.institution} />
       {c.curated && <span class="sr-only">{t.labels.curated}</span>}
     </p>
-    <h3 class="cc-title" id={titleId}>{c.title}</h3>
+    <h3 class="cc-title" id={titleId} translate="no">{c.title}</h3>
     <dl class="cc-facts">
       {facts.map(([k, v]) => (
         <div><dt class="meta">{k}</dt><dd>{v}</dd></div>
@@ -86,7 +89,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
     </dl>
   </div>
   <a class="cc-cta" href={c.url} target="_blank" rel="noopener noreferrer">
-    <span>{t.labels.cta}<span class="sr-only">: {c.title} ({t.labels.newTab})</span></span>
+    <span>{t.labels.cta}<span class="sr-only">: <span translate="no">{c.title}</span> ({t.labels.newTab})</span></span>
     <ExternalLinkIcon />
   </a>
 </li>
@@ -191,7 +194,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
   }
 
   /* Tablet: a feature runs the full row, so its plate sits beside the facts (as .is-wide). */
-  @media (min-width: 641px) and (max-width: 1024px) {
+  @media (min-width: 641px) and (max-width: 1180px) {
     .cc-f { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
     .cc-f .plate { grid-row: 1 / span 2; border-bottom: 0; border-right: 1px solid var(--rule); aspect-ratio: auto; min-height: 260px; }
     .cc-f .cc-body, .cc-f .cc-cta { grid-column: 2; }
@@ -242,7 +245,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
 
   /* half: two thirds of a row. The photo takes whatever height the row has, never less than 3:2. */
   .lay-half { --ar-photo: 1.5; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr); grid-template-rows: minmax(auto, 1fr) auto auto; grid-template-areas: 'media media' 'plate body' 'plate cta'; }
-  .lay-half .plate { border-right: 1px solid var(--rule); }
+  .lay-half .plate { border-right: 1px solid var(--rule); padding-bottom: var(--space-md); } /* beside the facts: its mark needs room below it, or it sits on the hairline */
   .lay-half .media { align-self: stretch; } /* an aspect-ratio item does not stretch by default: this one takes the row's height */
 
   /* tall: a third of a row. The portrait poster, whole, then the text. */
@@ -253,7 +256,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
   .lay-band .media { align-self: start; border-bottom: 0; border-right: 1px solid var(--rule); }
 
   /* Tablet: every cell runs the full row; the composition changes with the width. */
-  @media (min-width: 641px) and (max-width: 1024px) {
+  @media (min-width: 641px) and (max-width: 1180px) {
     .lay-opening, .lay-half { --ar-photo: 2; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'media media' 'plate body' 'plate cta'; }
     .lay-half { grid-template-rows: auto auto auto; }
     .cc-f.lay-media-right { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
@@ -264,10 +267,23 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
     .lay-tile, .lay-band { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'media media' 'plate body' 'plate cta'; }
     .lay-tile .media, .lay-band .media { border-right: 0; border-bottom: 1px solid var(--rule); }
     .lay-tile .plate, .lay-band .plate { border-right: 1px solid var(--rule); }
+    /* The plate stands beside the facts here, not above them: its mark needs room below it, or it sits on the hairline. */
+    .lay-tile .plate, .lay-band .plate { padding-bottom: var(--space-md); }
     /* tall: the poster beside the text, whole. */
     .lay-tall { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); grid-template-rows: auto 1fr auto; grid-template-areas: 'plate plate' 'media body' 'media cta'; }
     .lay-tall .plate { border-bottom: 1px solid var(--rule); padding-bottom: var(--space-md); }
     .lay-tall .media { border-bottom: 0; border-right: 1px solid var(--rule); }
+  }
+
+  /* Wide tablet (an iPad in landscape): a graphic that ran the whole row would be 620px tall and,
+     for the 1024px MIT frame, wider than its own pixels; the weakest picture would become the
+     biggest. Beside the text it keeps a share of the cell. Narrower tablets keep the stacked
+     composition above, where the frame runs the width at a size that suits it. */
+  @media (min-width: 901px) and (max-width: 1180px) {
+    .lay-tile, .lay-band { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: 'media plate' 'media body' 'media cta'; }
+    .lay-tile .media, .lay-band .media { border-bottom: 0; border-right: 1px solid var(--rule); }
+    .lay-tile .plate, .lay-band .plate { border-right: 0; padding-bottom: 0; }
+    .lay-tall { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   }
 
   /* Phone: one column. The image first, at its own proportion, then the plate, the facts, the action. */
