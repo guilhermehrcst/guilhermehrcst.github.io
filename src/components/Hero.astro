@@ -63,10 +63,12 @@ const icons = [
      bounded by two things: the width of the grid (as before: --fit-name) and now also by the
      window height, so that the photo and the column start near the middle of the viewport
      whatever the window's shape:
-       photo top = header + gaps + 2 lines of name  =>  name <= (50svh - chrome) / 1.68
+       photo top = header + gaps + 2 lines of name  =>  name <= (split - chrome) / 1.68
      On a tall or narrow window the width rule wins and the name stays full-bleed. */
   .hero {
     --hero-gap: var(--space-sm);
+    --hero-split: 45svh; /* where the photo and the column start, as a share of the window */
+    --hero-rest: calc(100svh - var(--hero-split)); /* what is left of the window for the photo and the column */
     --hero-chrome: calc(var(--header-h) + 1px + 2 * var(--hero-gap) + var(--space-xs) + 1px);
     padding-top: calc(var(--header-h) + 1px + var(--hero-gap));
   }
@@ -76,7 +78,7 @@ const icons = [
     padding-inline: var(--margin);
     padding-bottom: var(--space-xs);
     font-size: var(--fit-size);
-    font-size: min(var(--fit-size), max(3.5rem, calc((50svh - var(--hero-chrome)) / 1.68)));
+    font-size: min(var(--fit-size), max(3.5rem, calc((var(--hero-split) - var(--hero-chrome)) / 1.68)));
     font-weight: var(--display-wght);
     line-height: 0.84;
     letter-spacing: var(--display-track);
@@ -110,7 +112,7 @@ const icons = [
     align-self: stretch;
     justify-self: stretch;
     min-width: 0;
-    aspect-ratio: 4 / 3; /* a floor: the row is at least this tall; it stretches to the column when that is taller */
+    aspect-ratio: 3 / 2; /* a floor: the row is at least this tall; it stretches to the column when that is taller */
     overflow: clip;
     background: var(--surface); /* the box is reserved (no layout shift); a quiet tone until the image arrives */
   }
@@ -125,7 +127,11 @@ const icons = [
   .hero-aside {
     grid-column: 7 / span 6;
     --pad: var(--space-lg);
-    --row-h: clamp(3.25rem, 2.92rem + 1.33vw, 4.5rem); /* 52px on a phone, 66px at 1440 */
+    /* The column's vertical metrics are the smaller of a width rule and a share of what is left of the
+       window (--hero-rest), so photo, rows, statement and action end near the fold on a laptop and keep
+       their width-based size on a tall window. Both rules are continuous, and so is their minimum. */
+    --pad-v: clamp(1.25rem, min(var(--space-lg), calc(var(--hero-rest) * 0.073)), 2.5rem);
+    --row-h: clamp(3.25rem, min(2.92rem + 1.33vw, calc(var(--hero-rest) * 0.125)), 4.5rem); /* 52px on a phone, ~62px at 1440x900 */
     display: flex;
     flex-direction: column;
     border-left: 1px solid var(--rule);
@@ -142,8 +148,8 @@ const icons = [
   .hero-meta .meta { font-size: var(--fs-meta-l); }
 
   .hero-blurb {
-    padding: var(--space-lg) var(--pad) 0;
-    font-size: clamp(1.75rem, 1.03rem + 1.756vw, 2.75rem); /* one line of growth: 28px phone, 34px at 1024, 42px at 1440 */
+    padding: var(--pad-v) var(--pad) 0;
+    font-size: clamp(1.75rem, min(1.03rem + 1.756vw, calc(var(--hero-rest) * 0.075)), 2.75rem); /* 28px phone, ~32px at 1024x768, 37px at 1440x900 */
     font-weight: 450;
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -151,13 +157,13 @@ const icons = [
   }
 
   /* The action spans the column edge to edge and sits at its foot. */
-  .hero-cta { margin-top: auto; padding-top: var(--space-lg); }
+  .hero-cta { margin-top: auto; padding-top: var(--pad-v); }
   .cta {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-md);
-    min-height: clamp(3.75rem, 3.33rem + 1.714vw, 5.25rem); /* 60px phone, 71px at 1024, 78px at 1440 */
+    min-height: clamp(3.75rem, min(3.33rem + 1.714vw, calc(var(--hero-rest) * 0.158)), 5.25rem); /* 60px phone, 78px at 1440x900 */
     padding: 0 var(--pad);
     background: var(--signal);
     color: var(--ink); /* ink on the blue is 5.9:1; white would be 3.35:1 */
