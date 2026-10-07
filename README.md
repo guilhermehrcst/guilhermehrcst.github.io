@@ -37,6 +37,8 @@ npx astro check  # type check, including EN/PT parity
 
 Tokens live once, in `:root` of `src/styles/global.css`: `--gh-blue #078EFB`, `--gh-black`, `--gh-white`, `--gh-gray-50/200/300/600`, `--gh-void`. Components use the semantic roles (`--paper`, `--ink`, `--muted`, `--rule`, `--surface`, `--signal`, `--void*`); no hex codes elsewhere. The blue is a signature (roughly 10%): the slash, rules, arrows, focus rings, diagram marks, one marked word. It is 3.35:1 on white, so it is never used for small text; text is blue only at 24px and above (contact hover). Lume stays dark (`--gh-void`).
 
+**Action blue** is a separate, functional colour: `--gh-action #0B57D0` (hover `#0842A0`, white text, 6.4:1 and 9.1:1), used only for the primary call to action of a Courses cell (`CourseCard.astro`). Blue means *act*; navigation, filters, category links and secondary links stay neutral, and the decorative `--signal` blue is unchanged.
+
 The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nudges 0.12em on link hover and slides in once when a section label or giant heading enters.
 
 ## AI tool icons (résumé, section 04)
