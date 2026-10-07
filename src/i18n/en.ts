@@ -267,7 +267,7 @@ export const en: Dict = {
     meta: {
       title: 'Free courses in technology, programming and AI | Guilherme Henrique',
       description:
-        'A curated selection of free courses from Harvard, MIT, FGV, Microsoft, Fundação Bradesco, IBM and Cisco to learn programming, artificial intelligence, data and technology.',
+        'A curated selection of free courses from Harvard, MIT, FGV, Microsoft, Fundação Bradesco and Cisco to learn programming, artificial intelligence, data and technology.',
     },
     eyebrow: ['Curation', 'Education', '2026'],
     heading: 'free-courses-to-actually-learn',

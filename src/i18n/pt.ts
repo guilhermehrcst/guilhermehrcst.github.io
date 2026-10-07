@@ -267,7 +267,7 @@ export const pt: Dict = {
     meta: {
       title: 'Cursos gratuitos de tecnologia, programação e IA | Guilherme Henrique',
       description:
-        'Uma curadoria de cursos gratuitos de Harvard, MIT, FGV, Microsoft, Fundação Bradesco, IBM e Cisco para aprender programação, inteligência artificial, dados e tecnologia.',
+        'Uma curadoria de cursos gratuitos de Harvard, MIT, FGV, Microsoft, Fundação Bradesco e Cisco para aprender programação, inteligência artificial, dados e tecnologia.',
     },
     eyebrow: ['Curadoria', 'Educação', '2026'],
     heading: 'cursos-gratuitos-para-aprender-de-verdade',
