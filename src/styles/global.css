@@ -38,31 +38,26 @@
   /* Fixed header: the bar's height; its 1px rule is added on top. 60-68px on desktop and tablet. */
   --header-h: clamp(60px, 4.4vw, 68px);
 
-  /* Type ladder. Values in comments are at 1440px. Each step is roughly 0.55-0.8 of the one above;
-     before, the scale jumped from 260px display straight to 49px headlines and 14px text.
-       display XL  the hero name        min(width fit, 50svh bound)   206px   (Hero.astro)
-       display L   project titles, footer       2rem + 7.14vw          135px
-       display M   the three principles         max(two lines)         109px
-       headline L  the manifesto                5.6vw                  81px
-       headline M  questions, about, contact    3.6vw                  52px
-       lead        supporting copy              1.55vw                 22px
-       body        technical copy               1.2vw                  17px
-       meta        labels, indices, captions    0.86vw                 12px */
-  --fs-meta: clamp(0.75rem, 0.86vw, 0.8125rem);
-  --fs-meta-l: clamp(0.8125rem, 0.95vw, 0.875rem);
+  /* Type ladder. Values in comments are at 1440x900. Each step is 0.55-0.8 of the one above, and
+     every size on the page is one of these (or the hero's height-aware variants in Hero.astro).
+       display XL  the hero name        min(width fit, split bound)    180px   (Hero.astro)
+       display     project names, principles, footer   1.78rem + 5.52vw  108px   (0.6 of the hero)
+       headline L  the manifesto                       5vw                72px
+       headline    questions, about, contact           3vw                43px   (the hero statement: 37px)
+       lead        supporting copy                     1.55vw             22px
+       body        technical copy                      1.2vw              17px
+       meta        labels, indices, captions           0.9vw              13px   (rows of the hero: 0.95vw, 15px) */
+  --fs-meta: clamp(0.8125rem, 0.9vw, 0.875rem);
+  --fs-meta-l: clamp(0.875rem, 1.04vw, 1rem);
   --fs-body: clamp(1.0625rem, 1.2vw, 1.125rem);
   --fs-lead: clamp(1.25rem, 1.55vw, 1.5rem);
-  --fs-h3: clamp(1.75rem, 3.6vw, 3.5rem);
-  --fs-statement: clamp(2.625rem, 5.6vw, 7rem);
-  /* Display L and M are single continuous functions of the viewport width, not one value per
-     breakpoint: a per-breakpoint value jumps by 20-30% when the window grows by one pixel.
-     L is linear: 60px at 390, 135px at 1440. M is the larger of two lines that meet at 1025px, where
-     the principles switch from stacked to beside their text (the longest word fills ~95% of the 7
-     columns it sits in): 51px at 390, 78px at 1025, 109px at 1440. */
-  --fs-display-l: min(calc(2rem + 7.14vw), calc((100vw - 2 * var(--margin)) / var(--fit-name)), 15rem);
-  --fs-display-m: min(max(calc(2.13rem + 4.25vw), calc(0.025rem + 7.54vw)), calc((100vw - 2 * var(--margin)) / var(--fit-word)));
-  /* The last term of each is the old rule, kept as a ceiling: no display line is ever wider than the
-     grid (it is what binds below ~390px; on a 320px phone the linear part alone would overflow). */
+  --fs-h3: clamp(1.875rem, 3vw, 3.25rem);
+  --fs-statement: clamp(2.625rem, 5vw, 6.25rem);
+  /* The display size is a single continuous function of the viewport width, not one value per
+     breakpoint: a per-breakpoint value jumps by 20-30% when the window grows by one pixel. It is
+     linear (50px at 390, 108px at 1440) and capped by the width of the grid (the hero name's rule),
+     which is what binds below ~390px: on a 320px phone the linear part alone would overflow. */
+  --fs-display-l: min(calc(1.78rem + 5.52vw), calc((100vw - 2 * var(--margin)) / var(--fit-name)), 15rem);
 
   /* Motion. Expo-out only: precise, no bounce. */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -77,7 +72,7 @@
      --fit-name is the measured advance of GUILHERME (5.335em at 700 / -0.02em / opsz 144, Chromium)
      plus ~0.7%: content width / --fit-name makes the line span the grid exactly. Only the hero name
      uses it directly, as the upper bound of its size (Hero.astro adds a height bound); the other
-     display lines are steps of the ladder above (--fs-display-l, --fs-display-m). */
+     display lines are steps of the ladder above (--fs-display-l). */
   --display-wght: 700;
   --display-track: -0.02em;
   --display-opsz: 'opsz' 144;

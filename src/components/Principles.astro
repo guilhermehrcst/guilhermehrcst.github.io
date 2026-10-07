@@ -23,7 +23,7 @@ const t = dicts[Astro.props.lang].principles;
 </section>
 
 <style>
-  .principles { padding-block: var(--space-section); }
+  .principles { padding-block: var(--space-lg) var(--space-section); } /* the section above ends on white too: its bottom padding is most of the gap */
   :global(.pr-label) { grid-column: 1 / -1; margin-bottom: var(--space-lg); }
   .item {
     position: relative;
@@ -39,11 +39,12 @@ const t = dicts[Astro.props.lang].principles;
   .item::before { transition: transform 900ms var(--ease); }
   .item::after { transition: transform 500ms var(--ease) 500ms; }
   .idx { grid-column: 1 / -1; align-self: start; color: var(--muted); margin-bottom: var(--space-sm); }
-  /* --fs-display-m (global.css) keeps the longest word, CORRECTNESS/, inside the 7 columns it sits
-     in, so the explanation beside it reads as part of the composition. */
+  /* The display size, bounded so that the longest word, CORRECTNESS/, stays inside the 7 columns it
+     sits in (7 columns and 6 gaps, over its measured advance), and the explanation beside it reads
+     as part of the composition. */
   .word {
     grid-column: 1 / span 7;
-    font-size: var(--fs-display-m);
+    font-size: min(var(--fs-display-l), calc(((100vw - 2 * var(--margin) - 11 * var(--gap)) / 12 * 7 + 6 * var(--gap)) / var(--fit-word)));
     font-weight: 600;
     line-height: 0.82;
     /* a touch looser than the 700 display lines: at 600 the same tracking lets R-R and T-N touch */
@@ -55,7 +56,7 @@ const t = dicts[Astro.props.lang].principles;
   .pbody { grid-column: 8 / span 5; font-size: var(--fs-lead); line-height: 1.35; color: var(--muted); max-width: 24em; text-wrap: pretty; }
 
   @media (max-width: 1024px) {
-    .word { grid-column: 1 / -1; }
+    .word { grid-column: 1 / -1; font-size: min(var(--fs-display-l), calc((100vw - 2 * var(--margin)) / var(--fit-word))); }
     .pbody { grid-column: 3 / span 4; margin-top: var(--space-md); }
   }
   @media (max-width: 640px) {
