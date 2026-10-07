@@ -39,6 +39,10 @@ Tokens live once, in `:root` of `src/styles/global.css`: `--gh-blue #078EFB`, `-
 
 The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nudges 0.12em on link hover and slides in once when a section label or giant heading enters.
 
+## AI tool icons (résumé, section 04)
+
+`src/assets/ai/*.png` are the supplied artworks for the seven tools, kept exactly as received (1254px; some carry EXIF or a C2PA manifest, which the build drops). Astro converts them at build time to 28/56/84px WebP (~1 KB each). They are decorative (`alt=""`, `aria-hidden`); every name stays text. `src/lib/ai-tools.ts` maps each `AiToolName` (a closed union in `i18n/types.ts`) to its icon and an optical scale, and the mapping is exhaustive: a missing icon fails `astro check`.
+
 ## Hero photo
 
 `src/assets/hero/guilherme.jpg` is the only image of a person on the site: a 4:5 crop (980x1225) of the original, with no colour grading and **no metadata** (EXIF/GPS stripped). It was cropped on purpose to leave out the posters on the elevator walls. Astro generates the WebP sizes and the JPEG fallback at build time. Never commit the uncropped original: it is a phone photo and this repository's history is permanent.

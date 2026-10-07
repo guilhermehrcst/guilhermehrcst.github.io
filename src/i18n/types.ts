@@ -91,12 +91,17 @@ export interface Resume {
     body: string;
     flowLabel: string;
     flow: [string, string, string, string];
-    models: { label: string; items: string[] };
-    agents: { label: string; items: string[] };
+    models: { label: string; items: AiToolName[] };
+    agents: { label: string; items: AiToolName[] };
   };
   education: ResumeSection & { items: [ResumeStudy, ResumeStudy, ResumeStudy] };
   coursework: ResumeSection & { items: [ResumeStudy, ResumeStudy] };
 }
+
+/** Product names used in the résumé's AI section. Closed on purpose: src/lib/ai-tools.ts maps each one to its icon. */
+export type AiToolName =
+  | 'ChatGPT' | 'Claude' | 'Gemini' | 'DeepSeek'
+  | 'Claude Code' | 'Google Antigravity' | 'Hermes Agent';
 
 export interface MethodItem {
   term: string;
