@@ -1,0 +1,160 @@
+---
+// One course in the catalogue grid. Not a floating card: a cell of the grid, sharing its hairlines
+// with its neighbours. Two variants:
+//   feature  curator's pick: a typographic plate (the course's short name, set large), then the facts
+//   compact  the facts only
+// The call to action is the cell's bottom band: it opens the institution's own page in a new tab.
+import type { Course } from '../lib/courses';
+import type { CoursesPage } from '../i18n/types';
+
+interface Props {
+  course: Course & { url: string };
+  t: CoursesPage;
+  /** Position in the catalogue, shown on the plate. */
+  n: number;
+  /** Optional anchor id (the nav's "Data" stop lands on the first data course). */
+  anchor?: string | undefined;
+  /** The cell spans the whole row: plate and body sit side by side instead of stacked. */
+  wide?: boolean;
+  style?: string;
+}
+
+const { course: c, t, n, anchor, wide = false, style } = Astro.props;
+const facts: [string, string][] = [
+  [t.labels.category, t.categories[c.category]],
+  [t.labels.level, t.levels[c.level]],
+  [t.labels.language, t.languages[c.language]],
+];
+if (c.duration) facts.push([t.labels.duration, `${c.duration.value} ${c.duration.unit === 'hours' ? t.units.hours : t.units.weeks}`]);
+if (c.certificate) facts.push([t.labels.certificate, t.certificates[c.certificate]]);
+const titleId = `course-${c.id}`;
+---
+<li class:list={['cc rv', c.curated ? 'cc-f' : 'cc-c', wide && 'is-wide']} id={anchor} style={style} data-reveal>
+  {c.curated && (
+    <div class="plate" aria-hidden="true">
+      <p class="meta pl-top"><span class="pl-pick"><span class="slash">/</span>{t.labels.curated}</span><span>{String(n).padStart(2, '0')}</span></p>
+      <p class="pl-mark" style={`--len: ${[...c.curated.plate].length}`}>{c.curated.plate}<span class="slash">/</span></p>
+    </div>
+  )}
+  <div class="cc-body">
+    <p class="meta cc-top">
+      <span class="cc-inst">{c.institution}</span>
+      {c.curated && <span class="sr-only">{t.labels.curated}</span>}
+    </p>
+    <h3 class="cc-title" id={titleId}>{c.title}</h3>
+    <dl class="cc-facts">
+      {facts.map(([k, v]) => (
+        <div><dt class="meta">{k}</dt><dd>{v}</dd></div>
+      ))}
+    </dl>
+  </div>
+  <a class="cc-cta" href={c.url} target="_blank" rel="noopener noreferrer">
+    <span>{t.labels.cta}<span class="sr-only">: {c.title} ({t.labels.newTab})</span></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 17.5 17.5 6.5M8.5 6.5h9v9" /></svg>
+  </a>
+</li>
+
+<style>
+  /* A cell. Its right and bottom hairlines are drawn by an overlay one pixel outside the cell, so
+     neighbouring cells share a single line and no plate or band can paint over it. No radius, no
+     shadow, no fill. */
+  .cc {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .cc::after {
+    content: '';
+    position: absolute;
+    inset: 0 -1px -1px 0;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Plate: the course's short name set large on a pale ground, scaled to the cell's width
+     (container units), with the site's blue slash. No image, nothing borrowed. */
+  .plate {
+    container-type: inline-size;
+    position: relative;
+    aspect-ratio: 16 / 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--space-md);
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .pl-top { display: flex; justify-content: space-between; gap: var(--space-sm); color: var(--muted); }
+  .pl-pick { display: inline-flex; gap: 0.5em; color: var(--ink); }
+  .pl-mark {
+    font-size: min(var(--fs-sec, 4.5rem) * 0.9, calc(88cqi / (var(--len) * 0.6 + 0.5)));
+    font-weight: var(--display-wght);
+    line-height: 0.86;
+    letter-spacing: -0.035em;
+    font-variation-settings: var(--display-opsz);
+    white-space: nowrap;
+    margin-left: -0.04em;
+  }
+  .pl-mark .slash { margin-left: 0.04em; }
+  .cc:hover .pl-mark .slash { transform: translateX(0.08em); }
+
+  .cc-body { flex: 1 1 auto; display: flex; flex-direction: column; gap: var(--space-sm); padding: var(--space-md) var(--space-md) var(--space-lg); }
+  .cc-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px var(--space-sm); }
+  .cc-inst { color: var(--muted); }
+  .cc-title { font-size: clamp(1.125rem, 1.35vw, 1.3125rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.008em; text-wrap: balance; }
+  .cc-f .cc-title { font-size: var(--fs-lead); line-height: 1.2; }
+  .cc-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: var(--space-sm) var(--space-md); margin-top: auto; padding-top: var(--space-sm); }
+  .cc-facts dt { color: var(--muted); margin-bottom: 2px; }
+  .cc-facts dd { margin: 0; font-size: var(--fs-meta-l); line-height: 1.35; }
+
+  /* The call to action is the cell's bottom band. At rest: a hairline, ink text, a blue arrow.
+     On hover and focus it fills with the site's blue (ink on blue: 5.9:1). */
+  .cc-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    min-height: 56px;
+    padding-inline: var(--space-md);
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background-color var(--t-fast) linear;
+  }
+  .cc-cta svg { flex: none; width: 20px; height: 20px; color: var(--signal); transition: transform var(--t-ui) var(--ease), color var(--t-fast) linear; }
+  .cc-cta:hover, .cc-cta:focus-visible { background: var(--signal); }
+  .cc-cta:hover svg, .cc-cta:focus-visible svg { color: var(--ink); transform: translate(2px, -2px); }
+  .cc-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
+
+  /* A cell alone on its row: plate (or title) and facts side by side; the band stays at the bottom. */
+  .is-wide { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  .is-wide .plate { grid-row: 1 / span 2; border-bottom: 0; border-right: 1px solid var(--rule); aspect-ratio: auto; min-height: 260px; }
+  .is-wide .cc-body, .is-wide .cc-cta { grid-column: 2; }
+  .cc-c.is-wide { grid-template-columns: minmax(0, 1fr); }
+  .cc-c.is-wide .cc-body, .cc-c.is-wide .cc-cta { grid-column: 1; }
+  @media (min-width: 641px) {
+    .cc-c.is-wide .cc-body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--space-lg); align-items: end; }
+    .cc-c.is-wide .cc-top { grid-column: 1 / -1; }
+    .cc-c.is-wide .cc-title { grid-column: 1; }
+    .cc-c.is-wide .cc-facts { grid-column: 2; margin-top: 0; padding-top: 0; }
+  }
+
+  /* Tablet: a feature runs the full row, so its plate sits beside the facts (as .is-wide). */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .cc-f { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+    .cc-f .plate { grid-row: 1 / span 2; border-bottom: 0; border-right: 1px solid var(--rule); aspect-ratio: auto; min-height: 260px; }
+    .cc-f .cc-body, .cc-f .cc-cta { grid-column: 2; }
+  }
+
+  @media (max-width: 640px) {
+    .is-wide { display: flex; }
+    .is-wide .plate { border-right: 0; border-bottom: 1px solid var(--rule); aspect-ratio: 16 / 9; min-height: 0; }
+    .plate { aspect-ratio: 16 / 9; }
+  }
+</style>

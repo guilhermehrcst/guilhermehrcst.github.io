@@ -6,7 +6,7 @@ Personal site of Guilherme Henrique. Static output, built with [Astro](https://a
 |---|---|---|
 | Home | `/` | `/pt/` |
 | Résumé | `/resume/` | `/pt/curriculo/` |
-| Courses (placeholder, `noindex`) | `/courses/` | `/pt/cursos/` |
+| Courses (curated free courses) | `/courses/` | `/pt/cursos/` |
 
 ## Develop
 
@@ -47,6 +47,10 @@ The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nud
 
 `src/lib/influences.ts` holds the five people (name, photo, crop, brands) and the five brand marks; the one-line texts are in the dictionaries, keyed by `InfluenceId`, so EN and PT cannot drift. The photographs are wide shots, so each one has a crop window (centre and width as fractions of the photo, against the fixed 8:9 frame); a window that leaves the photo fails the build. Brand artworks sit on large transparent canvases, so each carries its measured content box and an optical height. Photos and logos are built by Astro (WebP, responsive, lazy). The section is hidden in print. The source photos and logos are kept as supplied; their EXIF is harmless and the build drops it.
 
+## Courses catalogue
+
+`src/lib/courses.ts` is the only place courses are defined: section, official title (not translated), institution, category/level/language (labels in the dictionaries), and `certificate`/`duration` only when the course's own page states them. `url` must be the institution's own page for that course, never an aggregator, blog or affiliate link, and never derived from a domain's structure; each published URL records how it was confirmed (`checked`). An entry with `url: null` keeps a `review` note and is not rendered. The page lays itself out from the data (curator's picks get a typographic plate; the others are compact cells; spans follow the count), so adding a course is one entry. A new institution host also needs adding to `COURSE_HOSTS` in `scripts/verify-dist.mjs`.
+
 ## Hero photo
 
 `src/assets/hero/guilherme.jpg` is the only image of a person on the site: a 4:5 crop (980x1225) of the original, with no colour grading and **no metadata** (EXIF/GPS stripped). It was cropped on purpose to leave out the posters on the elevator walls. Astro generates the WebP sizes and the JPEG fallback at build time. Never commit the uncropped original: it is a phone photo and this repository's history is permanent.
@@ -54,11 +58,11 @@ The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nud
 ## Structure
 
 - `src/i18n/` — `types.ts` defines one `Dict` shape; `en.ts` and `pt.ts` implement it. A key missing in either language is a type error. `routes.ts` is the single source of truth for URLs and `hreflang` pairs.
-- `src/components/` — one component per section of the home (`Hero`, `Statement`, `DitherBand`, `Lume`, `Pexiscale`, `Principles`, `About`, `Contact`, `Monument`), plus `Header`, `Label`, `ProjectDetail`, `Resume` (the résumé page, with `Command` for its section prompts) and `Shell` (the Courses placeholder).
+- `src/components/` — one component per section of the home (`Hero`, `Statement`, `DitherBand`, `Lume`, `Pexiscale`, `Principles`, `About`, `Contact`, `Monument`), plus `Header`, `Label`, `ProjectDetail`, `Resume` (the résumé page, with `Command` for its section prompts) and `Courses` + `CourseCard` (the Courses page).
 - `src/lib/` — deterministic models shared by the server render and the canvas: `dither.ts` (8×8 Bayer band) and `lume-model.ts` (seeded schematic of memory compaction).
 - `src/scripts/motion.ts` — every runtime animation, in one file.
 - `src/styles/global.css` — tokens (palette, grid, type, motion) and base.
-- `scripts/verify-dist.mjs` — post-build invariants: all routes exist; `lang`, canonical and `hreflang` are correct; placeholders are `noindex`; internal links resolve; no third-party resources; external links are limited to an allowlist (the contacts below, Lume, Pexiscale); no secret-shaped strings.
+- `scripts/verify-dist.mjs` — post-build invariants: all routes exist; `lang`, canonical and `hreflang` are correct; pages are indexable or `noindex` as declared; internal links resolve; no third-party resources; external links are limited to an allowlist (the contacts below, Lume, Pexiscale), except on the Courses pages, where course links may also go to the institutions' own hosts (exact list, HTTPS, `target="_blank"` with `rel="noopener noreferrer"`); no secret-shaped strings.
 
 ## Motion
 
