@@ -263,13 +263,82 @@ export const en: Dict = {
       quote: 'References are not models to copy. They are lenses that expand what I consider possible to build.',
     },
   },
-  shell: {
-    courses: {
-      title: 'Courses — Guilherme Henrique',
-      description: 'A curated selection of free courses. In preparation.',
-      heading: 'Courses',
-      body: 'In preparation. This page will feature a curated selection of free courses, with direct links to the platforms where they are available.',
+  courses: {
+    meta: {
+      title: 'Free courses in technology, programming and AI | Guilherme Henrique',
+      description:
+        'A curated selection of free courses from Harvard, MIT, FGV, Microsoft, Fundação Bradesco and Cisco to learn programming, artificial intelligence, data and technology.',
     },
-    back: 'Back to home',
+    eyebrow: ['Curation', 'Education', '2026'],
+    heading: 'free-courses-to-actually-learn',
+    intro:
+      'A curated selection of free courses in programming, artificial intelligence, data and technology. Chosen for people who want to learn properly, build projects and grow professionally.',
+    nav: {
+      label: 'Course categories',
+      jump: 'Jump to',
+      items: { all: 'All', programming: 'Programming', ai: 'AI', data: 'Data', systems: 'Systems', security: 'Cybersecurity' },
+    },
+    anchors: { all: 'catalogue', data: 'data-science' },
+    sections: {
+      build: {
+        title: 'learn-and-build',
+        intro: 'Solid foundations to start programming, understand computers and turn ideas into software.',
+      },
+      data: {
+        title: 'data-and-intelligence',
+        intro: 'Explore artificial intelligence, data science and new ways of working with information.',
+      },
+      systems: {
+        title: 'understand-the-systems',
+        intro: 'Algorithms, databases and mathematics to understand what lies beneath the interfaces.',
+      },
+      security: {
+        title: 'protect-and-connect',
+        intro: 'Security, infrastructure and the essential foundations for building more reliable systems.',
+      },
+    },
+    categories: {
+      cs: 'Computer Science',
+      python: 'Python',
+      web: 'Web',
+      webdev: 'Web Development',
+      ai: 'Artificial Intelligence',
+      genai: 'Generative AI',
+      datasci: 'Data Science',
+      'data-computing': 'Data and Computing',
+      databases: 'Databases',
+      algorithms: 'Algorithms',
+      'math-cs': 'Mathematics and Computing',
+      math: 'Mathematics',
+      cybersecurity: 'Cybersecurity',
+      security: 'Security',
+      privacy: 'Privacy and Security',
+      'cloud-ai': 'Cloud and AI',
+    },
+    levels: { beginner: 'Beginner', 'beginner-intermediate': 'Beginner to intermediate', intermediate: 'Intermediate' },
+    languages: { en: 'English', pt: 'Portuguese' },
+    certificates: {
+      none: 'No certificate',
+      statement: 'Completion statement',
+      available: 'Certificate available',
+    },
+    units: { hours: 'h', weeks: 'weeks' },
+    labels: {
+      category: 'Category',
+      level: 'Level',
+      language: 'Language',
+      certificate: 'Certificate',
+      duration: 'Length',
+      courses: 'courses',
+      curated: 'Curator’s pick',
+      cta: 'Go to course',
+      newTab: 'opens the official site in a new tab',
+    },
+    closing: {
+      title: 'keep-learning',
+      body: 'This selection changes over time. New courses come in only when they truly deserve a place here.',
+      prompt: 'Found an excellent free course?',
+      cta: 'Suggest a course',
+    },
   },
 };

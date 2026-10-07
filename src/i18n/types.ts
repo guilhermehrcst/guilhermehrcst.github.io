@@ -151,9 +151,50 @@ export interface Dict {
   };
   footer: { place: string; updated: string; top: string };
   resume: Resume;
-  /** Placeholder pages (Courses). */
-  shell: {
-    courses: { title: string; description: string; heading: string; body: string };
-    back: string;
+  courses: CoursesPage;
+}
+
+/* Courses page ------------------------------------------------------------------------------- */
+
+/** The four sections of the catalogue, in page order. */
+export type CourseSectionId = 'build' | 'data' | 'systems' | 'security';
+export type CourseCategoryId =
+  | 'cs' | 'python' | 'web' | 'webdev' | 'ai' | 'genai' | 'datasci' | 'data-computing'
+  | 'databases' | 'algorithms' | 'math-cs' | 'math' | 'cybersecurity' | 'security' | 'privacy' | 'cloud-ai';
+export type CourseLevelId = 'beginner' | 'beginner-intermediate' | 'intermediate';
+export type CourseLanguageId = 'en' | 'pt';
+/** Only what the course's own page states. Unknown is simply absent from the data. */
+export type CourseCertificateId = 'none' | 'statement' | 'available';
+export type CourseNavId = 'all' | 'programming' | 'ai' | 'data' | 'systems' | 'security';
+
+export interface CoursesPage {
+  meta: { title: string; description: string };
+  /** Small editorial line above the headline, e.g. CURADORIA / EDUCAÇÃO / 2026. */
+  eyebrow: [string, string, string];
+  /** Rendered with the blue slash. Hyphens are its only break points. */
+  heading: string;
+  intro: string;
+  nav: { label: string; jump: string; items: Record<CourseNavId, string> };
+  /** Anchor ids: the catalogue start, and the first data course (the "Data" stop of the nav). */
+  anchors: { all: string; data: string };
+  /** title doubles as the section's anchor id (it is already a slug: aprender-e-construir). */
+  sections: Record<CourseSectionId, { title: string; intro: string }>;
+  categories: Record<CourseCategoryId, string>;
+  levels: Record<CourseLevelId, string>;
+  languages: Record<CourseLanguageId, string>;
+  certificates: Record<CourseCertificateId, string>;
+  units: { hours: string; weeks: string };
+  labels: {
+    category: string;
+    level: string;
+    language: string;
+    certificate: string;
+    duration: string;
+    courses: string;
+    curated: string;
+    cta: string;
+    /** Screen-reader suffix on every external link. */
+    newTab: string;
   };
+  closing: { title: string; body: string; prompt: string; cta: string };
 }

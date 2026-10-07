@@ -12,8 +12,8 @@ const PAGES = [
   { path: '/pt/', lang: 'pt-BR', noindex: false, pair: '/' },
   { path: '/resume/', lang: 'en', noindex: false, pair: '/pt/curriculo/' },
   { path: '/pt/curriculo/', lang: 'pt-BR', noindex: false, pair: '/resume/' },
-  { path: '/courses/', lang: 'en', noindex: true, pair: '/pt/cursos/' },
-  { path: '/pt/cursos/', lang: 'pt-BR', noindex: true, pair: '/courses/' },
+  { path: '/courses/', lang: 'en', noindex: false, pair: '/pt/cursos/' },
+  { path: '/pt/cursos/', lang: 'pt-BR', noindex: false, pair: '/courses/' },
 ];
 
 /** The only external destinations this site may link to. Personal data is published on purpose and only here. */
@@ -24,6 +24,19 @@ const EXTERNAL_ALLOW = new Set([
   'https://github.com/guilhermehrcst',
   'https://github.com/guilhermehrcst/lume',
   'https://pexiscale.com',
+]);
+
+/** Course pages may also link out, but only to the institutions' own sites (exact hosts, HTTPS), and
+ *  every such link must open in a new tab without handing the page a reference back (noopener noreferrer). */
+const COURSE_PAGES = new Set(['/courses/', '/pt/cursos/']);
+const COURSE_HOSTS = new Set([
+  'cs50.harvard.edu',
+  'ocw.mit.edu',
+  'www.ev.org.br',
+  'educacao-executiva.fgv.br',
+  'www.netacad.com',
+  'learn.microsoft.com',
+  'skillsbuild.org',
 ]);
 
 const SECRET_PATTERNS = [/AKIA[0-9A-Z]{16}/, /sk_(live|test)_[0-9a-zA-Z]{10,}/, /-----BEGIN [A-Z ]*PRIVATE KEY-----/, /ghp_[0-9A-Za-z]{30,}/, /eyJhbGciOi/];
@@ -65,7 +78,24 @@ for (const pg of PAGES) {
     if (/stylesheet|preload|icon|modulepreload/.test(rel) && !href.startsWith('/')) fail(pg.path, `external ${rel} ${href}`);
   }
 
-  // Links: internal ones must resolve; external ones must be on the allowlist.
+  // Course links: official hosts only, HTTPS, new tab with noopener noreferrer.
+  const courseLinks = new Set();
+  if (COURSE_PAGES.has(pg.path)) {
+    for (const m of html.matchAll(/<a\b([^>]*)>/g)) {
+      if (!/target="_blank"/.test(m[1])) continue;
+      const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
+      let url;
+      try { url = new URL(href.replace(/&amp;/g, '&')); } catch { fail(pg.path, `bad course url ${href}`); continue; }
+      if (url.protocol !== 'https:') fail(pg.path, `course link not https: ${href}`);
+      if (!COURSE_HOSTS.has(url.hostname)) fail(pg.path, `course link to a non-official host: ${href}`);
+      const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
+      if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) fail(pg.path, `course link without rel="noopener noreferrer": ${href}`);
+      courseLinks.add(href);
+    }
+    if (courseLinks.size === 0) fail(pg.path, 'course page has no course links');
+  }
+
+  // Links: internal ones must resolve; external ones must be on the allowlist (or be a checked course link).
   for (const raw of attrs(html, /<a\b[^>]*\shref="([^"]+)"/g)) {
     const href = raw.replace(/&amp;/g, '&');
     if (href.startsWith('#')) {
@@ -77,7 +107,7 @@ for (const pg of PAGES) {
       if (!existsSync(fileFor(target))) fail(pg.path, `broken internal link ${href}`);
       continue;
     }
-    if (!EXTERNAL_ALLOW.has(href)) fail(pg.path, `external link not on allowlist: ${href}`);
+    if (!EXTERNAL_ALLOW.has(href) && !courseLinks.has(raw)) fail(pg.path, `external link not on allowlist: ${href}`);
   }
 }
 

@@ -263,13 +263,82 @@ export const pt: Dict = {
       quote: 'Referências não são modelos para copiar. São lentes para expandir o que considero possível construir.',
     },
   },
-  shell: {
-    courses: {
-      title: 'Cursos — Guilherme Henrique',
-      description: 'Uma curadoria de cursos gratuitos. Em preparação.',
-      heading: 'Cursos',
-      body: 'Em preparação. Esta página reunirá uma curadoria de cursos gratuitos, com links diretos para as plataformas onde estão disponíveis.',
+  courses: {
+    meta: {
+      title: 'Cursos gratuitos de tecnologia, programação e IA | Guilherme Henrique',
+      description:
+        'Uma curadoria de cursos gratuitos de Harvard, MIT, FGV, Microsoft, Fundação Bradesco e Cisco para aprender programação, inteligência artificial, dados e tecnologia.',
     },
-    back: 'Voltar ao início',
+    eyebrow: ['Curadoria', 'Educação', '2026'],
+    heading: 'cursos-gratuitos-para-aprender-de-verdade',
+    intro:
+      'Uma curadoria de cursos gratuitos em programação, inteligência artificial, dados e tecnologia. Selecionados para quem quer aprender melhor, construir projetos e evoluir profissionalmente.',
+    nav: {
+      label: 'Categorias de cursos',
+      jump: 'Ir para',
+      items: { all: 'Todos', programming: 'Programação', ai: 'IA', data: 'Dados', systems: 'Sistemas', security: 'Cibersegurança' },
+    },
+    anchors: { all: 'catalogo', data: 'ciencia-de-dados' },
+    sections: {
+      build: {
+        title: 'aprender-e-construir',
+        intro: 'Fundamentos sólidos para começar a programar, entender computadores e transformar ideias em software.',
+      },
+      data: {
+        title: 'dados-e-inteligencia',
+        intro: 'Explore inteligência artificial, ciência de dados e novas formas de trabalhar com informação.',
+      },
+      systems: {
+        title: 'entender-os-sistemas',
+        intro: 'Algoritmos, bancos de dados e matemática para compreender o que existe por baixo das interfaces.',
+      },
+      security: {
+        title: 'proteger-e-conectar',
+        intro: 'Segurança, infraestrutura e fundamentos essenciais para construir sistemas mais confiáveis.',
+      },
+    },
+    categories: {
+      cs: 'Ciência da Computação',
+      python: 'Python',
+      web: 'Web',
+      webdev: 'Desenvolvimento Web',
+      ai: 'Inteligência Artificial',
+      genai: 'IA Generativa',
+      datasci: 'Ciência de Dados',
+      'data-computing': 'Dados e Computação',
+      databases: 'Banco de Dados',
+      algorithms: 'Algoritmos',
+      'math-cs': 'Matemática e Computação',
+      math: 'Matemática',
+      cybersecurity: 'Cibersegurança',
+      security: 'Segurança',
+      privacy: 'Privacidade e Segurança',
+      'cloud-ai': 'Cloud e IA',
+    },
+    levels: { beginner: 'Iniciante', 'beginner-intermediate': 'Iniciante a intermediário', intermediate: 'Intermediário' },
+    languages: { en: 'Inglês', pt: 'Português' },
+    certificates: {
+      none: 'Sem certificado',
+      statement: 'Declaração de conclusão',
+      available: 'Certificado disponível',
+    },
+    units: { hours: 'h', weeks: 'semanas' },
+    labels: {
+      category: 'Categoria',
+      level: 'Nível',
+      language: 'Idioma',
+      certificate: 'Certificado',
+      duration: 'Duração',
+      courses: 'cursos',
+      curated: 'Escolha da curadoria',
+      cta: 'Acessar curso',
+      newTab: 'abre o site oficial em nova aba',
+    },
+    closing: {
+      title: 'continue-aprendendo',
+      body: 'Esta seleção evolui com o tempo. Novos cursos entram quando realmente merecem estar aqui.',
+      prompt: 'Encontrou um curso gratuito excelente?',
+      cta: 'Sugerir curso',
+    },
   },
 };
