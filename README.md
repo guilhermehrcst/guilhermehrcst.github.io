@@ -74,7 +74,7 @@ The page is complete without JavaScript and under `prefers-reduced-motion: reduc
 2. Section slashes, rules, the marked word and the Lume column grid reveal once on first view (`data-reveal` → `.is-in`; transform and opacity only). The header's reading-progress line is a CSS scroll timeline, with no JS.
 3. The dither band between the statement and Lume follows scroll position.
 4. The Lume schematic compacts with scroll position (reversible).
-5. The Pexiscale composition assembles once when in view; table rows then regroup by organization.
+5. The Pexiscale screenshots fade in once on first view (the same `data-reveal`, opacity only).
 6. Résumé: the title rises once on load; each section's command opens through a short mask on first view and a cursor shows for a few frames, then turns off.
 
 Without JS, the server-rendered SVGs show the final state. Under reduced motion, canvases draw the final state once and nothing else moves.
@@ -90,6 +90,10 @@ The six curator's picks on `/courses/` and `/pt/cursos/` carry an image: the sup
 ## Courses layout
 
 Three compositions, by width: **desktop** from 1181px, **tablet** 641 to 1180px (an iPad in landscape is 1180 wide), **phone** up to 640px. The boundary is declared in `Courses.astro`, `CourseCard.astro` and `CourseProvider.astro` only (the Home, the Résumé and the header keep their own, at 1024px). On a tablet every curator's pick runs the full row and the other courses go two by two; from 901px a graphic (MIT, FGV, the Fluência poster) sits beside the text instead of running the width, so a frame is never wider than its own pixels. The curator's picks are numbered 01 to 06 on their own, in reading order (their place in the catalogue is not their number). Section heads are `clamp(200px, 21vw, 320px)` tall and the closing `clamp(180px, 18vw, 280px)`; the heading sizes are not touched.
+
+## Pexiscale figure
+
+Fig. 03 on the Home is the product itself: three screenshots of the Pexiscale workspace with demo data, in `src/assets/pexiscale/` (sales, the full screen with its navigation, leads; the catalogue and the AI home follow as details cropped to their content, in one shared frame). The browser around them (tabs, address bar, status bar) is cropped away and nothing inside the product is edited; Astro makes the AVIF/WebP/JPEG sizes, never upscaled. Each screenshot has its own alt text (`pexiscale.figure.shots`, EN and PT) and the caption says it is the real product with demo data.
 
 ## Icons
 

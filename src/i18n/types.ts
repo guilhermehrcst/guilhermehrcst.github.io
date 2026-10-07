@@ -26,14 +26,21 @@ export interface Project {
   link: { href: string; text: string; note: string };
   facts: [Fact, Fact, Fact];
   ledger: Ledger;
-  figure: {
-    alt: string;
-    caption: string;
-    /** Lume only: state readout, axis label and legend of the schematic. */
-    states?: [string, string, string];
-    axis?: string;
-    legend?: [string, string, string];
-  };
+}
+
+/** Lume's figure: a drawn schematic, with its state readout, axis label and legend. */
+export interface LumeFigure {
+  alt: string;
+  caption: string;
+  states: [string, string, string];
+  axis: string;
+  legend: [string, string, string];
+}
+
+/** Pexiscale's figure: three screenshots of the product, each with its own alt text. */
+export interface PexiscaleFigure {
+  caption: string;
+  shots: { sales: string; catalog: string; home: string };
 }
 
 /** One entry of the résumé's selected work. Bullets are fixed-length tuples so EN and PT cannot
@@ -142,8 +149,8 @@ export interface Dict {
     photoAlt: string;
   };
   statement: { label: string; text: string; mark: string; aside: string };
-  lume: Project;
-  pexiscale: Project;
+  lume: Project & { figure: LumeFigure };
+  pexiscale: Project & { figure: PexiscaleFigure };
   principles: { label: string; items: [Fact, Fact, Fact] };
   about: { label: string; heading: string; body: string; also: string; cta: string };
   contact: {
