@@ -73,7 +73,7 @@ const rest = live % COLS;
     --accent: var(--void-signal);
     background: var(--void);
     color: var(--void-ink);
-    padding-block: clamp(72px, 10vw, 160px) var(--space-section);
+    padding-block: var(--space-2xl) var(--space-section);
   }
   .lume { position: relative; }
   .lume > :global(*) { position: relative; }
@@ -101,17 +101,17 @@ const rest = live % COLS;
   .lume :global(.p-label) { grid-column: 1 / -1; color: var(--void-muted); }
   .giant {
     grid-column: 1 / -1;
-    font-size: calc((100vw - 2 * var(--margin)) / var(--fit-name));
+    font-size: var(--fs-display-l);
     font-weight: var(--display-wght);
     line-height: 0.8;
     letter-spacing: var(--display-track);
     font-variation-settings: var(--display-opsz);
     text-transform: uppercase;
-    margin: clamp(16px, 2vw, 32px) 0 0 -0.045em;
+    margin: var(--space-md) 0 0 -0.045em;
   }
   .question {
     grid-column: 1 / span 9;
-    margin-top: clamp(48px, 7vw, 120px);
+    margin-top: var(--space-xl);
     font-size: var(--fs-h3);
     font-weight: 440;
     line-height: 1.02;
@@ -119,7 +119,7 @@ const rest = live % COLS;
     text-wrap: balance;
   }
 
-  .body { margin-top: clamp(56px, 8vw, 128px); row-gap: 48px; align-items: end; }
+  .body { margin-top: var(--space-xl); row-gap: var(--space-xl); align-items: end; }
   .fig { grid-column: 1 / span 8; }
   .fig-bar {
     display: flex;
@@ -143,7 +143,7 @@ const rest = live % COLS;
   .k-dead { box-shadow: inset 0 0 0 1px var(--void-muted); }
   .cap { margin-top: 10px; color: var(--void-muted); text-transform: none; letter-spacing: 0; max-width: 60em; }
 
-  .aside { grid-column: 9 / span 4; display: flex; flex-direction: column; gap: 32px; padding-bottom: 4px; }
+  .aside { grid-column: 9 / span 4; display: flex; flex-direction: column; gap: var(--space-lg); padding-bottom: 4px; }
   .lead { font-size: var(--fs-lead); line-height: 1.3; letter-spacing: -0.006em; text-wrap: pretty; }
   .link { display: flex; flex-direction: column; gap: 6px; }
   .link a { text-decoration: none; font-size: var(--fs-body); font-weight: 500; }
