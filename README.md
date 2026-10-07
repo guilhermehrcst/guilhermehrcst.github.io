@@ -41,7 +41,7 @@ The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nud
 
 ## AI tool icons (résumé, section 04)
 
-`src/assets/ai/*.png` are the supplied artworks for the seven tools, kept exactly as received (1254px; some carry EXIF or a C2PA manifest, which the build drops). Astro converts them at build time to 28/56/84px WebP (~1 KB each). They are decorative (`alt=""`, `aria-hidden`); every name stays text. `src/lib/ai-tools.ts` maps each `AiToolName` (a closed union in `i18n/types.ts`) to its icon and an optical scale, and the mapping is exhaustive: a missing icon fails `astro check`.
+`src/assets/ai/*.png` are the supplied artworks for the eight tools, kept exactly as received (1254px; some carry EXIF or a C2PA manifest, which the build drops). Astro converts them at build time to 28/56/84px WebP (~1 KB each). They are decorative (`alt=""`, `aria-hidden`); every name stays text. `src/lib/ai-tools.ts` maps each `AiToolName` (a closed union in `i18n/types.ts`) to its icon and an optical scale, and the mapping is exhaustive: a missing icon fails `astro check`.
 
 ## Hero photo
 
