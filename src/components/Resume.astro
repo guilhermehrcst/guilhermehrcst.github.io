@@ -1,11 +1,14 @@
 ---
 // The résumé. One page, two languages from the same dictionary shape (i18n/types.ts: Resume).
 // Each section opens with a small command (Command.astro) and answers it in the type of the Home.
-// Everything a reader or a recruiter's tool needs is text in the DOM: no canvas, no images.
+// Everything a reader or a recruiter's tool needs is text in the DOM: no canvas. The only images
+// are the small tool icons in section 04, which are decorative: every name stays as text.
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Command from './Command.astro';
 import Monument from './Monument.astro';
 import { dicts } from '../i18n/routes';
+import { aiIcons } from '../lib/ai-tools';
 import type { Lang } from '../i18n/types';
 
 interface Props { lang: Lang }
@@ -153,7 +156,16 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
           {[r.ai.models, r.ai.agents].map((g) => (
             <div>
               <h3 class="meta ai-tl">{g.label}</h3>
-              <ul class="slashes">{g.items.map((i) => <li>{i}</li>)}</ul>
+              <ul class="ai-list">
+                {g.items.map((name) => (
+                  <li>
+                    <span class="ai-icon" style={`--s: ${aiIcons[name].scale}`} aria-hidden="true">
+                      <Image src={aiIcons[name].src} alt="" width={28} height={28} densities={[1, 2, 3]} format="webp" quality={90} decoding="async" draggable="false" />
+                    </span>
+                    <span class="ai-name">{name}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
@@ -392,9 +404,26 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
   }
   .f-arrow { position: absolute; right: 0; top: var(--space-sm); width: 32px; height: 16px; color: var(--signal); }
   .ai-body { grid-column: 1 / span 6; font-size: var(--fs-lead); line-height: 1.42; text-wrap: pretty; }
-  .ai-tools { grid-column: 8 / span 5; display: grid; row-gap: var(--space-lg); }
+  .ai-tools { grid-column: 8 / span 5; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-lg); }
   .ai-tl { color: var(--muted); }
   .ai-tools ul { margin-top: var(--space-xs); font-size: var(--fs-lead); line-height: 1.45; }
+  /* Tool list: icon + name straight on the grid, two columns (the second group ends with one item).
+     No separators, no boxes. Informational only: nothing here is a link, so nothing reacts to hover.
+     Every icon sits in the same 28px optical box; each artwork carries its own --s (src/lib/ai-tools.ts). */
+  .ai-tools ul.ai-list {
+    display: grid;
+    /* Columns follow the real width: two when two names as long as "Google Antigravity" fit side by
+       side (the cap keeps it from ever becoming three), one otherwise. Names never wrap or squeeze. */
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    max-width: 30rem;
+    column-gap: var(--space-md);
+    row-gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+  .ai-list li { display: flex; align-items: center; gap: 0.7em; min-width: 0; }
+  .ai-icon { flex: none; display: grid; place-items: center; width: clamp(22px, 2vw, 28px); height: clamp(22px, 2vw, 28px); } /* 28px desktop, 22px tablet and mobile */
+  .ai-icon :global(img) { width: calc(var(--s, 1) * 100%); height: calc(var(--s, 1) * 100%); max-width: none; object-fit: contain; }
+  .ai-name { white-space: nowrap; font-size: min(var(--fs-lead), 1.375rem); line-height: 1.2; }
 
   /* 05, 06 */
   .rows { margin-top: var(--space-lg); }
@@ -465,6 +494,12 @@ const [roleA, roleB] = r.whoami.role.split(' | ');
     .r-head, .p-head, .p-points li, .cap, .flow, .row, .lm-method, .lm-exp, .px-figs { break-inside: avoid; }
     .r-head, .r-h2, .p-name, .p-head { break-after: avoid; }
     .ai { break-inside: avoid; }
+    /* Names are text and always print. Icons stay small and go grayscale: the brand colours add
+       nothing on paper, and a black-and-white printer would turn them into mud anyway. */
+    .ai-tools ul.ai-list { max-width: none; column-gap: 12pt; row-gap: 4pt; margin-top: 4pt; }
+    .ai-name { font-size: 10pt; }
+    .ai-icon { width: 13pt; height: 13pt; }
+    .ai-icon :global(img) { filter: grayscale(1); }
     a { color: inherit; }
   }
 </style>
