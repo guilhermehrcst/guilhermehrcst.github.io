@@ -41,8 +41,8 @@
   /* Type ladder. Values in comments are at 1440px. Each step is roughly 0.55-0.8 of the one above;
      before, the scale jumped from 260px display straight to 49px headlines and 14px text.
        display XL  the hero name        min(width fit, 50svh bound)   206px   (Hero.astro)
-       display L   project titles, footer       9.4vw                 135px
-       display M   the three principles         share of the row       109px
+       display L   project titles, footer       2rem + 7.14vw          135px
+       display M   the three principles         max(two lines)         109px
        headline L  the manifesto                5.6vw                  81px
        headline M  questions, about, contact    3.6vw                  52px
        lead        supporting copy              1.55vw                 22px
@@ -54,8 +54,15 @@
   --fs-lead: clamp(1.25rem, 1.55vw, 1.5rem);
   --fs-h3: clamp(1.75rem, 3.6vw, 3.5rem);
   --fs-statement: clamp(2.625rem, 5.6vw, 7rem);
-  --fs-display-l: min(9.4vw, 15rem);
-  --word-share: 0.56; /* width of the longest principle, as a share of the content width */
+  /* Display L and M are single continuous functions of the viewport width, not one value per
+     breakpoint: a per-breakpoint value jumps by 20-30% when the window grows by one pixel.
+     L is linear: 60px at 390, 135px at 1440. M is the larger of two lines that meet at 1025px, where
+     the principles switch from stacked to beside their text (the longest word fills ~95% of the 7
+     columns it sits in): 51px at 390, 78px at 1025, 109px at 1440. */
+  --fs-display-l: min(calc(2rem + 7.14vw), calc((100vw - 2 * var(--margin)) / var(--fit-name)), 15rem);
+  --fs-display-m: min(max(calc(2.13rem + 4.25vw), calc(0.025rem + 7.54vw)), calc((100vw - 2 * var(--margin)) / var(--fit-word)));
+  /* The last term of each is the old rule, kept as a ceiling: no display line is ever wider than the
+     grid (it is what binds below ~390px; on a 320px phone the linear part alone would overflow). */
 
   /* Motion. Expo-out only: precise, no bounce. */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -70,7 +77,7 @@
      --fit-name is the measured advance of GUILHERME (5.335em at 700 / -0.02em / opsz 144, Chromium)
      plus ~0.7%: content width / --fit-name makes the line span the grid exactly. Only the hero name
      uses it directly, as the upper bound of its size (Hero.astro adds a height bound); the other
-     display lines are steps of the ladder above (--fs-display-l, --word-share). */
+     display lines are steps of the ladder above (--fs-display-l, --fs-display-m). */
   --display-wght: 700;
   --display-track: -0.02em;
   --display-opsz: 'opsz' 144;
@@ -88,11 +95,11 @@
 }
 
 @media (max-width: 1024px) {
-  :root { --cols: 6; --fs-display-l: 12.5vw; --word-share: 0.8; }
+  :root { --cols: 6; }
 }
 @media (max-width: 640px) {
   /* Mobile header: two rows (name + language, then the three pages) in 57px + 1px rule. */
-  :root { --cols: 4; --header-h: 57px; --fs-body: 1rem; --fs-display-l: 15.4vw; --word-share: 1; }
+  :root { --cols: 4; --header-h: 57px; --fs-body: 1rem; }
 }
 
 *, *::before, *::after { box-sizing: border-box; }

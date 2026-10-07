@@ -39,11 +39,11 @@ const t = dicts[Astro.props.lang].principles;
   .item::before { transition: transform 900ms var(--ease); }
   .item::after { transition: transform 500ms var(--ease) 500ms; }
   .idx { grid-column: 1 / -1; align-self: start; color: var(--muted); margin-bottom: var(--space-sm); }
-  /* Sized to the longest word across both languages (CORRECTNESS/, --fit-word) as a share of the
-     content width (--word-share), so the explanation sits beside it as part of the composition. */
+  /* --fs-display-m (global.css) keeps the longest word, CORRECTNESS/, inside the 7 columns it sits
+     in, so the explanation beside it reads as part of the composition. */
   .word {
     grid-column: 1 / span 7;
-    font-size: calc((100vw - 2 * var(--margin)) * var(--word-share) / var(--fit-word));
+    font-size: var(--fs-display-m);
     font-weight: 600;
     line-height: 0.82;
     /* a touch looser than the 700 display lines: at 600 the same tracking lets R-R and T-N touch */

@@ -125,7 +125,7 @@ const icons = [
   .hero-aside {
     grid-column: 7 / span 6;
     --pad: var(--space-lg);
-    --row-h: clamp(3.625rem, 4.6vw, 4.5rem); /* 58-72px */
+    --row-h: clamp(3.25rem, 2.92rem + 1.33vw, 4.5rem); /* 52px on a phone, 66px at 1440 */
     display: flex;
     flex-direction: column;
     border-left: 1px solid var(--rule);
@@ -143,7 +143,7 @@ const icons = [
 
   .hero-blurb {
     padding: var(--space-lg) var(--pad) 0;
-    font-size: clamp(2.25rem, 2.9vw, 2.75rem); /* 36-44px */
+    font-size: clamp(1.75rem, 1.03rem + 1.756vw, 2.75rem); /* one line of growth: 28px phone, 34px at 1024, 42px at 1440 */
     font-weight: 450;
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -157,7 +157,7 @@ const icons = [
     align-items: center;
     justify-content: space-between;
     gap: var(--space-md);
-    min-height: clamp(4.5rem, 5.4vw, 5.25rem); /* 72-84px */
+    min-height: clamp(3.75rem, 3.33rem + 1.714vw, 5.25rem); /* 60px phone, 71px at 1024, 78px at 1440 */
     padding: 0 var(--pad);
     background: var(--signal);
     color: var(--ink); /* ink on the blue is 5.9:1; white would be 3.35:1 */
@@ -197,8 +197,6 @@ const icons = [
   @media (max-width: 1024px) {
     .hero-photo { grid-column: 1 / span 3; aspect-ratio: 1 / 1; }
     .hero-aside { grid-column: 4 / span 3; --pad: var(--space-md); }
-    .hero-blurb { font-size: clamp(1.875rem, 3.9vw, 2.375rem); } /* 30-38px */
-    .cta { min-height: 4.25rem; }
   }
 
   /* Mobile is its own composition: the photo takes the full width, kept shorter than its
@@ -209,15 +207,14 @@ const icons = [
     .hero-aside {
       grid-column: 1 / -1;
       --pad: 0px;
-      --row-h: 3.25rem; /* 52px */
       margin-top: var(--space-md);
       border-left: 0;
       border-top: 1px solid var(--rule);
     }
     /* Text and action come straight after the photo; the metadata closes the block as a caption. */
-    .hero-blurb { order: 1; font-size: clamp(1.625rem, 7.2vw, 2rem); padding-top: var(--space-md); } /* 26-32px */
+    .hero-blurb { order: 1; padding-top: var(--space-md); }
     .hero-cta { order: 2; margin-top: 0; padding-top: var(--space-md); }
-    .cta { min-height: 3.75rem; padding: 0 var(--space-md); }
+    .cta { padding: 0 var(--space-md); }
     .hero-meta { order: 3; margin-top: var(--space-lg); border-top: 1px solid var(--rule); }
   }
 </style>
