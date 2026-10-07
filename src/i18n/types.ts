@@ -47,8 +47,13 @@ export interface ResumeProject {
   points: string[];
 }
 
+/** Institutions shown with a logo in the résumé (sections 05 and 06). Closed on purpose, like AiToolName. */
+export type InstitutionId = 'unisuam' | 'marques-rodrigues' | 'joao-paulo' | 'harvard' | 'bradesco';
+
 /** A school or course: who, what, and its status in plain words (never a level or a grade). */
 export interface ResumeStudy {
+  /** Language-independent id of the institution: src/lib/institutions.ts maps it to its logo. */
+  institution: InstitutionId;
   school: string;
   program: string;
   status?: string;

@@ -238,16 +238,16 @@ export const en: Dict = {
     education: {
       title: 'Education',
       items: [
-        { school: 'UNISUAM', program: 'Systems Analysis and Development', status: 'Undergraduate program, started and not completed' },
-        { school: 'Colégio Marques Rodrigues', program: 'High school', status: 'Completed' },
-        { school: 'Jardim Escola João Paulo de Bangu', program: 'First and second years of high school', status: 'First exposure to information technology' },
+        { institution: 'unisuam', school: 'UNISUAM', program: 'Systems Analysis and Development', status: 'Undergraduate program, started and not completed' },
+        { institution: 'marques-rodrigues', school: 'Colégio Marques Rodrigues', program: 'High school', status: 'Completed' },
+        { institution: 'joao-paulo', school: 'Jardim Escola João Paulo de Bangu', program: 'First and second years of high school', status: 'First exposure to information technology' },
       ],
     },
     coursework: {
       title: 'Coursework',
       items: [
-        { school: 'Harvard University', program: 'CS50: Introduction to Computer Science', status: 'Part of the course material completed' },
-        { school: 'Fundação Bradesco', program: 'Information technology studies' },
+        { institution: 'harvard', school: 'Harvard University', program: 'CS50: Introduction to Computer Science', status: 'Part of the course material completed' },
+        { institution: 'bradesco', school: 'Fundação Bradesco', program: 'Information technology studies' },
       ],
     },
   },
