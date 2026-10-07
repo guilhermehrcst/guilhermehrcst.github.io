@@ -87,9 +87,13 @@ Without JS, the server-rendered SVGs show the final state. Under reduced motion,
 
 The six curator's picks on `/courses/` and `/pt/cursos/` carry an image: the supplied files, unmodified, in `src/assets/courses/` (Astro makes the AVIF/WebP/JPEG sizes at build, never upscaled: the largest is the file itself, 1536px). Each is declared in `src/lib/courses.ts` (`curated.image`: `layout`, `kind`, `position`, `ratio`; the alt text is a key into `courses.imageAlts`, so EN and PT both have one), and `CourseCard.astro` composes the cell around it. There is no logic by title anywhere. A **photo** may be cropped by its frame (`position` keeps its focus) and leans in 1.5% on hover; a **graphic** (it has its own text) keeps its frame, never zooms, and the black letterbox bars of the supplied MIT and FGV frames are trimmed by that frame, not by editing the files. `scripts/verify-dist.mjs` fails the build if any `<img>` lacks `alt`, `width` or `height`, or any srcset candidate is missing.
 
+## Icons
+
+**Radix Icons are the default family for new interface icons.** The package (`@radix-ui/react-icons`) ships React components and the site has no React, so it is not a dependency: each glyph in use is one `.astro` file in `src/components/icons/radix/` holding the package's SVG unchanged (path, viewBox, fill rules; MIT, licence in `/licenses/RadixIcons-MIT.txt`). A component carries no colour, size or spacing, only `currentColor`, an optional `class`, `width`/`height` (15 by default, as in the original) and `aria-hidden` (on by default; `aria-label` makes it announced). Add a glyph only when something uses it. The site's own earlier SVGs stay as they are, and no other icon family is introduced without an explicit decision.
+
 ## Course call to action
 
-Each course has one action, "Acessar curso" / "Go to course": a 48px button in the action blue that closes the cell, inset by the cell's own padding, with the Radix Icons `ExternalLinkIcon` on the right (`ExternalLinkIcon.astro`: the glyph copied from `@radix-ui/react-icons` 1.3.2, MIT, licence in `/licenses/RadixIcons-MIT.txt`; the package itself is not a dependency because the project has no React). It opens the institution's page with `target="_blank" rel="noopener noreferrer"`; the icon is decorative and the link's text says where it goes.
+Each course has one action, "Acessar curso" / "Go to course": a 48px button in the action blue that closes the cell, inset by the cell's own padding, with the Radix Icons `ExternalLinkIcon` on the right (`components/icons/radix/ExternalLinkIcon.astro`; see Icons). It opens the institution's page with `target="_blank" rel="noopener noreferrer"`; the icon is decorative and the link's text says where it goes.
 
 ## Institution marks
 
