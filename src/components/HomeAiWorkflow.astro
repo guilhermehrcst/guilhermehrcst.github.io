@@ -1,0 +1,90 @@
+---
+// Home 06, AI workflow: the method first (the four steps, then how it is used), the tools after it,
+// as names with their icons. No levels or proficiency claims. Everything is the résumé's copy.
+import { Image } from 'astro:assets';
+import HomeChapter from './HomeChapter.astro';
+import { dicts } from '../i18n/routes';
+import { aiIcons } from '../lib/ai-tools';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const ai = dicts[Astro.props.lang].resume.ai;
+---
+<HomeChapter id="ai-workflow" n="06" title={ai.title}>
+  <div class="grid ai">
+    <p class="meta ai-label">{ai.flowLabel}</p>
+    <ol class="flow">
+      {ai.flow.map((step, i) => (
+        <li>
+          <span class="meta f-n" aria-hidden="true">0{i + 1}</span>
+          <span class="f-w">{step}</span>
+          {i < ai.flow.length - 1 && (
+            <svg class="f-arrow" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 12h43M35 3l10 9-10 9" /></svg>
+          )}
+        </li>
+      ))}
+    </ol>
+    <p class="ai-body">{ai.body}</p>
+    <div class="ai-tools">
+      {[ai.models, ai.agents].map((g) => (
+        <div>
+          <h3 class="meta ai-tl">{g.label}</h3>
+          <ul class="ai-list">
+            {g.items.map((name) => (
+              <li>
+                <span class="ai-icon" style={`--s: ${aiIcons[name].scale}`} aria-hidden="true">
+                  <Image src={aiIcons[name].src} alt="" width={28} height={28} densities={[1, 2, 3]} format="webp" quality={90} loading="lazy" decoding="async" draggable="false" />
+                </span>
+                <span class="ai-name">{name}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</HomeChapter>
+
+<style>
+  .ai { margin-top: var(--space-xl); row-gap: var(--space-lg); }
+  .ai-label { grid-column: 1 / -1; color: var(--muted); }
+  .flow { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+  .flow li { position: relative; display: flex; flex-direction: column; gap: var(--space-xs); padding-top: var(--space-sm); border-top: 1px solid var(--ink); }
+  .flow li:first-child { border-top: 2px solid var(--signal); }
+  .f-n { color: var(--muted); }
+  /* Four steps side by side: the longest word (IMPLEMENTAR) fits a quarter of the column. */
+  .f-w {
+    font-size: min(var(--fs-h3), calc((100cqi - 2 * var(--margin) - 3 * var(--gap)) / 4 / 6.65));
+    font-weight: var(--display-wght);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variation-settings: var(--display-opsz);
+    text-transform: uppercase;
+  }
+  .f-arrow { position: absolute; right: 0; top: var(--space-sm); width: 32px; height: 16px; color: var(--signal); }
+  .ai-body { grid-column: 1 / span 6; font-size: var(--fs-lead); line-height: 1.42; text-wrap: pretty; }
+  .ai-tools { grid-column: 8 / span 5; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-lg); }
+  .ai-tl { color: var(--muted); }
+  /* Icon and name on the grid, two columns when two long names fit side by side. Nothing is a link. */
+  .ai-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    max-width: 30rem;
+    column-gap: var(--space-md);
+    row-gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+  .ai-list li { display: flex; align-items: center; gap: 0.7em; min-width: 0; }
+  .ai-icon { flex: none; display: grid; place-items: center; width: clamp(22px, 2vw, 28px); height: clamp(22px, 2vw, 28px); }
+  .ai-icon :global(img) { width: calc(var(--s, 1) * 100%); height: calc(var(--s, 1) * 100%); max-width: none; object-fit: contain; }
+  .ai-name { white-space: nowrap; font-size: min(var(--fs-lead), 1.375rem); line-height: 1.2; }
+
+  @media (max-width: 1024px) {
+    .ai-body, .ai-tools { grid-column: 1 / -1; }
+  }
+  @media (max-width: 640px) {
+    .flow { grid-template-columns: 1fr; row-gap: var(--space-md); }
+    .f-w { font-size: var(--fs-h3); }
+    .f-arrow { transform: rotate(90deg); }
+  }
+</style>

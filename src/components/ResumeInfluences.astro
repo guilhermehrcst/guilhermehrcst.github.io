@@ -1,7 +1,7 @@
 ---
 // Résumé 07, influences: the body of the section (the command and the heading are in Resume.astro,
 // next to the other sections). A rail of eight columns that runs past the edge of the window:
-// portrait, number, name, brand, one line. Editorial, not a card deck: no box, border, shadow, fill
+// portrait, name, brand, one line. Editorial, not a card deck: no box, border, shadow, fill
 // or hover, and nothing here is a link. Photographs are shown as supplied (no filter), cropped by a
 // per-photo window (src/lib/influences.ts); the brands are shown straight on the page.
 // The rail is a native horizontal scroller (touch, trackpad, wheel, keys). The script below adds a
@@ -26,8 +26,8 @@ const sizes = (w: number) =>
 
   <div class="infl-rail rv" data-reveal data-rail tabindex="0" role="region" aria-label={copy.title}>
     <div class="infl-track">
-      <ol class="infl-set">
-        {influences.map((p, i) => {
+      <ul class="infl-set">
+        {influences.map((p) => {
           const st = cropStyle(p.photo, p.crop);
           return (
             <li class="infl-card">
@@ -47,7 +47,6 @@ const sizes = (w: number) =>
                   style={`width: ${st.width}; left: ${st.left}; top: ${st.top}`}
                 />
               </div>
-              <p class="meta infl-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
               <h3 class="infl-name">{p.name}</h3>
               <div class="infl-brands">
                 {p.brands.map((id) => {
@@ -76,7 +75,7 @@ const sizes = (w: number) =>
             </li>
           );
         })}
-      </ol>
+      </ul>
     </div>
   </div>
 
@@ -241,20 +240,19 @@ const sizes = (w: number) =>
     padding-inline: var(--start) max(0px, calc(var(--margin) - var(--gap-r)));
   }
 
-  /* One set of columns. Each card is a subgrid over five shared rows (portrait, number, name, brand,
-     line), so names, brands and lines start at the same height in every column even when a name
+  /* One set of columns. Each card is a subgrid over four shared rows (portrait, name, brand, line), so names, brands and lines start at the same height in every column even when a name
      wraps. The trailing gap belongs to the set, so a copy of it placed after starts exactly one
      set-width later (the loop relies on this). */
   .infl-set {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: var(--card);
-    grid-template-rows: repeat(5, auto);
+    grid-template-rows: repeat(4, auto);
     column-gap: var(--gap-r);
     padding-inline-end: var(--gap-r);
   }
   .infl-card {
-    grid-row: span 5;
+    grid-row: span 4;
     display: grid;
     grid-template-rows: subgrid;
     row-gap: 0;
@@ -269,10 +267,7 @@ const sizes = (w: number) =>
   .infl-photo { position: relative; aspect-ratio: 8 / 9; overflow: hidden; border-radius: 4px; background: var(--surface); }
   .infl-photo :global(img) { position: absolute; max-width: none; height: auto; }
 
-  /* A hairline, then the number at its end: small, grey, quiet. */
-  .infl-n { display: flex; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); }
-  .infl-n::before { content: ''; flex: 1; height: 1px; background: var(--rule); }
-  .infl-name { margin-top: 8px; font-size: clamp(1rem, 1.25vw, 1.1875rem); font-weight: 650; line-height: 1.25; letter-spacing: -0.005em; text-wrap: balance; }
+  .infl-name { margin-top: 16px; font-size: clamp(1rem, 1.25vw, 1.1875rem); font-weight: 650; line-height: 1.25; letter-spacing: -0.005em; text-wrap: balance; }
 
   .infl-brands { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; min-height: 44px; margin-top: 12px; }
   .brand-mark { position: relative; display: block; flex: none; }

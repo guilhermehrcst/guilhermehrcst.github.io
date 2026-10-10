@@ -1,0 +1,36 @@
+---
+// Home 05, capabilities: the résumé's groups of plain words. No levels, bars, percentages or badges.
+import HomeChapter from './HomeChapter.astro';
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const c = dicts[Astro.props.lang].resume.capabilities;
+---
+<HomeChapter id="capabilities" n="05" title={c.title}>
+  <div class="grid caps">
+    {c.groups.map((g) => (
+      <div class="cap">
+        <h3 class="cap-title">{g.title}<span class="sl" aria-hidden="true">/</span></h3>
+        <ul class="slashes">{g.items.map((i) => <li>{i}</li>)}</ul>
+      </div>
+    ))}
+  </div>
+</HomeChapter>
+
+<style>
+  .caps { margin-top: var(--space-xl); row-gap: var(--space-xl); }
+  .cap { grid-column: span 4; padding-top: var(--space-sm); border-top: 1px solid var(--rule); }
+  .cap-title { font-size: var(--fs-body); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.3; }
+  .cap-title .sl { margin-left: 0.15em; }
+  /* Slash-separated: the separator is the site's mark, and it is not read. */
+  .slashes { display: flex; flex-wrap: wrap; margin-top: var(--space-sm); font-size: var(--fs-lead); line-height: 1.45; }
+  .slashes li:not(:last-child)::after { content: '/' / ''; margin-inline: 0.35em; color: var(--signal); }
+
+  @media (max-width: 1024px) {
+    .cap { grid-column: span 3; }
+  }
+  @media (max-width: 640px) {
+    .cap { grid-column: 1 / -1; }
+  }
+</style>
