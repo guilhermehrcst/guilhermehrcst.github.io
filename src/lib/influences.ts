@@ -17,6 +17,8 @@ import google from '../assets/influences/brands/google.png';
 // Anthropic's "A\" mark, drawn from the SVG served on anthropic.com (anthropic.svg, next to it),
 // rendered once to a transparent PNG so it goes through the same pipeline as the other marks.
 import anthropic from '../assets/influences/brands/anthropic.png';
+// OpenAI's horizontal signature (the knot and the wordmark), as supplied: 3840 x 2160, transparent, black.
+import openai from '../assets/influences/brands/openai.png';
 import type { InfluenceId } from '../i18n/types';
 
 /** Every portrait frame has this width / height. The crops below are computed against it. */
@@ -29,7 +31,7 @@ export const FRAME_ASPECT = 8 / 9;
  */
 export interface Crop { x: number; y: number; w: number }
 
-export type BrandId = 'nvidia' | 'spacex' | 'meta' | 'apple' | 'google' | 'anthropic';
+export type BrandId = 'nvidia' | 'spacex' | 'meta' | 'apple' | 'google' | 'anthropic' | 'openai';
 
 export interface Brand {
   /** Shown as the image's alt text: the brand is only communicated by its logo. */
@@ -48,6 +50,7 @@ export const brands: Record<BrandId, Brand> = {
   apple: { name: 'Apple', src: apple, box: { x: 246, y: 203, w: 745, h: 901 }, height: 34 },
   google: { name: 'Google', src: google, box: { x: 162, y: 80, w: 1835, h: 591 }, height: 28 },
   anthropic: { name: 'Anthropic', src: anthropic, box: { x: 0, y: 0, w: 1135, h: 800 }, height: 22 },
+  openai: { name: 'OpenAI', src: openai, box: { x: 122, y: 584, w: 3596, h: 992 }, height: 26 }, // the knot's height; the wordmark is about half of it
 };
 
 export interface Influence {
@@ -57,11 +60,7 @@ export interface Influence {
   alt: string;
   photo: ImageMetadata;
   crop: Crop;
-  /**
-   * The brands beside the name. Sam Altman has none yet: no official OpenAI artwork was available
-   * when he was added, and a mark is never drawn or borrowed from elsewhere. Add 'openai' here once
-   * the file exists.
-   */
+  /** The brands beside the name. */
   brands: readonly BrandId[];
 }
 
@@ -72,7 +71,7 @@ export const influences = [
   { id: 'mark', name: 'Mark Zuckerberg', alt: 'Mark Zuckerberg', photo: mark, crop: { x: 0.51, y: 0.44, w: 0.61 }, brands: ['meta'] },
   { id: 'steve', name: 'Steve Jobs', alt: 'Steve Jobs', photo: steve, crop: { x: 0.5, y: 0.45, w: 0.71 }, brands: ['apple'] },
   { id: 'larry-sergey', name: 'Larry Page & Sergey Brin', alt: 'Larry Page and Sergey Brin', photo: larrySergey, crop: { x: 0.472, y: 0.5, w: 0.617 }, brands: ['google'] },
-  { id: 'sam', name: 'Sam Altman', alt: 'Sam Altman', photo: sam, crop: { x: 0.5, y: 0.47, w: 0.8 }, brands: [] },
+  { id: 'sam', name: 'Sam Altman', alt: 'Sam Altman', photo: sam, crop: { x: 0.5, y: 0.47, w: 0.8 }, brands: ['openai'] },
   { id: 'dario', name: 'Dario Amodei', alt: 'Dario Amodei', photo: dario, crop: { x: 0.5, y: 0.45, w: 0.72 }, brands: ['anthropic'] },
   { id: 'tim', name: 'Tim Cook', alt: 'Tim Cook', photo: tim, crop: { x: 0.44, y: 0.66, w: 0.46 }, brands: ['apple'] },
 ] as const satisfies readonly Influence[];
