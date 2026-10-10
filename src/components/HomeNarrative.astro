@@ -1,0 +1,74 @@
+---
+// The Home after the hero: the editorial document, with the narrative terminal beside it.
+//   >= 1180px  two columns on the page grid: the terminal rail (3 of 12) sticks under the header
+//              while the document (9 of 12) scrolls.
+//   <  1180px  one column: the terminal becomes a compact strip under the header, showing only the
+//              chapter being read, at a fixed height so nothing below it moves.
+// The document is the source of every fact; without JS, or in print, it reads the same without the rail.
+import NarrativeTerminal from './NarrativeTerminal.astro';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<div class="hn" data-home-narrative>
+  <div class="hn-rail">
+    <NarrativeTerminal lang={lang} />
+  </div>
+  <div class="hn-doc">
+    <slot />
+  </div>
+</div>
+
+<style>
+  /* The document is a size container: the display type inside it is sized against its own width
+     (cqi), not the window's, so the giant lines that span the page still span the column. Outside
+     the wide layout the column is the window, and every size is what it was. */
+  .hn-doc {
+    min-width: 0;
+    container-type: inline-size;
+    --fs-display-l: min(calc(1.78rem + 5.52cqi), calc((100cqi - 2 * var(--margin)) / var(--fit-name)), 15rem);
+  }
+
+  /* Compact strip (default, below 1180px). Height is fixed (see NarrativeTerminal.astro) so typing
+     never shifts the document. Under the header (z-index 50), on paper, with a hairline. */
+  .hn-rail {
+    position: sticky;
+    top: calc(var(--header-h) + 1px);
+    z-index: 40;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    padding-inline: var(--margin);
+  }
+  /* Anchors land below the header and the strip. */
+  :global(html:has(.hn)) { scroll-padding-top: calc(var(--header-h) + var(--nt-strip) + 16px); }
+
+  @media (min-width: 1180px) {
+    .hn {
+      display: grid;
+      grid-template-columns: minmax(280px, 3fr) minmax(0, 9fr);
+      column-gap: var(--gap);
+      padding-inline: var(--margin);
+      align-items: start;
+    }
+    .hn-rail {
+      top: calc(var(--header-h) + var(--space-md));
+      z-index: auto;
+      border-bottom: 0;
+      padding-inline: 0;
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100svh - var(--header-h) - 2 * var(--space-md));
+    }
+    /* The rail already holds the page margin: the sections inside sit on the column's edges. */
+    .hn-doc { --margin: 0px; }
+    /* Except the dark Lume block, which needs air inside its own edges. */
+    .hn-doc :global(.lume) { --margin: var(--space-lg); }
+    :global(html:has(.hn)) { scroll-padding-top: calc(var(--header-h) + 16px); }
+  }
+
+  @media print {
+    .hn-rail { display: none !important; }
+    .hn-doc { container-type: normal; }
+  }
+</style>

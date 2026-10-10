@@ -9,6 +9,7 @@ import Principles from './Principles.astro';
 import About from './About.astro';
 import Contact from './Contact.astro';
 import Monument from './Monument.astro';
+import HomeNarrative from './HomeNarrative.astro';
 import { dicts } from '../i18n/routes';
 import type { Lang } from '../i18n/types';
 
@@ -19,13 +20,15 @@ const t = dicts[lang];
 <Base lang={lang} page="home" title={t.meta.title} description={t.meta.description}>
   <main id="main">
     <Hero lang={lang} />
-    <Statement lang={lang} />
-    <DitherBand />
-    <Lume lang={lang} />
-    <Pexiscale lang={lang} />
-    <Principles lang={lang} />
-    <About lang={lang} />
-    <Contact lang={lang} />
+    <HomeNarrative lang={lang}>
+      <Statement lang={lang} />
+      <DitherBand />
+      <Lume lang={lang} />
+      <Pexiscale lang={lang} />
+      <Principles lang={lang} />
+      <About lang={lang} />
+      <Contact lang={lang} />
+    </HomeNarrative>
   </main>
   <Monument lang={lang} page="home" />
 </Base>

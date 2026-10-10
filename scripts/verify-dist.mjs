@@ -39,6 +39,9 @@ const COURSE_HOSTS = new Set([
   'skillsbuild.org',
 ]);
 
+/** The Home: one narrative shell, with exactly one terminal, hidden from assistive tech. */
+const HOME_PAGES = new Set(['/', '/pt/']);
+
 const SECRET_PATTERNS = [/AKIA[0-9A-Z]{16}/, /sk_(live|test)_[0-9a-zA-Z]{10,}/, /-----BEGIN [A-Z ]*PRIVATE KEY-----/, /ghp_[0-9A-Za-z]{30,}/, /eyJhbGciOi/];
 
 const errors = [];
@@ -67,6 +70,17 @@ for (const pg of PAGES) {
 
   if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(pg.path, 'skip link or main landmark missing');
   if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(pg.path, 'expected exactly one <h1>');
+
+  // The narrative terminal belongs to the Home only, and repeats what the page says: aria-hidden.
+  const shells = html.match(/<[a-z]+\b[^>]*\sdata-home-narrative[\s>=][^>]*>/g) ?? [];
+  const terminals = html.match(/<[a-z]+\b[^>]*\sdata-narrative-terminal[\s>=][^>]*>/g) ?? [];
+  if (HOME_PAGES.has(pg.path)) {
+    if (shells.length !== 1) fail(pg.path, `expected one data-home-narrative, found ${shells.length}`);
+    if (terminals.length !== 1) fail(pg.path, `expected one data-narrative-terminal, found ${terminals.length}`);
+    for (const t of terminals) if (!/\saria-hidden="true"/.test(t)) fail(pg.path, 'narrative terminal must be aria-hidden="true"');
+  } else if (shells.length || terminals.length) {
+    fail(pg.path, 'narrative terminal outside the Home');
+  }
 
   // Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare `alt`) and reserves its box (width and
   // height), so nothing shifts when it loads.

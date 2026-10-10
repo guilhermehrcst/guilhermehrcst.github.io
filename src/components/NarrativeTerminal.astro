@@ -80,6 +80,27 @@ const first = chapters[0]!; // whoami: the static, server-rendered state
     background: var(--signal);
   }
 
+  /* Compact strip (below 1180px): only the chapter being read, its output flowing as one paragraph,
+     in a box of fixed height (--nt-strip, global.css); what does not fit is clipped, never scrolled. */
+  @media (max-width: 1179px) {
+    .nt {
+      flex-direction: row;
+      gap: var(--gap);
+      height: calc(var(--nt-strip) - 1px);
+      padding-block: var(--space-xs);
+      overflow: hidden;
+    }
+    .nt-prompt { flex: none; padding: 0; border: 0; }
+    .nt-log { display: block; padding: 0; flex: 1 1 auto; min-width: 0; }
+    .nt-block:not(.is-active) { display: none; }
+    .nt-line { display: inline; }
+    .nt-line::before { content: ' · '; color: var(--muted); }
+    .nt-cmd + .nt-line::before { content: none; }
+  }
+  @media (max-width: 640px) {
+    .nt-prompt { display: none; }
+  }
+
   @media print {
     .nt { display: none !important; }
   }
