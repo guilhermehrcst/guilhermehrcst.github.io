@@ -320,7 +320,8 @@ Requirements:
 
 In `src/scripts/narrative-terminal.ts`:
 
-- observe all `[data-narrative-section]` with `rootMargin: '-42% 0px -52% 0px'`;
+- observe all `[data-narrative-section]` with one `IntersectionObserver` using `rootMargin: '-42% 0px -52% 0px'`;
+- on each observer callback, sample `getBoundingClientRect()` for the ten chapter sections once and pass those samples to `pickActiveChapter(..., window.innerHeight * 0.45)`;
 - use `pickActiveChapter(..., window.innerHeight * 0.45)` when observation changes;
 - initialize `whoami` as completed because it is already server-rendered;
 - one active `AbortController` owns each typing sequence;
@@ -356,6 +357,8 @@ git commit -m "feat: add scroll-synchronized narrative terminal"
 **Files:**
 - Create: `src/components/HomeNarrative.astro`
 - Modify: `src/styles/global.css`
+- Modify: `src/components/Home.astro`
+- Modify: `scripts/verify-dist.mjs`
 
 **Interfaces:**
 - Consumes: `NarrativeTerminal lang={lang}`.
@@ -387,6 +390,8 @@ Wide layout, `min-width: 1180px`:
 }
 ```
 
+The shell root must include `data-home-narrative`.
+
 Terminal rail:
 
 - `position: sticky`;
@@ -411,12 +416,12 @@ Print:
 
 - hide `[data-narrative-terminal]`.
 
-- [ ] **Step 3: Temporarily mount the shell around an empty slot in a local branch check**
+- [ ] **Step 3: Mount the shell around the current post-Hero Home composition**
 
-Use the component from a minimal temporary Home edit only long enough to verify CSS and build behavior, then keep the real composition change for Task 6.
+In `Home.astro`, keep `Hero` full-width, then wrap the current sections after it in `HomeNarrative lang={lang}`. This establishes the final wide-screen terminal geometry without yet changing chapter content. Task 6 replaces the wrapped section list with the final living-résumé order.
 
 Run: `npm run check && npm run build`  
-Expected: PASS after the real Home shell marker exists. If the temporary mount is needed to satisfy the invariant, leave the shell mounted around the current Home sections; Task 6 will replace its contents.
+Expected: PASS with exactly one Home shell and one terminal on each Home language route.
 
 - [ ] **Step 4: Commit**
 
@@ -435,6 +440,7 @@ git commit -m "feat: add responsive home narrative shell"
 - Create: `src/components/HomeEducation.astro`
 - Create: `src/components/HomeInfluences.astro`
 - Modify: `src/components/ResumeInfluences.astro`
+- Modify: `src/lib/influences.ts`
 
 **Interfaces:**
 - Consumes:
@@ -487,6 +493,8 @@ In `ResumeInfluences.astro`:
 - remove `.infl-n` markup and CSS;
 - reduce the shared card row model from five rows to four rows;
 - update comments that still describe numbering;
+
+In `src/lib/influences.ts`, update the stale reading-order comment so it no longer claims a visible number is rendered.
 - keep the eight-person order unchanged;
 - keep rail drift, accessibility, clone behavior, reduced motion, and manual scrolling unchanged.
 
