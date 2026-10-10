@@ -25,6 +25,11 @@ test('a step never runs twice; scrolling back changes nothing', () => {
   assert.deepEqual(advance([true, true, false], 0), { instant: [], animate: null });
 });
 
+test('a step still typing is finished at once when the reader moves past it', () => {
+  assert.deepEqual(advance([true, true, false, false], 3, 1), { instant: [1, 2], animate: 3 });
+  assert.deepEqual(advance([true, true, false], 1, 1), { instant: [], animate: null }, 'still on it: it keeps typing');
+});
+
 test('out-of-range positions are ignored', () => {
   assert.deepEqual(advance([false, false], -1), { instant: [], animate: null });
   assert.deepEqual(advance([false, false], 2), { instant: [], animate: null });

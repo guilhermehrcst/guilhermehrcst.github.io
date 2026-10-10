@@ -43,6 +43,8 @@ const { command } = RESUME_STEPS[index]!;
   @media screen {
     :global(.t-pending) .t-step:not(:global(.is-run), :global(.is-now)) .t-c { max-width: 0; }
     :global(.t-pending) .t-step:not(:global(.is-run), :global(.is-now)) .t-out > :global(*) { opacity: 0; transform: translateY(6px); }
+    /* Nothing hidden can be clicked; keyboard focus entering a step runs it at once (resume-session.ts). */
+    :global(.t-pending) .t-step:not(:global(.is-run), :global(.is-now)) .t-out { pointer-events: none; }
 
     /* Typing: the command is monospace, so one step of the width is exactly one character. */
     .t-step:global(.is-run) .t-c { max-width: calc(var(--len) * 1ch); transition: max-width calc(var(--len) * var(--t-char)) steps(var(--len), end); }
@@ -57,6 +59,9 @@ const { command } = RESUME_STEPS[index]!;
     .t-out > :global(:nth-child(4)) { --o: 3; }
     .t-out > :global(:nth-child(5)) { --o: 4; }
     .t-out > :global(:nth-child(n + 6)) { --o: 5; }
+    /* Finished at once (skipped, passed while still typing, or reached by keyboard): no transition. */
+    .t-step:global(.is-now) .t-c, .t-step:global(.is-now) .t-out > :global(*) { transition: none !important; }
+    .t-step:global(.is-now) .t-cur { animation: none !important; opacity: 0; }
   }
   @media print {
     .t-step { padding-block: 10pt 4pt; }

@@ -31,12 +31,17 @@ export function commandMs(command: string): number {
 /**
  * The reader has reached step `reached` (its command line is on screen, or above it). The session
  * is continuous, so every earlier step that has not run yet is shown at once, already executed
- * (`instant`), and only the reached step is typed (`animate`), unless it already ran. A step never
- * runs twice. Out-of-range indices change nothing.
+ * (`instant`), and only the reached step is typed (`animate`), unless it already ran. `inFlight` is
+ * the step still being typed, if any: once the reader is past it, it is finished at once too, so
+ * only one command is ever typing. A step never runs twice. Out-of-range indices change nothing.
  */
-export function advance(ran: readonly boolean[], reached: number): { instant: number[]; animate: number | null } {
+export function advance(
+  ran: readonly boolean[],
+  reached: number,
+  inFlight: number | null = null,
+): { instant: number[]; animate: number | null } {
   if (!Number.isInteger(reached) || reached < 0 || reached >= ran.length) return { instant: [], animate: null };
   const instant: number[] = [];
-  for (let i = 0; i < reached; i++) if (!ran[i]) instant.push(i);
+  for (let i = 0; i < reached; i++) if (!ran[i] || i === inFlight) instant.push(i);
   return { instant, animate: ran[reached] ? null : reached };
 }
