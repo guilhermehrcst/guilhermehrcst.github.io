@@ -39,7 +39,22 @@ const COURSE_HOSTS = new Set([
   'skillsbuild.org',
 ]);
 
+/** The Home: one narrative shell, with exactly one terminal, hidden from assistive tech, and ten
+ *  chapters, each exactly once and in this order (src/lib/narrative-state.ts: NARRATIVE_ORDER). */
+const HOME_PAGES = new Set(['/', '/pt/']);
+const NARRATIVE_ORDER = ['whoami', 'pexiscale', 'lume', 'pexis-machine', 'capabilities', 'ai-workflow', 'education', 'influences', 'principles', 'contact'];
+const RESUME_PAGES = new Set(['/resume/', '/pt/curriculo/']);
+const decode = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+const textOf = (html) => decode(html.replace(/<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ');
+
 const SECRET_PATTERNS = [/AKIA[0-9A-Z]{16}/, /sk_(live|test)_[0-9a-zA-Z]{10,}/, /-----BEGIN [A-Z ]*PRIVATE KEY-----/, /ghp_[0-9A-Za-z]{30,}/, /eyJhbGciOi/];
+
+/** The terminal's markup: from its root to the end of its chapter data (it holds no nested <template>). */
+function terminalHtml(html) {
+  const start = html.search(/<[a-z]+\b[^>]*\sdata-narrative-terminal[\s>=]/);
+  const end = html.indexOf('</template>', start);
+  return start < 0 || end < 0 ? '' : html.slice(start, end + '</template>'.length);
+}
 
 const errors = [];
 const fail = (page, msg) => errors.push(`${page}: ${msg}`);
@@ -67,6 +82,34 @@ for (const pg of PAGES) {
 
   if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(pg.path, 'skip link or main landmark missing');
   if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(pg.path, 'expected exactly one <h1>');
+
+  // The narrative terminal belongs to the Home only, and repeats what the page says: aria-hidden.
+  const shells = html.match(/<[a-z]+\b[^>]*\sdata-home-narrative[\s>=][^>]*>/g) ?? [];
+  const terminals = html.match(/<[a-z]+\b[^>]*\sdata-narrative-terminal[\s>=][^>]*>/g) ?? [];
+  if (HOME_PAGES.has(pg.path)) {
+    if (shells.length !== 1) fail(pg.path, `expected one data-home-narrative, found ${shells.length}`);
+    if (terminals.length !== 1) fail(pg.path, `expected one data-narrative-terminal, found ${terminals.length}`);
+    for (const t of terminals) if (!/\saria-hidden="true"/.test(t)) fail(pg.path, 'narrative terminal must be aria-hidden="true"');
+    if (/<(?:input|textarea|select|form|button)\b|contenteditable/.test(terminalHtml(html))) fail(pg.path, 'narrative terminal must not accept input');
+
+    // The ten chapters, once each, in reading order.
+    const ids = attrs(html, /\sdata-narrative-section="([^"]+)"/g);
+    if (ids.join() !== NARRATIVE_ORDER.join()) fail(pg.path, `narrative sections ${ids.join()} != ${NARRATIVE_ORDER.join()}`);
+    if (!/<h2 id="pm-title"[^>]*>Pexis Machine</.test(html)) fail(pg.path, 'Pexis Machine heading missing');
+
+    // A narrator, not a second source: every line the terminal can print is already on the page,
+    // outside the terminal (a joined flow, A → B → C, is checked step by step).
+    const lines = attrs(terminalHtml(html), /<p data-narrative-line[^>]*>([^<]*)<\/p>/g).map(decode);
+    if (lines.length === 0) fail(pg.path, 'narrative terminal has no chapter lines');
+    const page = textOf(html.replace(terminalHtml(html), ' '));
+    for (const line of lines) {
+      for (const part of line.split(' → ')) if (!page.includes(part)) fail(pg.path, `terminal line not on the page: ${part}`);
+    }
+  } else if (shells.length || terminals.length) {
+    fail(pg.path, 'narrative terminal outside the Home');
+  }
+  if (/class="[^"]*\binfl-n\b/.test(html)) fail(pg.path, 'influence cards must not be numbered (.infl-n)');
+  if (RESUME_PAGES.has(pg.path) && !/\sdata-print[\s>=]/.test(html)) fail(pg.path, 'résumé print action (data-print) missing');
 
   // Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare `alt`) and reserves its box (width and
   // height), so nothing shifts when it loads.

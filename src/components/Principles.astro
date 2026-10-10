@@ -6,7 +6,7 @@ import type { Lang } from '../i18n/types';
 interface Props { lang: Lang }
 const t = dicts[Astro.props.lang].principles;
 ---
-<section class="principles" aria-labelledby="principles-label">
+<section class="principles" aria-labelledby="principles-label" data-narrative-section="principles">
   <div class="grid">
     <Label text={t.label} class="pr-label" />
   </div>
@@ -44,7 +44,7 @@ const t = dicts[Astro.props.lang].principles;
      as part of the composition. */
   .word {
     grid-column: 1 / span 7;
-    font-size: min(var(--fs-display-l), calc(((100vw - 2 * var(--margin) - 11 * var(--gap)) / 12 * 7 + 6 * var(--gap)) / var(--fit-word)));
+    font-size: min(var(--fs-display-l), calc(((100cqi - 2 * var(--margin) - 11 * var(--gap)) / 12 * 7 + 6 * var(--gap)) / var(--fit-word)));
     font-weight: 600;
     line-height: 0.82;
     /* a touch looser than the 700 display lines: at 600 the same tracking lets R-R and T-N touch */
@@ -58,7 +58,7 @@ const t = dicts[Astro.props.lang].principles;
   @media (max-width: 1024px) {
     /* Stacked, the word could be as wide as the window; the extra term holds it to the size it has
        when the layout switches to the 7 columns at 1025px (80px), so the size does not jump there. */
-    .word { grid-column: 1 / -1; font-size: min(var(--fs-display-l), calc(37px + 4.2vw), calc((100vw - 2 * var(--margin)) / var(--fit-word))); }
+    .word { grid-column: 1 / -1; font-size: min(var(--fs-display-l), calc(37px + 4.2cqi), calc((100cqi - 2 * var(--margin)) / var(--fit-word))); }
     .pbody { grid-column: 3 / span 4; margin-top: var(--space-md); }
   }
   @media (max-width: 640px) {

@@ -7,6 +7,7 @@ import type { Lang } from '../i18n/types';
 
 interface Props { lang: Lang }
 const t = dicts[Astro.props.lang].lume;
+const w = dicts[Astro.props.lang].resume.work.lume;
 const fig = t.figure;
 
 // Static picture (no JS / reduced motion): the final, compacted state.
@@ -16,11 +17,12 @@ const live = model.blocks.filter((b) => b.live).reduce((n, b) => n + b.len, 0);
 const fullRows = Math.floor(live / COLS);
 const rest = live % COLS;
 ---
-<section class="lume" id="lume" aria-labelledby="lume-title" data-reveal>
+<section class="lume" id="lume" aria-labelledby="lume-title" data-reveal data-narrative-section="lume">
   <div class="cols" aria-hidden="true"></div>
   <div class="grid head">
     <Label text={t.label} class="p-label" />
     <h2 id="lume-title" class="giant">{t.name}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+    <p class="meta spec"><span>{w.kind}</span><span class="spec-stack">{w.stack}</span></p>
     <p class="question">{t.question}</p>
   </div>
 
@@ -63,7 +65,7 @@ const rest = live % COLS;
     </div>
   </div>
 
-  <ProjectDetail project={t} num="02" />
+  <ProjectDetail project={t} num="03" />
 </section>
 
 <style>
@@ -118,6 +120,10 @@ const rest = live % COLS;
     letter-spacing: -0.022em;
     text-wrap: balance;
   }
+
+  /* What it is and what it is built with: the résumé's own two lines, which the terminal repeats. */
+  .spec { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 2px; margin-top: var(--space-md); }
+  .spec-stack { color: var(--void-muted); }
 
   .body { margin-top: var(--space-xl); row-gap: var(--space-xl); align-items: end; }
   .fig { grid-column: 1 / span 8; }

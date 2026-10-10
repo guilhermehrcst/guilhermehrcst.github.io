@@ -1,0 +1,52 @@
+---
+// Home 07, education: the résumé's education and coursework as one list (formal education first,
+// then courses). Institution, program and status in plain words; the logo is a small mark beside
+// the name, which leads. No levels or grades.
+import { Image } from 'astro:assets';
+import HomeChapter from './HomeChapter.astro';
+import { dicts } from '../i18n/routes';
+import { institutionLogos } from '../lib/institutions';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const r = dicts[Astro.props.lang].resume;
+const items = [...r.education.items, ...r.coursework.items];
+---
+<HomeChapter id="education" n="07" title={r.education.title}>
+  <ul class="rows">
+    {items.map((it) => (
+      <li class="grid row">
+        <h3 class="row-school">
+          <span class="brand" style={`--s: ${institutionLogos[it.institution].scale}`} aria-hidden="true">
+            <Image src={institutionLogos[it.institution].src} alt="" width={40} height={40} densities={[1, 2, 3]} format="webp" quality={90} loading="lazy" decoding="async" draggable="false" />
+          </span>
+          <span class="school-name">{it.school}</span>
+        </h3>
+        <p class="row-program">{it.program}</p>
+        {it.status && <p class="meta row-status">{it.status}</p>}
+      </li>
+    ))}
+  </ul>
+</HomeChapter>
+
+<style>
+  .rows { margin-top: var(--space-lg); }
+  .row { padding-block: var(--space-md); border-top: 1px solid var(--rule); row-gap: var(--space-xs); align-items: center; }
+  .row:last-child { border-bottom: 1px solid var(--rule); }
+  .row-school { grid-column: 1 / span 4; display: flex; align-items: center; gap: var(--space-sm); font-size: var(--fs-lead); font-weight: 560; line-height: 1.25; }
+  /* A fixed, unfilled box: every logo centred in it at its own optical scale, so names share a vertical. */
+  .brand { --logo: 32px; flex: none; display: grid; place-items: center; width: 40px; height: 32px; }
+  .brand :global(img) { width: calc(var(--s, 1) * var(--logo)); height: calc(var(--s, 1) * var(--logo)); max-width: none; object-fit: contain; }
+  .school-name { min-width: 0; text-wrap: balance; }
+  .row-program { grid-column: 5 / span 5; font-size: var(--fs-lead); line-height: 1.3; }
+  .row-status { grid-column: 10 / span 3; color: var(--muted); }
+
+  @media (max-width: 1024px) {
+    .row-school { grid-column: 1 / -1; }
+    .row-program { grid-column: 1 / span 4; }
+    .row-status { grid-column: 5 / span 2; }
+  }
+  @media (max-width: 640px) {
+    .row-program, .row-status { grid-column: 1 / -1; }
+  }
+</style>

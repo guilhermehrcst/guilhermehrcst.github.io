@@ -1,0 +1,39 @@
+---
+// A Home chapter drawn from the résumé: its command (Command.astro), its heading, then its body
+// (the slot). The section carries the chapter id the narrative terminal follows; the heading is
+// the section's accessible name. Content comes from the résumé dictionary, never copied into new copy.
+import Command from './Command.astro';
+import type { NarrativeChapterId } from '../lib/narrative-state';
+
+interface Props { id: NarrativeChapterId; n: string; title: string }
+const { id, n, title } = Astro.props;
+---
+<section class="hc" data-narrative-section={id} aria-labelledby={`${id}-title`}>
+  <div class="grid hc-head">
+    <Command n={n} cmd={id} />
+    <h2 id={`${id}-title`} class="hc-title">{title}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+  </div>
+  <slot />
+</section>
+
+<style>
+  .hc { padding-bottom: var(--space-section); }
+  .hc-head { row-gap: var(--space-md); padding-top: var(--space-sm); border-top: 1px solid var(--ink); }
+  .hc-head > :global(.cmd) { grid-column: 1 / -1; }
+  /* The display ladder, bounded so the widest word of any heading (ENGINEERING/, COMPETÊNCIAS/:
+     the résumé's --fit-h2) stays inside the column it sits in. */
+  .hc-title {
+    grid-column: 1 / span 10;
+    font-size: min(var(--fs-display-l), calc((100cqi - 2 * var(--margin)) / 7.7));
+    font-weight: var(--display-wght);
+    line-height: 0.86;
+    letter-spacing: var(--display-track);
+    font-variation-settings: var(--display-opsz);
+    text-transform: uppercase;
+    margin-left: -0.04em;
+    text-wrap: balance;
+  }
+  @media (max-width: 1024px) {
+    .hc-title { grid-column: 1 / -1; }
+  }
+</style>

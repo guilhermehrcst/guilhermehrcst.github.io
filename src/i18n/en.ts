@@ -28,7 +28,7 @@ export const en: Dict = {
       'I work on transactional backends and on how data is represented in memory: areas where a wrong answer can cost money or trust. I use AI tools extensively and treat their output as unverified until a test, a measurement, or a query shows otherwise.',
   },
   lume: {
-    label: '02 / Research',
+    label: '03 / Research',
     name: 'Lume',
     question:
       'Can software and data be represented using less memory and less data movement without sacrificing correctness?',
@@ -68,7 +68,7 @@ export const en: Dict = {
     },
   },
   pexiscale: {
-    label: '03 / Product',
+    label: '02 / Product',
     name: 'Pexiscale',
     question: 'A multi-tenant platform for the day-to-day work of small and medium-sized businesses.',
     body: "Customers, catalog, inventory, quotes, and orders in one platform, with each company's data kept isolated. I design and build it.",
@@ -103,8 +103,29 @@ export const en: Dict = {
       },
     },
   },
+  pexisMachine: {
+    label: '04 / Experiment',
+    name: 'Pexis Machine',
+    kind: 'Software computer-architecture laboratory',
+    question: 'How can the behavior of a complete computer be observed inside the browser?',
+    body: 'An experimental laboratory that simulates a machine in software. The simulation core is the source of truth; the visual interface only observes the state it produces.',
+    facts: [
+      {
+        title: 'Machine in software',
+        body: 'CPU, memory, interconnect and accelerators are modeled as parts of the system, not as decorative animation.',
+      },
+      {
+        title: 'Core as source of truth',
+        body: 'The visualization reads state produced by the simulator; the interface does not decide machine behavior.',
+      },
+      {
+        title: 'Evolving laboratory',
+        body: 'Its first use is to experiment with ideas related to Lume while leaving room for new subsystems and architecture studies.',
+      },
+    ],
+  },
   principles: {
-    label: '04 / Method',
+    label: '09 / Method',
     items: [
       {
         title: 'Correctness',
@@ -128,7 +149,7 @@ export const en: Dict = {
     cta: 'View résumé',
   },
   contact: {
-    label: '06 / Contact',
+    label: '10 / Contact',
     heading: 'Contact',
     items: [
       { icon: 'email', label: 'Email', value: 'guilhermehrcst@gmail.com', href: 'mailto:guilhermehrcst@gmail.com' },

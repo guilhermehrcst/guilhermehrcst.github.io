@@ -28,7 +28,7 @@ export const pt: Dict = {
       'Trabalho com backends transacionais e com a forma como os dados são representados na memória: áreas em que uma resposta errada pode custar dinheiro ou confiança. Uso ferramentas de IA extensivamente e trato as respostas delas como não verificadas até que um teste, uma medição ou uma consulta mostre o contrário.',
   },
   lume: {
-    label: '02 / Pesquisa',
+    label: '03 / Pesquisa',
     name: 'Lume',
     question:
       'É possível representar software e dados usando menos memória e menos movimentação de dados, sem abrir mão da correção?',
@@ -68,7 +68,7 @@ export const pt: Dict = {
     },
   },
   pexiscale: {
-    label: '03 / Produto',
+    label: '02 / Produto',
     name: 'Pexiscale',
     question: 'Uma plataforma multi-tenant para o trabalho do dia a dia de pequenas e médias empresas.',
     body: 'Clientes, catálogo, estoque, orçamentos e pedidos em uma única plataforma, com os dados de cada empresa mantidos isolados. Eu projeto e desenvolvo a plataforma.',
@@ -103,8 +103,29 @@ export const pt: Dict = {
       },
     },
   },
+  pexisMachine: {
+    label: '04 / Experimento',
+    name: 'Pexis Machine',
+    kind: 'Laboratório de arquitetura computacional em software',
+    question: 'Como observar o comportamento de uma máquina computacional completa dentro do navegador?',
+    body: 'Um laboratório experimental que simula uma máquina em software. O núcleo de simulação é a fonte de verdade; a interface visual apenas observa o estado produzido por ele.',
+    facts: [
+      {
+        title: 'Máquina em software',
+        body: 'CPU, memória, interconexão e aceleradores são modelados como partes do sistema, não como uma animação decorativa.',
+      },
+      {
+        title: 'Core como fonte de verdade',
+        body: 'A visualização lê o estado produzido pelo simulador; a interface não decide o comportamento da máquina.',
+      },
+      {
+        title: 'Laboratório evolutivo',
+        body: 'O primeiro uso é experimentar ideias ligadas ao Lume, preservando espaço para novos subsistemas e estudos de arquitetura.',
+      },
+    ],
+  },
   principles: {
-    label: '04 / Método',
+    label: '09 / Método',
     items: [
       {
         title: 'Correção',
@@ -128,7 +149,7 @@ export const pt: Dict = {
     cta: 'Ver currículo',
   },
   contact: {
-    label: '06 / Contato',
+    label: '10 / Contato',
     heading: 'Contato',
     items: [
       { icon: 'email', label: 'E-mail', value: 'guilhermehrcst@gmail.com', href: 'mailto:guilhermehrcst@gmail.com' },

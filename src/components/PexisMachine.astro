@@ -1,0 +1,81 @@
+---
+// Home 04, Pexis Machine: an experimental laboratory that simulates a computer in software. Set in
+// the same editorial system as Pexiscale and Lume (label, name, question, facts), and only with the
+// approved copy (dict.pexisMachine): no link, no screenshot, no metric, no performance claim.
+import Label from './Label.astro';
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const t = dicts[Astro.props.lang].pexisMachine;
+---
+<section class="pm" id="pexis-machine" aria-labelledby="pm-title" data-narrative-section="pexis-machine">
+  <div class="grid head">
+    <Label text={t.label} class="pm-label" />
+    <h2 id="pm-title" class="giant">{t.name}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+    <p class="meta spec">{t.kind}</p>
+    <p class="question">{t.question}</p>
+    <p class="lead">{t.body}</p>
+  </div>
+
+  <ol class="facts grid">
+    {t.facts.map((f, i) => (
+      <li class="fact">
+        <span class="meta n">04.{i + 1}</span>
+        <h3 class="f-title">{f.title}</h3>
+        <p class="f-body">{f.body}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .pm { padding-block: var(--space-section); }
+  .pm :global(.pm-label) { grid-column: 1 / -1; color: var(--muted); }
+  .giant {
+    grid-column: 1 / -1;
+    font-size: var(--fs-display-l);
+    font-weight: var(--display-wght);
+    line-height: 0.8;
+    letter-spacing: var(--display-track);
+    font-variation-settings: var(--display-opsz);
+    text-transform: uppercase;
+    margin: var(--space-md) 0 0 -0.045em;
+    text-wrap: balance;
+  }
+  .spec { grid-column: 1 / -1; margin-top: var(--space-md); }
+  .question {
+    grid-column: 4 / span 9;
+    margin-top: var(--space-xl);
+    font-size: var(--fs-h3);
+    font-weight: 440;
+    line-height: 1.02;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+  .lead {
+    grid-column: 4 / span 6;
+    margin-top: var(--space-lg);
+    font-size: var(--fs-lead);
+    line-height: 1.3;
+    letter-spacing: -0.006em;
+    color: var(--muted);
+    text-wrap: pretty;
+  }
+
+  /* The facts, as in Pexiscale and Lume (ProjectDetail.astro), without a ledger: nothing is claimed
+     as evidence yet. */
+  .facts { margin-top: var(--space-2xl); row-gap: var(--space-lg); }
+  .fact { grid-column: span 4; border-top: 1px solid var(--rule); padding-top: var(--space-sm); display: flex; flex-direction: column; gap: var(--space-xs); }
+  .n { color: var(--muted); }
+  .f-title { font-size: clamp(1.375rem, 1.9vw, 1.875rem); font-weight: 560; line-height: 1.1; letter-spacing: -0.012em; margin-top: var(--space-md); }
+  .f-body { color: var(--muted); font-size: var(--fs-body); line-height: 1.5; max-width: 32em; }
+
+  @media (max-width: 1024px) {
+    .question, .lead { grid-column: 1 / -1; }
+    .fact { grid-column: span 2; }
+  }
+  @media (max-width: 640px) {
+    .fact { grid-column: 1 / -1; }
+  }
+</style>
