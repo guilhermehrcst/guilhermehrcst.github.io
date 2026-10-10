@@ -10,7 +10,7 @@
     "build": "astro build && node scripts/verify-dist.mjs",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node --experimental-strip-types --test tests/narrative-state.test.ts tests/narrative-content.test.ts"
+    "test": "node --experimental-strip-types --test tests/narrative-state.test.ts tests/narrative-content.test.ts tests/resume-session.test.ts"
   },
   "dependencies": {
     "@fontsource-variable/google-sans-flex": "5.3.1",
