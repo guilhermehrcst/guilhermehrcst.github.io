@@ -163,10 +163,11 @@ export const pt: Dict = {
     meta: {
       title: 'Currículo — Guilherme Henrique',
       description:
-        'Currículo de Guilherme Henrique, engenheiro de software no Rio de Janeiro com atuação em backend, sistemas e IA: trabalhos selecionados em Pexiscale, Lume e Paulex, competências, formação e cursos.',
+        'Currículo de Guilherme Henrique, engenheiro de software no Rio de Janeiro com atuação em backend, sistemas e IA: trabalhos selecionados em Pexiscale, Lume e Pexis Machine, competências, fluxo de trabalho com IA, formação e cursos.',
     },
     heading: 'Currículo',
     print: 'Imprimir currículo',
+    terminal: { path: '~/curriculo', ready: ['sessão iniciada', 'role para executar'], closed: 'sessão encerrada.' },
     whoami: {
       role: 'Engenheiro de Software | Backend, Sistemas e IA',
       place: 'Rio de Janeiro, Brasil',

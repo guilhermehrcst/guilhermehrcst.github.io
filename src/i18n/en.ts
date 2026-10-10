@@ -163,10 +163,11 @@ export const en: Dict = {
     meta: {
       title: 'Résumé — Guilherme Henrique',
       description:
-        'Résumé of Guilherme Henrique, a software engineer in Rio de Janeiro working on backend, systems, and AI: selected work on Pexiscale, Lume, and Paulex, capabilities, education, and coursework.',
+        'Résumé of Guilherme Henrique, a software engineer in Rio de Janeiro working on backend, systems, and AI: selected work on Pexiscale, Lume, and Pexis Machine, capabilities, AI workflow, education, and coursework.',
     },
     heading: 'Résumé',
     print: 'Print résumé',
+    terminal: { path: '~/resume', ready: ['session initialized', 'scroll to execute'], closed: 'session closed.' },
     whoami: {
       role: 'Software Engineer | Backend, Systems & AI',
       place: 'Rio de Janeiro, Brazil',

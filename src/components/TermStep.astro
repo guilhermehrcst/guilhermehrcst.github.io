@@ -1,0 +1,71 @@
+---
+// One step of the résumé's terminal session: the command line, then its output (the slot).
+// The command is narrative (aria-hidden: the step's heading names the section for assistive tech);
+// the output is ordinary, server-rendered HTML. src/scripts/resume-session.ts runs each step as the
+// reader scrolls to it; without it (no JS, reduced motion, print) every step is already executed.
+import { RESUME_PROMPT, RESUME_STEPS, type ResumeStepId } from '../lib/resume-session';
+
+interface Props { id: ResumeStepId; labelledby?: string; as?: 'section' | 'footer' }
+const { id, labelledby, as: Tag = 'section' } = Astro.props;
+const index = RESUME_STEPS.findIndex((s) => s.id === id);
+const { command } = RESUME_STEPS[index]!;
+---
+<Tag class="t-step" data-step={id} data-index={index} aria-labelledby={labelledby} style={`--len: ${command.length}`}>
+  <p class="t-cmd" aria-hidden="true">
+    <span class="t-prompt">{RESUME_PROMPT}</span>
+    <span class="t-typed"><span class="t-c" lang="en">{command}</span><span class="t-cur"></span></span>
+  </p>
+  <div class="t-out">
+    <slot />
+  </div>
+</Tag>
+
+<style>
+  .t-step { padding-block: var(--space-xl) var(--space-lg); }
+  .t-cmd {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 1ch;
+    font-family: var(--mono);
+    font-size: var(--fs-t-cmd);
+    line-height: 1.5;
+    color: var(--void-ink);
+  }
+  .t-prompt { color: var(--void-muted); }
+  .t-typed { display: inline-flex; align-items: center; }
+  .t-c { display: inline-block; white-space: nowrap; overflow: hidden; vertical-align: bottom; }
+  /* The cursor: a still block that shows only while the command is being typed. */
+  .t-cur { display: inline-block; width: 0.6em; height: 1.15em; margin-left: 0.15ch; background: var(--void-signal); opacity: 0; }
+  .t-out { margin-top: var(--space-lg); }
+
+  /* Before a step runs (only while the session controller is live, see Resume.astro): no command
+     text, no output. Screen only: print and assistive tech always get the whole document. */
+  @media screen {
+    :global(.t-pending) .t-step:not(:global(.is-run), :global(.is-now)) .t-c { max-width: 0; }
+    :global(.t-pending) .t-step:not(:global(.is-run), :global(.is-now)) .t-out > :global(*) { opacity: 0; transform: translateY(6px); }
+
+    /* Typing: the command is monospace, so one step of the width is exactly one character. */
+    .t-step:global(.is-run) .t-c { max-width: calc(var(--len) * 1ch); transition: max-width calc(var(--len) * var(--t-char)) steps(var(--len), end); }
+    .t-step:global(.is-run) .t-cur { animation: t-cursor calc(var(--len) * var(--t-char) + var(--t-gap)) steps(1, end) both; }
+    /* The output arrives in quick blocks once the command is typed, one after the other. */
+    .t-step:global(.is-run) .t-out > :global(*) {
+      transition: opacity 260ms linear, transform 420ms var(--ease);
+      transition-delay: calc(var(--len) * var(--t-char) + var(--t-gap) + var(--o, 0) * 70ms);
+    }
+    .t-out > :global(:nth-child(2)) { --o: 1; }
+    .t-out > :global(:nth-child(3)) { --o: 2; }
+    .t-out > :global(:nth-child(4)) { --o: 3; }
+    .t-out > :global(:nth-child(5)) { --o: 4; }
+    .t-out > :global(:nth-child(n + 6)) { --o: 5; }
+  }
+  @media print {
+    .t-step { padding-block: 10pt 4pt; }
+    .t-cmd { font-size: 8pt; color: var(--gh-gray-600); break-after: avoid; }
+    .t-prompt, .t-cur { display: none; }
+    .t-out { margin-top: 2pt; }
+  }
+  @keyframes t-cursor {
+    0%, 99% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+</style>
