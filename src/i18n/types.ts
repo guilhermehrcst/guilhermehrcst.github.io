@@ -55,7 +55,7 @@ export interface ResumeProject {
 }
 
 /** People in the résumé's influences section. Closed on purpose: src/lib/influences.ts holds their name, photo and brands. */
-export type InfluenceId = 'jensen' | 'elon' | 'mark' | 'steve' | 'larry-sergey';
+export type InfluenceId = 'jensen' | 'elon' | 'mark' | 'steve' | 'larry-sergey' | 'sam' | 'dario' | 'tim';
 
 /** Institutions shown with a logo in the résumé (sections 05 and 06). Closed on purpose, like AiToolName. */
 export type InstitutionId = 'unisuam' | 'marques-rodrigues' | 'joao-paulo' | 'harvard' | 'bradesco';

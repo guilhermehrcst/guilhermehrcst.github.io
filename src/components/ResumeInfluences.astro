@@ -1,9 +1,11 @@
 ---
 // Résumé 07, influences: the body of the section (the command and the heading are in Resume.astro,
-// next to the other sections). Five columns straight on the page grid: portrait, number, name, brand,
-// one line. Editorial, not a card deck: no box, border, shadow, fill or hover, and nothing here is a
-// link. Whitespace and alignment separate the columns. Photographs are shown as supplied (no filter),
-// cropped by a per-photo window (src/lib/influences.ts); the brands are shown straight on the page.
+// next to the other sections). A rail of eight columns that runs past the edge of the window:
+// portrait, number, name, brand, one line. Editorial, not a card deck: no box, border, shadow, fill
+// or hover, and nothing here is a link. Photographs are shown as supplied (no filter), cropped by a
+// per-photo window (src/lib/influences.ts); the brands are shown straight on the page.
+// The rail is a native horizontal scroller (touch, trackpad, wheel, keys). The script below adds a
+// slow, endless drift on top: enrichment only. Without it the rail is a static row of the eight.
 import { Image } from 'astro:assets';
 import { brands, brandStyle, cropStyle, influences } from '../lib/influences';
 import type { Resume } from '../i18n/types';
@@ -13,66 +15,69 @@ const { copy } = Astro.props;
 
 // Source widths: capped at the photo's own size, never upscaled.
 const photoWidths = (w: number) => [...new Set([480, 720, 960, 1280, 1600].filter((x) => x < w).concat(w))];
+// The column's width at each layout (see --card below), divided by the crop's share of the photo.
 const sizes = (w: number) =>
-  `(max-width: 480px) calc((100vw - 56px) / ${w}), (max-width: 700px) calc(50vw / ${w}), (max-width: 1024px) calc(33vw / ${w}), (max-width: 1179px) calc(30vw / ${w}), calc(19vw / ${w})`;
+  `(max-width: 640px) calc(76vw / ${w}), (max-width: 1180px) calc(34vw / ${w}), (max-width: 1684px) calc(19vw / ${w}), calc(320px / ${w})`;
 ---
 <div class="infl">
   <div class="grid">
     <p class="infl-intro">{copy.intro}</p>
   </div>
 
-  <div class="grid">
-    <ol class="infl-grid">
-      {influences.map((p, i) => {
-        const st = cropStyle(p.photo, p.crop);
-        return (
-          <li class="infl-card" data-reveal style={`--i: ${i}`}>
-            <div class="infl-photo">
-              <Image
-                src={p.photo}
-                alt={p.alt}
-                widths={photoWidths(p.photo.width)}
-                sizes={sizes(p.crop.w)}
-                width={p.photo.width}
-                height={p.photo.height}
-                format="webp"
-                quality={82}
-                loading="lazy"
-                decoding="async"
-                draggable="false"
-                style={`width: ${st.width}; left: ${st.left}; top: ${st.top}`}
-              />
-            </div>
-            <p class="meta infl-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
-            <h3 class="infl-name">{p.name}</h3>
-            <div class="infl-brands">
-              {p.brands.map((id) => {
-                const b = brands[id];
-                const s = brandStyle(b);
-                return (
-                  <span class="brand-mark" style={`width: ${s.wrapperW}px; height: ${b.height}px`}>
-                    <Image
-                      src={b.src}
-                      alt={b.name}
-                      width={s.imgW}
-                      height={Math.round((s.imgW * b.src.height) / b.src.width)}
-                      densities={[1, 2, 3]}
-                      format="webp"
-                      quality={90}
-                      loading="lazy"
-                      decoding="async"
-                      draggable="false"
-                      style={`width: ${s.width}; left: ${s.left}; top: ${s.top}`}
-                    />
-                  </span>
-                );
-              })}
-            </div>
-            <p class="infl-desc">{copy.descriptions[p.id]}</p>
-          </li>
-        );
-      })}
-    </ol>
+  <div class="infl-rail rv" data-reveal data-rail tabindex="0" role="region" aria-label={copy.title}>
+    <div class="infl-track">
+      <ol class="infl-set">
+        {influences.map((p, i) => {
+          const st = cropStyle(p.photo, p.crop);
+          return (
+            <li class="infl-card">
+              <div class="infl-photo">
+                <Image
+                  src={p.photo}
+                  alt={p.alt}
+                  widths={photoWidths(p.photo.width)}
+                  sizes={sizes(p.crop.w)}
+                  width={p.photo.width}
+                  height={p.photo.height}
+                  format="webp"
+                  quality={82}
+                  loading="lazy"
+                  decoding="async"
+                  draggable="false"
+                  style={`width: ${st.width}; left: ${st.left}; top: ${st.top}`}
+                />
+              </div>
+              <p class="meta infl-n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+              <h3 class="infl-name">{p.name}</h3>
+              <div class="infl-brands">
+                {p.brands.map((id) => {
+                  const b = brands[id];
+                  const s = brandStyle(b);
+                  return (
+                    <span class="brand-mark" style={`width: ${s.wrapperW}px; height: ${b.height}px`}>
+                      <Image
+                        src={b.src}
+                        alt={b.name}
+                        width={s.imgW}
+                        height={Math.round((s.imgW * b.src.height) / b.src.width)}
+                        densities={[1, 2, 3]}
+                        format="webp"
+                        quality={90}
+                        loading="lazy"
+                        decoding="async"
+                        draggable="false"
+                        style={`width: ${s.width}; left: ${s.left}; top: ${s.top}`}
+                      />
+                    </span>
+                  );
+                })}
+              </div>
+              <p class="infl-desc">{copy.descriptions[p.id]}</p>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   </div>
 
   <div class="grid infl-close">
@@ -82,26 +87,179 @@ const sizes = (w: number) =>
   </div>
 </div>
 
+<script>
+  // The drift: the rail scrolls itself, slowly and endlessly, as long as nobody is using it.
+  // Enrichment only. The rail is a native scroller and works without this; nothing is hidden
+  // until this runs, and under prefers-reduced-motion it never moves on its own.
+  //
+  // How the loop works: a copy of the set of eight is appended once, when the drift first runs
+  // (hidden from assistive tech and from focus). The copy starts exactly one set-width (the
+  // period) after the original, so a scrollLeft of x and of x + period show the same pixels once
+  // x is past the page margin: when the drift passes the period plus that margin it subtracts the
+  // period, which nobody can see. The period is measured, never assumed, so a resize, a rotation
+  // or a late font changes nothing. Widths are whole pixels (see the CSS) so the two match exactly.
+  //
+  // It pauses while the pointer is over the rail, while it has focus, while a finger is on it and
+  // for a moment after any scroll it did not make itself (a gesture, the wheel, keys), and it only
+  // runs while the rail is on screen and the page is visible.
+  const SECONDS_PER_LOOP = 64; // one full set of eight; at 1440px that is ~35px per second
+  const IDLE_MS = 2500; // after the last interaction
+  const START_DELAY_MS = 1200; // lets the rail's entrance finish first
+  const EASE_MS = 600; // speed changes (start, hover) ease over about this long
+
+  document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
+    const found = rail.querySelector<HTMLElement>('.infl-track');
+    const original = found?.querySelector<HTMLElement>('.infl-set');
+    if (!found || !original) return;
+    const track: HTMLElement = found;
+    const set: HTMLElement = original;
+
+    // Copies exist only once the drift runs, so with reduced motion the rail stays a row of eight.
+    // One is enough unless the window is wider than a whole set (~3500px and up): then another.
+    let copy: HTMLElement | null = null;
+    const addCopy = () => {
+      const c = set.cloneNode(true) as HTMLElement;
+      c.setAttribute('aria-hidden', 'true');
+      c.setAttribute('inert', '');
+      c.querySelectorAll('img').forEach((img) => (img.alt = ''));
+      track.append(c);
+      copy ??= c;
+    };
+    const ensureCopy = () => { if (!copy) addCopy(); };
+    const period = () => (copy ? copy.getBoundingClientRect().left - set.getBoundingClientRect().left : 0);
+    // Before the first column there is the page margin, before the copy only the gap: the two
+    // positions look the same only past that margin, so the drift recentres there.
+    const lead = () => set.getBoundingClientRect().left - track.getBoundingClientRect().left;
+
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    let pos = rail.scrollLeft; // where the drift wants the rail, in fractional px
+    let written = -1; // the scrollLeft the drift last set; anything else was the user
+    let speed = 0; // px per ms, eased toward the target
+    let hovered = false;
+    let focused = false;
+    let touching = false;
+    let onScreen = false;
+    let quietUntil = 0;
+    let frame = 0;
+    let then = 0;
+    const quiet = (ms: number) => (quietUntil = Math.max(quietUntil, performance.now() + ms));
+
+    function tick(now: number) {
+      frame = requestAnimationFrame(tick);
+      const dt = then ? Math.min(now - then, 64) : 0;
+      then = now;
+      const p = period();
+      if (p <= 0) return;
+      if (rail.scrollWidth - rail.clientWidth < p + lead() + 1 && track.children.length < 4) addCopy();
+
+      if (written >= 0 && Math.abs(rail.scrollLeft - written) > 1) {
+        // Moved by someone else: follow, stop at once, wait.
+        pos = written = rail.scrollLeft;
+        speed = 0;
+        quiet(IDLE_MS);
+      }
+      const interacting = touching || now < quietUntil;
+      const target = interacting || hovered || focused ? 0 : p / (SECONDS_PER_LOOP * 1000);
+      speed = interacting ? 0 : speed + (target - speed) * Math.min(1, dt / EASE_MS);
+      if (target === 0 && speed < 0.002) speed = 0; // under 2px a second: stopped, not creeping
+      pos += speed * dt;
+      if (!interacting && pos >= p + lead()) pos -= p;
+      if (!interacting) {
+        rail.scrollLeft = pos;
+        written = rail.scrollLeft;
+      }
+    }
+
+    function update() {
+      const run = onScreen && document.visibilityState === 'visible' && !reduce.matches;
+      if (run && !frame) {
+        ensureCopy();
+        then = 0;
+        frame = requestAnimationFrame(tick);
+      } else if (!run && frame) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        speed = 0;
+      }
+    }
+
+    let first = true;
+    new IntersectionObserver(([e]) => {
+      onScreen = !!e?.isIntersecting;
+      if (onScreen && first) {
+        first = false;
+        quiet(START_DELAY_MS);
+      }
+      update();
+    }).observe(rail);
+    document.addEventListener('visibilitychange', update);
+    reduce.addEventListener('change', update);
+
+    rail.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hovered = true; });
+    rail.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') hovered = false; });
+    rail.addEventListener('pointerdown', () => quiet(IDLE_MS));
+    rail.addEventListener('touchstart', () => (touching = true), { passive: true });
+    const lift = () => { touching = false; quiet(IDLE_MS); };
+    rail.addEventListener('touchend', lift, { passive: true });
+    rail.addEventListener('touchcancel', lift, { passive: true });
+    rail.addEventListener('wheel', () => quiet(IDLE_MS), { passive: true });
+    rail.addEventListener('focusin', () => (focused = true));
+    rail.addEventListener('focusout', () => (focused = false));
+  });
+</script>
+
 <style>
   .infl { display: grid; row-gap: var(--space-lg); margin-top: var(--space-lg); }
   .infl-intro { grid-column: 1 / span 6; font-size: var(--fs-lead); line-height: 1.4; text-wrap: pretty; max-width: 34em; }
 
-  /* The five columns. Each card is a subgrid over five shared rows (portrait, number, name, brand,
-     line), so names, brands and lines start at the same height in every column even when a name wraps. */
-  .infl-grid {
-    grid-column: 1 / -1;
+  /* The rail: from the left edge of the page grid to the right edge of the window, so the last
+     column is cut by the window and the row reads as continuing. A native horizontal scroller; its
+     scrollbar is hidden, scrolling is not (touch, trackpad, wheel, and arrow keys once focused).
+     --card keeps the column close to the old five-column width on a desktop (just under five in
+     view), about three on a tablet and one and a quarter on a phone. */
+  .infl-rail {
+    --card: clamp(220px, 19vw, 320px);
+    --gap-r: var(--space-md);
+    /* Whole pixels where supported, so one set is a whole number of pixels wide and the loop's
+       recentring lands on exactly the same pixels (older browsers keep the values above). */
+    --card: round(down, clamp(220px, 19vw, 320px), 1px);
+    --gap-r: round(var(--space-md), 1px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-behavior: auto; /* the loop's recentring must be instant */
+    scrollbar-width: none;
+    padding-bottom: var(--space-lg);
+  }
+  .infl-rail::-webkit-scrollbar { display: none; }
+  .infl-rail:focus-visible { outline-offset: -2px; }
+  .infl-track {
+    --start: var(--margin);
+    --start: round(var(--margin), 1px); /* whole pixels too: see .infl-rail */
+    display: flex;
+    width: max-content;
+    padding-inline: var(--start) max(0px, calc(var(--margin) - var(--gap-r)));
+  }
+
+  /* One set of columns. Each card is a subgrid over five shared rows (portrait, number, name, brand,
+     line), so names, brands and lines start at the same height in every column even when a name
+     wraps. The trailing gap belongs to the set, so a copy of it placed after starts exactly one
+     set-width later (the loop relies on this). */
+  .infl-set {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    column-gap: var(--space-md); /* the columns are separated by whitespace alone: a little more than the page gap at small widths */
-    row-gap: 0;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--card);
+    grid-template-rows: repeat(5, auto);
+    column-gap: var(--gap-r);
+    padding-inline-end: var(--gap-r);
   }
   .infl-card {
     grid-row: span 5;
     display: grid;
     grid-template-rows: subgrid;
     row-gap: 0;
-    margin-bottom: var(--space-lg);
     min-width: 0;
+    user-select: none; /* a drag on the rail scrolls it; it never selects a name */
   }
   @supports not (grid-template-rows: subgrid) {
     .infl-card { display: flex; flex-direction: column; }
@@ -130,29 +288,20 @@ const sizes = (w: number) =>
   .infl-sign { grid-column: 10 / -1; justify-self: end; white-space: nowrap; align-self: end; display: flex; align-items: center; gap: 12px; color: var(--muted); }
   .infl-sign::before { content: ''; width: 48px; height: 1px; background: var(--rule); }
 
-  /* Entrance, once per card, staggered a little: the portrait is revealed from the top. Opacity and
-     clip only. The hidden state exists only after .reveal-ready (scripts/motion.ts), so it is fail-open. */
-  :global(.reveal-ready) .infl-card:not(:global(.is-in)) .infl-photo { clip-path: inset(0 0 100% 0); }
-  :global(.reveal-ready) .infl-card:not(:global(.is-in)) > :not(.infl-photo) { opacity: 0; }
-  .infl-photo { clip-path: inset(0 0 0 0); transition: clip-path 900ms var(--ease) calc(var(--i, 0) * 70ms); }
-  .infl-card > :not(.infl-photo) { transition: opacity var(--t-medium) linear calc(250ms + var(--i, 0) * 70ms); }
+  /* Entrance: the rail fades in once (the global .rv reveal, fail-open); the drift starts after it. */
 
-  /* Below 1180px five columns would make the portraits ~180px: three, then two, so they keep their size. */
-  @media (max-width: 1179px) {
-    .infl-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 1180px) {
+    .infl-rail { --card: 34vw; --card: round(down, 34vw, 1px); }
   }
   @media (max-width: 1024px) {
     .infl-intro { grid-column: 1 / -1; }
     .infl-quote { grid-column: 2 / span 5; }
     .infl-sign { grid-column: 1 / -1; justify-self: start; }
   }
-  @media (max-width: 700px) {
-    .infl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 640px) {
+    .infl-rail { --card: 76vw; --card: round(down, 76vw, 1px); }
   }
-  /* Phone: one column, the portrait full width, room to breathe. */
   @media (max-width: 480px) {
-    .infl-grid { grid-template-columns: 1fr; }
-    .infl-card { margin-bottom: var(--space-xl); }
     .infl-quote { grid-column: 1 / -1; }
     .infl-mark { grid-column: 1 / -1; }
   }
