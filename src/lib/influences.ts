@@ -20,6 +20,7 @@ import anthropic from '../assets/influences/brands/anthropic.png';
 // OpenAI's horizontal signature (the knot and the wordmark), as supplied: 3840 x 2160, transparent, black.
 import openai from '../assets/influences/brands/openai.png';
 import type { InfluenceId } from '../i18n/types';
+import { influenceRoster } from './influence-roster';
 
 /** Every portrait frame has this width / height. The crops below are computed against it. */
 export const FRAME_ASPECT = 8 / 9;
@@ -64,22 +65,21 @@ export interface Influence {
   brands: readonly BrandId[];
 }
 
-// In reading order: the number shown beside each person is its place here (01 to 08).
-export const influences = [
-  { id: 'jensen', name: 'Jensen Huang', alt: 'Jensen Huang', photo: jensen, crop: { x: 0.47, y: 0.312, w: 0.6 }, brands: ['nvidia'] },
-  { id: 'elon', name: 'Elon Musk', alt: 'Elon Musk', photo: elon, crop: { x: 0.47, y: 0.302, w: 0.59 }, brands: ['spacex'] },
-  { id: 'mark', name: 'Mark Zuckerberg', alt: 'Mark Zuckerberg', photo: mark, crop: { x: 0.51, y: 0.44, w: 0.61 }, brands: ['meta'] },
-  { id: 'steve', name: 'Steve Jobs', alt: 'Steve Jobs', photo: steve, crop: { x: 0.5, y: 0.45, w: 0.71 }, brands: ['apple'] },
-  { id: 'larry-sergey', name: 'Larry Page & Sergey Brin', alt: 'Larry Page and Sergey Brin', photo: larrySergey, crop: { x: 0.472, y: 0.5, w: 0.617 }, brands: ['google'] },
-  { id: 'sam', name: 'Sam Altman', alt: 'Sam Altman', photo: sam, crop: { x: 0.5, y: 0.47, w: 0.8 }, brands: ['openai'] },
-  { id: 'dario', name: 'Dario Amodei', alt: 'Dario Amodei', photo: dario, crop: { x: 0.5, y: 0.45, w: 0.72 }, brands: ['anthropic'] },
-  { id: 'tim', name: 'Tim Cook', alt: 'Tim Cook', photo: tim, crop: { x: 0.44, y: 0.66, w: 0.46 }, brands: ['apple'] },
-] as const satisfies readonly Influence[];
+// The photograph, crop and brands of each person. Order and names come from the roster
+// (src/lib/influence-roster.ts), which plain Node can load; this file imports images.
+const portraits: Record<InfluenceId, Omit<Influence, 'id' | 'name'>> = {
+  jensen: { alt: 'Jensen Huang', photo: jensen, crop: { x: 0.47, y: 0.312, w: 0.6 }, brands: ['nvidia'] },
+  elon: { alt: 'Elon Musk', photo: elon, crop: { x: 0.47, y: 0.302, w: 0.59 }, brands: ['spacex'] },
+  mark: { alt: 'Mark Zuckerberg', photo: mark, crop: { x: 0.51, y: 0.44, w: 0.61 }, brands: ['meta'] },
+  steve: { alt: 'Steve Jobs', photo: steve, crop: { x: 0.5, y: 0.45, w: 0.71 }, brands: ['apple'] },
+  'larry-sergey': { alt: 'Larry Page and Sergey Brin', photo: larrySergey, crop: { x: 0.472, y: 0.5, w: 0.617 }, brands: ['google'] },
+  sam: { alt: 'Sam Altman', photo: sam, crop: { x: 0.5, y: 0.47, w: 0.8 }, brands: ['openai'] },
+  dario: { alt: 'Dario Amodei', photo: dario, crop: { x: 0.5, y: 0.45, w: 0.72 }, brands: ['anthropic'] },
+  tim: { alt: 'Tim Cook', photo: tim, crop: { x: 0.44, y: 0.66, w: 0.46 }, brands: ['apple'] },
+};
 
-// Every InfluenceId appears here (a missing one is a type error), and only once (a duplicate fails the build).
-type Missing = Exclude<InfluenceId, (typeof influences)[number]['id']>;
-const everyone: [Missing] extends [never] ? true : Missing = true;
-if (!everyone || new Set(influences.map((p) => p.id)).size !== influences.length) throw new Error('influences: duplicate id');
+/** In reading order. A person missing from the roster or from portraits is a type error. */
+export const influences: readonly Influence[] = influenceRoster.map((p) => ({ ...p, ...portraits[p.id] }));
 
 /**
  * CSS for an <img> inside a frame of FRAME_ASPECT so that only the crop window is visible.

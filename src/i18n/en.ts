@@ -103,6 +103,27 @@ export const en: Dict = {
       },
     },
   },
+  pexisMachine: {
+    label: '04 / Experiment',
+    name: 'Pexis Machine',
+    kind: 'Software computer-architecture laboratory',
+    question: 'How can the behavior of a complete computer be observed inside the browser?',
+    body: 'An experimental laboratory that simulates a machine in software. The simulation core is the source of truth; the visual interface only observes the state it produces.',
+    facts: [
+      {
+        title: 'Machine in software',
+        body: 'CPU, memory, interconnect and accelerators are modeled as parts of the system, not as decorative animation.',
+      },
+      {
+        title: 'Core as source of truth',
+        body: 'The visualization reads state produced by the simulator; the interface does not decide machine behavior.',
+      },
+      {
+        title: 'Evolving laboratory',
+        body: 'Its first use is to experiment with ideas related to Lume while leaving room for new subsystems and architecture studies.',
+      },
+    ],
+  },
   principles: {
     label: '04 / Method',
     items: [

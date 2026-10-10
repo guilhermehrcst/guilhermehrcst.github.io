@@ -103,6 +103,27 @@ export const pt: Dict = {
       },
     },
   },
+  pexisMachine: {
+    label: '04 / Experimento',
+    name: 'Pexis Machine',
+    kind: 'Laboratório de arquitetura computacional em software',
+    question: 'Como observar o comportamento de uma máquina computacional completa dentro do navegador?',
+    body: 'Um laboratório experimental que simula uma máquina em software. O núcleo de simulação é a fonte de verdade; a interface visual apenas observa o estado produzido por ele.',
+    facts: [
+      {
+        title: 'Máquina em software',
+        body: 'CPU, memória, interconexão e aceleradores são modelados como partes do sistema, não como uma animação decorativa.',
+      },
+      {
+        title: 'Core como fonte de verdade',
+        body: 'A visualização lê o estado produzido pelo simulador; a interface não decide o comportamento da máquina.',
+      },
+      {
+        title: 'Laboratório evolutivo',
+        body: 'O primeiro uso é experimentar ideias ligadas ao Lume, preservando espaço para novos subsistemas e estudos de arquitetura.',
+      },
+    ],
+  },
   principles: {
     label: '04 / Método',
     items: [

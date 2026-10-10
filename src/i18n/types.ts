@@ -43,6 +43,17 @@ export interface PexiscaleFigure {
   shots: { sales: string; catalog: string; home: string };
 }
 
+/** The Home's Pexis Machine chapter: an experimental software computer-architecture lab. Only
+    approved facts: no link, no metric, no performance claim. */
+export interface PexisMachineCopy {
+  label: string;
+  name: string;
+  kind: string;
+  question: string;
+  body: string;
+  facts: [Fact, Fact, Fact];
+}
+
 /** One entry of the résumé's selected work. Bullets are fixed-length tuples so EN and PT cannot
     drift: a bullet added in one language is a type error until it exists in the other. */
 export interface ResumeProject {
@@ -151,6 +162,7 @@ export interface Dict {
   statement: { label: string; text: string; mark: string; aside: string };
   lume: Project & { figure: LumeFigure };
   pexiscale: Project & { figure: PexiscaleFigure };
+  pexisMachine: PexisMachineCopy;
   principles: { label: string; items: [Fact, Fact, Fact] };
   about: { label: string; heading: string; body: string; also: string; cta: string };
   contact: {
