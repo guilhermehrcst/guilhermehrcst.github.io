@@ -44,6 +44,8 @@ const COURSE_HOSTS = new Set([
 const HOME_PAGES = new Set(['/', '/pt/']);
 const NARRATIVE_ORDER = ['whoami', 'pexiscale', 'lume', 'pexis-machine', 'capabilities', 'ai-workflow', 'education', 'influences', 'principles', 'contact'];
 const RESUME_PAGES = new Set(['/resume/', '/pt/curriculo/']);
+/** The résumé's terminal session, in order (src/lib/resume-session.ts: RESUME_STEPS). */
+const RESUME_STEPS = ['whoami', 'projects', 'capabilities', 'ai-workflow', 'education', 'influences', 'contact', 'exit'];
 const decode = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
 const textOf = (html) => decode(html.replace(/<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ');
 
@@ -110,6 +112,19 @@ for (const pg of PAGES) {
   }
   if (/class="[^"]*\binfl-n\b/.test(html)) fail(pg.path, 'influence cards must not be numbered (.infl-n)');
   if (RESUME_PAGES.has(pg.path) && !/\sdata-print[\s>=]/.test(html)) fail(pg.path, 'résumé print action (data-print) missing');
+  if (RESUME_PAGES.has(pg.path)) {
+    // One terminal session: the steps once each and in order, the hero (the h1) and the closing
+    // footer inside it, no images, and nothing that accepts input.
+    const steps = attrs(html, /\sdata-step="([^"]+)"/g);
+    if (steps.join() !== RESUME_STEPS.join()) fail(pg.path, `résumé steps ${steps.join()} != ${RESUME_STEPS.join()}`);
+    const term = /<main id="main" class="term"[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
+    if (!term) fail(pg.path, 'résumé terminal (main.term) missing');
+    if (!/<h1[\s>]/.test(term)) fail(pg.path, 'résumé title must be inside the terminal');
+    if (!/<footer\b[^>]*data-step="exit"/.test(term)) fail(pg.path, 'résumé must close with the exit footer inside the terminal');
+    if (/<img\b/.test(html)) fail(pg.path, 'résumé terminal must have no images');
+    if (/<(?:input|textarea|select|form)\b|contenteditable/.test(html)) fail(pg.path, 'résumé terminal must not accept input');
+    if (/Paulex/.test(term)) fail(pg.path, 'projects --selected is Pexiscale, Lume and Pexis Machine only');
+  }
 
   // Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare `alt`) and reserves its box (width and
   // height), so nothing shifts when it loads.

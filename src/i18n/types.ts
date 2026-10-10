@@ -89,6 +89,9 @@ export interface Resume {
   meta: { title: string; description: string };
   heading: string;
   print: string;
+  /** The terminal session around the page: its working directory, the two lines under the title,
+      and the line after `exit`. Commands themselves are language-independent (src/lib/resume-session.ts). */
+  terminal: { path: string; ready: [string, string]; closed: string };
   whoami: { role: string; place: string; summary: string };
   work: ResumeSection & {
     note: string;
