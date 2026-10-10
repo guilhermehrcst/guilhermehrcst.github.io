@@ -62,15 +62,17 @@ const first = chapters[0]!; // whoami: the static, server-rendered state
     gap: var(--space-sm);
     padding-top: var(--space-sm);
   }
-  .nt-block { flex: none; }
-  .nt-cmd { color: var(--muted); }
-  .nt-p { color: var(--signal); font-weight: 600; }
-  .nt-line { overflow-wrap: anywhere; }
+  /* Blocks are also built at runtime (src/scripts/narrative-terminal.ts), without Astro's scoping
+     attribute, so everything inside the log is styled through :global, under .nt. */
+  .nt-log :global(.nt-block) { flex: none; }
+  .nt-log :global(.nt-cmd) { color: var(--muted); }
+  .nt-log :global(.nt-p) { color: var(--signal); font-weight: 600; }
+  .nt-log :global(.nt-line) { overflow-wrap: anywhere; }
   /* The chapter being read is in ink; those already narrated recede. */
-  .nt-block.is-active, .nt-block.is-active .nt-cmd { color: var(--ink); }
+  .nt-log :global(.nt-block.is-active), .nt-log :global(.nt-block.is-active .nt-cmd) { color: var(--ink); }
 
   /* A cursor only while a chapter is being typed: a still block at the end of the newest row. */
-  .nt-block.is-typing > :last-child::after {
+  .nt-log :global(.nt-block.is-typing > :last-child::after) {
     content: '';
     display: inline-block;
     width: 0.55em;
@@ -92,10 +94,10 @@ const first = chapters[0]!; // whoami: the static, server-rendered state
     }
     .nt-prompt { flex: none; padding: 0; border: 0; }
     .nt-log { display: block; padding: 0; flex: 1 1 auto; min-width: 0; }
-    .nt-block:not(.is-active) { display: none; }
-    .nt-line { display: inline; }
-    .nt-line::before { content: ' · '; color: var(--muted); }
-    .nt-cmd + .nt-line::before { content: none; }
+    .nt-log :global(.nt-block:not(.is-active)) { display: none; }
+    .nt-log :global(.nt-line) { display: inline; }
+    .nt-log :global(.nt-line::before) { content: ' · '; color: var(--muted); }
+    .nt-log :global(.nt-cmd + .nt-line::before) { content: none; }
   }
   @media (max-width: 640px) {
     .nt-prompt { display: none; }

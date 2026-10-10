@@ -7,7 +7,7 @@ import type { Lang } from '../i18n/types';
 interface Props { lang: Lang }
 const t = dicts[Astro.props.lang].contact;
 ---
-<section class="contact" id="contact" aria-labelledby="contact-heading">
+<section class="contact" id="contact" aria-labelledby="contact-heading" data-narrative-section="contact">
   <div class="grid">
     <Label text={t.label} class="c-label" />
     <h2 id="contact-heading" class="sr-only">{t.heading}</h2>

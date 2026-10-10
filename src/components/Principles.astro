@@ -6,7 +6,7 @@ import type { Lang } from '../i18n/types';
 interface Props { lang: Lang }
 const t = dicts[Astro.props.lang].principles;
 ---
-<section class="principles" aria-labelledby="principles-label">
+<section class="principles" aria-labelledby="principles-label" data-narrative-section="principles">
   <div class="grid">
     <Label text={t.label} class="pr-label" />
   </div>

@@ -10,6 +10,7 @@ import home from '../assets/pexiscale/home.png';
 
 interface Props { lang: Lang }
 const t = dicts[Astro.props.lang].pexiscale;
+const w = dicts[Astro.props.lang].resume.work.pexiscale;
 
 // The figure is the product itself: three screenshots of the Pexiscale workspace, with demo data.
 // The browser around them is cropped away (each file starts at the product's own edge) and nothing
@@ -18,16 +19,19 @@ const t = dicts[Astro.props.lang].pexiscale;
 // framed alike, so the two sit as one pair under it.
 // Never upscale: the last width is the file's own.
 const widths = (w: number) => [...[480, 768, 1080, 1440].filter((x) => x < w), w];
+// sizes: the figure spans 8 of 12 columns of the Home's document column (HomeNarrative.astro): about
+// half the window beside the terminal (from 1180px), two thirds of it below that, all of it on a phone.
 const shots = [
-  { key: 'sales', src: sales, main: true, sizes: '(min-width: 1025px) 71vw, 100vw' },
-  { key: 'catalog', src: catalog, main: false, sizes: '(min-width: 1025px) 35vw, (min-width: 641px) 50vw, 100vw' },
-  { key: 'home', src: home, main: false, sizes: '(min-width: 1025px) 35vw, (min-width: 641px) 50vw, 100vw' },
+  { key: 'sales', src: sales, main: true, sizes: '(min-width: 1180px) 48vw, (min-width: 1025px) 66vw, 100vw' },
+  { key: 'catalog', src: catalog, main: false, sizes: '(min-width: 1180px) 24vw, (min-width: 1025px) 33vw, (min-width: 641px) 50vw, 100vw' },
+  { key: 'home', src: home, main: false, sizes: '(min-width: 1180px) 24vw, (min-width: 1025px) 33vw, (min-width: 641px) 50vw, 100vw' },
 ] as const;
 ---
-<section class="pexi" id="pexiscale" aria-labelledby="pexi-title">
+<section class="pexi" id="pexiscale" aria-labelledby="pexi-title" data-narrative-section="pexiscale">
   <div class="grid head">
     <Label text={t.label} class="p-label" />
     <h2 id="pexi-title" class="giant">{t.name}<span class="slash rv-slash" data-reveal aria-hidden="true">/</span></h2>
+    <p class="meta spec"><span>{w.kind}</span><span class="spec-stack">{w.stack}</span></p>
     <p class="question">{t.question}</p>
   </div>
 
@@ -62,7 +66,7 @@ const shots = [
     </figure>
   </div>
 
-  <ProjectDetail project={t} num="03" />
+  <ProjectDetail project={t} num="02" />
 </section>
 
 <style>
@@ -88,14 +92,18 @@ const shots = [
     text-wrap: balance;
   }
 
+  /* What it is and what it is built with: the résumé's own two lines, which the terminal repeats. */
+  .spec { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 2px; margin-top: var(--space-md); }
+  .spec-stack { color: var(--muted); }
+
   .body { margin-top: var(--space-xl); row-gap: var(--space-xl); align-items: end; }
-  .aside { grid-column: 1 / span 3; display: flex; flex-direction: column; gap: var(--space-lg); }
+  .aside { grid-column: 1 / span 4; display: flex; flex-direction: column; gap: var(--space-lg); }
   .lead { font-size: var(--fs-lead); line-height: 1.3; letter-spacing: -0.006em; text-wrap: pretty; }
   .link { display: flex; flex-direction: column; gap: 6px; }
   .link a { text-decoration: none; font-weight: 500; }
   .note { color: var(--muted); }
 
-  .fig { grid-column: 4 / span 9; }
+  .fig { grid-column: 5 / span 8; }
   /* One frame per screenshot: a hairline, no radius, no shadow; the product's own pale ground
      inside it. Sales runs the width of the figure, the two details share the row under it. */
   .shots { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); }
