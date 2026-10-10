@@ -69,3 +69,36 @@ test('history keeps the last completed chapters plus the active one', () => {
     ['lume', 'pexis-machine', 'capabilities', 'contact'],
   );
 });
+
+// The controller's contract (src/scripts/narrative-terminal.ts drives these transitions).
+const narrated = completeChapter({ active: 'whoami', completed: [] }, 'whoami');
+
+test('a fast scroll leaves only the newest chapter active, and skipped ones unnarrated', () => {
+  let s = narrated;
+  for (const id of ['pexiscale', 'lume', 'education'] as const) {
+    const r = activateChapter(s, id, true);
+    assert.equal(r.shouldAnimate, true);
+    s = r.state; // each switch happens before the previous chapter finished typing
+  }
+  assert.equal(s.active, 'education');
+  assert.deepEqual(s.completed, ['whoami']);
+  assert.deepEqual(visibleNarrativeIds(s, 3), ['whoami', 'education']);
+});
+
+test('completing a chapter twice does not duplicate it', () => {
+  const once = completeChapter(activateChapter(narrated, 'lume', true).state, 'lume');
+  const twice = completeChapter(once, 'lume');
+  assert.equal(twice, once);
+  assert.deepEqual(twice.completed, ['whoami', 'lume']);
+});
+
+test('the active chapter stays visible once the history bound is reached', () => {
+  let s = narrated;
+  for (const id of ['pexiscale', 'lume', 'pexis-machine', 'capabilities', 'ai-workflow'] as const) {
+    s = completeChapter(activateChapter(s, id, true).state, id);
+  }
+  const back = activateChapter(s, 'whoami', true); // revisiting the oldest, completed chapter
+  assert.equal(back.shouldAnimate, false);
+  assert.deepEqual(visibleNarrativeIds(back.state, 3), ['pexis-machine', 'capabilities', 'ai-workflow', 'whoami']);
+  assert.deepEqual(visibleNarrativeIds(back.state, 0), ['whoami']);
+});

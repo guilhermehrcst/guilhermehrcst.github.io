@@ -37,6 +37,8 @@
   --void-signal: var(--gh-blue);
 
   --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Monospace: only where text is technically meaningful (the section commands, the Home's terminal). */
+  --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
   
   /* Grid: 12 / 6 / 4 columns. A guide, not a cage. */
   --cols: 12;
@@ -55,6 +57,7 @@
        body        technical copy                      1.2vw              17px
        meta        labels, indices, captions           0.9vw              13px   (rows of the hero: 0.95vw, 15px) */
   --fs-meta: clamp(0.8125rem, 0.9vw, 0.875rem);
+  --fs-cmd: clamp(0.75rem, 0.9vw, 0.875rem); /* 12-14px: commands sit with the metadata */
   --fs-meta-l: clamp(0.875rem, 1.04vw, 1rem);
   --fs-body: clamp(1.0625rem, 1.2vw, 1.125rem);
   --fs-lead: clamp(1.25rem, 1.55vw, 1.5rem);

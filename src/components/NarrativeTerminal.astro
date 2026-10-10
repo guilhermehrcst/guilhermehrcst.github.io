@@ -1,0 +1,86 @@
+---
+// The Home's terminal: a narrator, not a shell. It repeats, in a few code-like lines, the chapter
+// being read; the editorial document beside it is the source of every fact, so the terminal is
+// hidden from assistive tech and accepts no input. Without JS it shows `whoami`, already typed,
+// and stays still. src/scripts/narrative-terminal.ts follows the reading (fail-open).
+import { buildNarrative } from '../lib/narrative-content';
+import { dicts } from '../i18n/routes';
+import type { Lang } from '../i18n/types';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const chapters = buildNarrative(dicts[lang]);
+const first = chapters[0]!; // whoami: the static, server-rendered state
+---
+<div class="nt" data-narrative-terminal aria-hidden="true">
+  <p class="nt-prompt" lang="en">gh@portfolio:~$</p>
+  <div class="nt-log" data-narrative-log>
+    <div class="nt-block is-active" data-block={first.id}>
+      <p class="nt-cmd"><span class="nt-p">&gt;</span> <span class="nt-c" lang="en">{first.command}</span></p>
+      {first.lines.map((l) => <p class="nt-line">{l}</p>)}
+    </div>
+  </div>
+  <!-- The chapters, as inert data for the controller: never rendered, never read aloud. -->
+  <template data-narrative-chapters>
+    {chapters.map((c) => (
+      <div data-narrative-chapter data-id={c.id} data-command={c.command}>
+        {c.lines.map((l) => <p data-narrative-line>{l}</p>)}
+      </div>
+    ))}
+  </template>
+</div>
+
+<script>
+  import '../scripts/narrative-terminal';
+</script>
+
+<style>
+  .nt {
+    font-family: var(--mono);
+    font-size: var(--fs-cmd);
+    line-height: 1.55;
+    letter-spacing: 0;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .nt-prompt {
+    padding-block: var(--space-xs);
+    border-bottom: 1px solid var(--rule);
+    color: var(--muted);
+  }
+  /* New chapters arrive at the bottom; the oldest leave through the top. The log never grows the
+     page: its box is fixed by the rail (HomeNarrative.astro) and overflow is clipped, not scrolled. */
+  .nt-log {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
+  }
+  .nt-block { flex: none; }
+  .nt-cmd { color: var(--muted); }
+  .nt-p { color: var(--signal); font-weight: 600; }
+  .nt-line { overflow-wrap: anywhere; }
+  /* The chapter being read is in ink; those already narrated recede. */
+  .nt-block.is-active, .nt-block.is-active .nt-cmd { color: var(--ink); }
+
+  /* A cursor only while a chapter is being typed: a still block at the end of the newest row. */
+  .nt-block.is-typing > :last-child::after {
+    content: '';
+    display: inline-block;
+    width: 0.55em;
+    height: 1.1em;
+    margin-left: 0.15em;
+    vertical-align: -0.2em;
+    background: var(--signal);
+  }
+
+  @media print {
+    .nt { display: none !important; }
+  }
+</style>
