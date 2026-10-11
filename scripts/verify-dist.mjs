@@ -534,6 +534,20 @@ function checkProduct(path, html) {
   for (const item of resources) PUBLISHED_RESOURCE_IDS.add(resourceAttr(item, 'data-resource-id'));
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
+  // Every internal page says where it sits (V0.3): a breadcrumb from Início, through its section.
+  if (path !== '/') {
+    const crumbs = /<nav\b[^>]*\sdata-breadcrumb[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
+    if (!crumbs) fail(path, 'an internal page carries a breadcrumb');
+    else {
+      const trail = hrefsIn(crumbs);
+      if (trail[0] !== '/') fail(path, 'the breadcrumb starts at Início');
+      if (/^\/materias\/[a-z-]+\/$/.test(path) && JSON.stringify(trail) !== JSON.stringify(['/', '/materias/'])) fail(path, `a subject's breadcrumb goes through Explorar (${trail.join(',')})`);
+    }
+  }
+  if (path === '/materias/') {
+    const paths = hrefsIn(sectionOf(html, /<section\b[^>]*\sid="caminhos"/) ?? '');
+    if (JSON.stringify(paths) !== JSON.stringify(PATHS)) fail(path, `Explorar lists the six paths in order (${paths.join(',')})`);
+  }
   // An exam lives inside Vestibular: its breadcrumb leads back there (V0.3).
   if (path === '/enem/' || path === '/uerj/') {
     const crumbs = /<nav\b[^>]*\sdata-breadcrumb[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1] ?? '';

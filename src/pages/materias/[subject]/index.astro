@@ -28,7 +28,7 @@ const c = t.subjectPage(subject.label, area === subject.label ? t.subject.eyebro
 const objectives = objectivesFor(id);
 ---
 <Base title={c.title} description={c.description}>
-  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} crumbs={[{ label: t.footer.nav.explore, href: routes.subjectIndex }]} />
 
   <div class="wrap">
     <LearningMap subject={subject} />

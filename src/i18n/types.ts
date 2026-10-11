@@ -35,13 +35,9 @@ export interface Dict {
   nav: { label: string; home: string; mobile: string; menu: string; paths: string };
   breadcrumb: { label: string; home: string };
   footer: {
-    tagline: string;
-    objectives: string;
     subjects: string;
-    academy: string;
     verified: (date: string) => string;
     licenses: string;
-    technology: string;
     independence: string;
     nav: { explore: string; search: string; about: string; verification: string };
     about: string;
@@ -72,6 +68,7 @@ export interface Dict {
     scope: string;
     medio: string;
   };
+  explore: { paths: string; areas: string };
   superior: { note: string; groupsTitle: string };
   home: {
     hero: {

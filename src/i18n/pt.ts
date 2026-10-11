@@ -10,13 +10,9 @@ export const pt: Dict = {
   nav: { label: 'Principal', home: 'Pexis Academy, página inicial', mobile: 'Menu principal', menu: 'Menu', paths: 'Caminhos' },
   breadcrumb: { label: 'Você está em', home: 'Início' },
   footer: {
-    tagline: 'Recursos gratuitos e verificados, organizados com direção.',
-    objectives: 'Objetivos',
     subjects: 'Matérias',
-    academy: 'Sobre a Academy',
     verified: (date) => `Recursos verificados em ${date}.`,
     licenses: 'Licenças',
-    technology: 'Tecnologia',
     independence: 'A Pexis Academy é um produto da Pexis, independente das instituições cujos materiais indica.',
     nav: { explore: 'Explorar', search: 'Buscar', about: 'Sobre', verification: 'Como verificamos' },
     about: 'Uma plataforma gratuita para estudar com direção: organiza, por caminho, área e matéria, materiais gratuitos verificados na fonte.',
@@ -88,11 +84,11 @@ export const pt: Dict = {
       lead: 'Disciplinas de cursos universitários, publicadas gratuitamente pelas próprias universidades.',
     },
     materias: {
-      title: 'Matérias | Pexis Academy',
-      description: 'As matérias da Pexis Academy por área: Matemática, Linguagens, Ciências da Natureza, Ciências Humanas, Idiomas e Tecnologia.',
+      title: 'Explorar | Pexis Academy',
+      description: 'Os seis caminhos da Pexis Academy e todas as matérias, por área: de Matemática a Idiomas e Tecnologia, com recursos gratuitos e verificados.',
       eyebrow: 'Explorar',
-      heading: 'Explore por área',
-      lead: 'Escolha uma matéria para ver onde estudar e onde praticar, sempre com recursos gratuitos e verificados.',
+      heading: 'Explorar',
+      lead: 'Comece por um caminho ou vá direto a uma matéria. Tudo com recursos gratuitos e verificados na fonte.',
     },
     buscar: {
       title: 'Buscar | Pexis Academy',
@@ -162,6 +158,7 @@ export const pt: Dict = {
     scope: 'Esta área não oferece treinamento físico, avaliação médica nem simulados.',
     medio: 'Estude as matérias do Ensino Médio por área',
   },
+  explore: { paths: 'Caminhos', areas: 'Áreas e matérias' },
   superior: {
     note: 'Por enquanto, Matemática e Computação: são as áreas em que já verificamos cursos universitários gratuitos. Outras áreas do conhecimento entram à medida que verificarmos cursos na fonte.',
     groupsTitle: 'Áreas',
@@ -257,7 +254,7 @@ export const pt: Dict = {
     },
   },
   about: {
-    intro: 'A Pexis Academy é um produto da Pexis. Ela não produz aulas: organiza, por objetivo, área e matéria, materiais gratuitos de universidades, instituições públicas e plataformas educacionais, e diz por onde começar.',
+    intro: 'A Pexis Academy é um produto da Pexis. Ela não produz aulas: organiza, por caminho, área e matéria, materiais gratuitos de universidades, instituições públicas e plataformas educacionais, e diz por onde começar.',
     curation: {
       heading: 'Regras de curadoria',
       rules: [
@@ -287,7 +284,7 @@ export const pt: Dict = {
   search: {
     label: 'Buscar na Pexis Academy',
     placeholder: 'Matéria, prova, trilha ou curso',
-    groups: { objetivo: 'Objetivos', area: 'Áreas', materia: 'Matérias', trilha: 'Trilhas de tecnologia', recurso: 'Recursos' },
+    groups: { objetivo: 'Caminhos e provas', area: 'Áreas', materia: 'Matérias', trilha: 'Trilhas de tecnologia', recurso: 'Recursos' },
     results: (n) => (n === 1 ? '1 resultado' : `${n} resultados`),
     empty: 'Nada encontrado. Tente outra palavra, ou explore pelas áreas.',
   },
