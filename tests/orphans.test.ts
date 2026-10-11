@@ -15,8 +15,10 @@ const sources = [...walk('src'), ...walk('tests'), 'astro.config.mjs'].filter((p
 const importsOf = (path: string) => [...read(path).matchAll(/(?:from|import)\s+['"]([^'"]+)['"]/g)].map((m) => m[1]!);
 const imported = new Set(sources.flatMap((p) => importsOf(p).map((spec) => spec.split('/').pop()!.replace(/\.(ts|astro)$/, ''))));
 
-/** Kept on purpose, unused in V0.1: the curated course images wait for a visual decision (spec §2.2). */
-const EXCEPTIONS = new Set(['resource-images']);
+/** Kept on purpose, unused in V0.1: the curated course images wait for a visual decision (spec §2.2).
+ *  staging (V0.4 Gate B): records verified but not authorised for publication; no page may import it
+ *  (tests/staging.test.ts checks that), so it is unused by the site by design. */
+const EXCEPTIONS = new Set(['resource-images', 'staging']);
 
 test('every component is used', () => {
   for (const path of walk('src/components')) {
