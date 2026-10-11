@@ -12,7 +12,7 @@ const areas = AREA_ORDER.map((id) => ({ id, label: AREAS[id].label, subjects: su
 <ul class="areas" role="list">
   {areas.map((area) => (
     <li>
-      <div class="area" data-area={area.id}>
+      <div class="area" id={`area-${area.id}`} data-area={area.id}>
         {area.subjects.length === 1 ? (
           <Heading class="name"><a href={routes.subject(area.subjects[0]!)}>{area.label} <span aria-hidden="true">→</span></a></Heading>
         ) : (
