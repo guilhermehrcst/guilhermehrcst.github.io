@@ -344,6 +344,22 @@ function checkProduct(path, html) {
     if (ids[0] !== 'uerj' || ids[1] !== 'nota-editorial') fail(path, `Vestibulares opens with the UERJ, then the editorial note (${ids.join(',')})`);
     if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="uerj"/) ?? '').includes('/uerj/')) fail(path, '#uerj leads to /uerj/');
   }
+  if (path === '/buscar/') {
+    // The directory: without JavaScript it links every content page (Home, Buscar and Sobre are in the
+    // shell of every page); with it, a hidden search form filters the same entries.
+    const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
+    const linked = new Set(hrefsIn(main).map((h) => h.split('#')[0]));
+    for (const page of CANONICAL.filter((p) => !['/', '/buscar/', '/sobre/'].includes(p))) {
+      if (!linked.has(page)) fail(path, `the directory does not reach ${page}`);
+    }
+    const entries = main.match(/<li\b[^>]*\sdata-search-entry[\s>=][^>]*>/g) ?? [];
+    if (entries.length < 60) fail(path, `expected the full index, found ${entries.length} entries`);
+    for (const li of entries) {
+      const terms = /\sdata-terms="([^"]+)"/.exec(li)?.[1] ?? '';
+      if (!terms || terms !== terms.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()) fail(path, `entry without normalized terms: ${li.slice(0, 80)}`);
+    }
+    if (!/<form\b[^>]*role="search"[^>]*\shidden[\s>=]/.test(main)) fail(path, 'the search form starts hidden (revealed by JavaScript)');
+  }
   if (path === '/tecnologia/') {
     const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
     const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade'];

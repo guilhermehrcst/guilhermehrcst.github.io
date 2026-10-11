@@ -135,6 +135,13 @@ export const pt: Dict = {
     },
   },
   tecnologia: { chooser: 'Escolha uma trilha' },
+  search: {
+    label: 'Buscar na Pexis Academy',
+    placeholder: 'Matéria, prova, trilha ou curso',
+    groups: { objetivo: 'Objetivos', area: 'Áreas', materia: 'Matérias', trilha: 'Trilhas de tecnologia', recurso: 'Recursos' },
+    results: (n) => (n === 1 ? '1 resultado' : `${n} resultados`),
+    empty: 'Nada encontrado. Tente outra palavra, ou explore pelas áreas.',
+  },
   vestibulares: {
     uerj: {
       title: 'Vai prestar a UERJ?',

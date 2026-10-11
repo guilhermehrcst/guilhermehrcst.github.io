@@ -55,6 +55,7 @@ export interface Dict {
   };
   subjectPage: (subject: string, area: string) => PageCopy;
   tecnologia: { chooser: string };
+  search: { label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string };
   vestibulares: { uerj: { title: string; why: string; link: string }; note: { title: string; body: string } };
   objectiveMap: { more: (subject: string) => string; technology: { title: string; why: string; link: string } };
   guides: {
