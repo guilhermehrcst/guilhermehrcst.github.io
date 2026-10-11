@@ -1,0 +1,17 @@
+---
+// A list of free resources. One column on a phone, two from a tablet up: a reading list, not a grid
+// of cards.
+import ResourceItem from './ResourceItem.astro';
+import type { PublishedLearningResource } from '../lib/learning-resources';
+
+interface Props { resources: readonly PublishedLearningResource[]; headingLevel?: 2 | 3 | 4 }
+const { resources, headingLevel = 3 } = Astro.props;
+---
+<ul class="resources" role="list" data-resource-list>
+  {resources.map((resource) => <ResourceItem resource={resource} headingLevel={headingLevel} />)}
+</ul>
+
+<style>
+  .resources { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--space-7); }
+  @media (min-width: 768px) { .resources { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>

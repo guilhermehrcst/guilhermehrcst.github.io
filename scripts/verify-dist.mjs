@@ -165,8 +165,25 @@ function checkShell(path, html) {
 
 /* Product rules: what each page promises. --------------------------------------------------------- */
 
+/** Every rendered resource: an item of a resource list, named in its own language (translate="no"),
+ *  with exactly one link out, which says it opens in a new tab. Returns the resource items. */
+function checkResources(path, html) {
+  const items = [...html.matchAll(/<li\b([^>]*\sdata-resource-id="[^"]+"[^>]*)>([\s\S]*?)<\/li>/g)];
+  const inLists = [...html.matchAll(/<ul\b[^>]*\sdata-resource-list[\s>=][\s\S]*?<\/ul>/g)]
+    .reduce((n, m) => n + (m[0].match(/\sdata-resource-id="/g) ?? []).length, 0);
+  if (inLists !== items.length) fail(path, `every resource must be an item of a resource list (${inLists}/${items.length})`);
+  for (const [, attributes, body] of items) {
+    const id = /data-resource-id="([^"]+)"/.exec(attributes)?.[1] ?? '?';
+    const links = [...body.matchAll(/<a\b([^>]*)>/g)];
+    if (links.length !== 1 || !/target="_blank"/.test(links[0][1])) fail(path, `resource ${id} needs exactly one outbound link`);
+    if (!/translate="no"/.test(body)) fail(path, `resource ${id}: the official title must carry translate="no"`);
+    if (!/class="sr-only"[^>]*>[^<]*nova aba/.test(body)) fail(path, `resource ${id}: the link must say it opens in a new tab`);
+  }
+  return items;
+}
+
 function checkProduct(path, html) {
-  void path; void html;
+  checkResources(path, html);
 }
 
 for (const path of CANONICAL) {

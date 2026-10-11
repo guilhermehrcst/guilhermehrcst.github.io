@@ -92,4 +92,12 @@ export const pt: Dict = {
     lead: `O que estudar em ${subject} e onde encontrar material gratuito e verificado.`,
   }),
   notFound: { home: 'Página inicial', subjects: 'Explorar as matérias', search: 'Buscar' },
+  resource: {
+    formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', practice: 'Prática' },
+    languages: { pt: 'Em português', en: 'Em inglês', es: 'Em espanhol' },
+    registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
+    certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', available: 'Certificado disponível' },
+    units: { hours: 'h', weeks: 'semanas' },
+    newTab: 'abre o site do provedor em nova aba',
+  },
 };
