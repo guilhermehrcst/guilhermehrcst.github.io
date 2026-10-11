@@ -19,7 +19,10 @@ export type LearningLanguageId = 'pt' | 'en' | 'es';
 export type LearningLevelId = 'high-school' | 'vestibular' | 'beginner' | 'beginner-intermediate' | 'intermediate';
 /** 'unconfirmed': the source does not say; stated as such and never shown as a fact (V0.4 Gate B, P4). */
 export type LearningRegistrationId = 'required' | 'not-required' | 'unconfirmed';
-export type VerificationMethod = 'official-page' | 'youtube-page' | 'search-index';
+/** How a resource was verified: only directly at the official source, its page or the author's official
+ *  channel. A search index or any indirect method never verifies a resource (V0.4, review of P4). */
+export const VERIFICATION_METHODS = ['official-page', 'youtube-page'] as const;
+export type VerificationMethod = (typeof VERIFICATION_METHODS)[number];
 export type LearningCertificateId = 'none' | 'statement' | 'available' | 'unconfirmed';
 export type LearningDurationUnit = 'hours' | 'weeks';
 
@@ -232,17 +235,22 @@ const isDate = (on: string): boolean => {
 /** Everything wrong with a resource's verification (V0.4 Gate B, P4), one line each. A baseline resource
  *  (same id, URL and date) needs nothing new. Any other needs individual evidence from its own official
  *  host: what was checked (free access, scope, language, format, path; registration and certificate unless
- *  stated 'unconfirmed'), a note, and a real date that is not in the future. Registration and certificate
+ *  stated 'unconfirmed'), a note, a real date that is not in the future, and a direct method
+ *  (VERIFICATION_METHODS: never a search index). Registration and certificate
  *  are always stated, never left unknown by omission. */
 export const verificationProblems = (
   r: Pick<LearningResource, 'id' | 'url'> & { verified?: ResourceVerification | undefined; registration?: LearningRegistrationId | undefined; certificate?: LearningCertificateId | undefined },
   now: Date = new Date(),
 ): string[] => {
   if (!r.verified) return [];
-  if (r.url !== null && LEGACY_VERIFIED[r.id] === r.url && r.verified.on === VERIFIED_ON && !r.verified.evidence) return [];
+  if (r.url !== null && LEGACY_VERIFIED[r.id] === r.url && r.verified.on === VERIFIED_ON && r.verified.by === 'official-page' && !r.verified.evidence) return [];
   const problems: string[] = [];
+  // The method arrives as data: refuse a missing, unknown or indirect one, whatever the type says.
+  const by: unknown = r.verified.by;
+  if (by === undefined || by === null || by === '') problems.push(`${r.id}: no verification method`);
+  else if (!(VERIFICATION_METHODS as readonly unknown[]).includes(by)) problems.push(`${r.id}: ${String(by)} is not a direct verification at the official source`);
   const ev = r.verified.evidence;
-  if (!ev) return [`${r.id}: no individual evidence`];
+  if (!ev) return [...problems, `${r.id}: no individual evidence`];
   if (!isDate(r.verified.on)) problems.push(`${r.id}: ${r.verified.on} is not a date`);
   else if (new Date(`${r.verified.on}T00:00:00Z`).getTime() > now.getTime()) problems.push(`${r.id}: verified in the future (${r.verified.on})`);
   if (!ev.url.startsWith('https://')) problems.push(`${r.id}: evidence must be https`);

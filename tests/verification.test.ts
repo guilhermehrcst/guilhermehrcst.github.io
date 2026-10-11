@@ -85,3 +85,26 @@ test('P4: an unconfirmed detail is stated as unconfirmed and never shown as a fa
   const item = readFileSync(new URL('../src/components/ResourceItem.astro', import.meta.url), 'utf8');
   assert.match(item, /unconfirmed/, 'ResourceItem leaves unconfirmed details out of the facts');
 });
+
+/* Only direct verification at the official source (V0.4, review of P4). */
+
+test('P4: the verification methods are direct only: official page, or the author\'s official channel', () => {
+  assert.deepEqual(lr.VERIFICATION_METHODS, ['official-page', 'youtube-page']);
+});
+
+test('P4: a new resource verified through a search index, or with a missing or unknown method, is refused', () => {
+  const problems = need(lr, 'verificationProblems');
+  const ev = { url: 'https://example.gov.br/x', checked: ['free', 'scope', 'language', 'format', 'path', 'registration', 'certificate'], note: 'ok' };
+  const by = (method: unknown) => resource({ id: 'new-7', registration: 'required', certificate: 'none', verified: { on: '2026-10-11', by: method, freeAccess: true, evidence: ev } });
+  assert.deepEqual(problems(by('official-page')), []);
+  assert.match(problems(by('search-index')).join('\n'), /new-7: search-index is not a direct verification at the official source/);
+  assert.match(problems(by(undefined)).join('\n'), /new-7: no verification method/);
+  assert.match(problems(by('a-blog')).join('\n'), /new-7: a-blog is not a direct verification at the official source/);
+});
+
+test('P4: the legacy exemption also requires the baseline method', () => {
+  const problems = need(lr, 'verificationProblems');
+  const cs50x = publishedResources.find((r) => r.id === 'cs50x')!;
+  assert.match(problems({ ...cs50x, verified: { ...cs50x.verified, by: 'search-index' } }).join('\n'), /cs50x/);
+  assert.deepEqual(problems(cs50x), []);
+});
