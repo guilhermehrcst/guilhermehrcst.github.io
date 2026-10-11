@@ -126,7 +126,12 @@ export interface Dict {
   /** V0.4: the in-page navigation of a long path page, and the editorial highlights of a path. */
   sectionNav: { areas: string; page: string };
   featured: { title: string; why: string };
-  search: { label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string };
+  search: {
+    label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string;
+    /** V0.4 M4: the filters of the resources. */
+    filters: { title: string; note: string; facets: Record<'caminho' | 'materia' | 'instituicao' | 'idioma' | 'formato', string>; clear: string; emptyFiltered: string };
+    languages: Record<'pt' | 'en' | 'es', string>;
+  };
   vestibulares: {
     exams: { title: string; why: string; items: Record<'enem' | 'uerj', { name: string; what: string; link: string }> };
     note: { title: string; body: string };

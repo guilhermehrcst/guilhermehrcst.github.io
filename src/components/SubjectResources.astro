@@ -5,10 +5,11 @@
 import ResourceGroups from './ResourceGroups.astro';
 import { filterResources } from '../lib/learning-library';
 import { publishedResources } from '../lib/learning-resources';
+import { routes } from '../lib/routes';
 import type { PathId, SubjectId } from '../lib/taxonomy';
 
 interface Props { subject: SubjectId; path?: PathId | undefined; headingLevel?: 2 | 3; anchors?: boolean }
 const { subject, path, headingLevel = 2, anchors = false } = Astro.props;
 const all = filterResources(publishedResources, { subject, ...(path ? { paths: [path] } : {}) });
 ---
-<ResourceGroups resources={all} headingLevel={headingLevel} anchors={anchors} />
+<ResourceGroups resources={all} headingLevel={headingLevel} anchors={anchors} page={anchors ? routes.subject(subject) : undefined} />

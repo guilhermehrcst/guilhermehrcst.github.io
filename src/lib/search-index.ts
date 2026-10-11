@@ -7,7 +7,8 @@ import { areaOf, publishedResources } from './learning-resources.ts';
 import { routes } from './routes.ts';
 import { normalize } from './search-normalize.ts';
 import { publishedTracks } from './tech-tracks.ts';
-import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf, type SubjectId } from './taxonomy.ts';
+import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf, type ExamId, type SubjectId } from './taxonomy.ts';
+import { resourceFacets, type Facets } from './search-filter.ts';
 
 export type SearchKind = 'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso';
 
@@ -18,18 +19,45 @@ export interface SearchEntry {
   url: string;
   context: string;
   terms: string;
+  /** A resource's values for each search filter (V0.4 M4); other entries have none. */
+  facets?: Facets;
 }
 
 const entry = (kind: SearchKind, key: string, title: string, url: string, context: string, extra: readonly string[] = []): SearchEntry =>
   ({ id: `${kind}:${key}`, kind, title, url, context, terms: normalize([title, context, ...extra].join(' ')) });
 
+/** The id of the element that is a resource, on the page that shows it (V0.4 §5.4). */
+export const resourceAnchor = (id: string): string => `recurso-${id}`;
+
 /** Where a resource is shown: its subject's page, or the first technology track that holds it. A resource
- *  without a subject has no such page yet: the build fails rather than send the student somewhere it is not. */
-export const resourceHome = ({ id, subject }: { id: string; subject: SubjectId | null }): string => {
-  if (subject === null) throw new Error(`search-index: ${id} has no subject and no page shows it yet`);
+ *  without a subject lives on the guide of its first exam, which lists the exam's resources (V0.4 M4);
+ *  without an exam no page shows it yet, and the build fails rather than send the student somewhere it is not. */
+export const resourceHome = ({ id, subject, exams }: { id: string; subject: SubjectId | null; exams?: readonly ExamId[] | undefined }): string => {
+  if (subject === null) {
+    if (exams?.[0]) return routes.objective(exams[0]);
+    throw new Error(`search-index: ${id} has no subject and no page shows it yet`);
+  }
   if (subject !== 'tecnologia') return routes.subject(subject);
   const track = publishedTracks().find((t) => t.resourceIds.includes(id));
   return `${routes.objective('tecnologia')}${track ? `#${track.id}` : ''}`;
+};
+
+/** Which resources of a page's lists carry their anchor: those whose home is this page, at their first
+ *  occurrence. One set per list, in order. Anchors are never repeated, never on a page that is not home. */
+export const anchorPlan = (
+  page: string,
+  lists: readonly (readonly { id: string; subject: SubjectId | null; exams?: readonly ExamId[] | undefined }[])[],
+): Set<string>[] => {
+  const done = new Set<string>();
+  return lists.map((list) => {
+    const anchored = new Set<string>();
+    for (const resource of list) {
+      if (done.has(resource.id) || resourceHome(resource).split('#')[0] !== page) continue;
+      anchored.add(resource.id);
+      done.add(resource.id);
+    }
+    return anchored;
+  });
 };
 
 export const buildSearchIndex = (): SearchEntry[] => [
@@ -45,7 +73,8 @@ export const buildSearchIndex = (): SearchEntry[] => [
   ...publishedTracks().map((t) => entry('trilha', t.id, t.label, `${routes.objective('tecnologia')}#${t.id}`, 'Trilha de Tecnologia', [t.why])),
   ...publishedResources.map((r) => {
     const area = areaOf(r);
-    return entry('recurso', r.id, r.title, resourceHome(r),
-      `${r.provider} · ${r.subject === null ? '' : SUBJECTS[r.subject].label}`, area === null ? [] : [AREAS[area].label]);
+    const url = `${resourceHome(r).split('#')[0]}#${resourceAnchor(r.id)}`;
+    const context = [r.provider, r.subject === null ? null : SUBJECTS[r.subject].label].filter(Boolean).join(' · ');
+    return { ...entry('recurso', r.id, r.title, url, context, area === null ? [] : [AREAS[area].label]), facets: resourceFacets(r) };
   }),
 ];

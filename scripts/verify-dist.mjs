@@ -320,6 +320,8 @@ const hrefsIn = (fragment) => attrs(fragment, /<a\b[^>]*\shref="([^"]+)"/g);
  *  against every page's resource lists once all pages are read). */
 const DEMO_RESOURCE_IDS = new Set();
 const PUBLISHED_RESOURCE_IDS = new Set();
+/** Each search result for a resource, and the page#anchor it opens (V0.4 M4). */
+const SEARCH_RESOURCE_TARGETS = new Map();
 /** The distinct resources each page renders, and the count the Home prints for each path (V0.4 §5.3). */
 const PAGE_RESOURCE_IDS = new Map();
 const HOME_PATH_COUNTS = new Map();
@@ -596,6 +598,17 @@ function checkProduct(path, html) {
       if (!terms || terms !== terms.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()) fail(path, `entry without normalized terms: ${li.slice(0, 80)}`);
     }
     if (!/<form\b[^>]*role="search"[^>]*\shidden[\s>=]/.test(main)) fail(path, 'the search form starts hidden (revealed by JavaScript)');
+    // V0.4 M4: a resource result opens its page at the resource itself, and carries its facets; the form
+    // filters by the five facets, in this order (it stays hidden without JavaScript).
+    for (const li of main.match(/<li\b[^>]*\sdata-entry-id="recurso:[^"]+"[^>]*>[\s\S]*?<\/li>/g) ?? []) {
+      const id = /data-entry-id="recurso:([^"]+)"/.exec(li)[1];
+      const href = hrefsIn(li)[0] ?? '';
+      if (!href.endsWith(`#recurso-${id}`)) fail(path, `result ${id} must open its page at #recurso-${id} (${href})`);
+      SEARCH_RESOURCE_TARGETS.set(id, href);
+      if (!/\sdata-facet-caminho="[^"]+"/.test(li) || !/\sdata-facet-formato="[^"]+"/.test(li)) fail(path, `result ${id} carries no facets`);
+    }
+    const facets = attrs(/<form\b[\s\S]*?<\/form>/.exec(main)?.[0] ?? '', /<fieldset\b[^>]*\sdata-facet="([^"]+)"/g);
+    if (JSON.stringify(facets) !== JSON.stringify(['caminho', 'materia', 'instituicao', 'idioma', 'formato'])) fail(path, `search facets ${facets.join(',')}`);
   }
   if (path === '/tecnologia/') {
     const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
@@ -704,6 +717,22 @@ for (const path of SECTION_NAV_PAGES) {
   for (const [href, pages] of Object.entries(PATH_PAGES)) {
     const rendered = new Set(pages.flatMap((page) => [...(PAGE_RESOURCE_IDS.get(page) ?? [])]));
     if (HOME_PATH_COUNTS.get(href) !== rendered.size) fail('/', `#objetivo says ${HOME_PATH_COUNTS.get(href)} for ${href}; its pages render ${rendered.size}`);
+  }
+}
+
+/* Resource anchors (V0.4 §5.4): every published resource has a search result, which opens the page that
+   shows it at an element that is that resource; an anchor is never on anything else, and never twice. */
+for (const id of PUBLISHED_RESOURCE_IDS) if (!SEARCH_RESOURCE_TARGETS.has(id)) fail('/buscar/', `no result for the published resource ${id}`);
+for (const [id, href] of SEARCH_RESOURCE_TARGETS) {
+  const [page] = href.split('#');
+  const html = existsSync(fileFor(page)) ? readFileSync(fileFor(page), 'utf8') : '';
+  const at = html.match(new RegExp(`<[a-z]+\\b[^>]*\\sid="recurso-${id}"[^>]*>`, 'g')) ?? [];
+  if (at.length !== 1 || !at[0].includes(`data-resource-id="${id}"`)) fail(page, `#recurso-${id} must be the resource itself, once (${at.length})`);
+}
+for (const path of CANONICAL) {
+  const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+  for (const m of html.matchAll(/<[a-z]+\b([^>]*)\sid="recurso-([^"]+)"([^>]*)>/g)) {
+    if (!`${m[1]}${m[3]}`.includes(`data-resource-id="${m[2]}"`)) fail(path, `#recurso-${m[2]} is not that resource`);
   }
 }
 

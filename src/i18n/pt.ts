@@ -293,6 +293,14 @@ export const pt: Dict = {
     groups: { objetivo: 'Caminhos e provas', area: 'Áreas', materia: 'Matérias', trilha: 'Trilhas de tecnologia', recurso: 'Recursos' },
     results: (n) => (n === 1 ? '1 resultado' : `${n} resultados`),
     empty: 'Nada encontrado. Tente outra palavra, ou explore pelas áreas.',
+    filters: {
+      title: 'Filtrar recursos',
+      note: 'Os filtros valem para os recursos. Marque mais de uma opção para ampliar dentro do mesmo filtro.',
+      facets: { caminho: 'Caminho', materia: 'Matéria', instituicao: 'Instituição', idioma: 'Idioma', formato: 'Formato' },
+      clear: 'Limpar filtros',
+      emptyFiltered: 'Nenhum recurso atende a todos os filtros marcados.',
+    },
+    languages: { pt: 'Português', en: 'Inglês', es: 'Espanhol' },
   },
   vestibulares: {
     exams: {

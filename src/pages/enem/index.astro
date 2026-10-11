@@ -8,6 +8,7 @@ import SourceNote from '../../components/SourceNote.astro';
 import ResourceList from '../../components/ResourceList.astro';
 import SubjectLinks from '../../components/SubjectLinks.astro';
 import { ENEM_AREAS, resolveGuide } from '../../lib/exam-guides';
+import { anchorPlan } from '../../lib/search-index';
 import { routes } from '../../lib/routes';
 import { OBJECTIVES } from '../../lib/taxonomy';
 import { pt as t } from '../../i18n/pt';
@@ -20,6 +21,8 @@ const deepen = sections.get('aprofunde');
 const deepenByArea = ENEM_AREAS
   .map((area) => ({ ...area, resources: (deepen?.resources ?? []).filter((r) => r.subject !== null && area.subjects.includes(r.subject)) }))
   .filter((area) => area.resources.length > 0);
+// A resource whose home is this guide (one without a subject) carries its anchor at its first occurrence.
+const [practiceAnchors, ...deepenAnchors] = anchorPlan(routes.objective('enem'), [practice?.resources ?? [], ...deepenByArea.map((area) => area.resources)]);
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} crumbs={[{ label: OBJECTIVES.vestibulares.label, href: routes.objective('vestibulares') }]} />
@@ -47,16 +50,16 @@ const deepenByArea = ENEM_AREAS
   {practice && (
     <TrackSection id="pratique" title={g.pratique.title} why={g.pratique.why}>
       <SourceNote source="inep-provas-gabaritos" />
-      {practice.resources.length > 0 && <div class="after-note"><ResourceList resources={practice.resources} /></div>}
+      {practice.resources.length > 0 && <div class="after-note"><ResourceList resources={practice.resources} anchored={practiceAnchors} /></div>}
     </TrackSection>
   )}
 
   {deepen && (
     <TrackSection id="aprofunde" title={g.aprofunde.title} why={g.aprofunde.why}>
-      {deepenByArea.map((area) => (
+      {deepenByArea.map((area, i) => (
         <div class="group">
           <h3>{area.label}</h3>
-          <ResourceList resources={area.resources} headingLevel={4} compact />
+          <ResourceList resources={area.resources} headingLevel={4} compact anchored={deepenAnchors[i]} />
         </div>
       ))}
     </TrackSection>

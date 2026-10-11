@@ -15,7 +15,7 @@ Design and plan: `docs/superpowers/specs/2026-10-11-pexis-academy-v01-design.md`
 | `/tecnologia/` | Technology: objective, area and its tracks |
 | `/materias/` | All areas and subjects ("Explorar") |
 | `/materias/{matematica,portugues,redacao,fisica,quimica,biologia,historia,geografia,filosofia,sociologia,ingles,espanhol}/` | Subjects |
-| `/buscar/` | Search: a full directory, filtered in the browser |
+| `/buscar/` | Search: a full directory, filtered in the browser by text and by five facets (path, subject, institution, language, format); a resource result opens its page at the resource (`#recurso-<id>`) |
 | `/sobre/` | Curation rules, verification, independence |
 
 `/pt/` and the former `/courses/*`, `/pt/cursos/*` routes redirect (a page that refreshes to its destination, `noindex`: GitHub Pages cannot send HTTP redirects). `/resume/` and `/pt/curriculo/` are gone and answer with the 404.
@@ -47,6 +47,7 @@ All content is typed TypeScript, validated at build time.
 - `src/lib/tech-tracks.ts`: the technology tracks, as ordered lists of catalogue ids.
 - `src/lib/featured.ts`: the editorial highlights, ten per path, in staging until every one is homologated (V0.4).
 - `src/lib/search-index.ts`: the search index, derived from all of the above.
+- `src/lib/search-filter.ts` and `src/lib/search-facets.ts`: the search facets (pure, shared with the browser) and their options (build time).
 - `src/i18n/pt.ts`: interface copy (V0.1 is Portuguese only; the typed shape is kept for a future `/en/`).
 
 ### Add a resource

@@ -8,6 +8,7 @@ import SourceNote from '../../components/SourceNote.astro';
 import ResourceList from '../../components/ResourceList.astro';
 import SubjectLinks from '../../components/SubjectLinks.astro';
 import { resolveGuide, UERJ_SUBJECTS } from '../../lib/exam-guides';
+import { anchorPlan } from '../../lib/search-index';
 import { routes } from '../../lib/routes';
 import { OBJECTIVES } from '../../lib/taxonomy';
 import { pt as t } from '../../i18n/pt';
@@ -15,6 +16,7 @@ import { pt as t } from '../../i18n/pt';
 const c = t.pages.uerj;
 const g = t.guides.uerj;
 const exams = resolveGuide('uerj').find((s) => s.id === 'provas');
+const [examAnchors] = anchorPlan(routes.objective('uerj'), [exams?.resources ?? []]);
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} crumbs={[{ label: OBJECTIVES.vestibulares.label, href: routes.objective('vestibulares') }]} />
@@ -39,7 +41,7 @@ const exams = resolveGuide('uerj').find((s) => s.id === 'provas');
 
   {exams && (
     <TrackSection id="provas" title={g.provas.title} why={g.provas.why}>
-      <ResourceList resources={exams.resources} compact />
+      <ResourceList resources={exams.resources} compact anchored={examAnchors} />
     </TrackSection>
   )}
 </Base>
