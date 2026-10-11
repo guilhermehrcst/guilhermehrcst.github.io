@@ -33,7 +33,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Unit tests (pure narrative logic, Node's built-in runner)
+      - name: Unit tests (pure narrative and learning-domain logic)
         run: npm test
       - name: Type check (also enforces EN/PT dictionary parity)
         run: npx astro check

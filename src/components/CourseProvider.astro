@@ -1,8 +1,8 @@
 ---
-// The institution of a course, as its mark(s) instead of its name (marks: lib/providers.ts).
-// A partnership is its institutions' marks side by side with a quiet "+", announced once, by its
-// full name, as one image (the marks inside are decoration, with an empty alt). An institution
-// without a mark is shown as its name, so a missing asset never breaks a cell. The artwork is shown
+// A learning resource provider, rendered as its mark(s) when artwork exists (marks: lib/providers.ts).
+// A partnership is its providers' marks side by side with a quiet "+", announced once by its
+// full name. A provider without a mark is shown as text, so a missing asset never breaks a cell.
+// The artwork is shown
 // whole (object-fit: contain): its transparent margin is trimmed by the box, never the artwork.
 import { Image } from 'astro:assets';
 import { providerMarks } from '../lib/providers';
@@ -43,12 +43,12 @@ const geometry = (m: Mark) => {
     })}
   </span>
 ) : (
-  <span class="cc-inst-text" translate="no">{name}</span>
+  <span class="provider-text" translate="no">{name}</span>
 )}
 
 <style>
   /* One slot height for every mark, so the titles of neighbouring cells start on one line whatever
-     the institution. --bs scales the marks down with the window (tablet, phone). */
+     the provider. --bs scales the marks down with the window (tablet, phone). */
   .brand {
     --bs: 1;
     --slot: calc(40px * var(--bs));
@@ -72,7 +72,7 @@ const geometry = (m: Mark) => {
     object-position: left center;
   }
   .plus { flex: none; color: var(--muted); font-size: calc(15px * var(--bs)); font-weight: 500; line-height: 1; }
-  .cc-inst-text { color: var(--muted); }
+  .provider-text { color: var(--muted); }
 
   @media (max-width: 1180px) { .brand { --bs: 0.94; } }
   @media (max-width: 640px) { .brand { --bs: 0.88; } }

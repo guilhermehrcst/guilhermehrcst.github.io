@@ -197,37 +197,7 @@ import type { ExamId, StudyTrackSectionId } from '../lib/study-tracks';
 
 /* Courses page ------------------------------------------------------------------------------- */
 
-/** Legacy course-only types kept until the old CourseCard/courses module is retired in Task 8. */
-export type CourseSectionId = 'build' | 'data' | 'systems' | 'security';
-export type CourseCategoryId =
-  | 'cs' | 'python' | 'web' | 'webdev' | 'ai' | 'genai' | 'datasci' | 'data-computing'
-  | 'databases' | 'algorithms' | 'math-cs' | 'math' | 'cybersecurity' | 'security' | 'privacy' | 'cloud-ai';
-export type CourseLevelId = 'beginner' | 'beginner-intermediate' | 'intermediate';
-export type CourseLanguageId = 'en' | 'pt';
-export type CourseCertificateId = 'none' | 'statement' | 'available';
-export type CourseNavId = 'all' | 'programming' | 'ai' | 'data' | 'systems' | 'security';
 export type CourseImageId = LearningCourseImageId;
-
-export interface LegacyCoursesPage {
-  meta: { title: string; description: string };
-  eyebrow: [string, string, string];
-  heading: string;
-  intro: string;
-  nav: { label: string; jump: string; items: Record<CourseNavId, string> };
-  anchors: { all: string; data: string };
-  sections: Record<CourseSectionId, { title: string; intro: string }>;
-  categories: Record<CourseCategoryId, string>;
-  imageAlts: Record<CourseImageId, string>;
-  levels: Record<CourseLevelId, string>;
-  languages: Record<CourseLanguageId, string>;
-  certificates: Record<CourseCertificateId, string>;
-  units: { hours: string; weeks: string };
-  labels: {
-    category: string; level: string; language: string; certificate: string; duration: string;
-    courses: string; curated: string; cta: string; newTab: string;
-  };
-  closing: { title: string; body: string; prompt: string; cta: string };
-}
 
 export interface CoursesPage {
   meta: { title: string; description: string };

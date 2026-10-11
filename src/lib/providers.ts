@@ -1,9 +1,8 @@
 // The institutions' marks for the Courses page, as supplied (src/assets/providers, unmodified).
 // One place: `marks` holds each artwork with its measured geometry and its optical size, and
-// `providerMarks` says which marks stand for each institution name in the catalogue (lib/courses.ts).
-// The catalogue's `institution` string stays the single source of the name: it is the key here, the
-// accessible name of the group, and the text shown when an institution has no mark (so a new course
-// from a new institution renders, as text, before its logo is added).
+// `providerMarks` says which marks stand for each provider name in the learning-resource catalogue.
+// The resource `provider` string stays the single source of the name: it is the key here, the
+// accessible name of the group, and the fallback text when a provider has no mark.
 import harvard from '../assets/providers/harvard.png';
 import mit from '../assets/providers/mit-opencourseware.png';
 import fgv from '../assets/providers/fgv.png';
@@ -44,7 +43,7 @@ export const marks = {
   microsoft: { src: microsoft, alt: 'Microsoft', bbox: [64, 147, 2110, 579], h: 22 },
 } satisfies Record<string, Mark>;
 
-/** The marks that stand for each institution name used in the catalogue, in reading order. */
+/** The marks that stand for provider names used in the catalogue, in reading order. */
 export const providerMarks: Record<string, Mark[]> = {
   'Harvard University': [marks.harvard],
   'MIT OpenCourseWare': [marks.mit],
