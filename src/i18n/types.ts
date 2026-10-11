@@ -56,6 +56,12 @@ export interface Dict {
   subjectPage: (subject: string, area: string) => PageCopy;
   guides: {
     count: (n: number) => string;
+    uerj: {
+      entenda: { title: string; body: string[] };
+      prepare: { title: string; body: string[] };
+      materias: { title: string; why: string };
+      provas: { title: string; why: string };
+    };
     enem: {
       entenda: { title: string; body: string[] };
       areas: { title: string; why: string };

@@ -6,10 +6,8 @@ import PageIntro from '../../components/PageIntro.astro';
 import TrackSection from '../../components/TrackSection.astro';
 import SourceNote from '../../components/SourceNote.astro';
 import ResourceList from '../../components/ResourceList.astro';
+import SubjectLinks from '../../components/SubjectLinks.astro';
 import { ENEM_AREAS, resolveGuide } from '../../lib/exam-guides';
-import { publishedResources } from '../../lib/learning-resources';
-import { routes } from '../../lib/routes';
-import { SUBJECTS } from '../../lib/taxonomy';
 import { pt as t } from '../../i18n/pt';
 
 const c = t.pages.enem;
@@ -17,7 +15,6 @@ const g = t.guides.enem;
 const sections = new Map(resolveGuide('enem').map((s) => [s.id, s]));
 const practice = sections.get('pratique');
 const deepen = sections.get('aprofunde');
-const count = (subject: string) => publishedResources.filter((r) => r.subject === subject).length;
 const deepenByArea = ENEM_AREAS
   .map((area) => ({ ...area, resources: (deepen?.resources ?? []).filter((r) => area.subjects.includes(r.subject)) }))
   .filter((area) => area.resources.length > 0);
@@ -38,11 +35,7 @@ const deepenByArea = ENEM_AREAS
         <li>
           <div data-exam-area={area.id}>
             <h3>{area.label}</h3>
-            <ul role="list">
-              {area.subjects.map((id) => (
-                <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a> <span class="count">{t.guides.count(count(id))}</span></li>
-              ))}
-            </ul>
+            <SubjectLinks subjects={area.subjects} />
           </div>
         </li>
       ))}
@@ -75,8 +68,6 @@ const deepenByArea = ENEM_AREAS
   @media (min-width: 768px) { .exam-areas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .exam-areas > li { padding-block: var(--space-4) var(--space-5); border-top: 1px solid var(--rule); }
   .exam-areas h3, .group h3 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-2); }
-  .exam-areas li li { display: flex; align-items: baseline; gap: var(--space-3); min-height: 40px; }
-  .count { font-size: var(--fs-small); color: var(--muted); }
   .after-note { margin-top: var(--space-5); }
   .group + .group { margin-top: var(--space-6); }
 </style>

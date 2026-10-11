@@ -136,6 +136,21 @@ export const pt: Dict = {
   },
   guides: {
     count: (n) => (n === 1 ? '1 recurso' : `${n} recursos`),
+    uerj: {
+      entenda: {
+        title: 'Entenda a prova',
+        body: ['No Exame Discursivo da UERJ, todos os candidatos fazem a prova de Redação e duas disciplinas específicas.'],
+      },
+      prepare: {
+        title: 'Monte sua preparação',
+        body: [
+          'As disciplinas específicas dependem do curso que você pretende disputar, e as regras oficiais dizem quais são.',
+          'Escolha o curso, descubra as suas duas disciplinas e dê a elas a maior parte do seu tempo, sem deixar a Redação de lado.',
+        ],
+      },
+      materias: { title: 'Estude por matéria', why: 'As matérias com questões da UERJ para praticar. Cada página reúne também cursos gratuitos para estudar o conteúdo.' },
+      provas: { title: 'Resolva provas anteriores', why: 'A Revista do Vestibular da UERJ reúne questões comentadas de edições atuais e anteriores. É a forma mais direta de conhecer o estilo da prova.' },
+    },
     enem: {
       entenda: {
         title: 'Entenda a prova',

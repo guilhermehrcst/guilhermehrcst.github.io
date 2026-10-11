@@ -304,11 +304,29 @@ function checkEnem(path, html) {
   if (/data-format="practice"/.test(deepen)) fail(path, '#aprofunde holds no practice');
 }
 
+/** /uerj/: its own personality, with past exams as the spine (spec §6.3). */
+const UERJ_PRACTICE = ['uerj-math-practice', 'uerj-portuguese-practice', 'uerj-writing-practice', 'uerj-physics-practice', 'uerj-history-practice', 'uerj-geography-practice', 'uerj-spanish-practice'];
+function checkUerj(path, html) {
+  const ids = sectionIds(html);
+  if (JSON.stringify(ids) !== JSON.stringify(['entenda', 'prepare', 'materias', 'provas'])) fail(path, `UERJ sections ${ids.join(',')}`);
+  checkSourceNote(path, sectionOf(html, /<section\b[^>]*\sid="entenda"/) ?? '', '#entenda');
+  const prepare = sectionOf(html, /<section\b[^>]*\sid="prepare"/) ?? '';
+  checkSourceNote(path, prepare, '#prepare');
+  if (/<table\b/.test(prepare)) fail(path, '#prepare points to the official rules; it copies no table');
+  const exams = sectionOf(html, /<section\b[^>]*\sid="provas"/) ?? '';
+  const found = attrs(exams, /\sdata-resource-id="([^"]+)"/g).sort();
+  if (JSON.stringify(found) !== JSON.stringify([...UERJ_PRACTICE].sort())) fail(path, `#provas must hold the seven UERJ collections (${found.join(',')})`);
+  const subjects = hrefsIn(sectionOf(html, /<section\b[^>]*\sid="materias"/) ?? '');
+  const expected = ['/materias/matematica/', '/materias/portugues/', '/materias/redacao/', '/materias/fisica/', '/materias/historia/', '/materias/geografia/', '/materias/espanhol/'];
+  if (JSON.stringify(subjects) !== JSON.stringify(expected)) fail(path, `#materias links ${subjects.join(',')}`);
+}
+
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
   if (path === '/enem/') checkEnem(path, html);
+  if (path === '/uerj/') checkUerj(path, html);
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
 }

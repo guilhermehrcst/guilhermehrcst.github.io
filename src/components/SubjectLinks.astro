@@ -1,0 +1,20 @@
+---
+// Subjects as links to their pages, each with its real number of published resources.
+import { publishedResources } from '../lib/learning-resources';
+import { routes } from '../lib/routes';
+import { SUBJECTS, type SubjectId } from '../lib/taxonomy';
+import { pt as t } from '../i18n/pt';
+
+interface Props { subjects: readonly SubjectId[] }
+const count = (id: SubjectId) => publishedResources.filter((r) => r.subject === id).length;
+---
+<ul class="subject-links" role="list">
+  {Astro.props.subjects.map((id) => (
+    <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a><span class="count">{t.guides.count(count(id))}</span></li>
+  ))}
+</ul>
+
+<style>
+  li { display: flex; align-items: baseline; gap: var(--space-3); min-height: 40px; }
+  .count { font-size: var(--fs-small); color: var(--muted); }
+</style>
