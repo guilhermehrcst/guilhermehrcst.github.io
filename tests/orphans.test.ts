@@ -39,3 +39,14 @@ test('every global token is read somewhere', () => {
   const everything = sources.map(read).join('\n');
   for (const token of tokens) assert.ok(everything.includes(`var(${token})`), `unused token ${token}`);
 });
+
+test('every repository path the README cites exists', () => {
+  const readme = read('README.md');
+  const paths = [...readme.matchAll(/`((?:src|scripts|docs|tests|\.github)\/[^`*{}]+)`/g)].map((m) => m[1]!);
+  assert.ok(paths.length > 5);
+  for (const path of paths) {
+    let exists = true;
+    try { statSync(new URL(path, root)); } catch { exists = false; }
+    assert.ok(exists, `README cites a missing path: ${path}`);
+  }
+});
