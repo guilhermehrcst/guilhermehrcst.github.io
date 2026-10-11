@@ -114,20 +114,22 @@ function checkThirdParty(path, html) {
 
 /** Internal links resolve and anchors exist. Every external link goes to an allowed host over HTTPS, in
  *  a new tab, without handing the page a reference back (noopener noreferrer). */
+/** The page has an element with this id: the attribute itself, never a suffix such as data-resource-id. */
+const hasId = (html, id) => new RegExp(`\\sid="${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`).test(html);
 function checkLinks(path, html) {
   for (const m of html.matchAll(/<a\b([^>]*)>/g)) {
     const raw = /\shref="([^"]+)"/.exec(m[1])?.[1];
     if (raw === undefined) continue;
     const href = raw.replace(/&amp;/g, '&');
     if (href.startsWith('#')) {
-      if (!html.includes(`id="${href.slice(1)}"`)) fail(path, `dangling anchor ${href}`);
+      if (!hasId(html, href.slice(1))) fail(path, `dangling anchor ${href}`);
       continue;
     }
     if (href.startsWith('/')) {
       const [beforeHash, hash] = href.split('#');
       const target = beforeHash.split('?')[0];
       if (!existsSync(fileFor(target))) fail(path, `broken internal link ${href}`);
-      else if (hash && !readFileSync(fileFor(target), 'utf8').includes(`id="${hash}"`)) fail(path, `dangling anchor ${href}`);
+      else if (hash && !hasId(readFileSync(fileFor(target), 'utf8'), hash)) fail(path, `dangling anchor ${href}`);
       continue;
     }
     let url;
@@ -228,6 +230,9 @@ function checkUnique(list, what) {
 
 function checkShell(path, html) {
   if (!/<header\b/.test(html) || !/<footer\b/.test(html)) fail(path, 'header or footer landmark missing');
+  // An id names one element: a second one makes anchors and aria references ambiguous.
+  const ids = attrs(html.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, ''), /<[a-z][^>]*\sid="([^"]+)"/g);
+  for (const id of new Set(ids.filter((id, i) => ids.indexOf(id) !== i))) fail(path, `duplicate id "${id}"`);
   const footer = /<footer\b[\s\S]*<\/footer>/.exec(html)?.[0] ?? '';
   const footerLinks = new Set(hrefsIn(footer));
   for (const page of FOOTER_PAGES) if (!footerLinks.has(page)) fail(path, `the footer does not link ${page}`);

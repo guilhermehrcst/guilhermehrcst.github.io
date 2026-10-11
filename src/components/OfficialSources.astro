@@ -1,6 +1,6 @@
 ---
 // "Aprenda com fontes oficiais.": the institutions whose free courses the Academy points to, as their own
-// supplied marks (ProviderMark, unmodified), each leading to its first course on this site. Only providers
+// supplied marks (ProviderMark, unmodified), each leading to the track that holds its first course on this site. Only providers
 // with published, verified resources appear (institutions()); the brands still being verified are recorded
 // in docs/superpowers/research/2026-10-11-official-brands.md and are not shown. Never a partner or a sponsor:
 // the copy says the Academy is independent, and verify-dist rejects any claim of association.
@@ -8,6 +8,7 @@ import ProviderMark from './ProviderMark.astro';
 import { institutions } from '../lib/learning-library';
 import { providerMarks } from '../lib/providers';
 import { routes } from '../lib/routes';
+import { publishedTracks } from '../lib/tech-tracks';
 import { AREAS, SUBJECTS } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
@@ -19,7 +20,10 @@ const list = institutions(Object.keys(providerMarks)).map(({ provider, resources
   if (!first) throw new Error(`OfficialSources: ${provider} has no resource`);
   const page = SUBJECTS[first.subject];
   if (resources.some((r) => r.subject !== first.subject)) throw new Error(`OfficialSources: ${provider} spans pages; say where`);
-  return { provider, joint: (providerMarks[provider]?.length ?? 0) > 1, count: resources.length, page: AREAS[page.area].label, href: `${routes.subject(page.id)}#${first.id}` };
+  // The anchor is the published track that holds the first course: a real section on that page.
+  const track = publishedTracks().find((tr) => tr.resourceIds.includes(first.id));
+  if (!track || page.id !== 'tecnologia') throw new Error(`OfficialSources: ${provider} has no track to lead to`);
+  return { provider, joint: (providerMarks[provider]?.length ?? 0) > 1, count: resources.length, page: AREAS[page.area].label, href: `${routes.subject(page.id)}#${track.id}` };
 });
 ---
 <div class="grid">
