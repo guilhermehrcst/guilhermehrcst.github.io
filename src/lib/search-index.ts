@@ -7,8 +7,9 @@ import { areaOf, publishedResources } from './learning-resources.ts';
 import { routes } from './routes.ts';
 import { normalize } from './search-normalize.ts';
 import { publishedTracks } from './tech-tracks.ts';
-import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf, type ExamId, type SubjectId } from './taxonomy.ts';
+import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf } from './taxonomy.ts';
 import { resourceFacets, type Facets } from './search-filter.ts';
+import { placementOf, type Placeable } from './placement.ts';
 
 export type SearchKind = 'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso';
 
@@ -29,24 +30,22 @@ const entry = (kind: SearchKind, key: string, title: string, url: string, contex
 /** The id of the element that is a resource, on the page that shows it (V0.4 §5.4). */
 export const resourceAnchor = (id: string): string => `recurso-${id}`;
 
-/** Where a resource is shown: its subject's page, or the first technology track that holds it. A resource
- *  without a subject lives on the guide of its first exam, which lists the exam's resources (V0.4 M4);
- *  without an exam no page shows it yet, and the build fails rather than send the student somewhere it is not. */
-export const resourceHome = ({ id, subject, exams }: { id: string; subject: SubjectId | null; exams?: readonly ExamId[] | undefined }): string => {
-  if (subject === null) {
-    if (exams?.[0]) return routes.objective(exams[0]);
-    throw new Error(`search-index: ${id} has no subject and no page shows it yet`);
-  }
-  if (subject !== 'tecnologia') return routes.subject(subject);
-  const track = publishedTracks().find((t) => t.resourceIds.includes(id));
-  return `${routes.objective('tecnologia')}${track ? `#${track.id}` : ''}`;
+/** Where a resource is shown: its canonical page (src/lib/placement.ts, the rules the pages render by), and on
+ *  /tecnologia/ the first track that holds it. No page shows it: the build fails rather than send the
+ *  student somewhere it is not. */
+export const resourceHome = (resource: Placeable): string => {
+  const at = placementOf(resource);
+  if (!at) throw new Error(`search-index: ${resource.id}: no page shows it yet`);
+  if (at.page !== routes.objective('tecnologia')) return at.page;
+  const track = publishedTracks().find((t) => t.resourceIds.includes(resource.id));
+  return `${at.page}#${track!.id}`;
 };
 
 /** Which resources of a page's lists carry their anchor: those whose home is this page, at their first
  *  occurrence. One set per list, in order. Anchors are never repeated, never on a page that is not home. */
 export const anchorPlan = (
   page: string,
-  lists: readonly (readonly { id: string; subject: SubjectId | null; exams?: readonly ExamId[] | undefined }[])[],
+  lists: readonly (readonly Placeable[])[],
 ): Set<string>[] => {
   const done = new Set<string>();
   return lists.map((list) => {

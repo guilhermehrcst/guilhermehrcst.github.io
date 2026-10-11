@@ -32,10 +32,11 @@ test('anchorPlan anchors a resource once, on its home page only, at its first oc
   assert.deepEqual(si.anchorPlan('/materias/matematica/', [[math, cs50x]]).map((s: Set<string>) => [...s]), [['kultivi-math-enem']]);
 });
 
-test('a resource without a subject lives on its exam page; without an exam no page shows it yet', () => {
-  assert.equal(si.resourceHome({ id: 'x', subject: null, exams: ['enem'] }), '/enem/');
-  assert.equal(si.resourceHome({ id: 'x', subject: null, exams: ['uerj'] }), '/uerj/');
-  assert.throws(() => si.resourceHome({ id: 'x', subject: null }), /no page shows/);
+test('a resource without a subject lives on the exam page that shows it; with no such page it has no destination', () => {
+  // An exam's past papers (practice) are shown by its guide: that is where they live.
+  assert.equal(si.resourceHome({ id: 'x', subject: null, format: 'past-exam', paths: ['vestibulares'], exams: ['enem'] }), '/enem/');
+  assert.equal(si.resourceHome({ id: 'x', subject: null, format: 'past-exam', paths: ['vestibulares'], exams: ['uerj'] }), '/uerj/');
+  assert.throws(() => si.resourceHome({ id: 'x', subject: null, format: 'past-exam', paths: ['ensino-medio'] }), /no page shows/);
 });
 
 test('resource entries carry their facets; other entries carry none', () => {

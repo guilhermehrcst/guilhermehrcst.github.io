@@ -126,6 +126,8 @@ export interface Dict {
   /** V0.4: the in-page navigation of a long path page, and the editorial highlights of a path. */
   sectionNav: { areas: string; page: string };
   featured: { title: string; why: string };
+  /** V0.4 Gate B: the general section of a path page (resources no subject, exam or field page shows). */
+  pathResources: { other: { title: string; why: string }; general: { title: string; why: string } };
   search: {
     label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string;
     /** V0.4 M4: the filters of the resources. */

@@ -1,0 +1,20 @@
+---
+// The general section of a path page (V0.4 Gate B, P1): the resources no subject, exam or field page shows
+// that this path holds, such as a Fuvest or a military past exam, or a Fundamental lesson. It renders
+// exactly the resources placement puts on this page (placedOnPath), each with its canonical anchor, and
+// nothing while the path is in preparation. An empty section is never rendered.
+import TrackSection from './TrackSection.astro';
+import ResourceGroups from './ResourceGroups.astro';
+import { placedOnPath } from '../lib/placement';
+import { routes } from '../lib/routes';
+import type { PathId } from '../lib/taxonomy';
+
+interface Props { path: PathId; id: string; title: string; why?: string | undefined }
+const { path, id, title, why } = Astro.props;
+const resources = placedOnPath(path);
+---
+{resources.length > 0 && (
+  <TrackSection id={id} title={title} why={why}>
+    <ResourceGroups resources={resources} headingLevel={3} page={routes.objective(path)} />
+  </TrackSection>
+)}

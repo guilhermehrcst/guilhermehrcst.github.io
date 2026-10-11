@@ -9,6 +9,8 @@ import TrackSection from '../../components/TrackSection.astro';
 import ObjectiveMap from '../../components/ObjectiveMap.astro';
 import SectionNav from '../../components/SectionNav.astro';
 import FeaturedResources from '../../components/FeaturedResources.astro';
+import PathResources from '../../components/PathResources.astro';
+import { placedOnPath } from '../../lib/placement';
 import { featuredReady } from '../../lib/featured';
 import { mapNavItems, objectiveFacts } from '../../lib/learning-library';
 import { resolveGuide } from '../../lib/exam-guides';
@@ -29,6 +31,7 @@ const nav = [
   { id: 'provas', label: v.exams.title, why: exams.map((exam) => exam.name).join(', ') },
   { id: 'nota-editorial', label: v.note.title },
   ...mapNavItems('vestibulares', { practice: false }, (n) => t.home.objectives.facts(n)),
+  ...(placedOnPath('vestibulares').length ? [{ id: 'outras-provas', label: t.pathResources.other.title }] : []),
 ];
 ---
 <Base title={c.title} description={c.description}>
@@ -54,6 +57,7 @@ const nav = [
   </TrackSection>
 
   <ObjectiveMap path="vestibulares" technology={false} practice={false} />
+  <PathResources path="vestibulares" id="outras-provas" title={t.pathResources.other.title} why={t.pathResources.other.why} />
 </Base>
 
 <style>

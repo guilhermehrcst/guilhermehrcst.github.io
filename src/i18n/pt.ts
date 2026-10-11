@@ -283,6 +283,10 @@ export const pt: Dict = {
   },
   tecnologia: { chooser: 'Escolha uma trilha' },
   sectionNav: { areas: 'Escolha uma área', page: 'Nesta página' },
+  pathResources: {
+    other: { title: 'Outras provas e materiais', why: 'Provas anteriores e materiais de outros vestibulares, publicados pelas próprias instituições e conferidos na fonte.' },
+    general: { title: 'Recursos', why: 'Materiais gratuitos para este caminho, conferidos na página de quem os publica.' },
+  },
   featured: {
     title: 'Destaques',
     why: 'Uma seleção editorial para começar por este caminho, conferida na fonte. O acervo completo continua abaixo.',

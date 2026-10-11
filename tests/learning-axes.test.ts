@@ -119,9 +119,10 @@ test('a resource without a subject is reached by path and exam, never by area or
 });
 
 test('the search index never sends a resource without a subject to a page that does not show it', async () => {
-  const { resourceHome } = await import('../src/lib/search-index.ts') as { resourceHome?: (r: { id: string; subject: string | null }) => string };
-  assert.equal(typeof resourceHome, 'function');
-  assert.equal(resourceHome!({ id: 'kultivi-math-enem', subject: 'matematica' }), '/materias/matematica/');
-  assert.equal(resourceHome!({ id: 'cs50x', subject: 'tecnologia' }), '/tecnologia/#comecar-a-programar');
-  assert.throws(() => resourceHome!({ id: 'x', subject: null }), /no page shows/);
+  const { resourceHome } = await import('../src/lib/search-index.ts');
+  const { publishedResources: all } = await import('../src/lib/learning-resources.ts');
+  const byId = (id: string) => all.find((r) => r.id === id)!;
+  assert.equal(resourceHome(byId('kultivi-math-enem')), '/materias/matematica/');
+  assert.equal(resourceHome(byId('cs50x')), '/tecnologia/#comecar-a-programar');
+  assert.throws(() => resourceHome({ id: 'x', subject: null, format: 'past-exam', paths: ['ensino-medio'] }), /no page shows/);
 });
