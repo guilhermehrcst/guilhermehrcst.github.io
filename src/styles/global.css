@@ -12,6 +12,11 @@
   --action: #0c5fe8;
   --action-hover: #0a4cc0;
   --on-action: #faf8f4;
+  /* Quiet grounds for product panels and bands: no second brand colour, no heavy shadow. */
+  --raised: #fffdf9;
+  --tint-blue: #eaf0fd;
+  --tint-sand: #efe7da;
+  --rule-strong: #cfc8bb;
 
   --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   /* Newsreader (OFL-1.1, self-hosted): the academic voice of the display type. Body text stays sans. */
@@ -24,6 +29,7 @@
   --fs-h3: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
   --fs-h2: clamp(1.75rem, 1.35rem + 1.6vw, 2.75rem);
   --fs-h1: clamp(2.5rem, 1.7rem + 3.4vw, 4.5rem);
+  --fs-hero: clamp(2.875rem, 1.5rem + 5vw, 5.75rem);
 
 
   --space-1: 0.25rem;
@@ -39,6 +45,8 @@
   --gutter: clamp(16px, 4vw, 40px);
   --measure: 66ch;
   --radius: 6px;
+  --radius-lg: 14px;
+  --shadow-panel: 0 1px 0 rgb(29 33 37 / 0.04), 0 24px 56px -28px rgb(29 33 37 / 0.30);
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --t-ui: 180ms;

@@ -1,0 +1,77 @@
+---
+// A window that shows the real product: a quiet frame (three neutral dots and the page's path) around
+// content built from real data. It is decorative for assistive tech: the window is aria-hidden and holds
+// nothing focusable, and the visible caption links to the page it depicts (verify-dist checks all three).
+interface Props {
+  path: string;
+  caption: string;
+  href: string;
+  linkLabel: string;
+  class?: string;
+}
+const { path, caption, href, linkLabel, class: className } = Astro.props;
+---
+<figure class:list={['product', className]} data-product-window>
+  <div class="frame" aria-hidden="true">
+    <div class="chrome">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="path">{path}</span>
+    </div>
+    <div class="screen">
+      <slot />
+    </div>
+  </div>
+  <figcaption>
+    <span>{caption}</span>
+    <a href={href}>{linkLabel}{' '}<span aria-hidden="true">→</span></a>
+  </figcaption>
+</figure>
+
+<style>
+  .product { margin: 0; min-width: 0; }
+  .frame {
+    position: relative;
+    overflow: hidden;
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-panel);
+  }
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    height: 2.5rem;
+    padding-inline: var(--space-4);
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface);
+  }
+  .dots { display: inline-flex; gap: 6px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--rule-strong); }
+  .path {
+    flex: 1;
+    max-width: 22rem;
+    margin-inline: auto;
+    padding: 0.2rem var(--space-3);
+    border-radius: 999px;
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .screen { position: relative; }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-1) var(--space-4);
+    margin-top: var(--space-3);
+    font-size: var(--fs-small);
+    color: var(--muted);
+  }
+  figcaption a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 32px; color: var(--ink); font-weight: 500; }
+</style>

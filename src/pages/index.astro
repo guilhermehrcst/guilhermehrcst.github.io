@@ -1,7 +1,7 @@
 ---
 // The Home orients; it does not pour out content (spec §5.2). Objective → area; no resource here.
 import Base from '../layouts/Base.astro';
-import PageIntro from '../components/PageIntro.astro';
+import HomeHero from '../components/HomeHero.astro';
 import ObjectiveList from '../components/ObjectiveList.astro';
 import AreaList from '../components/AreaList.astro';
 import { routes } from '../lib/routes';
@@ -10,9 +10,7 @@ import { pt as t } from '../i18n/pt';
 const c = t.pages.home;
 ---
 <Base title={c.title} description={c.description}>
-  <PageIntro heading={c.heading} lead={c.lead}>
-    <a class="cta" href="#objetivo">{t.home.cta}</a>
-  </PageIntro>
+  <HomeHero />
 
   <section class="wrap block" id="objetivo" aria-labelledby="objetivo-title">
     <h2 id="objetivo-title">{t.home.objectives.heading}</h2>
@@ -39,20 +37,6 @@ const c = t.pages.home;
 </Base>
 
 <style>
-  .cta {
-    display: inline-flex;
-    align-items: center;
-    min-height: 48px;
-    margin-top: var(--space-6);
-    padding-inline: var(--space-5);
-    background: var(--action);
-    color: var(--on-action);
-    border-radius: var(--radius);
-    font-weight: 560;
-    text-decoration: none;
-    transition: background var(--t-ui);
-  }
-  .cta:hover { background: var(--action-hover); color: var(--on-action); }
   .block { padding-block: var(--space-7); }
   .block > h2 { font-size: var(--fs-h2); margin-bottom: var(--space-5); }
   .rules { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 var(--space-7); }

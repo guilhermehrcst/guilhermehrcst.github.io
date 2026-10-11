@@ -42,7 +42,16 @@ export interface Dict {
   };
   pages: Record<PageKey, PageCopy>;
   home: {
-    cta: string;
+    hero: {
+      eyebrow: string;
+      lead: string;
+      primary: string;
+      secondary: string;
+      note: string;
+      demoCaption: string;
+      demoLink: string;
+      demo: { subjects: string; objectives: string; areas: string; study: string; practice: string; byObjective: string };
+    };
     objectives: { heading: string; items: Record<ObjectiveId, string> };
     areas: { heading: string };
     curation: { heading: string; rules: { title: string; body: string }[]; more: string };

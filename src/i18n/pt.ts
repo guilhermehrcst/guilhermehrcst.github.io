@@ -85,7 +85,16 @@ export const pt: Dict = {
     },
   },
   home: {
-    cta: 'Escolher meu objetivo',
+    hero: {
+      eyebrow: 'Gratuito · Em português · Fontes oficiais',
+      lead: 'Encontre seu caminho para estudar, praticar e evoluir com recursos gratuitos, escolhidos e verificados na fonte.',
+      primary: 'Escolher meu objetivo',
+      secondary: 'Explorar matérias',
+      note: 'Sem cadastro na Pexis Academy. Cada recurso leva à página oficial de quem o publica.',
+      demoCaption: 'Uma página real da Pexis Academy, com os recursos que ela mostra hoje.',
+      demoLink: 'Abrir Matemática',
+      demo: { subjects: 'Matérias', objectives: 'Objetivos', areas: 'Áreas', study: 'Para estudar', practice: 'Para praticar', byObjective: 'Por objetivo' },
+    },
     areas: { heading: 'Explore por área' },
     curation: {
       heading: 'Como escolhemos os recursos',

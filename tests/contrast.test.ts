@@ -24,6 +24,9 @@ const pairs: [string, string, number][] = [
   ['muted', 'paper', 4.5], ['muted', 'surface', 4.5],
   ['action', 'paper', 4.5], ['action', 'surface', 4.5], ['action-hover', 'paper', 4.5],
   ['on-action', 'action', 4.5], ['on-action', 'action-hover', 4.5],
+  ['ink', 'raised', 7], ['muted', 'raised', 4.5], ['action', 'raised', 4.5],
+  ['ink', 'tint-blue', 7], ['muted', 'tint-blue', 4.5], ['action', 'tint-blue', 4.5],
+  ['ink', 'tint-sand', 7], ['muted', 'tint-sand', 4.5],
 ];
 for (const [fg, bg, min] of pairs) {
   test(`--${fg} on --${bg} is at least ${min}:1`, () => {

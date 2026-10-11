@@ -117,7 +117,8 @@ function checkLinks(path, html) {
       continue;
     }
     if (href.startsWith('/')) {
-      const [target, hash] = href.split('#');
+      const [beforeHash, hash] = href.split('#');
+      const target = beforeHash.split('?')[0];
       if (!existsSync(fileFor(target))) fail(path, `broken internal link ${href}`);
       else if (hash && !readFileSync(fileFor(target), 'utf8').includes(`id="${hash}"`)) fail(path, `dangling anchor ${href}`);
       continue;
@@ -255,8 +256,33 @@ function sectionOf(html, open, tag = 'section') {
 }
 const hrefsIn = (fragment) => attrs(fragment, /<a\b[^>]*\shref="([^"]+)"/g);
 
+/** Resource ids that decorative product demos show: each must be a real, published resource (checked
+ *  against every page's resource lists once all pages are read). */
+const DEMO_RESOURCE_IDS = new Set();
+const PUBLISHED_RESOURCE_IDS = new Set();
+
+/** A product demo (a window that shows the real product) is decorative for assistive tech, holds nothing
+ *  focusable, shows only real resources, and is captioned by a real link. */
+function checkProductWindow(path, figure) {
+  const hidden = (/<div\b[^>]*\saria-hidden="true"[^>]*>[\s\S]*/.exec(figure)?.[0] ?? '').split('<figcaption')[0];
+  if (!hidden) fail(path, 'a product window is aria-hidden');
+  if (/<(a|button|input|select|textarea)\b|tabindex=/.test(hidden)) fail(path, 'a product window holds nothing focusable');
+  if (/<h[1-6][\s>]/.test(hidden)) fail(path, 'a product window holds no headings (the page outline stays the page\'s)');
+  const ids = attrs(figure, /\sdata-demo-resource-id="([^"]+)"/g);
+  if (ids.length === 0) fail(path, 'a product window shows at least one real resource');
+  for (const id of ids) DEMO_RESOURCE_IDS.add(id);
+  const caption = /<figcaption\b[\s\S]*?<\/figcaption>/.exec(figure)?.[0] ?? '';
+  if (!/<a\b[^>]*href="\//.test(caption)) fail(path, 'a product window is captioned by a link to the real page');
+}
+
 /** The Home orients; it does not pour out content (spec §5.2). */
 function checkHome(path, html, resources) {
+  const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
+  const hero = main.slice(0, Math.max(0, main.search(/<section\b/)));
+  if (!hero.includes('href="#objetivo"') || !hero.includes('href="/materias/"')) fail(path, 'the hero offers "#objetivo" and "/materias/"');
+  const window = /<figure\b[^>]*\sdata-product-window[\s\S]*?<\/figure>/.exec(hero)?.[0];
+  if (!window) fail(path, 'the hero shows the product (figure[data-product-window])');
+  else checkProductWindow(path, window);
   const objective = sectionOf(html, /<section\b[^>]*\sid="objetivo"/);
   if (!objective) fail(path, 'section#objetivo missing');
   else {
@@ -271,7 +297,6 @@ function checkHome(path, html, resources) {
   if (resources.length) fail(path, `the Home lists no resources (found ${resources.length})`);
 
   // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
-  const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
   if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
   if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
@@ -395,6 +420,7 @@ function checkObjectiveMap(path, html, resources, goal) {
 
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
+  for (const item of resources) PUBLISHED_RESOURCE_IDS.add(resourceAttr(item, 'data-resource-id'));
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
   if (path === '/enem/') checkEnem(path, html);
@@ -452,6 +478,9 @@ for (const path of CANONICAL) {
   checkAccessibility(path, html);
 }
 
+for (const id of DEMO_RESOURCE_IDS) {
+  if (!PUBLISHED_RESOURCE_IDS.has(id)) fail('/', `a product demo shows ${id}, which no page publishes`);
+}
 checkUnique(seenTitles, 'title');
 checkUnique(seenDescriptions, 'description');
 
