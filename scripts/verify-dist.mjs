@@ -233,9 +233,20 @@ function checkShell(path, html) {
   // An id names one element: a second one makes anchors and aria references ambiguous.
   const ids = attrs(html.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, ''), /<[a-z][^>]*\sid="([^"]+)"/g);
   for (const id of new Set(ids.filter((id, i) => ids.indexOf(id) !== i))) fail(path, `duplicate id "${id}"`);
+  // The brand is the official lockup in every header (a link home, named by its label) and footer, and the
+  // icons are the generated ones (scripts/brand-assets.mjs); no typographic stand-in.
+  const header = /<header class="site-header"[\s\S]*?<\/header>/.exec(html)?.[0] ?? '';
+  const brandLink = /<a\b[^>]*\sdata-brand[^>]*>([\s\S]*?)<\/a>/.exec(header);
+  if (!brandLink || !/href="\/"/.test(brandLink[0]) || !/aria-label="[^"]+"/.test(brandLink[0]) || !/<img\b[^>]*src="\/_astro\/lockup-white\.[^"]+"/.test(brandLink[1])) fail(path, 'the header shows the official lockup, linked home');
+  if (/sig-a|sig-b/.test(html)) fail(path, 'the temporary typographic signature is gone');
+  for (const icon of ['/favicon-32.png', '/icon-192.png', '/apple-touch-icon.png']) {
+    if (!html.includes(`href="${icon}"`)) fail(path, `the page links ${icon}`);
+    else if (!existsSync(fileFor(icon))) fail(path, `${icon} is missing from dist`);
+  }
   const footer = /<footer\b[\s\S]*<\/footer>/.exec(html)?.[0] ?? '';
   const footerLinks = new Set(hrefsIn(footer));
   for (const page of FOOTER_PAGES) if (!footerLinks.has(page)) fail(path, `the footer does not link ${page}`);
+  if (!/<img\b[^>]*src="\/_astro\/lockup-white\.[^"]+"[^>]*alt="Pexis Academy"|<img\b[^>]*alt="Pexis Academy"[^>]*src="\/_astro\/lockup-white\./.test(footer)) fail(path, 'the footer shows the official lockup');
   const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
   if (!nav) { fail(path, 'main navigation (aria-label="Principal") missing'); return; }
   const items = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => [m[1], m[2].replace(/<[^>]+>/g, '').trim()]);

@@ -1,20 +1,22 @@
 /* Pexis Academy: global tokens and base. Component styles live in their .astro files.
-   "Acadêmica acolhedora" (spec §6.7): warm paper, graphite ink, one functional blue, hairlines and space.
+   "Acadêmica acolhedora" (spec §6.7): warm paper, graphite ink, the brand red, hairlines and space.
    Hex codes live only in :root. Contrast is measured, not estimated (tests/contrast.test.ts). */
 
 :root {
-  /* Paper, ink and one functional blue (#0C5FE8, the Pexis blue). */
+  /* Paper, ink and the brand red. --brand is measured from the official artwork (scripts/brand-assets.mjs,
+     tests/brand.test.ts); it is also the one action colour, so no second hue competes with the mark. */
   --paper: #faf8f4;
   --surface: #f2efe9;
   --ink: #1d2125;
   --muted: #565c63;
   --rule: #e2ddd4;
-  --action: #0c5fe8;
-  --action-hover: #0a4cc0;
+  --brand: #720111;
+  --action: #720111;
+  --action-hover: #8c1023;
   --on-action: #faf8f4;
-  /* Quiet grounds for product panels and bands: no second brand colour, no heavy shadow. */
+  /* Quiet grounds for product panels and bands: a pale brand tint and a sand, no heavy shadow. */
   --raised: #fffdf9;
-  --tint-blue: #eaf0fd;
+  --tint-brand: #f6e9ea;
   --tint-sand: #efe7da;
   --rule-strong: #cfc8bb;
 

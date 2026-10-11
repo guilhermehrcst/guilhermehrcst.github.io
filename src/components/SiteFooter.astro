@@ -3,7 +3,9 @@
 // subjects, technology tracks and the Academy's own pages. Every link is a real page or a real anchor
 // (verify-dist checks both, and that the footer reaches every objective and subject). Also the date the
 // catalogue was last verified (from the data, never typed), the Academy's independence, and the
-// licences of what the site ships.
+// licences of what the site ships. The brand is the official lockup (src/assets/brand), never redrawn.
+import { Image } from 'astro:assets';
+import lockup from '../assets/brand/lockup-white.png';
 import { routes } from '../lib/routes';
 import { ACADEMIC_SUBJECTS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
 import { publishedTracks } from '../lib/tech-tracks';
@@ -18,7 +20,7 @@ const tracks = publishedTracks();
 <footer class="site-footer">
   <div class="wrap grid">
     <div class="about">
-      <p class="brand"><span class="sig-a">Pexis</span> <span class="sig-b">Academy</span></p>
+      <p class="brand"><Image src={lockup} alt="Pexis Academy" height={64} densities={[1, 2, 3]} format="png" /></p>
       <p class="tagline">{f.tagline}</p>
       <p class="small"><time datetime={VERIFIED_ON} data-verified-on>{f.verified(date)}</time></p>
       <p class="small">{f.independence}</p>
@@ -73,9 +75,9 @@ const tracks = publishedTracks();
   }
 
   .about { display: grid; gap: var(--space-3); align-content: start; max-width: 36ch; }
-  .brand { font-family: var(--serif); font-size: 1.625rem; letter-spacing: -0.015em; color: var(--ink); }
-  .sig-a { font-weight: 640; }
-  .sig-b { font-weight: 380; color: var(--muted); }
+  /* The official lockup on the brand plate, larger than in the header ("ACADEMY" at 8.4px). */
+  .brand { justify-self: start; padding: 14px 20px; background: var(--brand); line-height: 0; }
+  .brand :global(img) { display: block; width: auto; height: 64px; }
   .tagline { color: var(--ink); }
   .small { font-size: var(--fs-small); color: var(--muted); }
   .eyebrow { margin-bottom: var(--space-2); }

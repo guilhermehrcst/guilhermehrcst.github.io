@@ -41,7 +41,10 @@ const canonical = new URL(Astro.url.pathname, site).href;
   <meta name="twitter:card" content="summary">
   <link rel="preload" href={sansLatin} as="font" type="font/woff2" crossorigin>
   <link rel="preload" href={serifLatin} as="font" type="font/woff2" crossorigin>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- The official symbol on the brand red (scripts/brand-assets.mjs). -->
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
   <a class="skip" href="#main">{t.skip}</a>
