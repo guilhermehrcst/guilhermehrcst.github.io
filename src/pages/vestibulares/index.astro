@@ -1,10 +1,32 @@
 ---
+// /vestibulares/: a common base for entrance exams in general, the UERJ first (the one specific exam with
+// a verified source), and an honest note on what the "vestibulares" tag means (spec §6.3). No other
+// exam is named: none has been verified.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
+import TrackSection from '../../components/TrackSection.astro';
+import ObjectiveMap from '../../components/ObjectiveMap.astro';
+import { routes } from '../../lib/routes';
 import { pt as t } from '../../i18n/pt';
 
-const c = t.pages['vestibulares'];
+const c = t.pages.vestibulares;
+const v = t.vestibulares;
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+
+  <TrackSection id="uerj" title={v.uerj.title} why={v.uerj.why}>
+    <p><a class="more" href={routes.objective('uerj')}>{v.uerj.link}{' '}<span aria-hidden="true">→</span></a></p>
+  </TrackSection>
+
+  <TrackSection id="nota-editorial" title={v.note.title}>
+    <p class="note">{v.note.body}</p>
+  </TrackSection>
+
+  <ObjectiveMap goal="vestibulares" technology={false} />
 </Base>
+
+<style>
+  .more { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 500; }
+  .note { max-width: var(--measure); color: var(--muted); }
+</style>

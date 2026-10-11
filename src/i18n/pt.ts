@@ -134,6 +134,17 @@ export const pt: Dict = {
       ],
     },
   },
+  vestibulares: {
+    uerj: {
+      title: 'Vai prestar a UERJ?',
+      why: 'A UERJ tem um processo próprio, com Exame Discursivo, e um caminho específico aqui.',
+      link: 'Ver o caminho da UERJ',
+    },
+    note: {
+      title: 'Sobre esta seleção',
+      body: 'Os recursos abaixo cobrem conteúdos do Ensino Médio cobrados em vestibulares. Indicá-los para vestibulares é uma escolha editorial: não significa que o provedor prepare oficialmente para um vestibular específico.',
+    },
+  },
   objectiveMap: {
     more: (subject) => `Tudo sobre ${subject}`,
     technology: {

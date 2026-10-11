@@ -10,8 +10,8 @@ import { routes } from '../lib/routes';
 import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
-interface Props { goal: LearningGoalId }
-const { goal } = Astro.props;
+interface Props { goal: LearningGoalId; technology?: boolean }
+const { goal, technology = true } = Astro.props;
 const areas = AREA_ORDER.filter((id) => id !== 'tecnologia')
   .map((id) => ({
     id,
@@ -25,21 +25,28 @@ const tech = t.objectiveMap.technology;
 ---
 {areas.map((area) => (
   <TrackSection id={area.id} title={area.label}>
-    {area.subjects.map((subject) => (
-      <div class="subject">
-        <h3><a href={routes.subject(subject.id)}>{t.objectiveMap.more(subject.label)}{' '}<span aria-hidden="true">→</span></a></h3>
-        <ResourceList resources={subject.resources} headingLevel={4} compact />
-      </div>
-    ))}
+    <div class="subjects">
+      {area.subjects.map((subject) => (
+        <div class="subject">
+          <h3><a href={routes.subject(subject.id)}>{t.objectiveMap.more(subject.label)}{' '}<span aria-hidden="true">→</span></a></h3>
+          <ResourceList resources={subject.resources} headingLevel={4} compact />
+        </div>
+      ))}
+    </div>
   </TrackSection>
 ))}
 
-<TrackSection id="tecnologia" title={tech.title} why={tech.why}>
-  <p><a class="more" href={routes.objective('tecnologia')}>{tech.link}{' '}<span aria-hidden="true">→</span></a></p>
-</TrackSection>
+{technology && (
+  <TrackSection id="tecnologia" title={tech.title} why={tech.why}>
+    <p><a class="more" href={routes.objective('tecnologia')}>{tech.link}{' '}<span aria-hidden="true">→</span></a></p>
+  </TrackSection>
+)}
 
 <style>
-  .subject + .subject { margin-top: var(--space-6); }
+  .subjects { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6) var(--space-7); }
+  @media (min-width: 768px) { .subjects { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  /* Inside a subject column the list is a single column. */
+  .subject :global(.resources) { grid-template-columns: minmax(0, 1fr); }
   h3 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-2); }
   h3 a { text-decoration: none; }
   h3 a:hover { text-decoration: underline; }

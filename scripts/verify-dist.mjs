@@ -335,6 +335,12 @@ function checkProduct(path, html) {
   if (path === '/sobre/') checkAbout(path, html);
   if (path === '/enem/') checkEnem(path, html);
   if (path === '/uerj/') checkUerj(path, html);
+  if (path === '/vestibulares/') {
+    checkObjectiveMap(path, html, resources, 'vestibulares');
+    const ids = sectionIds(html);
+    if (ids[0] !== 'uerj' || ids[1] !== 'nota-editorial') fail(path, `Vestibulares opens with the UERJ, then the editorial note (${ids.join(',')})`);
+    if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="uerj"/) ?? '').includes('/uerj/')) fail(path, '#uerj leads to /uerj/');
+  }
   if (path === '/ensino-medio/') {
     checkObjectiveMap(path, html, resources, 'ensino-medio');
     const ids = sectionIds(html);
