@@ -77,11 +77,9 @@ const fail = (page, msg) => errors.push(`${page}: ${msg}`);
 const fileFor = (p) => join(DIST, p.endsWith('/') ? p + 'index.html' : p);
 const attrs = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
 
-for (const pg of PAGES) {
-  const file = fileFor(pg.path);
-  if (!existsSync(file)) { fail(pg.path, 'missing'); continue; }
-  const html = readFileSync(file, 'utf8');
+/* Generic checks: they hold for any product built on this site. ------------------------------- */
 
+function checkHead(pg, html) {
   if (!html.includes(`<html lang="${pg.lang}"`)) fail(pg.path, `expected <html lang="${pg.lang}">`);
   if (!/<title>[^<]{5,}<\/title>/.test(html)) fail(pg.path, 'missing <title>');
   if (!/<meta name="description" content="[^"]{20,}"/.test(html)) fail(pg.path, 'missing description');
@@ -95,10 +93,71 @@ for (const pg of PAGES) {
 
   const robots = /<meta name="robots" content="noindex"/.test(html);
   if (robots !== pg.noindex) fail(pg.path, pg.noindex ? 'placeholder must be noindex' : 'must be indexable');
+}
 
+function checkLandmarks(pg, html) {
   if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(pg.path, 'skip link or main landmark missing');
   if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(pg.path, 'expected exactly one <h1>');
+}
 
+/** Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare
+ *  `alt`) and reserves its box (width and height), so nothing shifts when it loads. */
+function checkImages(pg, html) {
+  for (const tag of html.match(/<img\b[^>]*>/g) ?? []) {
+    if (!/\salt(?=[\s=>])/.test(tag)) fail(pg.path, `<img> without alt: ${tag.slice(0, 80)}`);
+    if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) fail(pg.path, `<img> without width and height: ${tag.slice(0, 80)}`);
+  }
+}
+
+/** Resources must be first-party: no third-party requests. */
+function checkThirdParty(pg, html) {
+  for (const src of attrs(html, /<(?:script|img|source|video|iframe)[^>]*\ssrc="([^"]+)"/g)) {
+    if (!src.startsWith('/')) fail(pg.path, `external resource ${src}`);
+  }
+  for (const m of html.matchAll(/<link\b([^>]*)>/g)) {
+    const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
+    const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
+    if (/stylesheet|preload|icon|modulepreload/.test(rel) && !href.startsWith('/')) fail(pg.path, `external ${rel} ${href}`);
+  }
+}
+
+/** Outbound links opened in a new tab: HTTPS, an allowed host, and no reference back to this page. */
+function checkNewTabLinks(pg, html, hosts) {
+  const checked = new Set();
+  for (const m of html.matchAll(/<a\b([^>]*)>/g)) {
+    if (!/target="_blank"/.test(m[1])) continue;
+    const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
+    let url;
+    try { url = new URL(href.replace(/&amp;/g, '&')); } catch { fail(pg.path, `bad course url ${href}`); continue; }
+    if (url.protocol !== 'https:') fail(pg.path, `course link not https: ${href}`);
+    if (!hosts.has(url.hostname)) fail(pg.path, `course link to a non-official host: ${href}`);
+    const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
+    if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) fail(pg.path, `course link without rel="noopener noreferrer": ${href}`);
+    checked.add(href);
+  }
+  return checked;
+}
+
+/** Internal links resolve; anchors exist; external links are allowed (or were checked above). */
+function checkLinks(pg, html, isAllowedExternal) {
+  for (const raw of attrs(html, /<a\b[^>]*\shref="([^"]+)"/g)) {
+    const href = raw.replace(/&amp;/g, '&');
+    if (href.startsWith('#')) {
+      if (!html.includes(`id="${href.slice(1)}"`)) fail(pg.path, `dangling anchor ${href}`);
+      continue;
+    }
+    if (href.startsWith('/')) {
+      const target = href.split('#')[0];
+      if (!existsSync(fileFor(target))) fail(pg.path, `broken internal link ${href}`);
+      continue;
+    }
+    if (!isAllowedExternal(href, raw)) fail(pg.path, `external link not on allowlist: ${href}`);
+  }
+}
+
+/* Product rules: what this particular site promises. ------------------------------------------ */
+
+function checkProduct(pg, html) {
   // The narrative terminal belongs to the Home only, and repeats what the page says: aria-hidden.
   const shells = html.match(/<[a-z]+\b[^>]*\sdata-home-narrative[\s>=][^>]*>/g) ?? [];
   const terminals = html.match(/<[a-z]+\b[^>]*\sdata-narrative-terminal[\s>=][^>]*>/g) ?? [];
@@ -140,23 +199,6 @@ for (const pg of PAGES) {
     if (/Paulex/.test(term)) fail(pg.path, 'projects --selected is Pexiscale, Lume and Pexis Machine only');
   }
 
-  // Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare `alt`) and reserves its box (width and
-  // height), so nothing shifts when it loads.
-  for (const tag of html.match(/<img\b[^>]*>/g) ?? []) {
-    if (!/\salt(?=[\s=>])/.test(tag)) fail(pg.path, `<img> without alt: ${tag.slice(0, 80)}`);
-    if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) fail(pg.path, `<img> without width and height: ${tag.slice(0, 80)}`);
-  }
-
-  // Resources must be first-party: no third-party requests.
-  for (const src of attrs(html, /<(?:script|img|source|video|iframe)[^>]*\ssrc="([^"]+)"/g)) {
-    if (!src.startsWith('/')) fail(pg.path, `external resource ${src}`);
-  }
-  for (const m of html.matchAll(/<link\b([^>]*)>/g)) {
-    const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
-    const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
-    if (/stylesheet|preload|icon|modulepreload/.test(rel) && !href.startsWith('/')) fail(pg.path, `external ${rel} ${href}`);
-  }
-
   // The general library must expose the eight primary areas exactly once, in semantic SSR markup.
   if (GENERAL_COURSE_PAGES.has(pg.path)) {
     for (const area of LEARNING_AREAS) {
@@ -170,37 +212,25 @@ for (const pg of PAGES) {
     fail(pg.path, 'study track has no learning resources');
   }
 
-  // Course links: verified hosts only, HTTPS, new tab with noopener noreferrer.
-  const courseLinks = new Set();
+}
+
+for (const pg of PAGES) {
+  const file = fileFor(pg.path);
+  if (!existsSync(file)) { fail(pg.path, 'missing'); continue; }
+  const html = readFileSync(file, 'utf8');
+
+  checkHead(pg, html);
+  checkLandmarks(pg, html);
+  checkProduct(pg, html);
+  checkImages(pg, html);
+  checkThirdParty(pg, html);
+
+  let courseLinks = new Set();
   if (COURSE_PAGES.has(pg.path)) {
-    for (const m of html.matchAll(/<a\b([^>]*)>/g)) {
-      if (!/target="_blank"/.test(m[1])) continue;
-      const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
-      let url;
-      try { url = new URL(href.replace(/&amp;/g, '&')); } catch { fail(pg.path, `bad course url ${href}`); continue; }
-      if (url.protocol !== 'https:') fail(pg.path, `course link not https: ${href}`);
-      if (!COURSE_HOSTS.has(url.hostname)) fail(pg.path, `course link to a non-official host: ${href}`);
-      const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
-      if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) fail(pg.path, `course link without rel="noopener noreferrer": ${href}`);
-      courseLinks.add(href);
-    }
+    courseLinks = checkNewTabLinks(pg, html, COURSE_HOSTS);
     if (courseLinks.size === 0) fail(pg.path, 'course page has no course links');
   }
-
-  // Links: internal ones must resolve; external ones must be on the allowlist (or be a checked course link).
-  for (const raw of attrs(html, /<a\b[^>]*\shref="([^"]+)"/g)) {
-    const href = raw.replace(/&amp;/g, '&');
-    if (href.startsWith('#')) {
-      if (!html.includes(`id="${href.slice(1)}"`)) fail(pg.path, `dangling anchor ${href}`);
-      continue;
-    }
-    if (href.startsWith('/')) {
-      const target = href.split('#')[0];
-      if (!existsSync(fileFor(target))) fail(pg.path, `broken internal link ${href}`);
-      continue;
-    }
-    if (!EXTERNAL_ALLOW.has(href) && !courseLinks.has(raw)) fail(pg.path, `external link not on allowlist: ${href}`);
-  }
+  checkLinks(pg, html, (href, raw) => EXTERNAL_ALLOW.has(href) || courseLinks.has(raw));
 }
 
 // Assets referenced from HTML and CSS must exist.
