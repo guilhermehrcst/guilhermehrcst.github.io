@@ -83,7 +83,12 @@
   - `LearningSubjectId`
   - `LearningGoalId`
   - `LearningFormatId`
+  - `LearningLanguageId = 'pt' | 'en' | 'es'`
+  - `LearningLevelId = 'high-school' | 'vestibular' | 'beginner' | 'beginner-intermediate' | 'intermediate'`
+  - `LearningRegistrationId = 'required' | 'not-required'`
+  - `VerificationMethod = 'official-page' | 'youtube-page' | 'search-index'`
   - `LearningResource`
+  - `PublishedLearningResource = LearningResource & { url: string; verified: { on: string; by: VerificationMethod; freeAccess: true } }`
   - `catalogue: readonly LearningResource[]`
   - `publishedResources: readonly PublishedLearningResource[]`
   - `AREA_SUBJECTS: Readonly<Record<LearningAreaId, readonly LearningSubjectId[]>>`
@@ -125,7 +130,7 @@ export type LearningGoalId = 'high-school' | 'enem' | 'uerj' | 'vestibular';
 export type LearningFormatId = 'course' | 'track' | 'playlist' | 'lessons' | 'practice';
 ```
 
-`LearningResource` must carry: `id`, `title`, `provider`, `area`, `subject`, `format`, `goals`, `language`, `level`, `url | null`, verification/review state, and optional duration/certificate/registration/curated-image data. Keep current technology topic/category metadata as an optional technology-specific field rather than exploding the school-subject union.
+`LearningResource` must carry: `id`, `title`, `provider`, `area`, `subject`, `format`, non-empty `goals`, `language`, `level`, `url: string | null`, optional `verified`, optional `review`, and optional duration/certificate/registration/curated-image data. A resource is published only when `url` is non-null and `verified.freeAccess === true`. Move the existing `CourseImageLayout` / `CourseImage` types into this module so technology imagery survives retirement of `src/lib/courses.ts`. Keep the current technology topic/category metadata as an optional technology-specific field rather than exploding the school-subject union.
 
 - [ ] **Step 4: Update `npm test` to include the new suite and run GREEN**
 
@@ -214,7 +219,8 @@ Assert that the published catalogue contains:
 - at least one resource for each Nature subject: physics, chemistry, biology;
 - at least one resource for each Humanities subject: history, geography, philosophy, sociology;
 - at least one published `practice` resource tagged `enem`;
-- at least one published `practice` resource tagged `uerj`.
+- at least one published `practice` resource tagged `uerj`;
+- every technology resource that remains published has newly recorded free-access verification, not only the legacy URL check.
 
 - [ ] **Step 2: Run RED**
 
@@ -224,6 +230,8 @@ Run:
 Expected: coverage assertions FAIL because the academic seed catalogue is not populated.
 
 - [ ] **Step 3: Research current free resources and exam sources**
+
+Re-verify every migrated technology resource under the new 100%-free rule, then research the new academic catalogue.
 
 For each candidate:
 - open the direct official/provider page;
@@ -372,7 +380,8 @@ git commit -m "feat: add progressive course filters"
 - Create: `src/pages/pt/cursos/enem/index.astro`
 - Create: `src/pages/courses/uerj/index.astro`
 - Create: `src/pages/pt/cursos/uerj/index.astro`
-- Modify: `src/i18n/types.ts`, `src/i18n/en.ts`, `src/i18n/pt.ts`
+- Modify: `src/i18n/types.ts`, `src/i18n/en.ts`, `src/i18n/pt.ts`, `src/i18n/routes.ts`
+- Modify: `src/layouts/Base.astro`, `src/components/Header.astro`
 - Modify: `package.json`
 
 **Interfaces:**
@@ -382,6 +391,7 @@ git commit -m "feat: add progressive course filters"
   - `type StudyTrackSectionId = 'start' | 'math' | 'languages' | 'writing' | 'nature' | 'humanities' | 'foreign-language' | 'recommended' | 'practice'`
   - `StudyTrackDefinition`
   - `studyTracks: Record<ExamId, StudyTrackDefinition>`
+  - `RouteId = PageId | 'courses-enem' | 'courses-uerj'`
 
 - [ ] **Step 1: Write RED integrity tests**
 
@@ -419,7 +429,11 @@ If current official exam structure differs, describe it accurately in copy while
 
 Both exam pages must reuse `LearningResourceCard.astro`; no duplicate resource records or copied URLs.
 
-- [ ] **Step 5: Add the four route files and localized exam copy**
+- [ ] **Step 5: Add route identities, canonical/hreflang pairs, and header behavior**
+
+Keep top-level `PageId = 'home' | 'resume' | 'courses'`. Add `RouteId = PageId | 'courses-enem' | 'courses-uerj'`. `Base.astro` accepts `RouteId`; `Header.astro` language-switches with the exact route pair and maps both exam route ids back to the top-level Courses nav item for `aria-current="page"`.
+
+- [ ] **Step 6: Add the four route files and localized exam copy**
 
 EN:
 - `/courses/enem/`
@@ -429,46 +443,32 @@ PT:
 - `/pt/cursos/enem/`
 - `/pt/cursos/uerj/`
 
-- [ ] **Step 6: Add suite to `npm test`, run GREEN, then type check**
+- [ ] **Step 7: Add suite to `npm test`, run GREEN, then type check**
 
 Run:
 `npm test && npm run check`
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
-git add src/lib/study-tracks.ts tests/study-tracks.test.ts src/components/StudyTrack.astro src/components/StudyTrackSection.astro src/pages/courses/enem/index.astro src/pages/pt/cursos/enem/index.astro src/pages/courses/uerj/index.astro src/pages/pt/cursos/uerj/index.astro src/i18n/types.ts src/i18n/en.ts src/i18n/pt.ts package.json
+git add src/lib/study-tracks.ts tests/study-tracks.test.ts src/components/StudyTrack.astro src/components/StudyTrackSection.astro src/pages/courses/enem/index.astro src/pages/pt/cursos/enem/index.astro src/pages/courses/uerj/index.astro src/pages/pt/cursos/uerj/index.astro src/i18n/types.ts src/i18n/en.ts src/i18n/pt.ts src/i18n/routes.ts src/layouts/Base.astro src/components/Header.astro package.json
 git commit -m "feat: add ENEM and UERJ study tracks"
 ```
 
 ---
 
-### Task 7: Route identity, hreflang, header state, and dist verification
+### Task 7: Dist verification and route invariants
 
 **Files:**
-- Modify: `src/i18n/types.ts`
-- Modify: `src/i18n/routes.ts`
-- Modify: `src/layouts/Base.astro`
-- Modify: `src/components/Header.astro`
 - Modify: `scripts/verify-dist.mjs`
 
 **Interfaces:**
-- Produces:
-  - `RouteId = PageId | 'courses-enem' | 'courses-uerj'`
-  - routes for all six Courses URLs;
-  - header maps both exam subroutes to the top-level Courses nav item.
+- Consumes: the six Courses-family route URLs and header/canonical behavior created in Task 6.
+- Produces: build-time invariants for the expanded library.
 
-- [ ] **Step 1: Add route identities and language pairs**
-
-Keep primary nav ids `home | resume | courses`. Add route ids for the two exam subpages rather than pretending they are new top-level nav destinations.
-
-- [ ] **Step 2: Update Base/Header contracts**
-
-`Base.astro` canonical/hreflang must use the exact subroute pair. The header language switch must stay on the same exam page, while `aria-current="page"` remains on Courses for both exam routes.
-
-- [ ] **Step 3: Extend `verify-dist.mjs`**
+- [ ] **Step 1: Extend `verify-dist.mjs`**
 
 Add the four pages to `PAGES` and course-page verification. For all learning-library pages:
 - exactly one H1;
@@ -481,17 +481,17 @@ Add the four pages to `PAGES` and course-page verification. For all learning-lib
 
 Add a general-library invariant that each of the eight primary area ids appears exactly once in both languages.
 
-- [ ] **Step 4: Run full build**
+- [ ] **Step 2: Run full build**
 
 Run:
 `npm run build`
 
 Expected final line: `verify-dist: 10 pages, ... files — all invariants hold.`
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 3: Commit**
 
 ```bash
-git add src/i18n/types.ts src/i18n/routes.ts src/layouts/Base.astro src/components/Header.astro scripts/verify-dist.mjs
+git add scripts/verify-dist.mjs
 git commit -m "test: verify learning library routes and links"
 ```
 
