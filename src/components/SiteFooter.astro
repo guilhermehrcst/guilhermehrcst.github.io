@@ -4,10 +4,10 @@
 import { routes } from '../lib/routes';
 import { ACADEMIC_SUBJECTS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
 import { VERIFIED_ON } from '../lib/learning-resources';
+import { formatDate } from '../lib/dates';
 import { pt as t } from '../i18n/pt';
 
-const date = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
-  .format(new Date(`${VERIFIED_ON}T00:00:00Z`));
+const date = formatDate(VERIFIED_ON);
 ---
 <footer class="site-footer">
   <div class="wrap grid">

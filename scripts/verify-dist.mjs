@@ -230,9 +230,22 @@ function checkAreaGroups(path, fragment) {
   if (JSON.stringify(groups) !== JSON.stringify(AREA_GROUPS)) fail(path, `area groups ${JSON.stringify(groups)}`);
 }
 
+/** /sobre/: the curation policy, how verification works (with the same date as the footer), and
+ *  independence from the institutions cited (spec §6.3). */
+function checkAbout(path, html) {
+  for (const id of ['curadoria', 'verificacao', 'afiliacao']) {
+    if (!new RegExp(`<section\\b[^>]*\\sid="${id}"`).test(html)) fail(path, `section#${id} missing`);
+  }
+  const verification = sectionOf(html, /<section\b[^>]*\sid="verificacao"/) ?? '';
+  const footerDate = /<time datetime="([^"]+)" data-verified-on/.exec(html)?.[1];
+  const pageDate = /<time datetime="([^"]+)"/.exec(verification)?.[1];
+  if (!footerDate || pageDate !== footerDate) fail(path, `verification date ${pageDate} must match the footer's ${footerDate}`);
+}
+
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
   if (path === '/') checkHome(path, html, resources);
+  if (path === '/sobre/') checkAbout(path, html);
 }
 
 for (const path of CANONICAL) {

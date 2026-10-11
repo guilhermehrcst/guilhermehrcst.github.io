@@ -1,10 +1,49 @@
 ---
+// What Pexis Academy is, how resources are chosen and verified, and its independence (spec §6.3).
+// No reporting channel until the product owner names one (plan §0.2, Q4); no personal data.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
+import { VERIFIED_ON } from '../../lib/learning-resources';
+import { formatDate } from '../../lib/dates';
 import { pt as t } from '../../i18n/pt';
 
-const c = t.pages['sobre'];
+const c = t.pages.sobre;
+const a = t.about;
 ---
 <Base title={c.title} description={c.description}>
-  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <PageIntro heading={c.heading} lead={c.lead} />
+
+  <div class="wrap"><div class="prose">
+    <p class="intro">{a.intro}</p>
+
+    <section id="curadoria" aria-labelledby="curadoria-title">
+      <h2 id="curadoria-title">{a.curation.heading}</h2>
+      <ol role="list" class="rules">
+        {a.curation.rules.map((rule) => <li><h3>{rule.title}</h3><p>{rule.body}</p></li>)}
+      </ol>
+    </section>
+
+    <section id="verificacao" aria-labelledby="verificacao-title">
+      <h2 id="verificacao-title">{a.verification.heading}</h2>
+      {a.verification.body.map((p) => <p>{p}</p>)}
+      <p><time datetime={VERIFIED_ON}>{a.verification.latest(formatDate(VERIFIED_ON))}</time></p>
+    </section>
+
+    <section id="afiliacao" aria-labelledby="afiliacao-title">
+      <h2 id="afiliacao-title">{a.independence.heading}</h2>
+      {a.independence.body.map((p) => <p>{p}</p>)}
+    </section>
+  </div></div>
 </Base>
+
+<style>
+  .prose { max-width: var(--measure); }
+  .intro { font-size: var(--fs-lead); line-height: 1.5; }
+  section { margin-top: var(--space-7); }
+  h2 { font-size: var(--fs-h2); margin-bottom: var(--space-4); }
+  section > p + p { margin-top: var(--space-4); }
+  section > p { color: var(--ink); }
+  .rules li { padding-block: var(--space-4); border-top: 1px solid var(--rule); }
+  .rules h3 { font-size: var(--fs-h3); margin-bottom: var(--space-2); }
+  .rules p { color: var(--muted); }
+</style>

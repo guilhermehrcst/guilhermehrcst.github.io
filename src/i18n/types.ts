@@ -47,6 +47,12 @@ export interface Dict {
     areas: { heading: string };
     curation: { heading: string; rules: { title: string; body: string }[]; more: string };
   };
+  about: {
+    intro: string;
+    curation: { heading: string; rules: { title: string; body: string }[] };
+    verification: { heading: string; body: string[]; latest: (date: string) => string };
+    independence: { heading: string; body: string[] };
+  };
   subjectPage: (subject: string, area: string) => PageCopy;
   notFound: { home: string; subjects: string; search: string };
   resource: {

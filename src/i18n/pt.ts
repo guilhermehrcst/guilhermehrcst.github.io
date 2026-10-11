@@ -107,6 +107,33 @@ export const pt: Dict = {
       },
     },
   },
+  about: {
+    intro: 'A Pexis Academy é um produto da Pexis. Ela não produz aulas: organiza, por objetivo, área e matéria, materiais gratuitos de universidades, instituições públicas e plataformas educacionais, e diz por onde começar.',
+    curation: {
+      heading: 'Regras de curadoria',
+      rules: [
+        { title: 'Acesso realmente gratuito', body: 'O conteúdo de estudo precisa ser inteiramente gratuito. Não publicamos períodos de teste, trechos de amostra, conteúdo atrás de pagamento nem links de afiliado. Uma conta gratuita pode ser exigida; um certificado pago e opcional não impede a publicação, desde que as aulas sejam gratuitas.' },
+        { title: 'Link para a fonte primária', body: 'Cada recurso leva à página oficial do curso ou da instituição. Nunca deduzimos um endereço a partir da estrutura de um site.' },
+        { title: 'Material oficial para as provas', body: 'Para ENEM e UERJ, a prática começa pelo material publicado por quem faz a prova: o INEP e o Vestibular Estadual da UERJ.' },
+        { title: 'Relevância, não promessa', body: 'Marcar um recurso como útil para o ENEM ou para vestibulares é uma indicação editorial, não uma alegação de que o provedor prepara oficialmente para aquela prova.' },
+      ],
+    },
+    verification: {
+      heading: 'Como verificamos',
+      body: [
+        'Antes de publicar, abrimos cada recurso na página do próprio provedor e confirmamos que o conteúdo de estudo é gratuito. Registramos a data e a forma dessa verificação junto com o recurso.',
+        'Um recurso promissor que não conseguimos confirmar fica fora do site, com uma nota explicando o motivo, até ser verificado.',
+      ],
+      latest: (date) => `A verificação mais recente do catálogo foi em ${date}.`,
+    },
+    independence: {
+      heading: 'Independência',
+      body: [
+        'A Pexis Academy não tem vínculo com o INEP, com a UERJ nem com os provedores dos recursos indicados. Os nomes e as marcas pertencem aos seus titulares e aparecem apenas para identificar a origem de cada material.',
+        'Não usamos links de afiliado: indicar um recurso não depende de nenhum acordo com quem o oferece.',
+      ],
+    },
+  },
   subjectPage: (subject, area) => ({
     title: `${subject} | Pexis Academy`,
     description: `Estude ${subject} com recursos gratuitos e verificados para o Ensino Médio, o ENEM e vestibulares, com links diretos para as fontes.`,
