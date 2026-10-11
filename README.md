@@ -45,13 +45,14 @@ All content is typed TypeScript, validated at build time.
 - `src/lib/exam-guides.ts`: the ENEM and UERJ guides. Resource sections are derived from the catalogue by goal and format; editorial sections cite official sources.
 - `src/lib/official-sources.ts`: official INEP and UERJ pages, with their verification.
 - `src/lib/tech-tracks.ts`: the technology tracks, as ordered lists of catalogue ids.
+- `src/lib/featured.ts`: the editorial highlights, ten per path, in staging until every one is homologated (V0.4).
 - `src/lib/search-index.ts`: the search index, derived from all of the above.
 - `src/i18n/pt.ts`: interface copy (V0.1 is Portuguese only; the typed shape is kept for a future `/en/`).
 
 ### Add a resource
 
 1. Open the resource on the provider's own page and confirm that the learning content is entirely free (no trial, no paywall, no teaser, no affiliate link; a free account is fine; a paid optional certificate is fine when the lessons are free).
-2. Add it to `catalogue` in `src/lib/learning-resources.ts` with its official title (never translated), provider, subject, format, goals, language, level and `url`, and `verified: { on, by, freeAccess: true }`. Duration and certificate only when the provider's page states them.
+2. Add it to `catalogue` in `src/lib/learning-resources.ts` with its official title (never translated), provider, subject (`null` for a multidisciplinary resource such as a complete past exam, never a false subject), its real format (a past exam, a lesson or an atlas is not a course), the `paths` it serves, the `exams` it prepares for (only with evidence), language, level and `url`, and `verified: { on, by, freeAccess: true }`. Duration and certificate only when the provider's page states them. Technology resources declare `tecnologia`, never Ensino Médio.
 3. A resource that cannot be confirmed stays with `url: null` and a `review` note: it is not shown.
 4. A new provider host must also be added to `COURSE_HOSTS` in `scripts/verify-dist.mjs` (a test keeps that list equal to the catalogue).
 5. Record the evidence in `docs/superpowers/research/2026-10-11-learning-library-sources.md`.
