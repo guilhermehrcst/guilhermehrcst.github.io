@@ -32,7 +32,7 @@ export interface Dict {
   ogLocale: 'pt_BR';
   siteName: 'Pexis Academy';
   skip: string;
-  nav: { label: string; home: string };
+  nav: { label: string; home: string; mobile: string; menu: string; paths: string };
   breadcrumb: { label: string; home: string };
   footer: {
     tagline: string;
@@ -44,6 +44,10 @@ export interface Dict {
     technology: string;
     independence: string;
     nav: { explore: string; search: string; about: string; verification: string };
+    about: string;
+    formation: string;
+    explore: string;
+    marks: string;
   };
   pages: Record<PageKey, PageCopy>;
   /** Copy of a path in preparation and of the new paths (V0.3). */

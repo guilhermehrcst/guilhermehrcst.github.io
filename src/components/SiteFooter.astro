@@ -1,50 +1,55 @@
 ---
-// The site map, derived from the taxonomy, the tracks and the routes (spec §5.2, item 5): objectives,
-// subjects, technology tracks and the Academy's own pages. Every link is a real page or a real anchor
-// (verify-dist checks both, and that the footer reaches every objective and subject). Also the date the
-// catalogue was last verified (from the data, never typed), the Academy's independence, and the
-// licences of what the site ships. The brand is the official lockup (src/assets/brand), never redrawn.
+// The institutional footer (V0.3): the brand wine, closing every page. Institucional (the official
+// lockup, what the Academy is, when the catalogue was last verified, its independence), Formação (the six
+// paths, with Vestibular's exams under it), Matérias, Explorar, then a bar with the real licences and the
+// attribution of third-party names. Every link is a real page or anchor (verify-dist checks both, and that
+// the footer reaches every path, exam and subject). No legal policy is invented.
 import { Image } from 'astro:assets';
 import lockup from '../assets/brand/lockup-white.png';
 import { routes } from '../lib/routes';
-import { ACADEMIC_SUBJECTS, EXAM_ORDER, OBJECTIVES, PATH_ORDER, SUBJECTS } from '../lib/taxonomy';
-import { publishedTracks } from '../lib/tech-tracks';
+import { ACADEMIC_SUBJECTS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, SUBJECTS } from '../lib/taxonomy';
 import { VERIFIED_ON } from '../lib/learning-resources';
 import { formatDate } from '../lib/dates';
 import { pt as t } from '../i18n/pt';
 
 const f = t.footer;
 const date = formatDate(VERIFIED_ON);
-const tracks = publishedTracks();
+const paths = PATH_ORDER.map((id) => ({
+  id,
+  label: OBJECTIVES[id].label,
+  exams: EXAM_ORDER.filter((exam) => EXAM_PARENT[exam] === id).map((exam) => ({ id: exam, label: OBJECTIVES[exam].label })),
+}));
 ---
 <footer class="site-footer">
   <div class="wrap grid">
     <div class="about">
       <p class="brand"><Image src={lockup} alt="Pexis Academy" height={64} densities={[1, 2, 3]} format="png" /></p>
-      <p class="tagline">{f.tagline}</p>
+      <p class="lead">{f.about}</p>
       <p class="small"><time datetime={VERIFIED_ON} data-verified-on>{f.verified(date)}</time></p>
-      <p class="small">{f.independence}</p>
     </div>
-    <nav aria-label={f.objectives}>
-      <p class="eyebrow">{f.objectives}</p>
+    <nav aria-label={f.formation}>
+      <p class="label">{f.formation}</p>
       <ul role="list">
-        {[...PATH_ORDER, ...EXAM_ORDER].map((id) => <li><a href={routes.objective(id)}>{OBJECTIVES[id].label}</a></li>)}
+        {paths.map((p) => (
+          <li>
+            <a href={routes.objective(p.id)}>{p.label}</a>
+            {p.exams.length > 0 && (
+              <ul role="list" class="sub">
+                {p.exams.map((exam) => <li><a href={routes.objective(exam.id)}>{exam.label}</a></li>)}
+              </ul>
+            )}
+          </li>
+        ))}
       </ul>
     </nav>
     <nav aria-label={f.subjects}>
-      <p class="eyebrow">{f.subjects}</p>
+      <p class="label">{f.subjects}</p>
       <ul role="list" class="cols">
         {ACADEMIC_SUBJECTS.map((id) => <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a></li>)}
       </ul>
     </nav>
-    <nav aria-label={f.technology}>
-      <p class="eyebrow">{f.technology}</p>
-      <ul role="list">
-        {tracks.map((track) => <li><a href={`${routes.objective('tecnologia')}#${track.id}`}>{track.label}</a></li>)}
-      </ul>
-    </nav>
-    <nav aria-label={f.academy}>
-      <p class="eyebrow">{f.academy}</p>
+    <nav aria-label={f.explore}>
+      <p class="label">{f.explore}</p>
       <ul role="list">
         <li><a href={routes.subjectIndex}>{f.nav.explore}</a></li>
         <li><a href={routes.search}>{f.nav.search}</a></li>
@@ -53,36 +58,44 @@ const tracks = publishedTracks();
       </ul>
     </nav>
   </div>
-  <div class="wrap legal">
+  <div class="wrap"><div class="legal">
+    <p>{f.independence} {f.marks}</p>
     <p>
       {f.licenses}:{' '}<a href="/licenses/GoogleSansFlex-OFL.txt">Google Sans Flex (OFL)</a>,{' '}<a href="/licenses/Newsreader-OFL.txt">Newsreader (OFL)</a>,{' '}<a href="/licenses/RadixIcons-MIT.txt">Radix Icons (MIT)</a>.
     </p>
-  </div>
+  </div></div>
 </footer>
 
 <style>
-  .site-footer { margin-top: var(--space-8); border-top: 1px solid var(--rule); background: var(--surface); }
+  .site-footer { margin-top: var(--space-8); background: var(--brand); color: var(--on-brand); }
+  .site-footer :global(:focus-visible) { outline-color: var(--on-brand); }
   .grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-6) var(--space-5);
+    gap: var(--space-7) var(--space-6);
     padding-block: var(--space-8) var(--space-7);
   }
   @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .about { grid-column: 1 / -1; } }
   @media (min-width: 1180px) {
-    .grid { grid-template-columns: minmax(0, 3fr) minmax(0, 1.4fr) minmax(0, 2.4fr) minmax(0, 2fr) minmax(0, 1.6fr); column-gap: var(--space-6); }
+    .grid { grid-template-columns: minmax(0, 4fr) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 2fr); }
     .about { grid-column: auto; }
   }
 
-  .about { display: grid; gap: var(--space-3); align-content: start; max-width: 36ch; }
-  /* The official lockup on the brand plate, larger than in the header ("ACADEMY" at 8.4px). */
-  .brand { justify-self: start; padding: 14px 20px; background: var(--brand); line-height: 0; }
+  .about { display: grid; gap: var(--space-4); align-content: start; max-width: 36ch; }
+  .brand { justify-self: start; line-height: 0; }
   .brand :global(img) { display: block; width: auto; height: 64px; }
-  .tagline { color: var(--ink); }
-  .small { font-size: var(--fs-small); color: var(--muted); }
-  .eyebrow { margin-bottom: var(--space-2); }
-  .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); }
-  li a { display: inline-flex; align-items: center; min-height: 40px; color: var(--ink); text-decoration: none; }
-  li a:hover { color: var(--action); text-decoration: underline; text-underline-offset: 0.2em; }
-  .legal > p { margin: 0; padding-block: var(--space-4) var(--space-6); border-top: 1px solid var(--rule); font-size: var(--fs-small); color: var(--muted); }
+  .lead { color: var(--on-brand); line-height: 1.5; }
+  .small { font-size: var(--fs-small); color: var(--on-brand-muted); }
+
+  .label { margin-bottom: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--brand-line); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--on-brand-muted); }
+  ul { display: grid; }
+  .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); }
+  .sub { margin-left: var(--space-4); padding-left: var(--space-3); border-left: 1px solid var(--brand-line); }
+  li a { display: inline-flex; align-items: center; min-height: 40px; color: var(--on-brand); text-decoration: none; }
+  .sub a { min-height: 36px; color: var(--on-brand-muted); }
+  li a:hover { color: var(--on-brand); text-decoration: underline; text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+
+  .legal { display: grid; gap: var(--space-2); padding-block: var(--space-5) var(--space-6); border-top: 1px solid var(--brand-line); font-size: var(--fs-small); color: var(--on-brand-muted); }
+  .legal a { color: var(--on-brand); text-decoration: underline; text-underline-offset: 0.2em; text-decoration-color: var(--brand-line); }
+  .legal a:hover { text-decoration-color: currentColor; }
 </style>

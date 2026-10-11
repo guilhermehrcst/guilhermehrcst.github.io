@@ -14,6 +14,12 @@
   --action: #720111;
   --action-hover: #8c1023;
   --on-action: #faf8f4;
+  /* The institutional wine grounds (header, footer): text, secondary text, a deeper wine for hover and
+     the current item, and hairlines. Measured in tests/contrast.test.ts. */
+  --on-brand: #ffffff;
+  --on-brand-muted: #e9c6cb;
+  --brand-deep: #5a000d;
+  --brand-line: #94394a;
   /* Quiet grounds for product panels and bands: a pale brand tint and a sand, no heavy shadow. */
   --raised: #fffdf9;
   --tint-brand: #f6e9ea;

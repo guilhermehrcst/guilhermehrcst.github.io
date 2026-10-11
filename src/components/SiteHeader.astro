@@ -1,29 +1,78 @@
 ---
-// Brand and the five entry points (spec §6.5). Plain links: no menu button, no JavaScript. On a phone
-// the items wrap under the brand; the page never scrolls sideways.
-// The brand is the official Pexis Academy lockup, white as supplied, on a plate of the brand red that
-// hangs from the top edge (src/assets/brand, scripts/brand-assets.mjs). The artwork is never redrawn: it
-// is shown whole, 46px tall, the smallest size at which "ACADEMY" keeps 6px letters (13.1% of the art).
+// The institutional header (V0.3): the brand wine, the official lockup in white, and the navigation.
+// From 900px: the "Explorar" menu (the six paths, then every subject) and four direct links. Below 900px:
+// one "Menu" button that opens the same items. Both menus are native <details>: keyboard operable and
+// complete without JavaScript (this page ships none). The cost, accepted: a menu closes by its own
+// button, not by Escape or a click outside.
+// The lockup is the official artwork (src/assets/brand), 46px tall: the smallest size at which "ACADEMY"
+// keeps 6px letters.
 import { Image } from 'astro:assets';
 import lockup from '../assets/brand/lockup-white.png';
-import { HEADER_NAV, routes } from '../lib/routes';
+import { EXPLORE_MENU, HEADER_NAV, routes, sectionOf } from '../lib/routes';
+import { PREPARING_PATHS } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
 const path = Astro.url.pathname;
-const isCurrent = (href: string) => href === path || (href === routes.subjectIndex && path.startsWith(routes.subjectIndex));
+const section = sectionOf(path);
+const current = (href: string) => (href === path ? 'page' : undefined);
+const items = EXPLORE_MENU.items.map((item) => ({
+  ...item,
+  what: t.home.objectives.items[item.id],
+  preparing: PREPARING_PATHS.includes(item.id),
+}));
+const exploreActive = section === routes.subjectIndex || items.some((item) => item.href === path && !HEADER_NAV.some((n) => n.href === path));
 ---
 <header class="site-header">
   <div class="wrap bar">
-    <a class="brand" href={routes.home} aria-label={t.nav.home} data-brand>
+    <a class="brand" href={routes.home} aria-label={t.nav.home} aria-current={current(routes.home)} data-brand>
       <Image src={lockup} alt="" height={46} densities={[1, 2, 3]} format="png" loading="eager" fetchpriority="high" />
     </a>
-    <nav aria-label={t.nav.label}>
-      <ul role="list">
+
+    <!-- From 900px: the menu and the direct links. -->
+    <nav class="desktop" aria-label={t.nav.label}>
+      <ul role="list" class="top">
+        <li>
+          <details class="explore" data-menu="explorar">
+            <summary class:list={[exploreActive && 'in-section']}>{EXPLORE_MENU.label}<span class="chev" aria-hidden="true"></span></summary>
+            <div class="panel">
+              <p class="panel-label">{t.nav.paths}</p>
+              <ul role="list" class="paths">
+                {items.map((item) => (
+                  <li>
+                    <a href={item.href} aria-current={current(item.href)}>
+                      <span class="name"><span class="label">{item.label}</span>{item.preparing && <span class="tag">{t.preparing.label}</span>}</span>
+                      <span class="what">{item.what}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <a class="all" href={EXPLORE_MENU.all.href} aria-current={current(EXPLORE_MENU.all.href)}>{EXPLORE_MENU.all.label}{' '}<span aria-hidden="true">→</span></a>
+            </div>
+          </details>
+        </li>
         {HEADER_NAV.map((item) => (
-          <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a></li>
+          <li><a class:list={['link', section === item.href && 'in-section']} href={item.href} aria-current={current(item.href)}>{item.label}</a></li>
         ))}
       </ul>
     </nav>
+
+    <!-- Below 900px: one button, the same items. -->
+    <details class="mobile" data-menu="mobile">
+      <summary><span class="burger" aria-hidden="true"><i></i><i></i></span>{t.nav.menu}</summary>
+      <nav class="sheet" aria-label={t.nav.mobile}>
+        <p class="panel-label">{t.nav.paths}</p>
+        <ul role="list" class="sheet-list">
+          {items.map((item) => (
+            <li><a href={item.href} aria-current={current(item.href)}>{item.label}{item.preparing && <span class="tag">{t.preparing.label}</span>}</a></li>
+          ))}
+          <li><a href={EXPLORE_MENU.all.href} aria-current={current(EXPLORE_MENU.all.href)}>{EXPLORE_MENU.all.label}</a></li>
+        </ul>
+        <ul role="list" class="sheet-list secondary">
+          <li><a href={routes.search} aria-current={current(routes.search)}>{HEADER_NAV.at(-1)?.label}</a></li>
+          <li><a href={routes.about} aria-current={current(routes.about)}>{t.footer.nav.about}</a></li>
+        </ul>
+      </nav>
+    </details>
   </div>
 </header>
 
@@ -31,58 +80,105 @@ const isCurrent = (href: string) => href === path || (href === routes.subjectInd
   .site-header {
     position: sticky;
     top: 0;
-    z-index: 20;
-    background: color-mix(in srgb, var(--paper) 92%, transparent);
-    backdrop-filter: saturate(1.4) blur(10px);
-    border-bottom: 1px solid var(--rule);
-  }
-  /* On a phone the header wraps to more than one row: it scrolls away instead of covering the page. */
-  @media (max-width: 639px) { .site-header { position: static; } }
-  .bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    column-gap: var(--space-6);
-    row-gap: var(--space-1);
-  }
-  /* The plate: the brand red, flush with the top of the page and the header's bottom rule. */
-  .brand {
-    display: block;
-    flex: none;
-    /* Clear space around the artwork: a fifth of its height above and below, more at the sides. */
-    padding: 10px 20px;
+    z-index: 30;
     background: var(--brand);
-    line-height: 0;
+    color: var(--on-brand);
+    border-bottom: 1px solid var(--brand-deep);
   }
+  .bar { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); min-height: 64px; }
+  .brand { display: block; flex: none; padding-block: 9px; line-height: 0; }
   .brand :global(img) { display: block; width: auto; height: 46px; }
-  .brand:focus-visible { outline-offset: -4px; outline-color: var(--on-action); }
 
-  ul { display: flex; flex-wrap: wrap; gap: 0 var(--space-1); margin-inline: calc(-1 * var(--space-2)); }
-  nav a {
+  /* Focus on the wine: the outline is white. */
+  .site-header :global(:focus-visible) { outline-color: var(--on-brand); }
+
+  /* Desktop navigation. */
+  .desktop { display: none; }
+  @media (min-width: 900px) { .desktop { display: block; } .mobile { display: none; } }
+  .top { display: flex; align-items: center; gap: var(--space-1); }
+  .link, summary {
+    position: relative;
     display: inline-flex;
     align-items: center;
+    gap: var(--space-2);
     min-height: 44px;
-    padding-inline: var(--space-2);
+    padding-inline: var(--space-3);
+    border-radius: var(--radius);
     font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--muted);
+    color: var(--on-brand-muted);
     text-decoration: none;
+    cursor: pointer;
+    list-style: none;
+    transition: background var(--t-ui), color var(--t-ui);
   }
-  nav a { border-radius: var(--radius); transition: background var(--t-ui), color var(--t-ui); }
-  nav a:hover { color: var(--ink); background: var(--surface); }
-  nav a[aria-current='page'] {
+  summary::-webkit-details-marker { display: none; }
+  .link:hover, summary:hover, details[open] > summary { background: var(--brand-deep); color: var(--on-brand); }
+  /* The current page and its section: white, with a hairline under it. */
+  .link[aria-current='page'], .in-section { color: var(--on-brand); }
+  .link[aria-current='page']::after, .in-section::after {
+    content: '';
+    position: absolute;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: 6px;
+    height: 2px;
+    background: var(--on-brand);
+  }
+  .chev { width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform var(--t-ui) var(--ease); }
+  details[open] .chev { transform: translateY(2px) rotate(-135deg); }
+
+  /* The Explorar panel: paper under the wine, the six paths with one line each. */
+  /* The panel hangs from the header bar, aligned with the content's right edge: it never leaves the page. */
+  .panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: var(--gutter);
+    width: min(40rem, calc(100vw - 2 * var(--gutter)));
+    padding: var(--space-5);
+    background: var(--raised);
     color: var(--ink);
-    text-decoration: underline;
-    text-decoration-color: var(--action);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.45em;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-panel);
   }
-  /* Phone: the five items on one row under the plate (down to 360px), each still 44px tall.
-     After the base rules: same specificity, so order decides. */
-  @media (max-width: 639px) {
-    nav { width: 100%; padding-block: var(--space-1); }
-    ul { gap: 0; margin-inline: -6px; }
-    nav a { padding-inline: 6px; font-size: 0.875rem; }
+  .panel-label { margin-bottom: var(--space-2); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .paths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-1) var(--space-4); }
+  .paths a { display: grid; gap: 2px; padding: var(--space-3); border-radius: var(--radius); color: var(--ink); text-decoration: none; }
+  .paths a:hover { background: var(--surface); }
+  .paths a:hover .name { color: var(--action); }
+  .paths a[aria-current='page'] { background: var(--tint-brand); }
+  .name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-2); font-family: var(--serif); font-size: 1.1875rem; line-height: 1.2; }
+  .name .label { white-space: nowrap; }
+  .what { font-size: 0.8125rem; line-height: 1.4; color: var(--muted); }
+  .tag { font-family: var(--sans); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--action); }
+  .all { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; margin-top: var(--space-3); padding-inline: var(--space-3); font-weight: 560; }
+  .site-header .panel :global(:focus-visible) { outline-color: var(--action); }
+
+  /* Mobile: one button that opens a sheet under the header. */
+  .mobile summary { color: var(--on-brand); padding-inline: var(--space-3) var(--space-4); border: 1px solid var(--brand-line); }
+  .burger { display: grid; gap: 5px; width: 18px; }
+  .burger i { display: block; height: 1.5px; background: currentColor; transition: transform var(--t-ui) var(--ease); }
+  .mobile[open] .burger i:first-child { transform: translateY(3.25px) rotate(45deg); }
+  .mobile[open] .burger i:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+  .sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+    padding: var(--space-5) var(--gutter) var(--space-6);
+    background: var(--raised);
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: var(--shadow-panel);
   }
+  .sheet-list { display: grid; border-top: 1px solid var(--rule); }
+  .sheet-list li { border-bottom: 1px solid var(--rule); }
+  .sheet-list a { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 52px; color: var(--ink); text-decoration: none; font-family: var(--serif); font-size: 1.25rem; }
+  .sheet-list a[aria-current='page'] { color: var(--action); }
+  .sheet-list.secondary { margin-top: var(--space-5); }
+  .sheet-list.secondary a { font-family: var(--sans); font-size: 1rem; font-weight: 500; }
+  .site-header .sheet :global(:focus-visible) { outline-color: var(--action); }
 </style>

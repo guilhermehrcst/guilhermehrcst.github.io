@@ -38,11 +38,20 @@ const REDIRECTS = {
 /** Routes of the former personal site that are gone: they fall through to the 404 (spec §8.4, Q2). */
 const GONE = ['/resume/', '/pt/curriculo/'];
 
-/** The header navigation, in order (spec §6.5). */
+/** The header navigation (V0.3): the "Explorar" menu (the six paths, then every subject), then four
+ *  direct links, in this order. */
+const EXPLORE_MENU = [
+  ['/ensino-fundamental/', 'Ensino Fundamental'],
+  ['/ensino-medio/', 'Ensino Médio'],
+  ['/vestibulares/', 'Vestibular'],
+  ['/pre-militar/', 'Pré-Militar'],
+  ['/ensino-superior/', 'Ensino Superior'],
+  ['/tecnologia/', 'Tecnologia'],
+  ['/materias/', 'Todas as matérias'],
+];
 const HEADER_NAV = [
-  ['/materias/', 'Explorar'],
-  ['/enem/', 'ENEM'],
-  ['/uerj/', 'UERJ'],
+  ['/vestibulares/', 'Vestibular'],
+  ['/pre-militar/', 'Pré-Militar'],
   ['/tecnologia/', 'Tecnologia'],
   ['/buscar/', 'Buscar'],
 ];
@@ -252,16 +261,27 @@ function checkShell(path, html) {
   const footerLinks = new Set(hrefsIn(footer));
   for (const page of FOOTER_PAGES) if (!footerLinks.has(page)) fail(path, `the footer does not link ${page}`);
   if (!/<img\b[^>]*src="\/_astro\/lockup-white\.[^"]+"[^>]*alt="Pexis Academy"|<img\b[^>]*alt="Pexis Academy"[^>]*src="\/_astro\/lockup-white\./.test(footer)) fail(path, 'the footer shows the official lockup');
-  const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
+  // The header is the institutional wine (checked in the stylesheet below), with the Explorar menu and the
+  // direct links in order, and a mobile menu that reaches the same places. No JavaScript: native <details>.
+  const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(header)?.[1];
   if (!nav) { fail(path, 'main navigation (aria-label="Principal") missing'); return; }
-  const items = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => [m[1], m[2].replace(/<[^>]+>/g, '').trim()]);
-  if (JSON.stringify(items) !== JSON.stringify(HEADER_NAV)) fail(path, `header navigation ${JSON.stringify(items)}`);
-  for (const m of nav.matchAll(/<a\b([^>]*)>/g)) {
+  const menu = /<details\b[^>]*data-menu="explorar"[^>]*>([\s\S]*?)<\/details>/.exec(nav)?.[1] ?? '';
+  if (!/<summary\b[^>]*>\s*Explorar\b/.test(menu)) fail(path, 'the Explorar menu is a <summary> named "Explorar"');
+  const linkItems = (fragment) => [...fragment.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
+    .map((m) => [m[1], m[2].replace(/<span class="tag"[\s\S]*?<\/span>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/ →$/, '').trim()]);
+  const menuHrefs = hrefsIn(menu);
+  if (JSON.stringify(menuHrefs) !== JSON.stringify(EXPLORE_MENU.map((i) => i[0]))) fail(path, `Explorar menu ${menuHrefs.join(',')}`);
+  const direct = linkItems(nav.replace(/<details\b[\s\S]*?<\/details>/, ''));
+  if (JSON.stringify(direct) !== JSON.stringify(HEADER_NAV)) fail(path, `header navigation ${JSON.stringify(direct)}`);
+  for (const m of header.matchAll(/<a\b([^>]*)>/g)) {
     const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
     const current = /aria-current="page"/.test(m[1]);
-    const expected = href === path || (href === '/materias/' && path.startsWith('/materias/'));
-    if (current !== expected) fail(path, `aria-current on ${href} should be ${expected}`);
+    if (current !== (href === path)) fail(path, `aria-current on ${href} should be ${href === path}`);
   }
+  const mobile = /<details\b[^>]*data-menu="mobile"[^>]*>([\s\S]*?)<\/details>/.exec(header)?.[1] ?? '';
+  if (!/<summary\b/.test(mobile)) fail(path, 'the mobile menu is a <details> with a <summary>');
+  const mobileHrefs = new Set(hrefsIn(mobile));
+  for (const [href] of [...EXPLORE_MENU, ...HEADER_NAV]) if (!mobileHrefs.has(href)) fail(path, `the mobile menu does not reach ${href}`);
 }
 
 /* Product rules: what each page promises. --------------------------------------------------------- */
@@ -643,6 +663,9 @@ const files = walk(DIST);
 {
   const css = files.filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n');
   if (!/:focus-visible\s*\{[^}]*outline:\s*2px/.test(css)) fail('css', 'a visible :focus-visible outline is required');
+  // The institutional header and footer stand on the brand wine (V0.3).
+  if (!/\.site-header\[[^\]]+\]\s*\{[^}]*background:\s*var\(--brand\)|\.site-header\s*\{[^}]*background:\s*var\(--brand\)/.test(css)) fail('css', 'the header stands on the brand wine');
+  if (!/\.site-footer\[[^\]]+\]\s*\{[^}]*background:\s*var\(--brand\)|\.site-footer\s*\{[^}]*background:\s*var\(--brand\)/.test(css)) fail('css', 'the footer stands on the brand wine');
   if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*transition:\s*none/.test(css)) fail('css', 'reduced motion must switch transitions off');
 }
 

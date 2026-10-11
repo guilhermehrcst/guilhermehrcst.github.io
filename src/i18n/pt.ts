@@ -7,7 +7,7 @@ export const pt: Dict = {
   ogLocale: 'pt_BR',
   siteName: 'Pexis Academy',
   skip: 'Pular para o conteúdo',
-  nav: { label: 'Principal', home: 'Pexis Academy, página inicial' },
+  nav: { label: 'Principal', home: 'Pexis Academy, página inicial', mobile: 'Menu principal', menu: 'Menu', paths: 'Caminhos' },
   breadcrumb: { label: 'Você está em', home: 'Início' },
   footer: {
     tagline: 'Recursos gratuitos e verificados, organizados com direção.',
@@ -19,6 +19,10 @@ export const pt: Dict = {
     technology: 'Tecnologia',
     independence: 'A Pexis Academy é um produto da Pexis, independente das instituições cujos materiais indica.',
     nav: { explore: 'Explorar', search: 'Buscar', about: 'Sobre', verification: 'Como verificamos' },
+    about: 'Uma plataforma gratuita para estudar com direção: organiza, por caminho, área e matéria, materiais gratuitos verificados na fonte.',
+    formation: 'Formação',
+    explore: 'Explorar',
+    marks: 'Os nomes e as marcas das instituições citadas pertencem aos seus titulares.',
   },
   pages: {
     home: {
