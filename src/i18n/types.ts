@@ -97,9 +97,10 @@ export interface Dict {
       route: string;
       steps: Record<'objetivo' | 'area' | 'assunto' | 'conteudo' | 'pratica', string>;
       vestMeta: string;
+      subjectMeta: (subject: string) => string;
       pending: string;
       topicNote: string;
-      links: { objective: string; subject: string; content: string; practice: string };
+      links: { objective: string; area: string; subject: string; content: string; practice: string };
     };
     areas: { heading: string; lead: string; subjects: (n: number) => string };
     tracks: {

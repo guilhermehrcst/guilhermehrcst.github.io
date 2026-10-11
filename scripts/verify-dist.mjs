@@ -260,6 +260,10 @@ function checkShell(path, html) {
   const footer = /<footer\b[\s\S]*<\/footer>/.exec(html)?.[0] ?? '';
   const footerLinks = new Set(hrefsIn(footer));
   for (const page of FOOTER_PAGES) if (!footerLinks.has(page)) fail(path, `the footer does not link ${page}`);
+  // A path in preparation says so wherever it is linked, the footer included (V0.3 §2.1).
+  for (const page of PREPARING) {
+    if (!new RegExp(`href="${page}"[^>]*>[^<]*</a>\\s*<span\\b[^>]*\\sdata-path-state[^>]*>Em preparação</span>`).test(footer)) fail(path, `the footer marks ${page} as in preparation`);
+  }
   if (!/<img\b[^>]*src="\/_astro\/lockup-white\.[^"]+"[^>]*alt="Pexis Academy"|<img\b[^>]*alt="Pexis Academy"[^>]*src="\/_astro\/lockup-white\./.test(footer)) fail(path, 'the footer shows the official lockup');
   // The header is the institutional wine (checked in the stylesheet below), with the Explorar menu and the
   // direct links in order, and a mobile menu that reaches the same places. No JavaScript: native <details>.

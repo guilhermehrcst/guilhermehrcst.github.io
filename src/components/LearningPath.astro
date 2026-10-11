@@ -1,6 +1,6 @@
 ---
 // "Um caminho mais claro para aprender." (V0.3): Objetivo → Área → Assunto → Conteúdo → Prática, shown on
-// one real route that differs from the hero's: Vestibular → Física → (topic) → Física para ENEM →
+// one real route that differs from the hero's: Vestibular → Ciências da Natureza (Física) → (topic) → Física para ENEM →
 // Questões de Física da UERJ. A step with nothing published says so and links nowhere (no topic is
 // verified yet). The build fails if the route stops being true: the course must be tagged for Vestibular,
 // the practice must be in the UERJ guide, and the UERJ must live inside Vestibular.
@@ -34,7 +34,8 @@ type Step = {
 const vest = routes.objective('vestibulares');
 const steps: Step[] = [
   { id: 'objetivo', value: OBJECTIVES.vestibulares.label, meta: p.vestMeta, href: vest, link: p.links.objective },
-  { id: 'area', value: subject.label, meta: AREAS[subject.area].label, href: routes.subject(subject.id), link: p.links.subject },
+  // The area is the area (Ciências da Natureza); the subject it leads to is named under it.
+  { id: 'area', value: AREAS[subject.area].label, meta: p.subjectMeta(subject.label), href: `${routes.subjectIndex}#area-${subject.area}`, link: p.links.area },
   topic
     ? { id: 'assunto', value: topic.label, meta: subject.label, href: routes.subject(subject.id), link: p.links.subject }
     : { id: 'assunto', meta: p.topicNote },

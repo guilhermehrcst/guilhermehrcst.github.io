@@ -248,9 +248,10 @@ export const pt: Dict = {
       route: 'Vestibular · Física',
       steps: { objetivo: 'Objetivo', area: 'Área', assunto: 'Assunto', conteudo: 'Conteúdo', pratica: 'Prática' },
       vestMeta: 'ENEM, UERJ e uma base comum por matéria',
+      subjectMeta: (subject) => `Matéria: ${subject}`,
       pending: 'Em preparação',
       topicNote: 'Os assuntos entram quando conferidos na Matriz de Referência do Enem, do INEP.',
-      links: { objective: 'Abrir Vestibular', subject: 'Ver Física', content: 'Ver em Vestibular', practice: 'Ver as provas da UERJ' },
+      links: { objective: 'Abrir Vestibular', area: 'Ver a área', subject: 'Ver Física', content: 'Ver em Vestibular', practice: 'Ver as provas da UERJ' },
     },
   },
   about: {
