@@ -77,6 +77,9 @@ const meta = (html, attr, name) => new RegExp(`<meta ${attr}="${name}" content="
 /* Generic checks: they hold for any page this site builds. -------------------------------------- */
 
 function checkLandmarks(path, html) {
+  const ids = attrs(html, /\sid="([^"]+)"/g);
+  const dup = ids.filter((id, i) => ids.indexOf(id) !== i);
+  if (dup.length) fail(path, `duplicate id: ${[...new Set(dup)].join(', ')}`);
   if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(path, 'skip link or main landmark missing');
   if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(path, 'expected exactly one <h1>');
 }
@@ -340,6 +343,12 @@ function checkProduct(path, html) {
     const ids = sectionIds(html);
     if (ids[0] !== 'uerj' || ids[1] !== 'nota-editorial') fail(path, `Vestibulares opens with the UERJ, then the editorial note (${ids.join(',')})`);
     if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="uerj"/) ?? '').includes('/uerj/')) fail(path, '#uerj leads to /uerj/');
+  }
+  if (path === '/tecnologia/') {
+    const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
+    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade'];
+    if (JSON.stringify(tracks.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `tracks ${tracks.map((m) => m[1]).join(',')}`);
+    for (const [, id, body] of tracks) if (!/\sdata-resource-id="/.test(body)) fail(path, `track ${id} is empty`);
   }
   if (path === '/ensino-medio/') {
     checkObjectiveMap(path, html, resources, 'ensino-medio');

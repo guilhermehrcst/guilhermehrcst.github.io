@@ -54,6 +54,7 @@ export interface Dict {
     independence: { heading: string; body: string[] };
   };
   subjectPage: (subject: string, area: string) => PageCopy;
+  tecnologia: { chooser: string };
   vestibulares: { uerj: { title: string; why: string; link: string }; note: { title: string; body: string } };
   objectiveMap: { more: (subject: string) => string; technology: { title: string; why: string; link: string } };
   guides: {

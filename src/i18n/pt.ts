@@ -134,6 +134,7 @@ export const pt: Dict = {
       ],
     },
   },
+  tecnologia: { chooser: 'Escolha uma trilha' },
   vestibulares: {
     uerj: {
       title: 'Vai prestar a UERJ?',
