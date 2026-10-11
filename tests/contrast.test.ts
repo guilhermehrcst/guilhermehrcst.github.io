@@ -48,3 +48,9 @@ test('no hex colour outside :root, but the theme-color meta, which equals --pape
     assert.ok(!/#[0-9a-f]{3,8}\b(?![\w-])/i.test(text.replace(/href="#[^"]*"|`#\$\{[^}]*\}`|'#[a-z-]*'/g, '')), `hex colour in ${path}`);
   }
 });
+
+test('the favicon is the Pexis Academy mark, in the current tokens', () => {
+  const svg = readFileSync(new URL('public/favicon.svg', root), 'utf8').toLowerCase();
+  const colours = [...svg.matchAll(/fill="(#[0-9a-f]{6})"/g)].map((m) => m[1]);
+  assert.deepEqual(colours, [token('paper'), token('action')]);
+});
