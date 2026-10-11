@@ -1,0 +1,61 @@
+path_id,position,title_candidate,provider_candidate,format_candidate,language_candidate,source_url_hint,existing_resource_id,verification_status,curation_note
+ensino-fundamental,1,"Letras e palavras, 2º ano",SME Goiânia,lesson,pt,,,PENDING_RECHECK,Verificar se é série de aulas ou aula isolada
+ensino-fundamental,2,"Língua Portuguesa: Leitura em Foco, 5º ano",SME Goiânia,lesson,pt,,,PENDING_RECHECK,Confirmar escopo real da sequência
+ensino-fundamental,3,Matemática: 1º ano,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar idioma e grade
+ensino-fundamental,4,Matemática: 5º ano,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar idioma e grade
+ensino-fundamental,5,Matemática: 9º ano,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar idioma e grade
+ensino-fundamental,6,Ciências: 1º ano,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar BNCC e grade
+ensino-fundamental,7,Ciências: 7º ano,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar BNCC e grade
+ensino-fundamental,8,Pré-história do Brasil,MultiRio,playlist,pt,,,PENDING_RECHECK,Confirmar série e nível
+ensino-fundamental,9,Atlas Geográfico Escolar,IBGE,reference,pt,,,PENDING_RECHECK,"Material de referência, não curso"
+ensino-fundamental,10,Portal de Matemática,OBMEP/IMPA,track,pt,,,PENDING_RECHECK,Selecionar módulo específico adequado ao fundamental
+ensino-medio,1,Álgebra 1,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar seção em português
+ensino-medio,2,Geometria e Trigonometria,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar seção em português
+ensino-medio,3,Física do Ensino Médio,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar trilha e nível
+ensino-medio,4,Química do Ensino Médio,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar trilha e nível
+ensino-medio,5,Biologia do Ensino Médio,Khan Academy,course,pt,,,PENDING_RECHECK,Confirmar trilha e nível
+ensino-medio,6,Português: preparação para o Ensino Médio,Khan Academy,course,pt,,,PENDING_RECHECK,"É revisão de transição, classificar corretamente"
+ensino-medio,7,História do Brasil: Independência,UNIVESP,lesson,pt,,,PENDING_RECHECK,"Aula isolada, não curso completo"
+ensino-medio,8,Geografia: mapas do Brasil e do mundo,IBGE,reference,pt,,,PENDING_RECHECK,"Material didático, não curso"
+ensino-medio,9,Inglês pelo MEC Idiomas,MEC,course,pt,,,PENDING_RECHECK,"Conferir elegibilidade, matrícula e certificado"
+ensino-medio,10,Espanhol pelo MEC Idiomas,MEC,course,pt,,,PENDING_RECHECK,"Conferir elegibilidade, matrícula e certificado"
+vestibulares,1,ENEM Completo,Kultivi,course,pt,,,PENDING_RECHECK,Verificar abrangência e registro
+vestibulares,2,Redação para o ENEM,Kultivi,course,pt,https://kultivi.com/curso/redacao-para-enem,kultivi-writing-enem,PENDING_RECHECK,URL pré-existente no catálogo; revalidar
+vestibulares,3,MEC Enem,Ministério da Educação,track,pt,,,PENDING_RECHECK,"Portal de exercícios/simulados, não único curso"
+vestibulares,4,Pré-Vestibular Social,Fundação Cecierj,course,pt,,,PENDING_RECHECK,"Verificar edital, prazo e vagas da edição"
+vestibulares,5,Provas anteriores do ENEM,INEP,past-exam,pt,,,PENDING_RECHECK,Coleção oficial de provas e gabaritos
+vestibulares,6,Acervo do Vestibular USP,Fuvest,past-exam,pt,,,PENDING_RECHECK,Verificar URL oficial e resoluções
+vestibulares,7,Simulado da Unicamp,Comvest,simulator,pt,,,PENDING_RECHECK,Verificar se ferramenta ainda acessível
+vestibulares,8,Provas da Unesp 2026,Vunesp,past-exam,pt,,,PENDING_RECHECK,"Acervo por edição, não preparação integral"
+vestibulares,9,Questões comentadas da UERJ,UERJ,practice,pt,,,PENDING_RECHECK,Priorizar banco oficial por disciplina
+vestibulares,10,O IBGE no ENEM,IBGE,reference,pt,,,PENDING_RECHECK,"Conteúdo de apoio, não curso"
+pre-militar,1,Preparatório gratuito ESA (conteúdo parcial),Gran Cursos,course,pt,,,PENDING_RECHECK,A oferta é parcial; não anunciar como preparação completa
+pre-militar,2,Provas anteriores da ESA,Exército,past-exam,pt,,,PENDING_RECHECK,Verificar página e edições oficiais
+pre-militar,3,Provas anteriores da EsPCEx,Exército,past-exam,pt,,,PENDING_RECHECK,Verificar página e edições oficiais
+pre-militar,4,Provas anteriores da EPCAR,Aeronáutica,past-exam,pt,,,PENDING_RECHECK,Confirmar vínculo e conteúdo do portal
+pre-militar,5,Provas anteriores da AFA,Aeronáutica,past-exam,pt,,,PENDING_RECHECK,Evitar URL genérica sem coleção correspondente
+pre-militar,6,Provas anteriores da EEAR,Aeronáutica,past-exam,pt,,,PENDING_RECHECK,Verificar página oficial
+pre-militar,7,Provas anteriores do Colégio Naval,Marinha,past-exam,pt,,,PENDING_RECHECK,Verificar página oficial
+pre-militar,8,Provas anteriores da Escola Naval,Marinha,past-exam,pt,,,PENDING_RECHECK,Verificar página oficial
+pre-militar,9,Provas anteriores do IME,Exército,past-exam,pt,,,PENDING_RECHECK,Verificar página oficial
+pre-militar,10,Provas anteriores do ITA,Aeronáutica,past-exam,pt,,,PENDING_RECHECK,Verificar página oficial
+ensino-superior,1,e-Aulas USP,Universidade de São Paulo,reference,pt,,,PENDING_RECHECK,"Portal: para contar como item, selecionar curso ou série específica"
+ensino-superior,2,Cálculo I,UNIVESP,playlist,pt,,,PENDING_RECHECK,Confirmar playlist oficial completa
+ensino-superior,3,Cálculo de uma variável,MIT OpenCourseWare,course,en,,,PENDING_RECHECK,"Curso universitário livre, sem diploma"
+ensino-superior,4,Mecânica Clássica,MIT OpenCourseWare,course,en,,,PENDING_RECHECK,"Curso universitário livre, sem diploma"
+ensino-superior,5,Introdução à Biologia,MIT OpenCourseWare,course,en,,,PENDING_RECHECK,Confirmar material completo
+ensino-superior,6,Introdução à Psicologia,Open Yale Courses,course,en,,,PENDING_RECHECK,Sem diploma universitário
+ensino-superior,7,Mercados Financeiros,Open Yale Courses,course,en,,,PENDING_RECHECK,Sem diploma universitário
+ensino-superior,8,Fundamentos da Gestão por Processos,FGV,course,pt,,,PENDING_RECHECK,Confirmar acesso e declaração
+ensino-superior,9,Introdução às Relações de Consumo e aos Direitos Básicos,FGV,course,pt,,,PENDING_RECHECK,Confirmar acesso e declaração
+ensino-superior,10,Meio ambiente e sustentabilidade,Open University,course,en,,,PENDING_RECHECK,Confirmar título exato e acesso
+tecnologia,1,CS50x: Introduction to Computer Science,Harvard University,course,en,https://cs50.harvard.edu/x/,cs50x,PENDING_RECHECK,Recurso publicado no repositório; validar idioma e certificado
+tecnologia,2,CS50’s Introduction to Programming with Python,Harvard University,course,en,https://cs50.harvard.edu/python/,cs50p,PENDING_RECHECK,Recurso publicado no repositório
+tecnologia,3,Responsive Web Design,freeCodeCamp,track,en,,,PENDING_RECHECK,Verificar currículo atual e condições de certificação
+tecnologia,4,JavaScript,freeCodeCamp,track,en,,,PENDING_RECHECK,Verificar nome e currículo atuais
+tecnologia,5,Foundations,The Odin Project,track,en,,,PENDING_RECHECK,Trilha por projetos
+tecnologia,6,Introduction to Cybersecurity,Cisco Networking Academy,course,en,https://www.netacad.com/courses/introduction-to-cybersecurity,cisco-cyber,PENDING_RECHECK,Recurso publicado no repositório; confirmar matrícula
+tecnologia,7,Python,Kaggle Learn,course,en,,,PENDING_RECHECK,Verificar URL do módulo
+tecnologia,8,Machine Learning Crash Course,Google,course,en,,,PENDING_RECHECK,Verificar idiomas disponíveis
+tecnologia,9,Conceitos de computação em nuvem,Microsoft Learn,track,pt,,,PENDING_RECHECK,Verificar módulo pt-BR correto
+tecnologia,10,Introdução ao SQL,Kaggle Learn,course,en,,,PENDING_RECHECK,Verificar URL e certificado
