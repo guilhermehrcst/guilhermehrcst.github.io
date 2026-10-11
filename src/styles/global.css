@@ -3,24 +3,34 @@
    Hex codes live only in :root. Contrast is measured, not estimated (tests/contrast.test.ts). */
 
 :root {
+  /* Paper, ink and one functional blue (#0C5FE8, the Pexis blue). */
   --paper: #faf8f4;
   --surface: #f2efe9;
   --ink: #1d2125;
   --muted: #565c63;
   --rule: #e2ddd4;
-  --action: #0b57d0;
-  --action-hover: #0842a0;
+  --action: #0c5fe8;
+  --action-hover: #0a4cc0;
   --on-action: #faf8f4;
+  /* Quiet grounds for product panels and bands: no second brand colour, no heavy shadow. */
+  --raised: #fffdf9;
+  --tint-blue: #eaf0fd;
+  --tint-sand: #efe7da;
+  --rule-strong: #cfc8bb;
 
   --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Newsreader (OFL-1.1, self-hosted): the academic voice of the display type. Body text stays sans. */
+  --serif: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
 
   /* Type: mobile first; one continuous function of the width, never a jump per breakpoint. */
   --fs-small: 0.875rem;
   --fs-body: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
   --fs-lead: clamp(1.1875rem, 1.05rem + 0.55vw, 1.4375rem);
   --fs-h3: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
-  --fs-h2: clamp(1.5rem, 1.25rem + 1.1vw, 2.125rem);
-  --fs-h1: clamp(2.25rem, 1.6rem + 2.8vw, 4rem);
+  --fs-h2: clamp(1.75rem, 1.35rem + 1.6vw, 2.75rem);
+  --fs-h1: clamp(2.5rem, 1.7rem + 3.4vw, 4.5rem);
+  --fs-hero: clamp(2.875rem, 1.5rem + 5vw, 5.75rem);
+
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -35,6 +45,8 @@
   --gutter: clamp(16px, 4vw, 40px);
   --measure: 66ch;
   --radius: 6px;
+  --radius-lg: 14px;
+  --shadow-panel: 0 1px 0 rgb(29 33 37 / 0.04), 0 24px 56px -28px rgb(29 33 37 / 0.30);
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --t-ui: 180ms;
@@ -48,6 +60,10 @@ html {
   text-size-adjust: 100%;
   color-scheme: light;
   scroll-padding-top: var(--space-5);
+}
+/* From 640px the header is sticky and one row (69px, measured): an anchored target lands below it. */
+@media (min-width: 640px) {
+  html { scroll-padding-top: calc(4.5rem + var(--space-5)); }
 }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
@@ -70,6 +86,8 @@ body {
 main { flex: 1 0 auto; }
 
 h1, h2, h3, h4 { font-weight: 560; line-height: 1.15; letter-spacing: -0.015em; text-wrap: balance; }
+/* Page and section titles speak in the serif; smaller headings stay in the sans for scanning. */
+h1, h2 { font-family: var(--serif); font-weight: 460; letter-spacing: -0.02em; font-optical-sizing: auto; }
 p, li { text-wrap: pretty; }
 img, svg { display: block; max-width: 100%; }
 ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }

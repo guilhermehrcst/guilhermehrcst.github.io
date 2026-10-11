@@ -1,0 +1,93 @@
+---
+// The Home's opening: the promise on the left, the product itself on the right (a real page in a window).
+// From a tablet down the window follows the text, its sidebar folded away; the composition is re-set,
+// not shrunk. The page's one h1 lives here.
+import HeroDemo from './HeroDemo.astro';
+import { routes } from '../lib/routes';
+import { pt as t } from '../i18n/pt';
+
+const h = t.home.hero;
+const c = t.pages.home;
+---
+<header class="hero">
+  <div class="wrap grid">
+    <div class="copy">
+      <p class="eyebrow">{h.eyebrow}</p>
+      <h1>{c.heading}</h1>
+      <p class="lead">{h.lead}</p>
+      <div class="actions">
+        <a class="primary" href="#objetivo">{h.primary}</a>
+        <a class="secondary" href={routes.subjectIndex}>{h.secondary}{' '}<span aria-hidden="true">→</span></a>
+      </div>
+      <p class="note">{h.note}</p>
+    </div>
+    <div class="stage">
+      <div class="ground" aria-hidden="true"></div>
+      <HeroDemo />
+    </div>
+  </div>
+</header>
+
+<style>
+  .hero { padding-block: var(--space-7) var(--space-8); overflow: clip; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-7); align-items: center; }
+  @media (min-width: 1024px) {
+    .grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2.5rem, 4vw, 4.5rem); }
+    .hero { padding-block: var(--space-8); }
+  }
+
+  .eyebrow { margin-bottom: var(--space-5); }
+  h1 {
+    /* Sized to its column so that balance sets two lines, "Aprenda / com direção.", at every width. */
+    font-size: min(var(--fs-hero), 12vw);
+    font-weight: 440;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
+  @media (min-width: 1024px) { h1 { font-size: min(5rem, 6.3vw); } }
+  .lead { margin-top: var(--space-5); max-width: 34ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
+
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); margin-top: var(--space-6); }
+  .primary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding-inline: var(--space-6);
+    border-radius: var(--radius);
+    background: var(--action);
+    color: var(--on-action);
+    font-weight: 560;
+    text-decoration: none;
+    transition: background var(--t-ui);
+  }
+  .primary:hover { background: var(--action-hover); color: var(--on-action); }
+  .secondary { display: inline-flex; align-items: center; gap: 0.35em; min-height: 52px; font-weight: 500; color: var(--ink); text-decoration: none; }
+  .secondary:hover { color: var(--action); }
+  .secondary span { transition: transform var(--t-ui) var(--ease); }
+  .secondary:hover span { transform: translateX(3px); }
+  .note { margin-top: var(--space-5); max-width: 40ch; font-size: var(--fs-small); color: var(--muted); }
+
+  /* The window sits on a quiet sand ground, offset, for depth without a heavy shadow. */
+  .stage { position: relative; isolation: isolate; }
+  /* It stops above the caption, which stays on paper. */
+  .ground {
+    position: absolute;
+    z-index: -1;
+    top: 14%;
+    right: -6%;
+    bottom: 3.25rem;
+    left: 16%;
+    border-radius: 28px;
+    background: var(--tint-sand);
+  }
+  @media (max-width: 1023px) { .ground { top: 20%; right: -4%; bottom: 4.75rem; left: 12%; } }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .copy > * { animation: rise 700ms var(--ease) both; }
+    .copy > :nth-child(2) { animation-delay: 60ms; }
+    .copy > :nth-child(3) { animation-delay: 120ms; }
+    .copy > :nth-child(n + 4) { animation-delay: 180ms; }
+    .stage { animation: rise 900ms var(--ease) 160ms both; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+</style>

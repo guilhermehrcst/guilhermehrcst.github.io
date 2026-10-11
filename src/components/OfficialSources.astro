@@ -1,0 +1,98 @@
+---
+// "Aprenda com fontes oficiais.": the institutions whose free courses the Academy points to, as their own
+// supplied marks (ProviderMark, unmodified), each leading to the track that holds its first course on this site. Only providers
+// with published, verified resources appear (institutions()); the brands still being verified are recorded
+// in docs/superpowers/research/2026-10-11-official-brands.md and are not shown. Never a partner or a sponsor:
+// the copy says the Academy is independent, and verify-dist rejects any claim of association.
+import ProviderMark from './ProviderMark.astro';
+import { institutions } from '../lib/learning-library';
+import { providerMarks } from '../lib/providers';
+import { routes } from '../lib/routes';
+import { publishedTracks } from '../lib/tech-tracks';
+import { AREAS, SUBJECTS } from '../lib/taxonomy';
+import { pt as t } from '../i18n/pt';
+
+const s = t.home.sources;
+const list = institutions(Object.keys(providerMarks)).map(({ provider, resources }) => {
+  // The count reads "cursos": fail the build rather than let it say so of anything else.
+  if (resources.some((r) => r.format !== 'course')) throw new Error(`OfficialSources: ${provider} has a resource that is not a course`);
+  const [first] = resources;
+  if (!first) throw new Error(`OfficialSources: ${provider} has no resource`);
+  const page = SUBJECTS[first.subject];
+  if (resources.some((r) => r.subject !== first.subject)) throw new Error(`OfficialSources: ${provider} spans pages; say where`);
+  // The anchor is the published track that holds the first course: a real section on that page.
+  const track = publishedTracks().find((tr) => tr.resourceIds.includes(first.id));
+  if (!track || page.id !== 'tecnologia') throw new Error(`OfficialSources: ${provider} has no track to lead to`);
+  return { provider, joint: (providerMarks[provider]?.length ?? 0) > 1, count: resources.length, page: AREAS[page.area].label, href: `${routes.subject(page.id)}#${track.id}` };
+});
+---
+<div class="grid">
+  <div class="copy">
+    <p class="independence">{s.independence}</p>
+    <p class="exams">
+      {s.exams}{' '}
+      <a href={`${routes.objective('enem')}#pratique`}>{s.examLinks.enem}</a>
+      {' · '}
+      <a href={routes.objective('uerj')}>{s.examLinks.uerj}</a>
+    </p>
+    <p class="pending">{s.pending}</p>
+  </div>
+  <ul class="marks" role="list">
+    {list.map((item) => (
+      <li data-institution={item.provider}>
+        <a href={item.href}>
+          <span class:list={['mark', item.joint && 'joint']}><ProviderMark name={item.provider} /></span>
+          <span class="count">{s.count(item.count, item.page)}{' '}<span aria-hidden="true">→</span></span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  @media (min-width: 1024px) { .grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-7); align-items: start; } }
+
+  .copy { display: grid; gap: var(--space-4); align-content: start; max-width: 44ch; }
+  .independence { padding-left: var(--space-4); border-left: 2px solid var(--action); color: var(--ink); }
+  .exams, .pending { font-size: var(--fs-small); color: var(--muted); }
+  .exams a { font-weight: 500; }
+
+  /* The marks sit in a quiet panel of equal cells: one height for every mark, so none reads larger. */
+  .marks {
+    display: grid;
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  @media (min-width: 640px) { .marks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1280px) { .marks { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  /* Marks at a size the cell can hold whole; a joint provider (two marks) needs more room per mark. */
+  .mark :global(.brand) { --bs: 0.82; }
+  .mark.joint :global(.brand) { --bs: 0.7; }
+  @media (max-width: 639px) { .mark :global(.brand) { --bs: 0.74; } .mark.joint :global(.brand) { --bs: 0.6; } }
+  .marks li { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin: 0 -1px -1px 0; }
+  .marks a {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: var(--space-4);
+    height: 100%;
+    min-height: 9rem;
+    padding: var(--space-5);
+    text-decoration: none;
+    color: var(--ink);
+    transition: background var(--t-ui);
+  }
+  .marks a:hover { background: var(--surface); }
+  .mark { display: flex; align-items: center; min-width: 0; }
+  .count { font-size: 0.8125rem; color: var(--muted); }
+  .count span { display: inline-block; transition: transform var(--t-ui) var(--ease); }
+  .marks a:hover .count { color: var(--action); }
+  .marks a:hover .count span { transform: translateX(3px); }
+  /* Phone: one institution per row, its count under the mark (two columns, or side by side, would crowd a joint mark). */
+  @media (max-width: 639px) {
+    .marks { grid-template-columns: minmax(0, 1fr); }
+    .marks a { gap: var(--space-2); min-height: 0; padding: var(--space-4); }
+  }
+</style>

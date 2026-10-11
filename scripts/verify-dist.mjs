@@ -71,6 +71,13 @@ const errors = [];
 const fail = (page, msg) => errors.push(`${page}: ${msg}`);
 const fileFor = (p) => join(DIST, p.endsWith('/') ? p + 'index.html' : p);
 const attrs = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
+/** The footer is the site map: every objective, every subject, search and about (hand-written, independent of the routes module). */
+const FOOTER_PAGES = [
+  '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/',
+  '/materias/', '/materias/matematica/', '/materias/portugues/', '/materias/redacao/', '/materias/fisica/', '/materias/quimica/',
+  '/materias/biologia/', '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
+  '/materias/ingles/', '/materias/espanhol/', '/buscar/', '/sobre/',
+];
 const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
 const meta = (html, attr, name) => new RegExp(`<meta ${attr}="${name}" content="([^"]*)"`).exec(html)?.[1];
 
@@ -107,19 +114,22 @@ function checkThirdParty(path, html) {
 
 /** Internal links resolve and anchors exist. Every external link goes to an allowed host over HTTPS, in
  *  a new tab, without handing the page a reference back (noopener noreferrer). */
+/** The page has an element with this id: the attribute itself, never a suffix such as data-resource-id. */
+const hasId = (html, id) => new RegExp(`\\sid="${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`).test(html);
 function checkLinks(path, html) {
   for (const m of html.matchAll(/<a\b([^>]*)>/g)) {
     const raw = /\shref="([^"]+)"/.exec(m[1])?.[1];
     if (raw === undefined) continue;
     const href = raw.replace(/&amp;/g, '&');
     if (href.startsWith('#')) {
-      if (!html.includes(`id="${href.slice(1)}"`)) fail(path, `dangling anchor ${href}`);
+      if (!hasId(html, href.slice(1))) fail(path, `dangling anchor ${href}`);
       continue;
     }
     if (href.startsWith('/')) {
-      const [target, hash] = href.split('#');
+      const [beforeHash, hash] = href.split('#');
+      const target = beforeHash.split('?')[0];
       if (!existsSync(fileFor(target))) fail(path, `broken internal link ${href}`);
-      else if (hash && !readFileSync(fileFor(target), 'utf8').includes(`id="${hash}"`)) fail(path, `dangling anchor ${href}`);
+      else if (hash && !hasId(readFileSync(fileFor(target), 'utf8'), hash)) fail(path, `dangling anchor ${href}`);
       continue;
     }
     let url;
@@ -152,7 +162,12 @@ const decode = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&qu
 const nameOf = (attributes, inner) => {
   const label = /\saria-label="([^"]*)"/.exec(attributes)?.[1];
   if (label !== undefined) return decode(label).trim();
-  return decode(inner.replace(/<([a-z]+)\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+  // As a browser computes it: an image counts by its alt, an element with role="img" by its label.
+  const named = inner
+    .replace(/<([a-z]+)\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/\1>/g, '')
+    .replace(/<[a-z]+\b[^>]*\srole="img"[^>]*\saria-label="([^"]*)"[^>]*>/g, ' $1 ')
+    .replace(/<img\b[^>]*\salt="([^"]*)"[^>]*>/g, ' $1 ');
+  return decode(named.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
 };
 
 function checkAccessibility(path, html) {
@@ -215,6 +230,12 @@ function checkUnique(list, what) {
 
 function checkShell(path, html) {
   if (!/<header\b/.test(html) || !/<footer\b/.test(html)) fail(path, 'header or footer landmark missing');
+  // An id names one element: a second one makes anchors and aria references ambiguous.
+  const ids = attrs(html.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, ''), /<[a-z][^>]*\sid="([^"]+)"/g);
+  for (const id of new Set(ids.filter((id, i) => ids.indexOf(id) !== i))) fail(path, `duplicate id "${id}"`);
+  const footer = /<footer\b[\s\S]*<\/footer>/.exec(html)?.[0] ?? '';
+  const footerLinks = new Set(hrefsIn(footer));
+  for (const page of FOOTER_PAGES) if (!footerLinks.has(page)) fail(path, `the footer does not link ${page}`);
   const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
   if (!nav) { fail(path, 'main navigation (aria-label="Principal") missing'); return; }
   const items = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => [m[1], m[2].replace(/<[^>]+>/g, '').trim()]);
@@ -255,8 +276,33 @@ function sectionOf(html, open, tag = 'section') {
 }
 const hrefsIn = (fragment) => attrs(fragment, /<a\b[^>]*\shref="([^"]+)"/g);
 
+/** Resource ids that decorative product demos show: each must be a real, published resource (checked
+ *  against every page's resource lists once all pages are read). */
+const DEMO_RESOURCE_IDS = new Set();
+const PUBLISHED_RESOURCE_IDS = new Set();
+
+/** A product demo (a window that shows the real product) is decorative for assistive tech, holds nothing
+ *  focusable, shows only real resources, and is captioned by a real link. */
+function checkProductWindow(path, figure) {
+  const hidden = (/<div\b[^>]*\saria-hidden="true"[^>]*>[\s\S]*/.exec(figure)?.[0] ?? '').split('<figcaption')[0];
+  if (!hidden) fail(path, 'a product window is aria-hidden');
+  if (/<(a|button|input|select|textarea)\b|tabindex=/.test(hidden)) fail(path, 'a product window holds nothing focusable');
+  if (/<h[1-6][\s>]/.test(hidden)) fail(path, 'a product window holds no headings (the page outline stays the page\'s)');
+  const ids = attrs(figure, /\sdata-demo-resource-id="([^"]+)"/g);
+  if (ids.length === 0) fail(path, 'a product window shows at least one real resource');
+  for (const id of ids) DEMO_RESOURCE_IDS.add(id);
+  const caption = /<figcaption\b[\s\S]*?<\/figcaption>/.exec(figure)?.[0] ?? '';
+  if (!/<a\b[^>]*href="\//.test(caption)) fail(path, 'a product window is captioned by a link to the real page');
+}
+
 /** The Home orients; it does not pour out content (spec §5.2). */
 function checkHome(path, html, resources) {
+  const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
+  const hero = main.slice(0, Math.max(0, main.search(/<section\b/)));
+  if (!hero.includes('href="#objetivo"') || !hero.includes('href="/materias/"')) fail(path, 'the hero offers "#objetivo" and "/materias/"');
+  const window = /<figure\b[^>]*\sdata-product-window[\s\S]*?<\/figure>/.exec(hero)?.[0];
+  if (!window) fail(path, 'the hero shows the product (figure[data-product-window])');
+  else checkProductWindow(path, window);
   const objective = sectionOf(html, /<section\b[^>]*\sid="objetivo"/);
   if (!objective) fail(path, 'section#objetivo missing');
   else {
@@ -265,17 +311,67 @@ function checkHome(path, html, resources) {
     const expected = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
     if (JSON.stringify(hrefs) !== JSON.stringify(expected)) fail(path, `#objetivo links ${hrefs.join(',')}`);
   }
+  // The learning path: the five steps, in order, each a real thing. A step that has nothing published yet
+  // says so and links nowhere; the others lead to the page that holds them.
+  const path_ = sectionOf(html, /<section\b[^>]*\sid="caminho"/);
+  if (!path_) fail(path, 'section#caminho missing');
+  else {
+    const steps = [...path_.matchAll(/<li\b[^>]*\sdata-path-step="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
+    const order = ['objetivo', 'materia', 'assunto', 'conteudo', 'pratica'];
+    if (JSON.stringify(steps.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `#caminho steps ${steps.map((m) => m[1]).join(',')}`);
+    for (const [, step, body] of steps) {
+      const links = hrefsIn(body);
+      const pending = /\sdata-path-pending[\s>=]/.test(body);
+      if (pending ? links.length : links.length !== 1 || !links[0].startsWith('/')) fail(path, `#caminho step ${step} links ${links.join(',') || 'nowhere'}`);
+    }
+    for (const id of attrs(path_, /\sdata-demo-resource-id="([^"]+)"/g)) DEMO_RESOURCE_IDS.add(id);
+  }
+  // Official sources: institutions that publish free material here, each leading to that material on this
+  // site. Never a partner, a sponsor or an endorsement (docs/superpowers/research/2026-10-11-official-brands.md).
+  const sources = sectionOf(html, /<section\b[^>]*\sid="fontes"/);
+  if (!sources) fail(path, 'section#fontes missing');
+  else {
+    const cells = [...sources.matchAll(/<li\b[^>]*\sdata-institution="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
+    if (cells.length < 3) fail(path, `#fontes shows ${cells.length} institutions`);
+    for (const [, name, body] of cells) {
+      const links = hrefsIn(body);
+      if (links.length !== 1 || !/^\/[^#]*#[\w-]+$/.test(links[0])) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
+    }
+  }
+  // Featured paths: at most three, each a real guide or track with its steps, opened by one internal link.
+  const featured = sectionOf(html, /<section\b[^>]*\sid="trilhas"/);
+  if (!featured) fail(path, 'section#trilhas missing');
+  else {
+    const cards = [...featured.matchAll(/<article\b[^>]*\sdata-featured="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
+    if (cards.length < 1 || cards.length > 3) fail(path, `#trilhas shows ${cards.length} paths (1 to 3)`);
+    for (const [, id, body] of cards) {
+      const links = hrefsIn(body);
+      if (links.length !== 1 || !links[0].startsWith('/')) fail(path, `#trilhas ${id} links ${links.join(',') || 'nowhere'}`);
+      if ((body.match(/<li\b/g) ?? []).length < 2) fail(path, `#trilhas ${id} lists fewer than two steps`);
+    }
+  }
+  const plain = main.replace(/<[^>]+>/g, ' ');
+  // Nor a feature the product does not have (V0.2 brief): no tutor, no saved progress, no Academy certificate.
+  const claim = /parceir|patrocin|apoiad|endoss|oficial da pexis|tutor|progresso salvo|salvamos|certificado da (pexis|academy)/i.exec(plain);
+  if (claim) fail(path, `the Home claims an association ("${claim[0]}")`);
   const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
   if (!areas) fail(path, 'section#areas missing');
   else checkAreaGroups(path, areas);
   if (resources.length) fail(path, `the Home lists no resources (found ${resources.length})`);
 
   // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
-  const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
-  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'fontes', 'areas', 'trilhas', 'curadoria', 'perguntas'])) fail(path, `Home sections ${sections.join(',')}`);
   if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
   if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
+  // Questions as native disclosure (no JavaScript): each a <details> with its <summary>.
+  const faq = sectionOf(html, /<section\b[^>]*\sid="perguntas"/);
+  if (!faq) fail(path, 'section#perguntas missing');
+  else {
+    const items = faq.match(/<details\b[\s\S]*?<\/details>/g) ?? [];
+    if (items.length < 4) fail(path, `#perguntas has ${items.length} questions`);
+    for (const item of items) if (!/<summary\b[^>]*>[\s\S]*?\?[\s\S]*?<\/summary>/.test(item)) fail(path, 'a question is a <summary> ending in "?"');
+  }
   const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/);
   if (curation && !hrefsIn(curation).includes('/sobre/')) fail(path, '#curadoria must lead to /sobre/');
 }
@@ -395,6 +491,7 @@ function checkObjectiveMap(path, html, resources, goal) {
 
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
+  for (const item of resources) PUBLISHED_RESOURCE_IDS.add(resourceAttr(item, 'data-resource-id'));
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
   if (path === '/enem/') checkEnem(path, html);
@@ -452,6 +549,9 @@ for (const path of CANONICAL) {
   checkAccessibility(path, html);
 }
 
+for (const id of DEMO_RESOURCE_IDS) {
+  if (!PUBLISHED_RESOURCE_IDS.has(id)) fail('/', `a product demo shows ${id}, which no page publishes`);
+}
 checkUnique(seenTitles, 'title');
 checkUnique(seenDescriptions, 'description');
 

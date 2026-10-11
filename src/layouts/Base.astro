@@ -1,10 +1,13 @@
 ---
 // The page shell: head (title, description, canonical, Open Graph), skip link, header, main, footer.
-// Google Sans Flex (OFL-1.1), self-hosted from @fontsource-variable: weight and optical size only.
+// Google Sans Flex and Newsreader (both OFL-1.1), self-hosted from @fontsource-variable: weight and
+// optical size only, Latin preloaded.
 // V0.1 is Portuguese only and carries no hreflang (spec §6.6). No JavaScript here.
 import '@fontsource-variable/google-sans-flex/opsz.css';
+import '@fontsource-variable/newsreader/opsz.css';
 import '../styles/global.css';
 import sansLatin from '@fontsource-variable/google-sans-flex/files/google-sans-flex-latin-opsz-normal.woff2?url';
+import serifLatin from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { pt as t } from '../i18n/pt';
@@ -37,6 +40,7 @@ const canonical = new URL(Astro.url.pathname, site).href;
   <meta property="og:site_name" content={t.siteName}>
   <meta name="twitter:card" content="summary">
   <link rel="preload" href={sansLatin} as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href={serifLatin} as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>

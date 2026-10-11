@@ -1,0 +1,85 @@
+---
+// The hero's product window: the real /materias/matematica/ page in miniature, built from the catalogue at
+// build time (the same resources, facts and objectives the page shows). Nothing here is invented: no topic
+// that has no page, no progress, no user. Decorative: the real page is one click away (ProductWindow).
+import ProductWindow from './ProductWindow.astro';
+import { filterResources, objectivesFor } from '../lib/learning-library';
+import { publishedResources } from '../lib/learning-resources';
+import { routes } from '../lib/routes';
+import { AREA_ORDER, AREAS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
+import { pt as t } from '../i18n/pt';
+
+const subject = SUBJECTS.matematica;
+const all = filterResources(publishedResources, { subject: subject.id });
+const study = all.filter((r) => r.format !== 'practice');
+const practice = all.filter((r) => r.format === 'practice');
+const objectives = objectivesFor(subject.id);
+const d = t.home.hero.demo;
+const l = t.resource;
+const facts = (r: (typeof all)[number]) =>
+  [l.formats[r.format], r.registration && l.registration[r.registration]].filter(Boolean).join(' · ');
+---
+<ProductWindow
+  class="hero-demo"
+  path={routes.subject(subject.id)}
+  caption={t.home.hero.demoCaption}
+  href={routes.subject(subject.id)}
+  linkLabel={t.home.hero.demoLink}
+>
+  <div class="app">
+    <div class="side">
+      <p class="label">{d.objectives}</p>
+      <ul role="list">{OBJECTIVE_ORDER.map((id) => <li>{OBJECTIVES[id].label}</li>)}</ul>
+      <p class="label">{d.areas}</p>
+      <ul role="list">
+        {AREA_ORDER.map((id) => <li class:list={[id === subject.area && 'on']}>{AREAS[id].label}</li>)}
+      </ul>
+    </div>
+    <div class="page">
+      <p class="crumbs">{d.subjects} <span>/</span> {subject.label}</p>
+      <p class="title">{subject.label}</p>
+      <p class="part">{d.study}</p>
+      {study.map((r) => (
+        <div class="res" data-demo-resource-id={r.id}>
+          <p class="prov">{r.provider}</p>
+          <p class="name" translate="no">{r.title}</p>
+          <p class="facts">{facts(r)}</p>
+        </div>
+      ))}
+      <p class="part">{d.practice}</p>
+      {practice.map((r) => (
+        <div class="res" data-demo-resource-id={r.id}>
+          <p class="prov">{r.provider}</p>
+          <p class="name" translate="no">{r.title}</p>
+          <p class="facts">{facts(r)}</p>
+        </div>
+      ))}
+      <p class="part">{d.byObjective}</p>
+      <p class="chips">{objectives.map((id) => <span>{OBJECTIVES[id].label}</span>)}</p>
+    </div>
+  </div>
+</ProductWindow>
+
+<style>
+  .app { display: grid; grid-template-columns: minmax(0, 1fr); font-size: 0.8125rem; line-height: 1.45; }
+  @media (min-width: 640px) { .app { grid-template-columns: 10.5rem minmax(0, 1fr); } }
+
+  .side { display: none; padding: var(--space-4) var(--space-3); border-right: 1px solid var(--rule); background: var(--surface); }
+  @media (min-width: 640px) { .side { display: block; } }
+  .label { margin: var(--space-3) 0 var(--space-1); padding-inline: var(--space-2); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .label:first-child { margin-top: 0; }
+  .side li { padding: 0.28rem var(--space-2); border-radius: var(--radius); color: var(--ink); }
+  .side li.on { background: var(--tint-blue); color: var(--action); font-weight: 600; }
+
+  .page { padding: var(--space-5) var(--space-5) var(--space-6); }
+  .crumbs { color: var(--muted); }
+  .crumbs span { margin-inline: 0.3em; color: var(--rule-strong); }
+  .title { margin-top: var(--space-2); font-family: var(--serif); font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.375rem); font-weight: 460; line-height: 1.05; letter-spacing: -0.02em; }
+  .part { margin-top: var(--space-5); padding-bottom: var(--space-2); border-bottom: 1px solid var(--rule); font-family: var(--serif); font-size: 1rem; font-weight: 560; }
+  .res { padding-block: var(--space-3); border-bottom: 1px solid var(--rule); }
+  .prov { color: var(--muted); font-size: 0.75rem; }
+  .name { margin-top: 0.15rem; font-weight: 600; font-size: 0.9375rem; color: var(--ink); }
+  .facts { color: var(--muted); font-size: 0.75rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+  .chips span { padding: 0.2rem 0.6rem; border: 1px solid var(--rule-strong); border-radius: 999px; font-size: 0.75rem; color: var(--ink); }
+</style>

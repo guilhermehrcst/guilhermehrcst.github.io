@@ -24,6 +24,9 @@ const pairs: [string, string, number][] = [
   ['muted', 'paper', 4.5], ['muted', 'surface', 4.5],
   ['action', 'paper', 4.5], ['action', 'surface', 4.5], ['action-hover', 'paper', 4.5],
   ['on-action', 'action', 4.5], ['on-action', 'action-hover', 4.5],
+  ['ink', 'raised', 7], ['muted', 'raised', 4.5], ['action', 'raised', 4.5],
+  ['ink', 'tint-blue', 7], ['muted', 'tint-blue', 4.5], ['action', 'tint-blue', 4.5],
+  ['ink', 'tint-sand', 7], ['muted', 'tint-sand', 4.5],
 ];
 for (const [fg, bg, min] of pairs) {
   test(`--${fg} on --${bg} is at least ${min}:1`, () => {
@@ -49,8 +52,11 @@ test('no hex colour outside :root, but the theme-color meta, which equals --pape
   }
 });
 
-test('the favicon is the Pexis Academy mark, in the current tokens', () => {
+test('the favicon is the temporary typographic signature, in the current tokens', () => {
+  // No official Academy symbol is in the repository (the red book asset is pending): the favicon is a
+  // serif "P" in ink on paper, never an invented mark.
   const svg = readFileSync(new URL('public/favicon.svg', root), 'utf8').toLowerCase();
   const colours = [...svg.matchAll(/fill="(#[0-9a-f]{6})"/g)].map((m) => m[1]);
-  assert.deepEqual(colours, [token('paper'), token('action')]);
+  assert.deepEqual(colours, [token('paper'), token('ink')]);
+  assert.ok(/<text\b[^>]*>p<\/text>/.test(svg), 'a typographic P');
 });

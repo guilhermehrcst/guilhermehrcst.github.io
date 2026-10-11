@@ -53,3 +53,25 @@ test('objectivesFor derives, in the Home order, the objectives a subject has res
   assert.deepEqual(objectivesFor('quimica'), ['enem', 'ensino-medio', 'vestibulares']);
   assert.deepEqual(objectivesFor('redacao'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
 });
+
+test('objectiveFacts counts what each objective really holds', async () => {
+  const { objectiveFacts } = await import('../src/lib/learning-library.ts');
+  const { publishedResources } = await import('../src/lib/learning-resources.ts');
+  const tagged = (goal: string) => publishedResources.filter((r) => (r.goals as readonly string[]).includes(goal)).length;
+  assert.deepEqual(objectiveFacts('enem'), { resources: tagged('enem') });
+  assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
+  assert.deepEqual(objectiveFacts('vestibulares'), { resources: tagged('vestibulares') });
+  assert.deepEqual(objectiveFacts('ensino-medio'), { resources: tagged('ensino-medio') });
+  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 17, tracks: 7 });
+});
+
+test('institutions lists only providers that publish, with their resources in catalogue order', async () => {
+  const { institutions } = await import('../src/lib/learning-library.ts');
+  const { publishedResources } = await import('../src/lib/learning-resources.ts');
+  const list = institutions(['Harvard University', 'Microsoft Learn', 'FGV']);
+  // Microsoft Learn has no published resource: it is left out, never shown empty.
+  assert.deepEqual(list.map((i) => i.provider), ['Harvard University', 'FGV']);
+  const harvard = publishedResources.filter((r) => r.provider === 'Harvard University').map((r) => r.id);
+  assert.deepEqual(list[0]?.resources.map((r) => r.id), harvard);
+  assert.equal(list[0]?.resources.length, 5);
+});

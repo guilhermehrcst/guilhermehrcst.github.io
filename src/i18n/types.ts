@@ -39,13 +39,54 @@ export interface Dict {
     academy: string;
     verified: (date: string) => string;
     licenses: string;
+    technology: string;
+    independence: string;
+    nav: { explore: string; search: string; about: string; verification: string };
   };
   pages: Record<PageKey, PageCopy>;
   home: {
-    cta: string;
-    objectives: { heading: string; items: Record<ObjectiveId, string> };
-    areas: { heading: string };
-    curation: { heading: string; rules: { title: string; body: string }[]; more: string };
+    hero: {
+      eyebrow: string;
+      lead: string;
+      primary: string;
+      secondary: string;
+      note: string;
+      demoCaption: string;
+      demoLink: string;
+      demo: { subjects: string; objectives: string; areas: string; study: string; practice: string; byObjective: string };
+    };
+    objectives: { heading: string; lead: string; items: Record<ObjectiveId, string>; facts: (resources: number, tracks?: number) => string };
+    sources: {
+      heading: string;
+      lead: string;
+      independence: string;
+      count: (resources: number, page: string) => string;
+      exams: string;
+      examLinks: { enem: string; uerj: string };
+      pending: string;
+    };
+    path: {
+      heading: string;
+      lead: string;
+      route: string;
+      steps: Record<'objetivo' | 'materia' | 'assunto' | 'conteudo' | 'pratica', string>;
+      enemMeta: string;
+      pending: string;
+      topicNote: string;
+      official: string;
+      links: { objective: string; subject: string; content: string; practice: string };
+    };
+    areas: { heading: string; lead: string; subjects: (n: number) => string };
+    tracks: {
+      heading: string;
+      lead: string;
+      kinds: { guide: string; track: string };
+      titles: { enem: string; uerj: string };
+      steps: (n: number) => string;
+      links: { enem: string; uerj: string; track: string };
+    };
+    curation: { heading: string; statement: string; verified: (date: string) => string; rules: { title: string; body: string }[]; more: string };
+    faq: { heading: string; items: { q: string; a: string }[] };
   };
   about: {
     intro: string;
