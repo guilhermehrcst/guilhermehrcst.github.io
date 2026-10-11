@@ -1,10 +1,15 @@
 ---
 // /tecnologia/: the technology objective and area, organised by tracks (spec §6.3). The page opens with
 // the choice of a track, then each track with its resources, in order. Planned tracks are not shown.
+// V0.4: the chooser is the shared SectionNav; the editorial highlights follow it once complete. The seven
+// tracks and their resources stay whole: the highlights never truncate the catalogue.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import TrackSection from '../../components/TrackSection.astro';
 import ResourceList from '../../components/ResourceList.astro';
+import SectionNav from '../../components/SectionNav.astro';
+import FeaturedResources from '../../components/FeaturedResources.astro';
+import { featuredReady } from '../../lib/featured';
 import { resourcesByIds } from '../../lib/learning-library';
 import { publishedResources } from '../../lib/learning-resources';
 import { publishedTracks } from '../../lib/tech-tracks';
@@ -12,23 +17,16 @@ import { pt as t } from '../../i18n/pt';
 
 const c = t.pages.tecnologia;
 const tracks = publishedTracks().map((track) => ({ ...track, resources: resourcesByIds(publishedResources, track.resourceIds) }));
+const nav = [
+  ...(featuredReady('tecnologia') ? [{ id: 'destaques', label: t.featured.title }] : []),
+  ...tracks.map((track) => ({ id: track.id, label: track.label, why: track.why })),
+];
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
 
-  <nav class="wrap chooser" aria-labelledby="chooser-title">
-    <h2 id="chooser-title">{t.tecnologia.chooser}</h2>
-    <ul role="list">
-      {tracks.map((track) => (
-        <li>
-          <a href={`#${track.id}`}>
-            <span class="name">{track.label}</span>
-            <span class="why">{track.why}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </nav>
+  <SectionNav id="chooser" title={t.tecnologia.chooser} items={nav} />
+  <FeaturedResources path="tecnologia" />
 
   {tracks.map((track) => (
     <TrackSection id={track.id} track={track.id} title={track.label} why={track.why}>
@@ -36,15 +34,3 @@ const tracks = publishedTracks().map((track) => ({ ...track, resources: resource
     </TrackSection>
   ))}
 </Base>
-
-<style>
-  .chooser { padding-bottom: var(--space-7); }
-  .chooser h2 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-3); }
-  .chooser ul { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--space-7); }
-  @media (min-width: 768px) { .chooser ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .chooser li { border-top: 1px solid var(--rule); }
-  .chooser a { display: grid; gap: var(--space-1); padding-block: var(--space-3) var(--space-4); text-decoration: none; }
-  .name { font-weight: 600; }
-  .chooser a:hover .name { color: var(--action); text-decoration: underline; }
-  .why { font-size: var(--fs-small); color: var(--muted); }
-</style>

@@ -1,14 +1,27 @@
 ---
 // /ensino-medio/: the school subjects through their areas, with the resources for Ensino Médio
 // (spec §6.3). Unlike /materias/, which is an index, this page is a study map for one objective.
+// V0.4: it opens with a nav to its areas, then the editorial highlights (when complete), then the map.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
+import SectionNav from '../../components/SectionNav.astro';
+import FeaturedResources from '../../components/FeaturedResources.astro';
 import ObjectiveMap from '../../components/ObjectiveMap.astro';
+import { mapNavItems } from '../../lib/learning-library';
+import { featuredReady } from '../../lib/featured';
 import { pt as t } from '../../i18n/pt';
 
 const c = t.pages['ensino-medio'];
+const tech = t.objectiveMap.technology;
+const nav = [
+  ...(featuredReady('ensino-medio') ? [{ id: 'destaques', label: t.featured.title }] : []),
+  ...mapNavItems('ensino-medio', {}, (n) => t.home.objectives.facts(n)),
+  { id: 'tecnologia', label: tech.title, why: tech.link },
+];
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <SectionNav id="areas-nav" title={t.sectionNav.areas} items={nav} />
+  <FeaturedResources path="ensino-medio" />
   <ObjectiveMap path="ensino-medio" />
 </Base>

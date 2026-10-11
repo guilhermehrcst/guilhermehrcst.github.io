@@ -6,6 +6,7 @@ import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import TrackSection from '../../components/TrackSection.astro';
 import ResourceList from '../../components/ResourceList.astro';
+import FeaturedResources from '../../components/FeaturedResources.astro';
 import { higherEducation } from '../../lib/higher-education';
 import { pt as t } from '../../i18n/pt';
 
@@ -15,6 +16,7 @@ const groups = higherEducation();
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
   <p class="wrap note">{t.superior.note}</p>
+  <FeaturedResources path="ensino-superior" />
 
   {groups.map((group) => (
     <TrackSection id={group.id} title={group.label} why={group.why}>

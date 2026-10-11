@@ -1,14 +1,14 @@
 // Pure selections over the catalogue. Pages compose lists at build time from these; nothing here
 // runs in the browser.
-import { areaOf, publishedResources } from './learning-resources.ts';
+import { areaOf, isPractice, publishedResources } from './learning-resources.ts';
 import { publishedTracks } from './tech-tracks.ts';
-import { EXAM_ORDER, PATH_ORDER } from './taxonomy.ts';
+import { AREA_ORDER, AREAS, EXAM_ORDER, PATH_ORDER, SUBJECTS, subjectsOf } from './taxonomy.ts';
 import type {
   LearningFormatId,
   LearningSubjectId,
   PublishedLearningResource,
 } from './learning-resources';
-import type { AreaId, ExamId, ObjectiveId, PathId } from './taxonomy';
+import type { AreaId, ExamId, ObjectiveId, PathId, SubjectId } from './taxonomy';
 
 /** Dimensions combine with AND; the values inside one dimension combine with OR. */
 export type LearningFilter = {
@@ -85,3 +85,36 @@ export const institutions = (
   providers
     .map((provider) => ({ provider, resources: resources.filter((resource) => resource.provider === provider) }))
     .filter((institution) => institution.resources.length > 0);
+
+/** A path seen through the school areas (Technology aside, it has its own path): each area with its subjects,
+ *  each with the published resources that declare the path. Without `practice`, practice is left out (on
+ *  Vestibular it lives on the exam pages). An empty subject or area is left out, never shown empty. The one
+ *  source of both the map and its in-page navigation. */
+export const mapSections = (
+  path: PathId,
+  { practice = true }: { practice?: boolean } = {},
+  resources: readonly PublishedLearningResource[] = publishedResources,
+): { id: AreaId; label: string; subjects: { id: SubjectId; label: string; resources: PublishedLearningResource[] }[] }[] =>
+  AREA_ORDER.filter((id) => id !== 'tecnologia')
+    .map((id) => ({
+      id,
+      label: AREAS[id].label,
+      subjects: subjectsOf(id)
+        .map((s) => ({ id: s, label: SUBJECTS[s].label, resources: filterResources(resources, { subject: s, paths: [path] }).filter((r) => practice || !isPractice(r)) }))
+        .filter((s) => s.resources.length > 0),
+    }))
+    .filter((area) => area.subjects.length > 0);
+
+/** The in-page navigation rows for a path's map: each area with its subjects; an area named like its only
+ *  subject (Matemática) says how many resources it holds instead, so its link never reads like the link to
+ *  the subject's page. */
+export const mapNavItems = (
+  path: PathId,
+  options: { practice?: boolean } = {},
+  facts: (resources: number) => string,
+): { id: AreaId; label: string; why: string }[] =>
+  mapSections(path, options).map((area) => {
+    const names = area.subjects.map((s) => s.label);
+    const resources = new Set(area.subjects.flatMap((s) => s.resources.map((r) => r.id))).size;
+    return { id: area.id, label: area.label, why: names.length === 1 && names[0] === area.label ? facts(resources) : names.join(', ') };
+  });

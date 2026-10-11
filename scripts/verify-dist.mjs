@@ -605,13 +605,14 @@ function checkProduct(path, html) {
   }
   if (path === '/ensino-medio/') {
     checkObjectiveMap(path, html, resources, 'ensino-medio');
-    const ids = sectionIds(html);
+    // The editorial highlights (#destaques) may lead the map once complete; they are checked on their own.
+    const ids = sectionIds(html).filter((id) => id !== 'destaques');
     if (JSON.stringify(ids) !== JSON.stringify(['matematica', 'linguagens', 'natureza', 'humanas', 'idiomas', 'tecnologia'])) fail(path, `Ensino Médio sections ${ids.join(',')}`);
     if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="tecnologia"/) ?? '').includes('/tecnologia/')) fail(path, '#tecnologia leads to /tecnologia/');
   }
   if (path === '/ensino-superior/') {
     // University courses only, by field: the two fields of V0.3, each with courses.
-    const groups = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].map((m) => [m[1], (m[2].match(/\sdata-resource-id="/g) ?? []).length]);
+    const groups = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].filter((m) => m[1] !== 'destaques').map((m) => [m[1], (m[2].match(/\sdata-resource-id="/g) ?? []).length]);
     if (JSON.stringify(groups.map((g) => g[0])) !== JSON.stringify(['matematica', 'computacao'])) fail(path, `Ensino Superior groups ${groups.map((g) => g[0]).join(',')}`);
     for (const [id, n] of groups) if (n < 2) fail(path, `group ${id} lists ${n} courses`);
   }
@@ -653,6 +654,40 @@ for (const path of PREPARING) {
   checkLinks(path, html);
   checkScripts(path, html);
   checkAccessibility(path, html);
+}
+
+/* In-page navigation (V0.4 M3): a long path page opens with a nav[data-section-nav] that leads, in order,
+   to every section of the page, and to nothing else. */
+const SECTION_NAV_PAGES = ['/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+for (const path of SECTION_NAV_PAGES) {
+  const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+  const nav = /<nav\b[^>]*\sdata-section-nav[\s\S]*?<\/nav>/.exec(html)?.[0];
+  if (!nav) { fail(path, 'a long path page opens with nav[data-section-nav]'); continue; }
+  const targets = hrefsIn(nav).map((href) => href.replace(/^#/, ''));
+  if (JSON.stringify(targets) !== JSON.stringify(sectionIds(html))) fail(path, `section nav ${targets.join(',')} ≠ sections ${sectionIds(html).join(',')}`);
+}
+
+/* Editorial highlights (V0.4 §5.2): a section[data-featured] appears only complete: ten distinct resources,
+   each declaring the page's path, none featured on two pages, none on a path in preparation. */
+{
+  const FEATURED_PAGES = { '/ensino-fundamental/': 'ensino-fundamental', '/ensino-medio/': 'ensino-medio', '/vestibulares/': 'vestibulares', '/pre-militar/': 'pre-militar', '/ensino-superior/': 'ensino-superior', '/tecnologia/': 'tecnologia' };
+  const seen = new Map();
+  for (const [path, pathId] of Object.entries(FEATURED_PAGES)) {
+    const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+    const sections = [...html.matchAll(/<section\b[^>]*\sdata-featured[\s>=][\s\S]*?<\/section>/g)].map((m) => m[0]);
+    if (sections.length > 1) fail(path, 'one featured section at most');
+    if (!sections.length) continue;
+    if (PREPARING.includes(path)) fail(path, 'a path in preparation features nothing');
+    const items = [...sections[0].matchAll(/<li\b([^>]*\sdata-resource-id="[^"]+"[^>]*)>/g)];
+    const ids = items.map((item) => resourceAttr(item, 'data-resource-id'));
+    if (ids.length !== 10 || new Set(ids).size !== 10) fail(path, `featured holds ${ids.length} (${new Set(ids).size} distinct), not ten`);
+    for (const item of items) {
+      const id = resourceAttr(item, 'data-resource-id');
+      if (!resourceAttr(item, 'data-paths').split(' ').includes(pathId)) fail(path, `featured ${id} does not declare ${pathId}`);
+      if (seen.has(id)) fail(path, `${id} is also featured on ${seen.get(id)}`);
+      seen.set(id, path);
+    }
+  }
 }
 
 /* Every count the Home prints for a path is the number of distinct resources that path's pages render:

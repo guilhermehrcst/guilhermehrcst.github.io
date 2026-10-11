@@ -6,6 +6,7 @@
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import PreparingNote from '../../components/PreparingNote.astro';
+import FeaturedResources from '../../components/FeaturedResources.astro';
 import TrackSection from '../../components/TrackSection.astro';
 import { routes } from '../../lib/routes';
 import { pt as t } from '../../i18n/pt';
@@ -16,6 +17,7 @@ const m = t.preMilitar;
 <Base title={c.title} description={c.description} noindex>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
   <PreparingNote />
+  <FeaturedResources path="pre-militar" />
 
   <TrackSection id="processos" title={m.processesTitle} why={m.processesWhy}>
     <div class="forces">

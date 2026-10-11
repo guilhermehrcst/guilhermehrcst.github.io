@@ -1,0 +1,21 @@
+---
+// A path's editorial highlights (V0.4 §5.2): ten resources chosen for this path, shown only when the
+// selection is complete and valid (featuredReady). Until then it renders nothing: no empty or partial
+// "Destaques". A path in preparation never shows highlights; it must leave preparation first.
+import TrackSection from './TrackSection.astro';
+import ResourceList from './ResourceList.astro';
+import { featuredFor, featuredReady } from '../lib/featured';
+import { PREPARING_PATHS, type PathId } from '../lib/taxonomy';
+import { pt as t } from '../i18n/pt';
+
+interface Props { path: PathId }
+const { path } = Astro.props;
+const ready = featuredReady(path);
+if (ready && PREPARING_PATHS.includes(path)) throw new Error(`FeaturedResources: ${path} is in preparation; take it out before featuring`);
+const resources = ready ? featuredFor(path) : [];
+---
+{ready && (
+  <TrackSection id="destaques" title={t.featured.title} why={t.featured.why} featured>
+    <ResourceList resources={resources} />
+  </TrackSection>
+)}

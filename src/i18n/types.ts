@@ -123,6 +123,9 @@ export interface Dict {
   };
   subjectPage: (subject: string, area: string) => PageCopy;
   tecnologia: { chooser: string };
+  /** V0.4: the in-page navigation of a long path page, and the editorial highlights of a path. */
+  sectionNav: { areas: string; page: string };
+  featured: { title: string; why: string };
   search: { label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string };
   vestibulares: {
     exams: { title: string; why: string; items: Record<'enem' | 'uerj', { name: string; what: string; link: string }> };
@@ -145,7 +148,7 @@ export interface Dict {
     };
   };
   source: { label: string; verified: (date: string) => string };
-  subject: { map: string; eyebrow: string; content: string; practice: string; objectives: string; objectivesLead: (subject: string) => string };
+  subject: { map: string; eyebrow: string; content: string; practice: string; reference: string; objectives: string; objectivesLead: (subject: string) => string };
   notFound: { home: string; subjects: string; search: string };
   resource: {
     formats: Record<LearningFormatId, string>;

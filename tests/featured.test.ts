@@ -62,3 +62,15 @@ test('an id repeated in one list, or featured in two paths, is refused: sixty mu
 test('featuredFor resolves a path to its published resources in order', () => {
   assert.deepEqual(featured.featuredFor('tecnologia'), []);
 });
+
+// M3: a path shows its highlights only when its list is complete and valid: never an empty or partial
+// "Destaques", never on a path still in preparation (it must leave preparation first, deliberately).
+test('featuredReady: a path is ready only with ten valid highlights', () => {
+  const ready = featured.featuredReady;
+  assert.equal(typeof ready, 'function');
+  assert.equal(ready('ensino-medio', full, pool), true);
+  assert.equal(ready('ensino-medio', { ...full, 'ensino-medio': full['ensino-medio']!.slice(0, 9) }, pool), false);
+  assert.equal(ready('ensino-medio', empty, pool), false);
+  assert.equal(ready('ensino-medio', { ...full, tecnologia: ['nope'] }, pool), false, 'an invalid selection is never ready anywhere');
+  for (const p of PATHS) assert.equal(ready(p), false, `${p} is not ready today`);
+});

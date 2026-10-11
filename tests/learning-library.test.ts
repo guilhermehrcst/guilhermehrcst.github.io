@@ -88,3 +88,13 @@ test('institutions lists only providers that publish, with their resources in ca
   assert.deepEqual(list[0]?.resources.map((r) => r.id), harvard);
   assert.equal(list[0]?.resources.length, 5);
 });
+
+test('mapNavItems: one row per area of the map; an area named like its only subject gives its count', async () => {
+  const { mapNavItems, mapSections } = await import('../src/lib/learning-library.ts');
+  const facts = (n: number) => `${n} recursos`;
+  const rows = mapNavItems('ensino-medio', {}, facts);
+  assert.deepEqual(rows.map((r) => r.id), mapSections('ensino-medio').map((a) => a.id));
+  assert.deepEqual(rows.find((r) => r.id === 'matematica'), { id: 'matematica', label: 'Matemática', why: '1 recursos' });
+  assert.equal(rows.find((r) => r.id === 'natureza')?.why, 'Física, Química, Biologia');
+  assert.ok(!rows.some((r) => r.id === 'tecnologia'), 'Technology is its own path, never an area of the map');
+});

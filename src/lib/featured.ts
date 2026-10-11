@@ -61,6 +61,15 @@ export const featuredProblems = (
 export const featuredComplete = (): boolean =>
   FEATURED_STATE === 'final' && featuredProblems(FEATURED_RESOURCE_IDS_BY_PATH, 'final').length === 0;
 
+/** A path shows its highlights only when the whole selection is valid and the path holds all ten: never an
+ *  empty or partial "Destaques". Defaults to the real selection and catalogue. */
+export const featuredReady = (
+  path: PathId,
+  selection: Readonly<Record<PathId, readonly string[]>> = FEATURED_RESOURCE_IDS_BY_PATH,
+  resources: readonly PublishedLearningResource[] = publishedResources,
+): boolean =>
+  selection[path].length === FEATURED_PER_PATH && featuredProblems(selection, 'staging', resources).length === 0;
+
 /** A path's highlights, in editorial order. */
 export const featuredFor = (path: PathId): PublishedLearningResource[] => {
   const byId = new Map(publishedResources.map((resource) => [resource.id, resource]));

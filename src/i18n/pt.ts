@@ -282,6 +282,11 @@ export const pt: Dict = {
     },
   },
   tecnologia: { chooser: 'Escolha uma trilha' },
+  sectionNav: { areas: 'Escolha uma área', page: 'Nesta página' },
+  featured: {
+    title: 'Destaques',
+    why: 'Uma seleção editorial para começar por este caminho, conferida na fonte. O acervo completo continua abaixo.',
+  },
   search: {
     label: 'Buscar na Pexis Academy',
     placeholder: 'Matéria, prova, trilha ou curso',
@@ -347,6 +352,7 @@ export const pt: Dict = {
     eyebrow: 'Matéria',
     content: 'Para estudar',
     practice: 'Para praticar',
+    reference: 'Para consultar',
     objectives: 'Por objetivo',
     objectivesLead: (subject) => `Veja como ${subject} entra na preparação de cada objetivo.`,
   },

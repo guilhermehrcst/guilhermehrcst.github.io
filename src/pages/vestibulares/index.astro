@@ -1,12 +1,16 @@
 ---
 // /vestibulares/ — "Vestibular" (V0.3): the hub of entrance exams. It opens with the exams that have a
 // guide (ENEM, UERJ), then an honest note on what the "vestibulares" tag means, then the common base by
-// subject (spec §6.3). No other exam is named: none has been verified.
+// subject (spec §6.3). No other exam is named: none has been verified. V0.4: a nav to every section opens
+// the page, and the editorial highlights follow it once complete.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import TrackSection from '../../components/TrackSection.astro';
 import ObjectiveMap from '../../components/ObjectiveMap.astro';
-import { objectiveFacts } from '../../lib/learning-library';
+import SectionNav from '../../components/SectionNav.astro';
+import FeaturedResources from '../../components/FeaturedResources.astro';
+import { featuredReady } from '../../lib/featured';
+import { mapNavItems, objectiveFacts } from '../../lib/learning-library';
 import { resolveGuide } from '../../lib/exam-guides';
 import { routes } from '../../lib/routes';
 import { EXAM_ORDER } from '../../lib/taxonomy';
@@ -20,9 +24,17 @@ const exams = EXAM_ORDER.map((id) => ({
   steps: resolveGuide(id).length,
   resources: objectiveFacts(id).resources,
 }));
+const nav = [
+  ...(featuredReady('vestibulares') ? [{ id: 'destaques', label: t.featured.title }] : []),
+  { id: 'provas', label: v.exams.title, why: exams.map((exam) => exam.name).join(', ') },
+  { id: 'nota-editorial', label: v.note.title },
+  ...mapNavItems('vestibulares', { practice: false }, (n) => t.home.objectives.facts(n)),
+];
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <SectionNav id="vestibular-nav" title={t.sectionNav.page} items={nav} />
+  <FeaturedResources path="vestibulares" />
 
   <TrackSection id="provas" title={v.exams.title} why={v.exams.why}>
     <ul class="exams" role="list">

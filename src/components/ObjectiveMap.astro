@@ -5,23 +5,14 @@
 // practice is left to the exam pages that hold it (Vestibular: /enem/ and /uerj/).
 import TrackSection from './TrackSection.astro';
 import ResourceList from './ResourceList.astro';
-import { filterResources } from '../lib/learning-library';
-import { isPractice, publishedResources } from '../lib/learning-resources';
+import { mapSections } from '../lib/learning-library';
 import { routes } from '../lib/routes';
-import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf, type PathId } from '../lib/taxonomy';
+import type { PathId } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
 interface Props { path: PathId; technology?: boolean; practice?: boolean }
 const { path, technology = true, practice = true } = Astro.props;
-const areas = AREA_ORDER.filter((id) => id !== 'tecnologia')
-  .map((id) => ({
-    id,
-    label: AREAS[id].label,
-    subjects: subjectsOf(id)
-      .map((s) => ({ id: s, label: SUBJECTS[s].label, resources: filterResources(publishedResources, { subject: s, paths: [path] }).filter((r) => practice || !isPractice(r)) }))
-      .filter((s) => s.resources.length > 0),
-  }))
-  .filter((area) => area.subjects.length > 0);
+const areas = mapSections(path, { practice });
 const tech = t.objectiveMap.technology;
 ---
 {areas.map((area) => (
