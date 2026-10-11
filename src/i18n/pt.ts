@@ -359,7 +359,7 @@ export const pt: Dict = {
   }),
   notFound: { home: 'Página inicial', subjects: 'Explorar as matérias', search: 'Buscar' },
   resource: {
-    formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', practice: 'Prática' },
+    formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', lesson: 'Aula', practice: 'Prática', 'past-exam': 'Prova anterior', simulator: 'Simulado', reference: 'Material de referência' },
     languages: { pt: 'Em português', en: 'Em inglês', es: 'Em espanhol' },
     registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
     certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', available: 'Certificado disponível' },

@@ -6,7 +6,7 @@
 import TrackSection from './TrackSection.astro';
 import ResourceList from './ResourceList.astro';
 import { filterResources } from '../lib/learning-library';
-import { publishedResources } from '../lib/learning-resources';
+import { isPractice, publishedResources } from '../lib/learning-resources';
 import { routes } from '../lib/routes';
 import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf, type PathId } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
@@ -18,7 +18,7 @@ const areas = AREA_ORDER.filter((id) => id !== 'tecnologia')
     id,
     label: AREAS[id].label,
     subjects: subjectsOf(id)
-      .map((s) => ({ id: s, label: SUBJECTS[s].label, resources: filterResources(publishedResources, { subject: s, paths: [path] }).filter((r) => practice || r.format !== 'practice') }))
+      .map((s) => ({ id: s, label: SUBJECTS[s].label, resources: filterResources(publishedResources, { subject: s, paths: [path] }).filter((r) => practice || !isPractice(r)) }))
       .filter((s) => s.resources.length > 0),
   }))
   .filter((area) => area.subjects.length > 0);

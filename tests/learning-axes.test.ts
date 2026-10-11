@@ -72,3 +72,32 @@ test('every count is the number of distinct published resources of that path or 
   assert.deepEqual(objectiveFacts('enem'), { resources: 13 });
   assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
 });
+
+// Formats (spec §4.3, §5.1): past exams, simulators, single lessons and reference material are resources,
+// never "courses". Practice is a kind of format, not one format: a past exam or a simulator is practice.
+test('the format axis names what a resource really is, and knows which formats are practice', async () => {
+  const lr = await import('../src/lib/learning-resources.ts') as Record<string, unknown>;
+  const formats = lr.LEARNING_FORMATS as readonly string[] | undefined;
+  const practice = lr.PRACTICE_FORMATS as readonly string[] | undefined;
+  assert.deepEqual(formats, ['course', 'track', 'playlist', 'lessons', 'lesson', 'practice', 'past-exam', 'simulator', 'reference']);
+  assert.deepEqual(practice, ['practice', 'past-exam', 'simulator']);
+  const isPractice = lr.isPractice as ((r: { format: string }) => boolean) | undefined;
+  assert.equal(typeof isPractice, 'function');
+  for (const format of formats ?? []) assert.equal(isPractice!({ format }), practice!.includes(format), format);
+});
+
+test('every format has a label, and no label calls a past exam, a lesson or a reference a course', async () => {
+  const { pt } = await import('../src/i18n/pt.ts');
+  const { LEARNING_FORMATS } = await import('../src/lib/learning-resources.ts') as { LEARNING_FORMATS?: readonly string[] };
+  const labels = pt.resource.formats as Record<string, string>;
+  for (const format of LEARNING_FORMATS ?? ['missing']) assert.ok(labels[format]?.trim(), `no label for ${format}`);
+  for (const format of ['lesson', 'past-exam', 'simulator', 'reference']) assert.ok(!/curso/i.test(labels[format] ?? 'curso'), format);
+});
+
+test('verify-dist keeps an independent, equal list of the practice formats', async () => {
+  const { readFileSync } = await import('node:fs');
+  const script = readFileSync(new URL('../scripts/verify-dist.mjs', import.meta.url), 'utf8');
+  const body = /const PRACTICE_FORMATS = \[([^\]]*)\];/.exec(script)?.[1] ?? '';
+  const { PRACTICE_FORMATS } = await import('../src/lib/learning-resources.ts') as { PRACTICE_FORMATS?: readonly string[] };
+  assert.deepEqual([...body.matchAll(/'([^']+)'/g)].map((m) => m[1]), PRACTICE_FORMATS ?? ['missing']);
+});

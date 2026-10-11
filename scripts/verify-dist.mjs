@@ -454,6 +454,10 @@ function checkAbout(path, html) {
 }
 
 const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+/** The formats a student practises with (V0.4 §4.3). Mirrors PRACTICE_FORMATS; a test keeps them equal. */
+const PRACTICE_FORMATS = ['practice', 'past-exam', 'simulator'];
+const PRACTICE_ATTR = new RegExp(`data-format="(?:${PRACTICE_FORMATS.join('|')})"`);
+const NON_PRACTICE_ATTR = new RegExp(`data-format="(?!(?:${PRACTICE_FORMATS.join('|')})")`);
 const resourceAttr = (item, name) => new RegExp(`\\s${name}="([^"]*)"`).exec(item[1])?.[1] ?? '';
 
 /** A subject page: content, then practice, then the objectives it serves (spec §6.3). An empty
@@ -467,8 +471,8 @@ function checkSubject(path, html, resources) {
   const content = sectionOf(html, /<section\b[^>]*\sid="conteudo"/);
   const practice = sectionOf(html, /<section\b[^>]*\sid="pratique"/);
   const objectives = sectionOf(html, /<section\b[^>]*\sid="objetivos"/);
-  if (content && /data-format="practice"/.test(content)) fail(path, '#conteudo holds no practice');
-  if (practice && /data-format="(?!practice")/.test(practice)) fail(path, '#pratique holds practice only');
+  if (content && PRACTICE_ATTR.test(content)) fail(path, '#conteudo holds no practice');
+  if (practice && NON_PRACTICE_ATTR.test(practice)) fail(path, '#pratique holds practice only');
   if (!content && !practice) fail(path, 'neither #conteudo nor #pratique');
   // A learning map, when present, is an ordered list of plain items that names its source; V0.1 topics have no pages.
   const map = sectionOf(html, /<section\b[^>]*\sdata-learning-map[\s>=]/);
@@ -512,7 +516,7 @@ function checkEnem(path, html) {
   if (JSON.stringify(groups) !== JSON.stringify(ENEM_GROUPS)) fail(path, `ENEM area groups ${JSON.stringify(groups)}`);
   const deepen = sectionOf(html, /<section\b[^>]*\sid="aprofunde"/) ?? '';
   if (!/\sdata-resource-id="/.test(deepen)) fail(path, '#aprofunde shows at least one resource');
-  if (/data-format="practice"/.test(deepen)) fail(path, '#aprofunde holds no practice');
+  if (PRACTICE_ATTR.test(deepen)) fail(path, '#aprofunde holds no practice');
 }
 
 /** /uerj/: its own personality, with past exams as the spine (spec §6.3). */

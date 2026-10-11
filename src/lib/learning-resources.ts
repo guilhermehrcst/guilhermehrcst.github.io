@@ -7,7 +7,14 @@
 import { EXAM_ORDER, EXAM_PARENT, PATH_ORDER, SUBJECTS, type AreaId, type ExamId, type PathId, type SubjectId } from './taxonomy.ts';
 
 export type LearningSubjectId = SubjectId;
-export type LearningFormatId = 'course' | 'track' | 'playlist' | 'lessons' | 'practice';
+/** What a resource really is (spec §4.3): a past exam, a single lesson or an atlas is never a course.
+ *  `lessons` is a series of lessons; `lesson` is one. */
+export const LEARNING_FORMATS = ['course', 'track', 'playlist', 'lessons', 'lesson', 'practice', 'past-exam', 'simulator', 'reference'] as const;
+export type LearningFormatId = (typeof LEARNING_FORMATS)[number];
+/** The formats a student practises with. scripts/verify-dist.mjs keeps an equal, hand-written list. */
+export const PRACTICE_FORMATS = ['practice', 'past-exam', 'simulator'] as const satisfies readonly LearningFormatId[];
+export const isPractice = (resource: { format: LearningFormatId }): boolean =>
+  (PRACTICE_FORMATS as readonly LearningFormatId[]).includes(resource.format);
 export type LearningLanguageId = 'pt' | 'en' | 'es';
 export type LearningLevelId = 'high-school' | 'vestibular' | 'beginner' | 'beginner-intermediate' | 'intermediate';
 export type LearningRegistrationId = 'required' | 'not-required';

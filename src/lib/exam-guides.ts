@@ -2,7 +2,7 @@
 // hand-kept lists of ids and empty "editorial" sections. Here the resource sections are derived from the
 // catalogue by exam and format, editorial sections cite official sources, and an empty section is never
 // returned. No asset imports: this module runs under Node's test runner.
-import { publishedResources, type PublishedLearningResource } from './learning-resources.ts';
+import { isPractice, publishedResources, type PublishedLearningResource } from './learning-resources.ts';
 import type { OfficialSourceId } from './official-sources.ts';
 import { ACADEMIC_SUBJECTS, type ExamId, type SubjectId } from './taxonomy.ts';
 
@@ -42,7 +42,7 @@ export const examGuides: Readonly<Record<ExamId, readonly SectionDefinition[]>> 
 };
 
 const select = (exam: ExamId, { practice }: Select) =>
-  publishedResources.filter((r) => r.exams?.includes(exam) && (r.format === 'practice') === practice);
+  publishedResources.filter((r) => r.exams?.includes(exam) && isPractice(r) === practice);
 
 /** The guide's sections with their resources, without any section that would be empty. */
 export const resolveGuide = (exam: ExamId): ResolvedSection[] =>
