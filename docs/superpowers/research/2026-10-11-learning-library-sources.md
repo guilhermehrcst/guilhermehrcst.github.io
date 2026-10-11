@@ -120,3 +120,20 @@ Prepared mapping, to confirm against the official PDF before publishing:
 Decision: `SUBJECTS.matematica.topics` stays empty in V0.1. Publishing needs the official PDF opened at
 its source; then the table above becomes the list in `src/lib/taxonomy.ts` and the test in
 `tests/taxonomy.test.ts` changes with it.
+
+### Claims the ENEM and UERJ pages make
+
+Every factual sentence of "Entenda a prova" and "Monte sua preparação" is listed here with its source.
+No dates, cut-off scores, question counts or calendars are published (spec R5): they change every edition.
+
+| Page | Claim (as published) | Official source cited on the page | Evidence |
+| --- | --- | --- | --- |
+| `/enem/` | The ENEM assesses four areas of knowledge (Linguagens, Códigos e suas Tecnologias; Ciências Humanas e suas Tecnologias; Ciências da Natureza e suas Tecnologias; Matemática e suas Tecnologias) and an essay. | INEP reference matrices | Official page verified by this audit on 2026-10-11; corroborated by search index the same day (INEP's ENEM page, MEC's "Como funciona o Enem" guide). |
+| `/enem/` | The reference matrices describe what each area assesses. | INEP reference matrices | What the document is (title and purpose of the official page). |
+| `/enem/` | INEP publishes the tests and answer keys of previous editions. | INEP "Provas e gabaritos" | Official page verified by this audit on 2026-10-11. |
+| `/uerj/` | In the Exame Discursivo every candidate writes the essay (Redação) and takes two specific subjects. | UERJ FAQ | Official FAQ, verified by this audit on 2026-10-11 (section "UERJ official practice"). |
+| `/uerj/` | The specific subjects depend on the course chosen; the official rules say which. | UERJ FAQ | Same FAQ; the page sends the reader to it rather than copying any table. |
+| `/uerj/` | The Revista do Vestibular publishes commented questions from current and previous editions as study references. | links to the Revista collections | Section "UERJ official practice" above. |
+
+"Provas e gabaritos" is cited as an official source in the ENEM practice section, not added to the
+catalogue: it covers every subject, and a catalogue resource has exactly one (plan T3.2, option a).
