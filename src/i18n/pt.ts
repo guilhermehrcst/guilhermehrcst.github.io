@@ -134,7 +134,9 @@ export const pt: Dict = {
       ],
     },
   },
+  source: { label: 'Fonte oficial:', verified: (date) => `verificada em ${date}` },
   subject: {
+    map: 'Mapa de estudo',
     eyebrow: 'Matéria',
     content: 'Para estudar',
     practice: 'Para praticar',

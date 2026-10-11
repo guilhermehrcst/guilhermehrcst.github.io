@@ -259,6 +259,13 @@ function checkSubject(path, html, resources) {
   if (content && /data-format="practice"/.test(content)) fail(path, '#conteudo holds no practice');
   if (practice && /data-format="(?!practice")/.test(practice)) fail(path, '#pratique holds practice only');
   if (!content && !practice) fail(path, 'neither #conteudo nor #pratique');
+  // A learning map, when present, is an ordered list of plain items that names its source; V0.1 topics have no pages.
+  const map = sectionOf(html, /<section\b[^>]*\sdata-learning-map[\s>=]/);
+  if (map) {
+    if (!/<ol\b/.test(map) || !/data-source-note/.test(map)) fail(path, 'a learning map is an <ol> that cites its source');
+    const items = /<ol\b[\s\S]*?<\/ol>/.exec(map)?.[0] ?? '';
+    if (/<a\b/.test(items)) fail(path, 'learning-map topics have no pages in V0.1');
+  }
   if (!objectives) fail(path, 'section#objetivos missing');
   else for (const href of hrefsIn(objectives)) if (!OBJECTIVE_PATHS.includes(href)) fail(path, `#objetivos links ${href}`);
 }

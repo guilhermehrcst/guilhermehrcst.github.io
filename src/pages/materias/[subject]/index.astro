@@ -5,6 +5,7 @@
 import Base from '../../../layouts/Base.astro';
 import PageIntro from '../../../components/PageIntro.astro';
 import SubjectResources from '../../../components/SubjectResources.astro';
+import LearningMap from '../../../components/LearningMap.astro';
 import { objectivesFor } from '../../../lib/learning-library';
 import { publishedResources } from '../../../lib/learning-resources';
 import { routes } from '../../../lib/routes';
@@ -30,6 +31,7 @@ const objectives = objectivesFor(id);
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
 
   <div class="wrap">
+    <LearningMap subject={subject} />
     <SubjectResources subject={id} anchors />
 
     <section class="objectives" id="objetivos" aria-labelledby="objetivos-title">

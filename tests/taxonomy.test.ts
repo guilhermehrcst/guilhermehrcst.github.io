@@ -48,3 +48,10 @@ test('every topic names its source and none is published in V0.1', () => {
     }
   }
 });
+
+test('no subject has a learning map until each topic is checked against its source', () => {
+  // The Mathematics map is prepared but unpublished: the ENEM reference matrix could not be opened at
+  // its official source on 2026-10-11 (docs/superpowers/research/2026-10-11-learning-library-sources.md,
+  // "Pexis Academy: re-verification"). Plan T4.3: unverifiable → empty.
+  for (const id of SUBJECT_ORDER) assert.deepEqual(SUBJECTS[id].topics, [], id);
+});

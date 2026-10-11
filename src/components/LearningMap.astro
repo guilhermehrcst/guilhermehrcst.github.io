@@ -1,0 +1,32 @@
+---
+// A subject's learning map: its topics, in order, with the source they come from (spec §6.1, §6.3).
+// V0.1 topics have no page, so the items are not links. Rendered only when the subject has topics,
+// and a subject has topics only after each one was checked against its source: no invented curriculum.
+import { officialSources } from '../lib/official-sources';
+import { formatDate } from '../lib/dates';
+import type { Subject } from '../lib/taxonomy';
+import { pt as t } from '../i18n/pt';
+
+interface Props { subject: Subject }
+const { subject } = Astro.props;
+const source = officialSources['inep-matrizes'];
+---
+{subject.topics.length > 0 && (
+  <section class="map" id="mapa" aria-labelledby="mapa-title" data-learning-map>
+    <h2 id="mapa-title">{t.subject.map}</h2>
+    <ol>
+      {subject.topics.map((topic) => <li>{topic.label}</li>)}
+    </ol>
+    <p class="source" data-source-note>
+      {t.source.label}{' '}<a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}<span class="sr-only"> ({t.resource.newTab})</span></a>,
+      {' '}<time datetime={source.verified.on}>{t.source.verified(formatDate(source.verified.on))}</time>.
+    </p>
+  </section>
+)}
+
+<style>
+  .map { margin-bottom: var(--space-7); }
+  h2 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-3); }
+  ol { padding-left: 1.4em; display: grid; gap: var(--space-1); }
+  .source { margin-top: var(--space-3); font-size: var(--fs-small); color: var(--muted); }
+</style>

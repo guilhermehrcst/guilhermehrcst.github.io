@@ -54,7 +54,8 @@ export interface Dict {
     independence: { heading: string; body: string[] };
   };
   subjectPage: (subject: string, area: string) => PageCopy;
-  subject: { eyebrow: string; content: string; practice: string; objectives: string; objectivesLead: (subject: string) => string };
+  source: { label: string; verified: (date: string) => string };
+  subject: { map: string; eyebrow: string; content: string; practice: string; objectives: string; objectivesLead: (subject: string) => string };
   notFound: { home: string; subjects: string; search: string };
   resource: {
     formats: Record<LearningFormatId, string>;
