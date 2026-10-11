@@ -39,6 +39,9 @@ export interface Dict {
     academy: string;
     verified: (date: string) => string;
     licenses: string;
+    technology: string;
+    independence: string;
+    nav: { explore: string; search: string; about: string; verification: string };
   };
   pages: Record<PageKey, PageCopy>;
   home: {
@@ -82,7 +85,8 @@ export interface Dict {
       steps: (n: number) => string;
       links: { enem: string; uerj: string; track: string };
     };
-    curation: { heading: string; rules: { title: string; body: string }[]; more: string };
+    curation: { heading: string; statement: string; verified: (date: string) => string; rules: { title: string; body: string }[]; more: string };
+    faq: { heading: string; items: { q: string; a: string }[] };
   };
   about: {
     intro: string;

@@ -32,6 +32,8 @@ const isCurrent = (href: string) => href === path || (href === routes.subjectInd
     backdrop-filter: saturate(1.4) blur(10px);
     border-bottom: 1px solid var(--rule);
   }
+  /* On a phone the header wraps to more than one row: it scrolls away instead of covering the page. */
+  @media (max-width: 639px) { .site-header { position: static; } }
   .bar {
     display: flex;
     flex-wrap: wrap;

@@ -1,45 +1,59 @@
 ---
-// The site map, derived from the taxonomy and the routes (spec §5.2, item 5), the date the catalogue
-// was last verified (from the data, never typed) and the licences of what the site ships.
+// The site map, derived from the taxonomy, the tracks and the routes (spec §5.2, item 5): objectives,
+// subjects, technology tracks and the Academy's own pages. Every link is a real page or a real anchor
+// (verify-dist checks both, and that the footer reaches every objective and subject). Also the date the
+// catalogue was last verified (from the data, never typed), the Academy's independence, and the
+// licences of what the site ships.
 import { routes } from '../lib/routes';
 import { ACADEMIC_SUBJECTS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
+import { publishedTracks } from '../lib/tech-tracks';
 import { VERIFIED_ON } from '../lib/learning-resources';
 import { formatDate } from '../lib/dates';
 import { pt as t } from '../i18n/pt';
 
+const f = t.footer;
 const date = formatDate(VERIFIED_ON);
+const tracks = publishedTracks();
 ---
 <footer class="site-footer">
   <div class="wrap grid">
     <div class="about">
-      <p class="brand">Pexis Academy</p>
-      <p class="muted">{t.footer.tagline}</p>
-      <p class="muted small"><time datetime={VERIFIED_ON} data-verified-on>{t.footer.verified(date)}</time></p>
+      <p class="brand"><span class="sig-a">Pexis</span> <span class="sig-b">Academy</span></p>
+      <p class="tagline">{f.tagline}</p>
+      <p class="small"><time datetime={VERIFIED_ON} data-verified-on>{f.verified(date)}</time></p>
+      <p class="small">{f.independence}</p>
     </div>
-    <nav aria-label={t.footer.objectives}>
-      <p class="eyebrow">{t.footer.objectives}</p>
+    <nav aria-label={f.objectives}>
+      <p class="eyebrow">{f.objectives}</p>
       <ul role="list">
         {OBJECTIVE_ORDER.map((id) => <li><a href={routes.objective(id)}>{OBJECTIVES[id].label}</a></li>)}
       </ul>
     </nav>
-    <nav aria-label={t.footer.subjects}>
-      <p class="eyebrow">{t.footer.subjects}</p>
+    <nav aria-label={f.subjects}>
+      <p class="eyebrow">{f.subjects}</p>
       <ul role="list" class="cols">
         {ACADEMIC_SUBJECTS.map((id) => <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a></li>)}
       </ul>
     </nav>
-    <nav aria-label={t.footer.academy}>
-      <p class="eyebrow">{t.footer.academy}</p>
+    <nav aria-label={f.technology}>
+      <p class="eyebrow">{f.technology}</p>
       <ul role="list">
-        <li><a href={routes.subjectIndex}>Explorar</a></li>
-        <li><a href={routes.search}>Buscar</a></li>
-        <li><a href={routes.about}>Sobre</a></li>
+        {tracks.map((track) => <li><a href={`${routes.objective('tecnologia')}#${track.id}`}>{track.label}</a></li>)}
+      </ul>
+    </nav>
+    <nav aria-label={f.academy}>
+      <p class="eyebrow">{f.academy}</p>
+      <ul role="list">
+        <li><a href={routes.subjectIndex}>{f.nav.explore}</a></li>
+        <li><a href={routes.search}>{f.nav.search}</a></li>
+        <li><a href={routes.about}>{f.nav.about}</a></li>
+        <li><a href={`${routes.about}#verificacao`}>{f.nav.verification}</a></li>
       </ul>
     </nav>
   </div>
   <div class="wrap legal">
-    <p class="muted small">
-      {t.footer.licenses}:{' '}<a href="/licenses/GoogleSansFlex-OFL.txt">Google Sans Flex (OFL)</a>,{' '}<a href="/licenses/Newsreader-OFL.txt">Newsreader (OFL)</a>,{' '}<a href="/licenses/RadixIcons-MIT.txt">Radix Icons (MIT)</a>.
+    <p>
+      {f.licenses}:{' '}<a href="/licenses/GoogleSansFlex-OFL.txt">Google Sans Flex (OFL)</a>,{' '}<a href="/licenses/Newsreader-OFL.txt">Newsreader (OFL)</a>,{' '}<a href="/licenses/RadixIcons-MIT.txt">Radix Icons (MIT)</a>.
     </p>
   </div>
 </footer>
@@ -49,19 +63,24 @@ const date = formatDate(VERIFIED_ON);
   .grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-6);
-    padding-block: var(--space-7) var(--space-6);
+    gap: var(--space-6) var(--space-5);
+    padding-block: var(--space-8) var(--space-7);
   }
-  @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1024px) { .grid { grid-template-columns: 2fr 1fr 2fr 1fr; } }
+  @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .about { grid-column: 1 / -1; } }
+  @media (min-width: 1180px) {
+    .grid { grid-template-columns: minmax(0, 3fr) minmax(0, 1.4fr) minmax(0, 2.4fr) minmax(0, 2fr) minmax(0, 1.6fr); column-gap: var(--space-6); }
+    .about { grid-column: auto; }
+  }
 
-  .brand { font-weight: 620; margin-bottom: var(--space-2); }
-  .muted { color: var(--muted); }
-  .small { font-size: var(--fs-small); margin-top: var(--space-3); }
+  .about { display: grid; gap: var(--space-3); align-content: start; max-width: 36ch; }
+  .brand { font-family: var(--serif); font-size: 1.625rem; letter-spacing: -0.015em; color: var(--ink); }
+  .sig-a { font-weight: 640; }
+  .sig-b { font-weight: 380; color: var(--muted); }
+  .tagline { color: var(--ink); }
+  .small { font-size: var(--fs-small); color: var(--muted); }
   .eyebrow { margin-bottom: var(--space-2); }
-  ul { display: grid; gap: 0; }
-  .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); }
-  li a { display: inline-flex; align-items: center; min-height: 36px; text-decoration: none; }
-  li a:hover { text-decoration: underline; }
-  .legal > p { margin: 0; padding-block: var(--space-4) var(--space-6); border-top: 1px solid var(--rule); }
+  .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); }
+  li a { display: inline-flex; align-items: center; min-height: 40px; color: var(--ink); text-decoration: none; }
+  li a:hover { color: var(--action); text-decoration: underline; text-underline-offset: 0.2em; }
+  .legal > p { margin: 0; padding-block: var(--space-4) var(--space-6); border-top: 1px solid var(--rule); font-size: var(--fs-small); color: var(--muted); }
 </style>

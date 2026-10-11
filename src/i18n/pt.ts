@@ -12,9 +12,12 @@ export const pt: Dict = {
     tagline: 'Recursos gratuitos e verificados, organizados com direção.',
     objectives: 'Objetivos',
     subjects: 'Matérias',
-    academy: 'Pexis Academy',
+    academy: 'Sobre a Academy',
     verified: (date) => `Recursos verificados em ${date}.`,
     licenses: 'Licenças',
+    technology: 'Tecnologia',
+    independence: 'A Pexis Academy é um produto da Pexis, independente das instituições cujos materiais indica.',
+    nav: { explore: 'Explorar', search: 'Buscar', about: 'Sobre', verification: 'Como verificamos' },
   },
   pages: {
     home: {
@@ -110,12 +113,25 @@ export const pt: Dict = {
     },
     curation: {
       heading: 'Como escolhemos os recursos',
+      statement: 'Só indicamos o que conferimos na página de quem publica.',
+      verified: (date) => `Catálogo verificado em ${date}`,
       rules: [
         { title: 'Gratuito de verdade', body: 'Todo o conteúdo de estudo é gratuito. Sem período de teste, sem trechos de amostra, sem link de afiliado. Alguns pedem uma conta gratuita.' },
         { title: 'Direto da fonte', body: 'Cada link leva à página oficial do curso, da instituição ou da prova, nunca a um agregador.' },
         { title: 'Verificado com data', body: 'Conferimos cada recurso na fonte antes de publicar e registramos quando.' },
       ],
-      more: 'Como verificamos',
+      more: 'Ler as regras completas',
+    },
+    faq: {
+      heading: 'Perguntas frequentes',
+      items: [
+        { q: 'A Pexis Academy é gratuita?', a: 'Sim. A Academy não cobra nada, e todo recurso indicado pode ser estudado de graça. Certificados, quando existem, são de quem publica o curso, podem ser pagos e são sempre opcionais.' },
+        { q: 'Preciso criar uma conta?', a: 'Não na Pexis Academy: aqui não há cadastro. Alguns recursos pedem uma conta gratuita no site de quem os publica; quando conferimos essa exigência, ela aparece indicada no recurso.' },
+        { q: 'Os cursos são da Pexis?', a: 'Não. A Pexis Academy não produz aulas. Ela organiza materiais gratuitos de universidades, instituições públicas e plataformas educacionais, e leva você à página oficial de quem os publica.' },
+        { q: 'Há material oficial para o ENEM?', a: 'Sim. O guia do ENEM leva às provas e aos gabaritos publicados pelo INEP e às Matrizes de Referência, que descrevem o que cada área avalia.' },
+        { q: 'Como os recursos são escolhidos?', a: 'O conteúdo precisa ser gratuito de verdade, o link vai à página oficial de quem publica e cada recurso é conferido nessa página antes de entrar, com a data registrada. O que não conseguimos confirmar fica de fora até ser verificado.' },
+        { q: 'A Academy guarda o meu progresso?', a: 'Não. Como não há conta na Pexis Academy, nada é salvo aqui. Você estuda na página de quem publica, e o progresso, quando existe, fica lá.' },
+      ],
     },
     objectives: {
       heading: 'Qual é o seu objetivo?',

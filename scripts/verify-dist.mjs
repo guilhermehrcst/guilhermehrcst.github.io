@@ -71,6 +71,13 @@ const errors = [];
 const fail = (page, msg) => errors.push(`${page}: ${msg}`);
 const fileFor = (p) => join(DIST, p.endsWith('/') ? p + 'index.html' : p);
 const attrs = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
+/** The footer is the site map: every objective, every subject, search and about (hand-written, independent of the routes module). */
+const FOOTER_PAGES = [
+  '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/',
+  '/materias/', '/materias/matematica/', '/materias/portugues/', '/materias/redacao/', '/materias/fisica/', '/materias/quimica/',
+  '/materias/biologia/', '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
+  '/materias/ingles/', '/materias/espanhol/', '/buscar/', '/sobre/',
+];
 const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
 const meta = (html, attr, name) => new RegExp(`<meta ${attr}="${name}" content="([^"]*)"`).exec(html)?.[1];
 
@@ -221,6 +228,9 @@ function checkUnique(list, what) {
 
 function checkShell(path, html) {
   if (!/<header\b/.test(html) || !/<footer\b/.test(html)) fail(path, 'header or footer landmark missing');
+  const footer = /<footer\b[\s\S]*<\/footer>/.exec(html)?.[0] ?? '';
+  const footerLinks = new Set(hrefsIn(footer));
+  for (const page of FOOTER_PAGES) if (!footerLinks.has(page)) fail(path, `the footer does not link ${page}`);
   const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
   if (!nav) { fail(path, 'main navigation (aria-label="Principal") missing'); return; }
   const items = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => [m[1], m[2].replace(/<[^>]+>/g, '').trim()]);
@@ -336,7 +346,8 @@ function checkHome(path, html, resources) {
     }
   }
   const plain = main.replace(/<[^>]+>/g, ' ');
-  const claim = /parceir|patrocin|apoiad|endoss|oficial da pexis/i.exec(plain);
+  // Nor a feature the product does not have (V0.2 brief): no tutor, no saved progress, no Academy certificate.
+  const claim = /parceir|patrocin|apoiad|endoss|oficial da pexis|tutor|progresso salvo|salvamos|certificado da (pexis|academy)/i.exec(plain);
   if (claim) fail(path, `the Home claims an association ("${claim[0]}")`);
   const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
   if (!areas) fail(path, 'section#areas missing');
@@ -345,9 +356,17 @@ function checkHome(path, html, resources) {
 
   // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
-  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'fontes', 'areas', 'trilhas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'fontes', 'areas', 'trilhas', 'curadoria', 'perguntas'])) fail(path, `Home sections ${sections.join(',')}`);
   if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
   if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
+  // Questions as native disclosure (no JavaScript): each a <details> with its <summary>.
+  const faq = sectionOf(html, /<section\b[^>]*\sid="perguntas"/);
+  if (!faq) fail(path, 'section#perguntas missing');
+  else {
+    const items = faq.match(/<details\b[\s\S]*?<\/details>/g) ?? [];
+    if (items.length < 4) fail(path, `#perguntas has ${items.length} questions`);
+    for (const item of items) if (!/<summary\b[^>]*>[\s\S]*?\?[\s\S]*?<\/summary>/.test(item)) fail(path, 'a question is a <summary> ending in "?"');
+  }
   const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/);
   if (curation && !hrefsIn(curation).includes('/sobre/')) fail(path, '#curadoria must lead to /sobre/');
 }
