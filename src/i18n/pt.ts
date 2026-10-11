@@ -86,6 +86,7 @@ export const pt: Dict = {
   },
   home: {
     cta: 'Escolher meu objetivo',
+    areas: { heading: 'Explore por área' },
     objectives: {
       heading: 'Qual é o seu objetivo?',
       items: {

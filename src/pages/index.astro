@@ -3,6 +3,7 @@
 import Base from '../layouts/Base.astro';
 import PageIntro from '../components/PageIntro.astro';
 import ObjectiveList from '../components/ObjectiveList.astro';
+import AreaList from '../components/AreaList.astro';
 import { pt as t } from '../i18n/pt';
 
 const c = t.pages.home;
@@ -15,6 +16,11 @@ const c = t.pages.home;
   <section class="wrap block" id="objetivo" aria-labelledby="objetivo-title">
     <h2 id="objetivo-title">{t.home.objectives.heading}</h2>
     <ObjectiveList />
+  </section>
+
+  <section class="wrap block" id="areas" aria-labelledby="areas-title">
+    <h2 id="areas-title">{t.home.areas.heading}</h2>
+    <AreaList />
   </section>
 </Base>
 

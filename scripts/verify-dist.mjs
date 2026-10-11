@@ -201,7 +201,24 @@ function checkHome(path, html, resources) {
     const expected = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
     if (JSON.stringify(hrefs) !== JSON.stringify(expected)) fail(path, `#objetivo links ${hrefs.join(',')}`);
   }
+  const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
+  if (!areas) fail(path, 'section#areas missing');
+  else checkAreaGroups(path, areas);
   if (resources.length) fail(path, `the Home lists no resources (found ${resources.length})`);
+}
+
+/** The six areas, in order, each linking exactly its subjects (spec §5.2, item 3; §6.1). */
+const AREA_GROUPS = [
+  ['matematica', ['/materias/matematica/']],
+  ['linguagens', ['/materias/portugues/', '/materias/redacao/']],
+  ['natureza', ['/materias/fisica/', '/materias/quimica/', '/materias/biologia/']],
+  ['humanas', ['/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/']],
+  ['idiomas', ['/materias/ingles/', '/materias/espanhol/']],
+  ['tecnologia', ['/tecnologia/']],
+];
+function checkAreaGroups(path, fragment) {
+  const groups = [...fragment.matchAll(/<(\w+)\b[^>]*\sdata-area="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => [m[2], hrefsIn(m[3])]);
+  if (JSON.stringify(groups) !== JSON.stringify(AREA_GROUPS)) fail(path, `area groups ${JSON.stringify(groups)}`);
 }
 
 function checkProduct(path, html) {

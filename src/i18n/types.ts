@@ -44,6 +44,7 @@ export interface Dict {
   home: {
     cta: string;
     objectives: { heading: string; items: Record<ObjectiveId, string> };
+    areas: { heading: string };
   };
   subjectPage: (subject: string, area: string) => PageCopy;
   notFound: { home: string; subjects: string; search: string };
