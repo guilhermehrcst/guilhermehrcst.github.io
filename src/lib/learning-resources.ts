@@ -279,23 +279,29 @@ export const schoolYearProblems = (r: Pick<LearningResource, 'id' | 'paths'> & {
   return problems;
 };
 
-for (const resource of catalogue) {
-  const years = schoolYearProblems(resource);
-  if (years.length) throw new Error(`learning-resources: ${years.join('; ')}`);
-  const verification = verificationProblems(resource);
-  if (verification.length) throw new Error(`learning-resources: ${verification.join('; ')}`);
-  if (resource.subject !== null && !(resource.subject in SUBJECTS)) throw new Error(`learning-resources: ${resource.id} has an unknown subject`);
-  if (!resource.paths.length || new Set(resource.paths).size !== resource.paths.length) throw new Error(`learning-resources: ${resource.id} needs distinct paths`);
-  if (resource.paths.some((path) => !PATH_ORDER.includes(path))) throw new Error(`learning-resources: ${resource.id} has an unknown path`);
+/** Everything wrong with one record, one line each: the rules every catalogue record obeys, exported so a
+ *  record in staging (src/lib/staging.ts) is held to the very same rules before it may be promoted. */
+export const resourceProblems = (resource: LearningResource, now: Date = new Date()): string[] => {
+  const problems = [...schoolYearProblems(resource), ...verificationProblems(resource, now)];
+  const fail = (message: string) => problems.push(`${resource.id} ${message}`);
+  if (resource.subject !== null && !(resource.subject in SUBJECTS)) fail('has an unknown subject');
+  if (!resource.paths.length || new Set(resource.paths).size !== resource.paths.length) fail('needs distinct paths');
+  if (resource.paths.some((path) => !PATH_ORDER.includes(path))) fail('has an unknown path');
   for (const exam of resource.exams ?? []) {
-    if (!EXAM_ORDER.includes(exam)) throw new Error(`learning-resources: ${resource.id} has an unknown exam`);
-    if (!resource.paths.includes(EXAM_PARENT[exam])) throw new Error(`learning-resources: ${resource.id} prepares for ${exam} outside its path`);
+    if (!EXAM_ORDER.includes(exam)) fail('has an unknown exam');
+    else if (!resource.paths.includes(EXAM_PARENT[exam])) fail(`prepares for ${exam} outside its path`);
   }
   // Technology is its own path (spec §1.3): never counted in Ensino Médio, which lists school subjects only.
-  if (resource.subject === 'tecnologia' && !resource.paths.includes('tecnologia')) throw new Error(`learning-resources: ${resource.id} is technology outside Tecnologia`);
-  if (resource.paths.includes('ensino-medio') && areaOf(resource) === 'tecnologia') throw new Error(`learning-resources: ${resource.id} puts technology in Ensino Médio`);
-  if (resource.url && !resource.url.startsWith('https://')) throw new Error(`learning-resources: ${resource.id} url must be https`);
-  if (resource.verified && (!resource.url || !resource.verified.freeAccess)) throw new Error(`learning-resources: ${resource.id} has invalid verification`);
-  if (!resource.url && !resource.review?.trim()) throw new Error(`learning-resources: ${resource.id} is held back without a review note`);
+  if (resource.subject === 'tecnologia' && !resource.paths.includes('tecnologia')) fail('is technology outside Tecnologia');
+  if (resource.paths.includes('ensino-medio') && areaOf(resource) === 'tecnologia') fail('puts technology in Ensino Médio');
+  if (resource.url && !resource.url.startsWith('https://')) fail('url must be https');
+  if (resource.verified && (!resource.url || !resource.verified.freeAccess)) fail('has invalid verification');
+  if (!resource.url && !resource.review?.trim()) fail('is held back without a review note');
+  return problems;
+};
+
+for (const resource of catalogue) {
+  const problems = resourceProblems(resource);
+  if (problems.length) throw new Error(`learning-resources: ${problems.join('; ')}`);
 }
 if (new Set(catalogue.map((resource) => resource.id)).size !== catalogue.length) throw new Error('learning-resources: duplicate id');
