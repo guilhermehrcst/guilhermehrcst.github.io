@@ -22,8 +22,9 @@ const facts = [
   r.schoolYears && l.schoolYears(r.schoolYears),
   l.languages[r.language],
   r.duration && `${r.duration.value} ${l.units[r.duration.unit]}`,
-  r.registration && l.registration[r.registration],
-  r.certificate && r.certificate !== 'none' && l.certificates[r.certificate],
+  // An 'unconfirmed' registration or certificate is left out: uncertainty is never shown as a fact.
+  r.registration && r.registration !== 'unconfirmed' && l.registration[r.registration],
+  r.certificate && r.certificate !== 'none' && r.certificate !== 'unconfirmed' && l.certificates[r.certificate],
 ].filter((fact): fact is string => Boolean(fact));
 ---
 <li

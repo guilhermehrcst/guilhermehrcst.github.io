@@ -17,9 +17,10 @@ export const isPractice = (resource: { format: LearningFormatId }): boolean =>
   (PRACTICE_FORMATS as readonly LearningFormatId[]).includes(resource.format);
 export type LearningLanguageId = 'pt' | 'en' | 'es';
 export type LearningLevelId = 'high-school' | 'vestibular' | 'beginner' | 'beginner-intermediate' | 'intermediate';
-export type LearningRegistrationId = 'required' | 'not-required';
+/** 'unconfirmed': the source does not say; stated as such and never shown as a fact (V0.4 Gate B, P4). */
+export type LearningRegistrationId = 'required' | 'not-required' | 'unconfirmed';
 export type VerificationMethod = 'official-page' | 'youtube-page' | 'search-index';
-export type LearningCertificateId = 'none' | 'statement' | 'available';
+export type LearningCertificateId = 'none' | 'statement' | 'available' | 'unconfirmed';
 export type LearningDurationUnit = 'hours' | 'weeks';
 
 export type TechnologyTopicId =
@@ -97,7 +98,58 @@ export type PublishedLearningResource = LearningResource & {
 
 /** The date the published catalogue was last verified at its sources. */
 export const VERIFIED_ON = '2026-10-11';
-const verified = (): ResourceVerification => ({ on: VERIFIED_ON, by: 'official-page', freeAccess: true });
+
+/** The 37 resources published before the Gate B (V0.4, P4), each with the URL it was verified at on
+ *  VERIFIED_ON. Only these, with exactly these URLs and that date, keep the collective verification of
+ *  2026-10-11. Any other resource, or one of these with a new URL or date, needs individual evidence.
+ *  Closed list: entering it is not a way to verify a resource. */
+export const LEGACY_VERIFIED: Readonly<Record<string, string>> = {
+  cs50x: 'https://cs50.harvard.edu/x/',
+  cs50p: 'https://cs50.harvard.edu/python/',
+  'mit-6100l': 'https://ocw.mit.edu/courses/6-100l-introduction-to-cs-and-programming-using-python-fall-2022/',
+  'fb-python': 'https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico',
+  'fb-web': 'https://www.ev.org.br/cursos/crie-um-site-simples-usando-html-css-e-javascript',
+  cs50w: 'https://cs50.harvard.edu/web/',
+  cs50ai: 'https://cs50.harvard.edu/ai/',
+  fluencia: 'https://www.ev.org.br/cursos/fluencia',
+  'fgv-datasci': 'https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/introducao-ciencia-de-dados',
+  'mit-60002': 'https://ocw.mit.edu/courses/6-0002-introduction-to-computational-thinking-and-data-science-fall-2016/',
+  cs50sql: 'https://cs50.harvard.edu/sql/',
+  'mit-6006': 'https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/',
+  'mit-6042j': 'https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/',
+  'mit-1806': 'https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/',
+  'cisco-cyber': 'https://www.netacad.com/courses/introduction-to-cybersecurity',
+  'fgv-security': 'https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/seguranca-digital',
+  'fgv-privacy': 'https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/protecao-de-dados',
+  'kultivi-math-enem': 'https://kultivi.com/curso/matematica',
+  'kultivi-portuguese-enem': 'https://kultivi.com/curso/portugues',
+  'kultivi-writing-enem': 'https://kultivi.com/curso/redacao-para-enem',
+  'kultivi-physics-enem': 'https://kultivi.com/curso/fisica',
+  'kultivi-chemistry-enem': 'https://kultivi.com/curso/quimica',
+  'kultivi-biology-enem': 'https://kultivi.com/curso/biologia',
+  'kultivi-history-enem': 'https://kultivi.com/curso/historia-2',
+  'kultivi-geography-enem': 'https://kultivi.com/curso/geografia',
+  'kultivi-philosophy-enem': 'https://kultivi.com/curso/filosofia',
+  'kultivi-sociology-enem': 'https://kultivi.com/curso/sociologia',
+  'kultivi-english-enem': 'https://kultivi.com/curso/ingles-para-enem',
+  'kultivi-spanish-enem': 'https://kultivi.com/curso/espanhol-para-enem',
+  'inep-writing-2026': 'https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante',
+  'uerj-portuguese-practice': 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=1',
+  'uerj-writing-practice': 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=11',
+  'uerj-math-practice': 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=9',
+  'uerj-history-practice': 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=5',
+  'uerj-geography-practice': 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=6',
+  'uerj-spanish-practice': 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=2',
+  'uerj-physics-practice': 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aano=&anivel=dificil&aseq_area=&aseq_disciplina=8&aseq_etapa=&sb=Buscar',
+};
+export const LEGACY_VERIFIED_IDS: readonly string[] = Object.keys(LEGACY_VERIFIED);
+
+/** The collective verification of a baseline resource. Refuses any other id: nothing stamps a date on a
+ *  new resource. */
+export const legacyVerified = (id: string): ResourceVerification => {
+  if (!(id in LEGACY_VERIFIED)) throw new Error(`learning-resources: ${id} is not in the legacy baseline; give it its own verification`);
+  return { on: VERIFIED_ON, by: 'official-page', freeAccess: true };
+};
 
 const tech = (
   resource: Omit<LearningResource, 'subject' | 'format'> & {
@@ -107,7 +159,7 @@ const tech = (
   ...resource,
   subject: 'tecnologia',
   format: 'course',
-  ...(resource.url ? { verified: verified() } : {}),
+  ...(resource.url && !resource.verified ? { verified: legacyVerified(resource.id) } : {}),
 });
 
 export const catalogue: LearningResource[] = [
@@ -134,28 +186,28 @@ export const catalogue: LearningResource[] = [
 
   // Ensino Médio / vestibular. Provider pages were re-opened on 2026-10-11 and
   // only resources whose represented learning content is fully free are published.
-  { id: 'kultivi-math-enem', title: 'Matemática para ENEM', provider: 'Kultivi', subject: 'matematica', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/matematica', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-portuguese-enem', title: 'Português para ENEM', provider: 'Kultivi', subject: 'portugues', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/portugues', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-writing-enem', title: 'Redação para ENEM', provider: 'Kultivi', subject: 'redacao', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/redacao-para-enem', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-physics-enem', title: 'Física para ENEM', provider: 'Kultivi', subject: 'fisica', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/fisica', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-chemistry-enem', title: 'Química para ENEM', provider: 'Kultivi', subject: 'quimica', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/quimica', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-biology-enem', title: 'Biologia para ENEM', provider: 'Kultivi', subject: 'biologia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/biologia', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-history-enem', title: 'História para ENEM', provider: 'Kultivi', subject: 'historia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/historia-2', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-geography-enem', title: 'Geografia para ENEM', provider: 'Kultivi', subject: 'geografia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/geografia', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-philosophy-enem', title: 'Filosofia para ENEM', provider: 'Kultivi', subject: 'filosofia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/filosofia', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-sociology-enem', title: 'Sociologia para ENEM', provider: 'Kultivi', subject: 'sociologia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/sociologia', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-english-enem', title: 'Inglês para ENEM', provider: 'Kultivi', subject: 'ingles', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/ingles-para-enem', verified: verified(), registration: 'required', certificate: 'available' },
-  { id: 'kultivi-spanish-enem', title: 'Espanhol para ENEM', provider: 'Kultivi', subject: 'espanhol', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/espanhol-para-enem', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-math-enem', title: 'Matemática para ENEM', provider: 'Kultivi', subject: 'matematica', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/matematica', verified: legacyVerified('kultivi-math-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-portuguese-enem', title: 'Português para ENEM', provider: 'Kultivi', subject: 'portugues', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/portugues', verified: legacyVerified('kultivi-portuguese-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-writing-enem', title: 'Redação para ENEM', provider: 'Kultivi', subject: 'redacao', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/redacao-para-enem', verified: legacyVerified('kultivi-writing-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-physics-enem', title: 'Física para ENEM', provider: 'Kultivi', subject: 'fisica', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/fisica', verified: legacyVerified('kultivi-physics-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-chemistry-enem', title: 'Química para ENEM', provider: 'Kultivi', subject: 'quimica', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/quimica', verified: legacyVerified('kultivi-chemistry-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-biology-enem', title: 'Biologia para ENEM', provider: 'Kultivi', subject: 'biologia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/biologia', verified: legacyVerified('kultivi-biology-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-history-enem', title: 'História para ENEM', provider: 'Kultivi', subject: 'historia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/historia-2', verified: legacyVerified('kultivi-history-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-geography-enem', title: 'Geografia para ENEM', provider: 'Kultivi', subject: 'geografia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/geografia', verified: legacyVerified('kultivi-geography-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-philosophy-enem', title: 'Filosofia para ENEM', provider: 'Kultivi', subject: 'filosofia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/filosofia', verified: legacyVerified('kultivi-philosophy-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-sociology-enem', title: 'Sociologia para ENEM', provider: 'Kultivi', subject: 'sociologia', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/sociologia', verified: legacyVerified('kultivi-sociology-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-english-enem', title: 'Inglês para ENEM', provider: 'Kultivi', subject: 'ingles', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/ingles-para-enem', verified: legacyVerified('kultivi-english-enem'), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-spanish-enem', title: 'Espanhol para ENEM', provider: 'Kultivi', subject: 'espanhol', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/espanhol-para-enem', verified: legacyVerified('kultivi-spanish-enem'), registration: 'required', certificate: 'available' },
 
   // Official practice and guidance. These are first-party exam resources, not third-party prep.
-  { id: 'inep-writing-2026', title: 'A Redação do Enem 2026 — Cartilha do Participante', provider: 'INEP', subject: 'redacao', format: 'practice', paths: ['vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante', verified: verified(), registration: 'not-required', certificate: 'none' },
-  { id: 'uerj-portuguese-practice', title: 'Questões de Língua Portuguesa e Literatura', provider: 'Revista do Vestibular UERJ', subject: 'portugues', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=1', verified: verified(), registration: 'not-required', certificate: 'none' },
-  { id: 'uerj-writing-practice', title: 'Questões de Língua Portuguesa Instrumental com Redação', provider: 'Revista do Vestibular UERJ', subject: 'redacao', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=11', verified: verified(), registration: 'not-required', certificate: 'none' },
-  { id: 'uerj-math-practice', title: 'Questões de Matemática', provider: 'Revista do Vestibular UERJ', subject: 'matematica', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=9', verified: verified(), registration: 'not-required', certificate: 'none' },
-  { id: 'uerj-history-practice', title: 'Questões de História', provider: 'Revista do Vestibular UERJ', subject: 'historia', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=5', verified: verified(), registration: 'not-required', certificate: 'none' },
-  { id: 'uerj-geography-practice', title: 'Questões de Geografia', provider: 'Revista do Vestibular UERJ', subject: 'geografia', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=6', verified: verified(), registration: 'not-required', certificate: 'none' },
-  { id: 'uerj-spanish-practice', title: 'Questões de Espanhol', provider: 'Revista do Vestibular UERJ', subject: 'espanhol', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=2', verified: verified(), registration: 'not-required', certificate: 'none' },
-  { id: 'uerj-physics-practice', title: 'Questões de Física', provider: 'Revista do Vestibular UERJ', subject: 'fisica', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aano=&anivel=dificil&aseq_area=&aseq_disciplina=8&aseq_etapa=&sb=Buscar', verified: verified(), registration: 'not-required', certificate: 'none' },
+  { id: 'inep-writing-2026', title: 'A Redação do Enem 2026 — Cartilha do Participante', provider: 'INEP', subject: 'redacao', format: 'practice', paths: ['vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante', verified: legacyVerified('inep-writing-2026'), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-portuguese-practice', title: 'Questões de Língua Portuguesa e Literatura', provider: 'Revista do Vestibular UERJ', subject: 'portugues', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=1', verified: legacyVerified('uerj-portuguese-practice'), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-writing-practice', title: 'Questões de Língua Portuguesa Instrumental com Redação', provider: 'Revista do Vestibular UERJ', subject: 'redacao', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=11', verified: legacyVerified('uerj-writing-practice'), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-math-practice', title: 'Questões de Matemática', provider: 'Revista do Vestibular UERJ', subject: 'matematica', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=9', verified: legacyVerified('uerj-math-practice'), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-history-practice', title: 'Questões de História', provider: 'Revista do Vestibular UERJ', subject: 'historia', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=5', verified: legacyVerified('uerj-history-practice'), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-geography-practice', title: 'Questões de Geografia', provider: 'Revista do Vestibular UERJ', subject: 'geografia', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=6', verified: legacyVerified('uerj-geography-practice'), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-spanish-practice', title: 'Questões de Espanhol', provider: 'Revista do Vestibular UERJ', subject: 'espanhol', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=2', verified: legacyVerified('uerj-spanish-practice'), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-physics-practice', title: 'Questões de Física', provider: 'Revista do Vestibular UERJ', subject: 'fisica', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aano=&anivel=dificil&aseq_area=&aseq_disciplina=8&aseq_etapa=&sb=Buscar', verified: legacyVerified('uerj-physics-practice'), registration: 'not-required', certificate: 'none' },
 ];
 
 export const isPublishedResource = (resource: LearningResource): resource is PublishedLearningResource =>
@@ -170,6 +222,40 @@ export const areaOf = (resource: Pick<LearningResource, 'subject'>): AreaId | nu
 /** The hosts of published resources: the only places a page may link out to for a resource.
  *  scripts/verify-dist.mjs keeps a hand-written copy; tests/verify-dist-hosts.test.ts keeps them equal. */
 export const COURSE_HOSTS: ReadonlySet<string> = new Set(publishedResources.map((resource) => new URL(resource.url).hostname));
+
+const REQUIRED_CHECKS = ['free', 'scope', 'language', 'format', 'path'] as const;
+const isDate = (on: string): boolean => {
+  const date = new Date(`${on}T00:00:00Z`);
+  return /^\d{4}-\d{2}-\d{2}$/.test(on) && !Number.isNaN(date.getTime()) && date.toISOString().startsWith(on);
+};
+
+/** Everything wrong with a resource's verification (V0.4 Gate B, P4), one line each. A baseline resource
+ *  (same id, URL and date) needs nothing new. Any other needs individual evidence from its own official
+ *  host: what was checked (free access, scope, language, format, path; registration and certificate unless
+ *  stated 'unconfirmed'), a note, and a real date that is not in the future. Registration and certificate
+ *  are always stated, never left unknown by omission. */
+export const verificationProblems = (
+  r: Pick<LearningResource, 'id' | 'url'> & { verified?: ResourceVerification | undefined; registration?: LearningRegistrationId | undefined; certificate?: LearningCertificateId | undefined },
+  now: Date = new Date(),
+): string[] => {
+  if (!r.verified) return [];
+  if (r.url !== null && LEGACY_VERIFIED[r.id] === r.url && r.verified.on === VERIFIED_ON && !r.verified.evidence) return [];
+  const problems: string[] = [];
+  const ev = r.verified.evidence;
+  if (!ev) return [`${r.id}: no individual evidence`];
+  if (!isDate(r.verified.on)) problems.push(`${r.id}: ${r.verified.on} is not a date`);
+  else if (new Date(`${r.verified.on}T00:00:00Z`).getTime() > now.getTime()) problems.push(`${r.id}: verified in the future (${r.verified.on})`);
+  if (!ev.url.startsWith('https://')) problems.push(`${r.id}: evidence must be https`);
+  else if (r.url && new URL(ev.url).hostname !== new URL(r.url).hostname) problems.push(`${r.id}: evidence is not on the resource's own host`);
+  if (!ev.checked.includes('free')) problems.push(`${r.id}: free access not checked`);
+  for (const check of REQUIRED_CHECKS.slice(1)) if (!ev.checked.includes(check)) problems.push(`${r.id}: ${check} not checked`);
+  if (!ev.note.trim()) problems.push(`${r.id}: the evidence needs a note`);
+  if (r.registration === undefined) problems.push(`${r.id}: registration not stated (use 'unconfirmed')`);
+  else if (r.registration !== 'unconfirmed' && !ev.checked.includes('registration')) problems.push(`${r.id}: registration not checked`);
+  if (r.certificate === undefined) problems.push(`${r.id}: certificate not stated (use 'unconfirmed')`);
+  else if (r.certificate !== 'unconfirmed' && !ev.checked.includes('certificate')) problems.push(`${r.id}: certificate not checked`);
+  return problems;
+};
 
 /** Everything wrong with a resource's school years, one line each; empty when it holds or has none. */
 export const schoolYearProblems = (r: Pick<LearningResource, 'id' | 'paths'> & { schoolYears?: readonly unknown[] | undefined; verified?: { evidence?: { checked?: readonly string[] } | undefined } | undefined }): string[] => {
@@ -188,6 +274,8 @@ export const schoolYearProblems = (r: Pick<LearningResource, 'id' | 'paths'> & {
 for (const resource of catalogue) {
   const years = schoolYearProblems(resource);
   if (years.length) throw new Error(`learning-resources: ${years.join('; ')}`);
+  const verification = verificationProblems(resource);
+  if (verification.length) throw new Error(`learning-resources: ${verification.join('; ')}`);
   if (resource.subject !== null && !(resource.subject in SUBJECTS)) throw new Error(`learning-resources: ${resource.id} has an unknown subject`);
   if (!resource.paths.length || new Set(resource.paths).size !== resource.paths.length) throw new Error(`learning-resources: ${resource.id} needs distinct paths`);
   if (resource.paths.some((path) => !PATH_ORDER.includes(path))) throw new Error(`learning-resources: ${resource.id} has an unknown path`);

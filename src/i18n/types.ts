@@ -160,8 +160,9 @@ export interface Dict {
   resource: {
     formats: Record<LearningFormatId, string>;
     languages: Record<LearningLanguageId, string>;
-    registration: Record<LearningRegistrationId, string>;
-    certificates: Record<LearningCertificateId, string>;
+    /** Only confirmed values have a label: 'unconfirmed' is never shown as a fact (V0.4 Gate B, P4). */
+    registration: Record<Exclude<LearningRegistrationId, 'unconfirmed'>, string>;
+    certificates: Record<Exclude<LearningCertificateId, 'unconfirmed'>, string>;
     units: { hours: string; weeks: string };
     /** V0.4 Gate B, P3: the school years the source states ("2º ano", "6º ao 9º ano"). */
     schoolYears: (years: readonly number[]) => string;
