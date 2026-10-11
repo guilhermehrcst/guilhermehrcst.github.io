@@ -1,6 +1,7 @@
 // Pure selections over the catalogue. Pages compose lists at build time from these; nothing here
 // runs in the browser.
-import { areaOf } from './learning-resources.ts';
+import { areaOf, publishedResources } from './learning-resources.ts';
+import { OBJECTIVE_ORDER } from './taxonomy.ts';
 import type {
   LearningFormatId,
   LearningGoalId,
@@ -44,3 +45,11 @@ export const resourcesByIds = (
     return resource;
   });
 };
+
+/** The objectives a subject has published resources for, in the Home's order. Derived, never typed. */
+export const objectivesFor = (
+  subject: LearningSubjectId,
+  resources: readonly PublishedLearningResource[] = publishedResources,
+): LearningGoalId[] =>
+  OBJECTIVE_ORDER.filter((goal): goal is LearningGoalId =>
+    goal !== 'tecnologia' && resources.some((resource) => resource.subject === subject && resource.goals.includes(goal as LearningGoalId)));

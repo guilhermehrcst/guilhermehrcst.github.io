@@ -1,19 +1,51 @@
 ---
-// One page per school subject (spec §6.3). Technology has its own page, /tecnologia/.
+// One page per school subject (spec §6.3): what to study, where to practise, and the objectives the
+// subject serves. Technology has its own page, /tecnologia/. A subject without a published resource
+// is not published: the build stops and someone decides.
 import Base from '../../../layouts/Base.astro';
 import PageIntro from '../../../components/PageIntro.astro';
-import { ACADEMIC_SUBJECTS, AREAS, SUBJECTS, type SubjectId } from '../../../lib/taxonomy';
+import SubjectResources from '../../../components/SubjectResources.astro';
+import { objectivesFor } from '../../../lib/learning-library';
+import { publishedResources } from '../../../lib/learning-resources';
+import { routes } from '../../../lib/routes';
+import { ACADEMIC_SUBJECTS, AREAS, OBJECTIVES, SUBJECTS, type SubjectId } from '../../../lib/taxonomy';
 import { pt as t } from '../../../i18n/pt';
 
 export function getStaticPaths() {
-  return ACADEMIC_SUBJECTS.map((id) => ({ params: { subject: SUBJECTS[id].slug }, props: { id } }));
+  return ACADEMIC_SUBJECTS.map((id) => {
+    if (!publishedResources.some((r) => r.subject === id)) throw new Error(`materias: ${id} has no published resource`);
+    return { params: { subject: SUBJECTS[id].slug }, props: { id } };
+  });
 }
 
 interface Props { id: SubjectId }
 const { id } = Astro.props;
 const subject = SUBJECTS[id];
-const c = t.subjectPage(subject.label, AREAS[subject.area].label);
+// The eyebrow names the area; when the area has the subject's own name (Matemática), it says "Matéria".
+const area = AREAS[subject.area].label;
+const c = t.subjectPage(subject.label, area === subject.label ? t.subject.eyebrow : area);
+const objectives = objectivesFor(id);
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+
+  <div class="wrap">
+    <SubjectResources subject={id} anchors />
+
+    <section class="objectives" id="objetivos" aria-labelledby="objetivos-title">
+      <h2 id="objetivos-title">{t.subject.objectives}</h2>
+      <p>{t.subject.objectivesLead(subject.label)}</p>
+      <ul role="list">
+        {objectives.map((goal) => <li><a href={routes.objective(goal)}>{OBJECTIVES[goal].label}{' '}<span aria-hidden="true">→</span></a></li>)}
+      </ul>
+    </section>
+  </div>
 </Base>
+
+<style>
+  .objectives { margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--rule); }
+  .objectives h2 { font-size: var(--fs-h3); font-weight: 600; }
+  .objectives p { margin-top: var(--space-2); color: var(--muted); }
+  .objectives ul { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-top: var(--space-3); }
+  .objectives a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 500; }
+</style>

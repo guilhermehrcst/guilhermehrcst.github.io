@@ -46,3 +46,10 @@ test('resourcesByIds follows the requested order', () => {
 test('resourcesByIds fails closed on an unknown id', () => {
   assert.throws(() => resourcesByIds(items, ['c', 'missing']));
 });
+
+test('objectivesFor derives, in the Home order, the objectives a subject has resources for', async () => {
+  const { objectivesFor } = await import('../src/lib/learning-library.ts');
+  assert.deepEqual(objectivesFor('matematica'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
+  assert.deepEqual(objectivesFor('quimica'), ['enem', 'ensino-medio', 'vestibulares']);
+  assert.deepEqual(objectivesFor('redacao'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
+});

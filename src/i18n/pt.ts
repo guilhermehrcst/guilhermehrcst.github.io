@@ -134,6 +134,13 @@ export const pt: Dict = {
       ],
     },
   },
+  subject: {
+    eyebrow: 'Matéria',
+    content: 'Para estudar',
+    practice: 'Para praticar',
+    objectives: 'Por objetivo',
+    objectivesLead: (subject) => `Veja como ${subject} entra na preparação de cada objetivo.`,
+  },
   subjectPage: (subject, area) => ({
     title: `${subject} | Pexis Academy`,
     description: `Estude ${subject} com recursos gratuitos e verificados para o Ensino Médio, o ENEM e vestibulares, com links diretos para as fontes.`,

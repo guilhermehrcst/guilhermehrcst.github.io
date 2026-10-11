@@ -242,10 +242,32 @@ function checkAbout(path, html) {
   if (!footerDate || pageDate !== footerDate) fail(path, `verification date ${pageDate} must match the footer's ${footerDate}`);
 }
 
+const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+const resourceAttr = (item, name) => new RegExp(`\\s${name}="([^"]*)"`).exec(item[1])?.[1] ?? '';
+
+/** A subject page: content, then practice, then the objectives it serves (spec §6.3). An empty
+ *  subject is never published. */
+function checkSubject(path, html, resources) {
+  const subject = path.split('/')[2];
+  if (resources.length === 0) fail(path, 'a subject page shows at least one resource');
+  for (const item of resources) {
+    if (resourceAttr(item, 'data-subject') !== subject) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} is not ${subject}`);
+  }
+  const content = sectionOf(html, /<section\b[^>]*\sid="conteudo"/);
+  const practice = sectionOf(html, /<section\b[^>]*\sid="pratique"/);
+  const objectives = sectionOf(html, /<section\b[^>]*\sid="objetivos"/);
+  if (content && /data-format="practice"/.test(content)) fail(path, '#conteudo holds no practice');
+  if (practice && /data-format="(?!practice")/.test(practice)) fail(path, '#pratique holds practice only');
+  if (!content && !practice) fail(path, 'neither #conteudo nor #pratique');
+  if (!objectives) fail(path, 'section#objetivos missing');
+  else for (const href of hrefsIn(objectives)) if (!OBJECTIVE_PATHS.includes(href)) fail(path, `#objetivos links ${href}`);
+}
+
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
+  if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
 }
 
