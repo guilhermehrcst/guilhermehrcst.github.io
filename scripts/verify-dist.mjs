@@ -653,6 +653,13 @@ for (const path of PATHS.filter((p) => !PREPARING.includes(p))) {
   const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
   if (/\sdata-preparing[\s>=]/.test(html)) fail(path, 'an active path does not say it is in preparation');
   if (/<meta name="robots" content="[^"]*noindex/.test(html)) fail(path, 'an active path is indexable');
+  const description = /<meta name="description" content="([^"]*)"/.exec(html)?.[1] ?? '';
+  if (/prepara[çc][ãa]o|ainda n[ãa]o/i.test(description)) fail(path, 'an active path\'s description does not speak of preparation');
+}
+/* …and a path in preparation says so in its description too. */
+for (const path of PREPARING) {
+  const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+  if (!/<meta name="description" content="[^"]*prepara[çc][ãa]o/i.test(html)) fail(path, 'a path in preparation says so in its description');
 }
 
 /* Paths in preparation: real pages, linked from the Home, the header and the footer, that say what

@@ -17,14 +17,16 @@ import { pt as t } from '../../i18n/pt';
 const c = t.pages['pre-militar'];
 const m = t.preMilitar;
 const preparing = isPreparing('pre-militar');
+// The copy follows the state (description and lead included): an active page never speaks of preparation.
+const s = m.byState[preparing ? 'preparing' : 'active'];
 ---
-<Base title={c.title} description={c.description} noindex={preparing}>
-  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+<Base title={c.title} description={s.description} noindex={preparing}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={s.lead} />
   {preparing && <PreparingNote />}
   <FeaturedResources path="pre-militar" />
   <PathResources path="pre-militar" id="materiais" title={t.pathResources.general.title} why={t.pathResources.general.why} />
 
-  <TrackSection id="processos" title={m.processesTitle} why={m.processesWhy}>
+  <TrackSection id="processos" title={s.processesTitle} why={m.processesWhy}>
     <div class="forces">
       {m.branches.map((branch) => (
         <section class="force" aria-label={branch.force}>
@@ -43,9 +45,9 @@ const preparing = isPreparing('pre-militar');
     </div>
   </TrackSection>
 
-  <TrackSection id="como" title={m.howTitle}>
+  <TrackSection id="como" title={s.howTitle}>
     <ol class="how" role="list">
-      {m.how.map((item, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span>{item}</span></li>)}
+      {s.how.map((item, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span>{item}</span></li>)}
     </ol>
     <p class="scope">{m.scope}</p>
   </TrackSection>

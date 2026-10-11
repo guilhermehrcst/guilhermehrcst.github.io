@@ -16,14 +16,16 @@ import { pt as t } from '../../i18n/pt';
 const c = t.pages['ensino-fundamental'];
 const f = t.fundamental;
 const preparing = isPreparing('ensino-fundamental');
+// The copy follows the state (description and lead included): an active page never speaks of preparation.
+const s = f.byState[preparing ? 'preparing' : 'active'];
 ---
-<Base title={c.title} description={c.description} noindex={preparing}>
-  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+<Base title={c.title} description={s.description} noindex={preparing}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={s.lead} />
   {preparing && <PreparingNote />}
   <FeaturedResources path="ensino-fundamental" />
   <PathResources path="ensino-fundamental" id="materiais" title={t.pathResources.general.title} why={t.pathResources.general.why} />
 
-  <TrackSection id="etapas" title={f.stagesTitle} why={f.stagesWhy}>
+  <TrackSection id="etapas" title={s.stagesTitle} why={s.stagesWhy}>
     <ol class="stages" role="list">
       {f.stages.map((stage, i) => (
         <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span class="name">{stage.title}</span><span class="body">{stage.body}</span></li>
@@ -31,7 +33,7 @@ const preparing = isPreparing('ensino-fundamental');
     </ol>
   </TrackSection>
 
-  {preparing && (<TrackSection id="disciplinas" title={f.subjectsTitle} why={f.subjectsWhy}>
+  {preparing && (<TrackSection id="disciplinas" title={f.byState.preparing.subjectsTitle} why={f.byState.preparing.subjectsWhy}>
     <ul class="subjects" role="list">
       {f.subjects.map((name) => <li><span>{name}</span><span class="state">{t.preparing.label}</span></li>)}
     </ul>

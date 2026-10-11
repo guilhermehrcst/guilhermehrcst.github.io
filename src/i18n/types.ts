@@ -22,6 +22,10 @@ export interface PageCopy extends PageMeta {
   lead: string;
 }
 
+/** The paths whose page copy follows PATH_STATUS (V0.4): their description and lead live in byState. */
+export type GatedPageKey = 'ensino-fundamental' | 'pre-militar';
+type StatePageCopy = { description: string; lead: string };
+
 export type PageKey =
   | 'home' | 'enem' | 'uerj' | 'ensino-medio' | 'vestibulares' | 'tecnologia'
   | 'ensino-fundamental' | 'pre-militar' | 'ensino-superior'
@@ -45,26 +49,26 @@ export interface Dict {
     explore: string;
     marks: string;
   };
-  pages: Record<PageKey, PageCopy>;
+  pages: Record<Exclude<PageKey, GatedPageKey>, PageCopy> & Record<GatedPageKey, Omit<PageCopy, 'description' | 'lead'>>;
   /** Copy of a path in preparation and of the new paths (V0.3). */
   preparing: { label: string; why: string; meanwhile: string };
   fundamental: {
-    stagesTitle: string;
-    stagesWhy: string;
+    /** The copy that follows PATH_STATUS: the page picks it with isPreparing. Subjects show only in preparation. */
+    byState: {
+      preparing: StatePageCopy & { stagesTitle: string; stagesWhy: string; subjectsTitle: string; subjectsWhy: string };
+      active: StatePageCopy & { stagesTitle: string; stagesWhy: string };
+    };
     stages: { title: string; body: string }[];
-    subjectsTitle: string;
-    subjectsWhy: string;
     subjects: string[];
     rule: string;
     medio: string;
   };
   preMilitar: {
-    processesTitle: string;
+    /** The copy that follows PATH_STATUS: the page picks it with isPreparing. */
+    byState: Record<'preparing' | 'active', StatePageCopy & { processesTitle: string; howTitle: string; how: string[] }>;
     processesWhy: string;
     branches: { force: string; schools: { acronym: string; name: string }[] }[];
     status: string;
-    howTitle: string;
-    how: string[];
     scope: string;
     medio: string;
   };
