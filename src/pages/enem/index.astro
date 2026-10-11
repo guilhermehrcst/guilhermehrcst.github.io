@@ -1,0 +1,10 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import { pt as t } from '../../i18n/pt';
+
+const c = t.pages['enem'];
+---
+<Base title={c.title} description={c.description}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+</Base>

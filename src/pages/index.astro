@@ -1,4 +1,10 @@
 ---
-import Home from '../components/Home.astro';
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { pt as t } from '../i18n/pt';
+
+const c = t.pages['home'];
 ---
-<Home lang="en" />
+<Base title={c.title} description={c.description}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+</Base>

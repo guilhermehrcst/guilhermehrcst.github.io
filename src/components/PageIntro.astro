@@ -1,0 +1,19 @@
+---
+// The top of every page: an optional eyebrow, the page's one H1, and a lead. A slot follows for an
+// action (the Home's call to action).
+interface Props { eyebrow?: string | undefined; heading: string; lead: string }
+const { eyebrow, heading, lead } = Astro.props;
+---
+<header class="intro wrap">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h1>{heading}</h1>
+  <p class="lead">{lead}</p>
+  <slot />
+</header>
+
+<style>
+  .intro { padding-block: var(--space-8) var(--space-7); }
+  .eyebrow { margin-bottom: var(--space-4); }
+  h1 { font-size: var(--fs-h1); font-weight: 540; letter-spacing: -0.025em; line-height: 1.05; max-width: 18ch; }
+  .lead { margin-top: var(--space-5); max-width: 40ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
+</style>

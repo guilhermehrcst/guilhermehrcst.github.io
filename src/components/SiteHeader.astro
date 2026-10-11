@@ -1,0 +1,70 @@
+---
+// Brand and the five entry points (spec §6.5). Plain links: no menu button, no JavaScript. On a phone
+// the items wrap under the brand; the page never scrolls sideways.
+import { HEADER_NAV, routes } from '../lib/routes';
+import { pt as t } from '../i18n/pt';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => href === path || (href === routes.subjectIndex && path.startsWith(routes.subjectIndex));
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href={routes.home} aria-label={t.nav.home}>
+      <span class="mark" aria-hidden="true"></span>
+      <span>Pexis Academy</span>
+    </a>
+    <nav aria-label={t.nav.label}>
+      <ul role="list">
+        {HEADER_NAV.map((item) => (
+          <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header { border-bottom: 1px solid var(--rule); }
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: var(--space-6);
+    row-gap: var(--space-1);
+    padding-block: var(--space-3);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    font-weight: 620;
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  /* The one mark: a small square of the functional blue. */
+  .mark { width: 0.75rem; height: 0.75rem; background: var(--action); border-radius: 2px; }
+
+  ul { display: flex; flex-wrap: wrap; gap: 0 var(--space-1); margin-inline: calc(-1 * var(--space-2)); }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  nav a:hover { color: var(--ink); }
+  nav a[aria-current='page'] {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--action);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.45em;
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+// GitHub Pages serves dist/404.html with a real 404 status, for any unknown path, including the
+// former résumé (spec §8.4).
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/PageIntro.astro';
+import { routes } from '../lib/routes';
+import { pt as t } from '../i18n/pt';
+
+const c = t.pages.notFound;
+const ways = [
+  { href: routes.home, label: t.notFound.home },
+  { href: routes.subjectIndex, label: t.notFound.subjects },
+  { href: routes.search, label: t.notFound.search },
+];
+---
+<Base title={c.title} description={c.description} noindex>
+  <PageIntro heading={c.heading} lead={c.lead} />
+  <nav class="wrap ways" aria-label={c.heading}>
+    <ul role="list">
+      {ways.map((w) => <li><a href={w.href}>{w.label} <span aria-hidden="true">→</span></a></li>)}
+    </ul>
+  </nav>
+</Base>
+
+<style>
+  .ways ul { display: grid; gap: var(--space-2); max-width: 32rem; }
+  .ways a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 52px;
+    padding-inline: var(--space-4);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    text-decoration: none;
+    font-weight: 500;
+  }
+</style>

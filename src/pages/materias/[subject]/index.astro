@@ -1,0 +1,19 @@
+---
+// One page per school subject (spec §6.3). Technology has its own page, /tecnologia/.
+import Base from '../../../layouts/Base.astro';
+import PageIntro from '../../../components/PageIntro.astro';
+import { ACADEMIC_SUBJECTS, AREAS, SUBJECTS, type SubjectId } from '../../../lib/taxonomy';
+import { pt as t } from '../../../i18n/pt';
+
+export function getStaticPaths() {
+  return ACADEMIC_SUBJECTS.map((id) => ({ params: { subject: SUBJECTS[id].slug }, props: { id } }));
+}
+
+interface Props { id: SubjectId }
+const { id } = Astro.props;
+const subject = SUBJECTS[id];
+const c = t.subjectPage(subject.label, AREAS[subject.area].label);
+---
+<Base title={c.title} description={c.description}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+</Base>

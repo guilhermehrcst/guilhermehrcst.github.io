@@ -1,241 +1,225 @@
-// Post-build invariants for dist/. Runs after `astro build`; any violation
-// fails the build (and therefore the deploy). No dependencies.
+// Post-build invariants for dist/. Runs after `astro build`; any violation fails the build (and
+// therefore the deploy). No dependencies.
+//
+// The lists below are written out by hand on purpose. They repeat what src/lib/routes.ts derives, so an
+// accidental change there is caught here by an independent path (spec R10), not confirmed by it.
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 
 const DIST = new URL('../dist/', import.meta.url).pathname;
 const SITE = 'https://guilhermehrcst.github.io';
 
-/** Every page, its language, and whether it is a placeholder (noindex). */
-const PAGES = [
-  { path: '/', lang: 'en', noindex: false, pair: '/pt/' },
-  { path: '/pt/', lang: 'pt-BR', noindex: false, pair: '/' },
-  { path: '/resume/', lang: 'en', noindex: false, pair: '/pt/curriculo/' },
-  { path: '/pt/curriculo/', lang: 'pt-BR', noindex: false, pair: '/resume/' },
-  { path: '/courses/', lang: 'en', noindex: false, pair: '/pt/cursos/' },
-  { path: '/pt/cursos/', lang: 'pt-BR', noindex: false, pair: '/courses/' },
-  { path: '/courses/enem/', lang: 'en', noindex: false, pair: '/pt/cursos/enem/' },
-  { path: '/pt/cursos/enem/', lang: 'pt-BR', noindex: false, pair: '/courses/enem/' },
-  { path: '/courses/uerj/', lang: 'en', noindex: false, pair: '/pt/cursos/uerj/' },
-  { path: '/pt/cursos/uerj/', lang: 'pt-BR', noindex: false, pair: '/courses/uerj/' },
+/** The indexable pages of V0.1 (spec §5.1). */
+const CANONICAL = [
+  '/', '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/', '/materias/',
+  '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
+  '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
+  '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
+  '/materias/ingles/', '/materias/espanhol/',
+  '/buscar/', '/sobre/',
 ];
 
-/** The only external destinations this site may link to. Personal data is published on purpose and only here. */
-const EXTERNAL_ALLOW = new Set([
-  'mailto:guilhermehrcst@gmail.com',
-  'https://www.linkedin.com/in/guilherme-henrique-8927093b6',
-  'https://www.instagram.com/guilhermehrcst/',
-  'https://github.com/guilhermehrcst',
-  'https://github.com/guilhermehrcst/lume',
-  'https://pexiscale.com',
-]);
+/** Routes of the former personal site that keep a destination (spec §8.4). */
+const REDIRECTS = {
+  '/pt/': '/',
+  '/courses/': '/materias/',
+  '/pt/cursos/': '/materias/',
+  '/courses/enem/': '/enem/',
+  '/pt/cursos/enem/': '/enem/',
+  '/courses/uerj/': '/uerj/',
+  '/pt/cursos/uerj/': '/uerj/',
+};
 
-/** Course pages may also link out, but only to the institutions' own sites (exact hosts, HTTPS), and
- *  every such link must open in a new tab without handing the page a reference back (noopener noreferrer). */
-const COURSE_PAGES = new Set([
-  '/courses/', '/pt/cursos/',
-  '/courses/enem/', '/pt/cursos/enem/',
-  '/courses/uerj/', '/pt/cursos/uerj/',
-]);
-const GENERAL_COURSE_PAGES = new Set(['/courses/', '/pt/cursos/']);
-const STUDY_TRACK_PAGES = new Set(['/courses/enem/', '/pt/cursos/enem/', '/courses/uerj/', '/pt/cursos/uerj/']);
-const LEARNING_AREAS = ['technology', 'math', 'portuguese', 'writing', 'nature', 'humanities', 'english', 'spanish'];
-const COURSE_HOSTS = new Set([
+/** Routes of the former personal site that are gone: they fall through to the 404 (spec §8.4, Q2). */
+const GONE = ['/resume/', '/pt/curriculo/'];
+
+/** The header navigation, in order (spec §6.5). */
+const HEADER_NAV = [
+  ['/materias/', 'Explorar'],
+  ['/enem/', 'ENEM'],
+  ['/uerj/', 'UERJ'],
+  ['/tecnologia/', 'Tecnologia'],
+  ['/buscar/', 'Buscar'],
+];
+
+/** Hosts a page may link out to: the providers of published resources and the official exam pages.
+ *  Mirrors COURSE_HOSTS in src/lib/learning-resources.ts and OFFICIAL_HOSTS in src/lib/official-sources.ts
+ *  (a unit test keeps the copies equal). */
+const COURSE_HOSTS = [
   'cs50.harvard.edu',
   'ocw.mit.edu',
   'www.ev.org.br',
   'educacao-executiva.fgv.br',
   'www.netacad.com',
-  'learn.microsoft.com',
-  'skillsbuild.org',
   'kultivi.com',
   'www.gov.br',
   'www.revista.vestibular.uerj.br',
-]);
+];
+const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
+const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
 
-/** The Home: one narrative shell, with exactly one terminal, hidden from assistive tech, and ten
- *  chapters, each exactly once and in this order (src/lib/narrative-state.ts: NARRATIVE_ORDER). */
-const HOME_PAGES = new Set(['/', '/pt/']);
-const NARRATIVE_ORDER = ['whoami', 'pexiscale', 'lume', 'pexis-machine', 'capabilities', 'ai-workflow', 'education', 'influences', 'principles', 'contact'];
-const RESUME_PAGES = new Set(['/resume/', '/pt/curriculo/']);
-/** The résumé's terminal session, in order (src/lib/resume-session.ts: RESUME_STEPS). */
-const RESUME_STEPS = ['whoami', 'projects', 'capabilities', 'ai-workflow', 'education', 'influences', 'contact', 'exit'];
-const decode = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
-const textOf = (html) => decode(html.replace(/<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ');
+/** Pages that may run JavaScript. Every other page is complete, static HTML (spec §7). */
+const SCRIPT_PAGES = new Set([]);
+
+/** The former personal site must leave no trace (spec §3, §9.2). The site's own origin is allowed only
+ *  inside canonical and og:url, which are stripped before this check runs. */
+const DENY = [/Guilherme/, /guilhermehrcst/, /linkedin\.com\/in\//, /instagram\.com\//, /Pexiscale/, /pexiscale\.com/, /\bLume\b/, /Pexis Machine/];
 
 const SECRET_PATTERNS = [/AKIA[0-9A-Z]{16}/, /sk_(live|test)_[0-9a-zA-Z]{10,}/, /-----BEGIN [A-Z ]*PRIVATE KEY-----/, /ghp_[0-9A-Za-z]{30,}/, /eyJhbGciOi/];
-
-/** The terminal's markup: from its root to the end of its chapter data (it holds no nested <template>). */
-function terminalHtml(html) {
-  const start = html.search(/<[a-z]+\b[^>]*\sdata-narrative-terminal[\s>=]/);
-  const end = html.indexOf('</template>', start);
-  return start < 0 || end < 0 ? '' : html.slice(start, end + '</template>'.length);
-}
 
 const errors = [];
 const fail = (page, msg) => errors.push(`${page}: ${msg}`);
 const fileFor = (p) => join(DIST, p.endsWith('/') ? p + 'index.html' : p);
 const attrs = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
+const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
+const meta = (html, attr, name) => new RegExp(`<meta ${attr}="${name}" content="([^"]*)"`).exec(html)?.[1];
 
-/* Generic checks: they hold for any product built on this site. ------------------------------- */
+/* Generic checks: they hold for any page this site builds. -------------------------------------- */
 
-function checkHead(pg, html) {
-  if (!html.includes(`<html lang="${pg.lang}"`)) fail(pg.path, `expected <html lang="${pg.lang}">`);
-  if (!/<title>[^<]{5,}<\/title>/.test(html)) fail(pg.path, 'missing <title>');
-  if (!/<meta name="description" content="[^"]{20,}"/.test(html)) fail(pg.path, 'missing description');
-  if (!html.includes(`<link rel="canonical" href="${SITE}${pg.path}"`)) fail(pg.path, 'canonical mismatch');
-
-  const en = pg.lang === 'en' ? pg.path : pg.pair;
-  const pt = pg.lang === 'en' ? pg.pair : pg.path;
-  for (const [hl, href] of [['en', en], ['pt-BR', pt], ['x-default', en]]) {
-    if (!html.includes(`<link rel="alternate" hreflang="${hl}" href="${SITE}${href}"`)) fail(pg.path, `hreflang ${hl} → ${href} missing`);
-  }
-
-  const robots = /<meta name="robots" content="noindex"/.test(html);
-  if (robots !== pg.noindex) fail(pg.path, pg.noindex ? 'placeholder must be noindex' : 'must be indexable');
-}
-
-function checkLandmarks(pg, html) {
-  if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(pg.path, 'skip link or main landmark missing');
-  if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(pg.path, 'expected exactly one <h1>');
+function checkLandmarks(path, html) {
+  if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(path, 'skip link or main landmark missing');
+  if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(path, 'expected exactly one <h1>');
 }
 
 /** Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare
  *  `alt`) and reserves its box (width and height), so nothing shifts when it loads. */
-function checkImages(pg, html) {
+function checkImages(path, html) {
   for (const tag of html.match(/<img\b[^>]*>/g) ?? []) {
-    if (!/\salt(?=[\s=>])/.test(tag)) fail(pg.path, `<img> without alt: ${tag.slice(0, 80)}`);
-    if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) fail(pg.path, `<img> without width and height: ${tag.slice(0, 80)}`);
+    if (!/\salt(?=[\s=>])/.test(tag)) fail(path, `<img> without alt: ${tag.slice(0, 80)}`);
+    if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) fail(path, `<img> without width and height: ${tag.slice(0, 80)}`);
   }
 }
 
 /** Resources must be first-party: no third-party requests. */
-function checkThirdParty(pg, html) {
+function checkThirdParty(path, html) {
   for (const src of attrs(html, /<(?:script|img|source|video|iframe)[^>]*\ssrc="([^"]+)"/g)) {
-    if (!src.startsWith('/')) fail(pg.path, `external resource ${src}`);
+    if (!src.startsWith('/')) fail(path, `external resource ${src}`);
   }
   for (const m of html.matchAll(/<link\b([^>]*)>/g)) {
     const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
     const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
-    if (/stylesheet|preload|icon|modulepreload/.test(rel) && !href.startsWith('/')) fail(pg.path, `external ${rel} ${href}`);
+    if (/stylesheet|preload|icon|modulepreload/.test(rel) && !href.startsWith('/')) fail(path, `external ${rel} ${href}`);
   }
 }
 
-/** Outbound links opened in a new tab: HTTPS, an allowed host, and no reference back to this page. */
-function checkNewTabLinks(pg, html, hosts) {
-  const checked = new Set();
+/** Internal links resolve and anchors exist. Every external link goes to an allowed host over HTTPS, in
+ *  a new tab, without handing the page a reference back (noopener noreferrer). */
+function checkLinks(path, html) {
   for (const m of html.matchAll(/<a\b([^>]*)>/g)) {
-    if (!/target="_blank"/.test(m[1])) continue;
-    const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
-    let url;
-    try { url = new URL(href.replace(/&amp;/g, '&')); } catch { fail(pg.path, `bad course url ${href}`); continue; }
-    if (url.protocol !== 'https:') fail(pg.path, `course link not https: ${href}`);
-    if (!hosts.has(url.hostname)) fail(pg.path, `course link to a non-official host: ${href}`);
-    const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
-    if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) fail(pg.path, `course link without rel="noopener noreferrer": ${href}`);
-    checked.add(href);
-  }
-  return checked;
-}
-
-/** Internal links resolve; anchors exist; external links are allowed (or were checked above). */
-function checkLinks(pg, html, isAllowedExternal) {
-  for (const raw of attrs(html, /<a\b[^>]*\shref="([^"]+)"/g)) {
+    const raw = /\shref="([^"]+)"/.exec(m[1])?.[1];
+    if (raw === undefined) continue;
     const href = raw.replace(/&amp;/g, '&');
     if (href.startsWith('#')) {
-      if (!html.includes(`id="${href.slice(1)}"`)) fail(pg.path, `dangling anchor ${href}`);
+      if (!html.includes(`id="${href.slice(1)}"`)) fail(path, `dangling anchor ${href}`);
       continue;
     }
     if (href.startsWith('/')) {
-      const target = href.split('#')[0];
-      if (!existsSync(fileFor(target))) fail(pg.path, `broken internal link ${href}`);
+      const [target, hash] = href.split('#');
+      if (!existsSync(fileFor(target))) fail(path, `broken internal link ${href}`);
+      else if (hash && !readFileSync(fileFor(target), 'utf8').includes(`id="${hash}"`)) fail(path, `dangling anchor ${href}`);
       continue;
     }
-    if (!isAllowedExternal(href, raw)) fail(pg.path, `external link not on allowlist: ${href}`);
+    let url;
+    try { url = new URL(href); } catch { fail(path, `bad link ${href}`); continue; }
+    if (url.protocol !== 'https:') fail(path, `external link not https: ${href}`);
+    if (!EXTERNAL_HOSTS.has(url.hostname)) fail(path, `external link to a host that is not allowed: ${href}`);
+    if (!/target="_blank"/.test(m[1])) fail(path, `external link must open in a new tab: ${href}`);
+    const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
+    if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) fail(path, `external link without rel="noopener noreferrer": ${href}`);
   }
 }
 
-/* Product rules: what this particular site promises. ------------------------------------------ */
-
-function checkProduct(pg, html) {
-  // The narrative terminal belongs to the Home only, and repeats what the page says: aria-hidden.
-  const shells = html.match(/<[a-z]+\b[^>]*\sdata-home-narrative[\s>=][^>]*>/g) ?? [];
-  const terminals = html.match(/<[a-z]+\b[^>]*\sdata-narrative-terminal[\s>=][^>]*>/g) ?? [];
-  if (HOME_PAGES.has(pg.path)) {
-    if (shells.length !== 1) fail(pg.path, `expected one data-home-narrative, found ${shells.length}`);
-    if (terminals.length !== 1) fail(pg.path, `expected one data-narrative-terminal, found ${terminals.length}`);
-    for (const t of terminals) if (!/\saria-hidden="true"/.test(t)) fail(pg.path, 'narrative terminal must be aria-hidden="true"');
-    if (/<(?:input|textarea|select|form|button)\b|contenteditable/.test(terminalHtml(html))) fail(pg.path, 'narrative terminal must not accept input');
-
-    // The ten chapters, once each, in reading order.
-    const ids = attrs(html, /\sdata-narrative-section="([^"]+)"/g);
-    if (ids.join() !== NARRATIVE_ORDER.join()) fail(pg.path, `narrative sections ${ids.join()} != ${NARRATIVE_ORDER.join()}`);
-    if (!/<h2 id="pm-title"[^>]*>Pexis Machine</.test(html)) fail(pg.path, 'Pexis Machine heading missing');
-
-    // A narrator, not a second source: every line the terminal can print is already on the page,
-    // outside the terminal (a joined flow, A → B → C, is checked step by step).
-    const lines = attrs(terminalHtml(html), /<p data-narrative-line[^>]*>([^<]*)<\/p>/g).map(decode);
-    if (lines.length === 0) fail(pg.path, 'narrative terminal has no chapter lines');
-    const page = textOf(html.replace(terminalHtml(html), ' '));
-    for (const line of lines) {
-      for (const part of line.split(' → ')) if (!page.includes(part)) fail(pg.path, `terminal line not on the page: ${part}`);
-    }
-  } else if (shells.length || terminals.length) {
-    fail(pg.path, 'narrative terminal outside the Home');
-  }
-  if (/class="[^"]*\binfl-n\b/.test(html)) fail(pg.path, 'influence cards must not be numbered (.infl-n)');
-  if (RESUME_PAGES.has(pg.path) && !/\sdata-print[\s>=]/.test(html)) fail(pg.path, 'résumé print action (data-print) missing');
-  if (RESUME_PAGES.has(pg.path)) {
-    // One terminal session: the steps once each and in order, the hero (the h1) and the closing
-    // footer inside it, no images, and nothing that accepts input.
-    const steps = attrs(html, /\sdata-step="([^"]+)"/g);
-    if (steps.join() !== RESUME_STEPS.join()) fail(pg.path, `résumé steps ${steps.join()} != ${RESUME_STEPS.join()}`);
-    const term = /<main id="main" class="term"[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
-    if (!term) fail(pg.path, 'résumé terminal (main.term) missing');
-    if (!/<h1[\s>]/.test(term)) fail(pg.path, 'résumé title must be inside the terminal');
-    if (!/<footer\b[^>]*data-step="exit"/.test(term)) fail(pg.path, 'résumé must close with the exit footer inside the terminal');
-    if (/<img\b/.test(html)) fail(pg.path, 'résumé terminal must have no images');
-    if (/<(?:input|textarea|select|form)\b|contenteditable/.test(html)) fail(pg.path, 'résumé terminal must not accept input');
-    if (/Paulex/.test(term)) fail(pg.path, 'projects --selected is Pexiscale, Lume and Pexis Machine only');
-  }
-
-  // The general library must expose the eight primary areas exactly once, in semantic SSR markup.
-  if (GENERAL_COURSE_PAGES.has(pg.path)) {
-    for (const area of LEARNING_AREAS) {
-      const count = (html.match(new RegExp(`id="area-${area}"`, 'g')) ?? []).length;
-      if (count !== 1) fail(pg.path, `expected one primary area ${area}, found ${count}`);
-    }
-  }
-
-  // A study track is not an empty editorial shell: at least one shared verified resource must render.
-  if (STUDY_TRACK_PAGES.has(pg.path) && !/\sdata-learning-resource[\s>=]/.test(html)) {
-    fail(pg.path, 'study track has no learning resources');
-  }
-
+function checkScripts(path, html) {
+  if (!SCRIPT_PAGES.has(path) && /<script\b/.test(html)) fail(path, 'content pages carry no JavaScript');
 }
 
-for (const pg of PAGES) {
-  const file = fileFor(pg.path);
-  if (!existsSync(file)) { fail(pg.path, 'missing'); continue; }
+/* Canonical pages. --------------------------------------------------------------------------------- */
+
+function checkHead(path, html) {
+  if (!html.includes('<html lang="pt-BR"')) fail(path, 'expected <html lang="pt-BR">');
+  const title = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? '';
+  if (title.length < 5) fail(path, 'missing <title>');
+  if (path === '/' ? !title.startsWith('Pexis Academy') : !title.endsWith('| Pexis Academy')) fail(path, `title pattern: ${title}`);
+  const description = meta(html, 'name', 'description') ?? '';
+  if (description.length < 70 || description.length > 160) fail(path, `description must be 70-160 characters (${description.length})`);
+  if (!html.includes(`<link rel="canonical" href="${SITE}${path}"`)) fail(path, 'canonical mismatch');
+  if (meta(html, 'property', 'og:site_name') !== 'Pexis Academy') fail(path, 'og:site_name must be Pexis Academy');
+  if (meta(html, 'property', 'og:locale') !== 'pt_BR') fail(path, 'og:locale must be pt_BR');
+  if (/hreflang=/.test(html)) fail(path, 'V0.1 is Portuguese only: no hreflang');
+  if (/<meta name="robots" content="[^"]*noindex/.test(html)) fail(path, 'must be indexable');
+}
+
+function checkShell(path, html) {
+  if (!/<header\b/.test(html) || !/<footer\b/.test(html)) fail(path, 'header or footer landmark missing');
+  const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
+  if (!nav) { fail(path, 'main navigation (aria-label="Principal") missing'); return; }
+  const items = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => [m[1], m[2].replace(/<[^>]+>/g, '').trim()]);
+  if (JSON.stringify(items) !== JSON.stringify(HEADER_NAV)) fail(path, `header navigation ${JSON.stringify(items)}`);
+  for (const m of nav.matchAll(/<a\b([^>]*)>/g)) {
+    const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
+    const current = /aria-current="page"/.test(m[1]);
+    const expected = href === path || (href === '/materias/' && path.startsWith('/materias/'));
+    if (current !== expected) fail(path, `aria-current on ${href} should be ${expected}`);
+  }
+}
+
+/* Product rules: what each page promises. --------------------------------------------------------- */
+
+function checkProduct(path, html) {
+  void path; void html;
+}
+
+for (const path of CANONICAL) {
+  const file = fileFor(path);
+  if (!existsSync(file)) { fail(path, 'missing'); continue; }
   const html = readFileSync(file, 'utf8');
-
-  checkHead(pg, html);
-  checkLandmarks(pg, html);
-  checkProduct(pg, html);
-  checkImages(pg, html);
-  checkThirdParty(pg, html);
-
-  let courseLinks = new Set();
-  if (COURSE_PAGES.has(pg.path)) {
-    courseLinks = checkNewTabLinks(pg, html, COURSE_HOSTS);
-    if (courseLinks.size === 0) fail(pg.path, 'course page has no course links');
-  }
-  checkLinks(pg, html, (href, raw) => EXTERNAL_ALLOW.has(href) || courseLinks.has(raw));
+  checkHead(path, html);
+  checkShell(path, html);
+  checkLandmarks(path, html);
+  checkProduct(path, html);
+  checkImages(path, html);
+  checkThirdParty(path, html);
+  checkLinks(path, html);
+  checkScripts(path, html);
 }
 
-// Assets referenced from HTML and CSS must exist.
-const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
+/* Redirects, gone routes and the 404. ------------------------------------------------------------- */
+
+for (const [from, to] of Object.entries(REDIRECTS)) {
+  const file = fileFor(from);
+  if (!existsSync(file)) { fail(from, 'redirect page missing'); continue; }
+  const html = readFileSync(file, 'utf8');
+  if (!/<meta name="robots" content="[^"]*noindex/.test(html)) fail(from, 'redirect must be noindex');
+  if (!new RegExp(`<meta http-equiv="refresh" content="0;\\s*url=${to.replace(/\//g, '\\/')}"`).test(html)) fail(from, `redirect must refresh to ${to}`);
+  if (!CANONICAL.includes(to) || !existsSync(fileFor(to))) fail(from, `redirect target ${to} is not a canonical page`);
+}
+for (const path of GONE) {
+  if (existsSync(join(DIST, path))) fail(path, 'must be gone (404)');
+}
+{
+  const file = join(DIST, '404.html');
+  if (!existsSync(file)) fail('/404.html', 'missing');
+  else {
+    const html = readFileSync(file, 'utf8');
+    if (!/<meta name="robots" content="[^"]*noindex/.test(html)) fail('/404.html', 'must be noindex');
+    if (!html.includes('<html lang="pt-BR"')) fail('/404.html', 'expected <html lang="pt-BR">');
+    checkLandmarks('/404.html', html);
+    checkLinks('/404.html', html);
+    checkScripts('/404.html', html);
+    for (const href of ['/', '/materias/', '/buscar/']) {
+      if (!new RegExp(`<main[\\s\\S]*href="${href}"[\\s\\S]*</main>`).test(html)) fail('/404.html', `must offer a way to ${href}`);
+    }
+  }
+}
+
+/* The whole of dist/. ----------------------------------------------------------------------------- */
+
 const files = walk(DIST);
+const known = new Set([...CANONICAL, ...Object.keys(REDIRECTS)].map((p) => fileFor(p)).concat(join(DIST, '404.html')));
+for (const f of files.filter((f) => f.endsWith('.html'))) {
+  if (!known.has(f)) fail('/' + relative(DIST, f).split(sep).join('/'), 'page not in the canonical inventory');
+}
+
 for (const f of files.filter((f) => /\.(html|css|js)$/.test(f))) {
   const text = readFileSync(f, 'utf8');
   const refs = [...text.matchAll(/(?:src|href)="(\/_astro\/[^"]+)"|url\((\/_astro\/[^)]+)\)/g)].map((m) => m[1] ?? m[2]);
@@ -251,10 +235,15 @@ for (const f of files.filter((f) => /\.(html|css|js)$/.test(f))) {
     if (!existsSync(join(DIST, ref))) fail(f, `missing asset ${ref}`);
   }
   for (const re of SECRET_PATTERNS) if (re.test(text)) fail(f, `matches secret pattern ${re}`);
+
+  const visible = text
+    .replace(/<link rel="canonical" href="[^"]*">/g, '')
+    .replace(/<meta property="og:url" content="[^"]*">/g, '');
+  for (const re of DENY) if (re.test(visible)) fail('/' + relative(DIST, f).split(sep).join('/'), `trace of the former personal site: ${re}`);
 }
 
 if (errors.length) {
   console.error(`verify-dist: ${errors.length} problem(s)\n  ` + errors.join('\n  '));
   process.exit(1);
 }
-console.log(`verify-dist: ${PAGES.length} pages, ${files.length} files — all invariants hold.`);
+console.log(`verify-dist: ${CANONICAL.length} pages, ${Object.keys(REDIRECTS).length} redirects, 404, ${files.length} files — all invariants hold.`);

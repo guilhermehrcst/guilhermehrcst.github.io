@@ -78,7 +78,8 @@ export const AREA_SUBJECTS: Readonly<Record<LearningAreaId, readonly LearningSub
   spanish: ['spanish'],
 };
 
-const VERIFIED_ON = '2026-10-11';
+/** The date the published catalogue was last verified at its sources. */
+export const VERIFIED_ON = '2026-10-11';
 const verified = (): ResourceVerification => ({ on: VERIFIED_ON, by: 'official-page', freeAccess: true });
 
 const tech = (
