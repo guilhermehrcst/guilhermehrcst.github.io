@@ -3,24 +3,28 @@
    Hex codes live only in :root. Contrast is measured, not estimated (tests/contrast.test.ts). */
 
 :root {
+  /* Paper, ink and one functional blue (#0C5FE8, the Pexis blue). */
   --paper: #faf8f4;
   --surface: #f2efe9;
   --ink: #1d2125;
   --muted: #565c63;
   --rule: #e2ddd4;
-  --action: #0b57d0;
-  --action-hover: #0842a0;
+  --action: #0c5fe8;
+  --action-hover: #0a4cc0;
   --on-action: #faf8f4;
 
   --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Newsreader (OFL-1.1, self-hosted): the academic voice of the display type. Body text stays sans. */
+  --serif: 'Newsreader Variable', 'Newsreader', Georgia, 'Times New Roman', serif;
 
   /* Type: mobile first; one continuous function of the width, never a jump per breakpoint. */
   --fs-small: 0.875rem;
   --fs-body: clamp(1.0625rem, 1rem + 0.2vw, 1.125rem);
   --fs-lead: clamp(1.1875rem, 1.05rem + 0.55vw, 1.4375rem);
   --fs-h3: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
-  --fs-h2: clamp(1.5rem, 1.25rem + 1.1vw, 2.125rem);
-  --fs-h1: clamp(2.25rem, 1.6rem + 2.8vw, 4rem);
+  --fs-h2: clamp(1.75rem, 1.35rem + 1.6vw, 2.75rem);
+  --fs-h1: clamp(2.5rem, 1.7rem + 3.4vw, 4.5rem);
+
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -70,6 +74,8 @@ body {
 main { flex: 1 0 auto; }
 
 h1, h2, h3, h4 { font-weight: 560; line-height: 1.15; letter-spacing: -0.015em; text-wrap: balance; }
+/* Page and section titles speak in the serif; smaller headings stay in the sans for scanning. */
+h1, h2 { font-family: var(--serif); font-weight: 460; letter-spacing: -0.02em; font-optical-sizing: auto; }
 p, li { text-wrap: pretty; }
 img, svg { display: block; max-width: 100%; }
 ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }

@@ -49,8 +49,11 @@ test('no hex colour outside :root, but the theme-color meta, which equals --pape
   }
 });
 
-test('the favicon is the Pexis Academy mark, in the current tokens', () => {
+test('the favicon is the temporary typographic signature, in the current tokens', () => {
+  // No official Academy symbol is in the repository (the red book asset is pending): the favicon is a
+  // serif "P" in ink on paper, never an invented mark.
   const svg = readFileSync(new URL('public/favicon.svg', root), 'utf8').toLowerCase();
   const colours = [...svg.matchAll(/fill="(#[0-9a-f]{6})"/g)].map((m) => m[1]);
-  assert.deepEqual(colours, [token('paper'), token('action')]);
+  assert.deepEqual(colours, [token('paper'), token('ink')]);
+  assert.ok(/<text\b[^>]*>p<\/text>/.test(svg), 'a typographic P');
 });
