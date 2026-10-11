@@ -17,17 +17,7 @@ const { resource: r, t, n, style } = Astro.props;
 const img = r.curated?.image;
 const imageSrc = img ? resourceImages[img.id] : undefined;
 const subject = r.technology ? t.technologyTopics[r.technology.topic] : t.subjects[r.subject];
-const facts: [string, string][] = [
-  [t.labels.subject, subject],
-  [t.labels.format, t.formats[r.format]],
-  [t.labels.level, t.levels[r.level]],
-  [t.labels.language, t.languages[r.language]],
-  [t.labels.goals, r.goals.map((goal) => t.goals[goal]).join(' / ')],
-];
-if (r.registration) facts.push([t.labels.registration, t.registration[r.registration]]);
-if (r.duration) facts.push([t.labels.duration, `${r.duration.value} ${r.duration.unit === 'hours' ? t.units.hours : t.units.weeks}`]);
-if (r.certificate) facts.push([t.labels.certificate, t.certificates[r.certificate]]);
-
+const quickFacts = [subject, t.formats[r.format], t.languages[r.language]];
 const sizes: Record<CourseImageLayout, string> = {
   opening: '(min-width: 1181px) calc(100vw - 72px), 100vw',
   'media-right': '(min-width: 1181px) 38vw, 100vw',
@@ -65,6 +55,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
       />
     </figure>
   )}
+
   {r.curated && (
     <div class="plate" aria-hidden="true">
       <p class="meta plate-top">
@@ -74,15 +65,16 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
       <p class="plate-mark" translate="no" style={`--len: ${[...r.curated.plate].length}`}>{r.curated.plate}<span class="slash">/</span></p>
     </div>
   )}
+
   <div class="body">
     <p class="meta provider"><CourseProvider name={r.provider} /></p>
     <h3 class="title" translate="no">{r.title}</h3>
-    <dl class="facts">
-      {facts.map(([key, value]) => <div><dt class="meta">{key}</dt><dd>{value}</dd></div>)}
-    </dl>
+    <p class="quickfacts">{quickFacts.join(' · ')}</p>
   </div>
+
   <a class="cta" href={r.url} target="_blank" rel="noopener noreferrer">
-    <span>{t.labels.cta}<span class="sr-only">: <span translate="no">{r.title}</span> ({t.labels.newTab})</span></span>
+    <span class="u">{t.labels.cta}</span>
+    <span class="sr-only">: <span translate="no">{r.title}</span> ({t.labels.newTab})</span>
     <ExternalLinkIcon />
   </a>
 </li>
@@ -90,27 +82,49 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
 <style>
   .lr { position: relative; display: flex; flex-direction: column; min-width: 0; }
   .lr::after { content: ''; position: absolute; inset: 0 -1px -1px 0; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); pointer-events: none; z-index: 2; }
-  .body { flex: 1; display: flex; flex-direction: column; gap: var(--space-sm); padding: var(--space-md) var(--space-md) var(--space-lg); min-width: 0; }
-  .provider { color: var(--muted); min-height: 40px; display: flex; align-items: center; }
-  .title { font-size: clamp(1.1rem, 1.35vw, 1.32rem); font-weight: 600; line-height: 1.23; letter-spacing: -0.01em; text-wrap: balance; }
-  .is-curated .title { font-size: var(--fs-lead); }
-  .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); gap: var(--space-sm) var(--space-md); margin-top: auto; padding-top: var(--space-sm); }
-  .facts dt { color: var(--muted); margin-bottom: 2px; }
-  .facts dd { margin: 0; font-size: var(--fs-meta-l); line-height: 1.35; }
-  .cta { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); min-height: 48px; margin: 0 var(--space-md) var(--space-md); padding-inline: var(--space-md); border-radius: 3px; background: var(--action); color: var(--action-ink); font-size: var(--fs-body); font-weight: 600; text-decoration: none; }
-  .cta:hover, .cta:focus-visible { background: var(--action-hover); }
-  .cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .cta > :global(svg) { width: 16px; height: 16px; flex: none; }
 
-  .plate { container-type: inline-size; display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-md); padding: var(--space-md); background: var(--surface); border-bottom: 1px solid var(--rule); min-height: 190px; overflow: hidden; }
+  .body { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: var(--space-md); min-width: 0; }
+  .provider { color: var(--muted); min-height: 28px; display: flex; align-items: center; }
+  .title { font-size: clamp(1.08rem, 1.28vw, 1.28rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; }
+  .is-curated .title { font-size: var(--fs-lead); }
+  .quickfacts { margin-top: auto; padding-top: var(--space-sm); color: var(--muted); font-size: var(--fs-meta-l); line-height: 1.4; }
+
+  .cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    min-height: 48px;
+    padding: 12px var(--space-md);
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-meta-l);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .cta:hover > :global(svg), .cta:focus-visible > :global(svg) { transform: translate(2px, -2px); }
+  .cta > :global(svg) { width: 15px; height: 15px; flex: none; transition: transform var(--t-ui) var(--ease); }
+
+  .plate {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+    min-height: 160px;
+    overflow: hidden;
+  }
   .plate-top { display: flex; justify-content: space-between; gap: var(--space-sm); color: var(--muted); }
   .plate-top > span:first-child { display: inline-flex; gap: 0.5em; color: var(--ink); }
-  .plate-mark { font-size: min(var(--fs-sec, 4.5rem) * 0.78, calc(88cqi / (var(--len) * 0.6 + 0.5))); font-weight: var(--display-wght); line-height: 0.88; letter-spacing: -0.035em; white-space: nowrap; }
+  .plate-mark { font-size: min(var(--fs-sec, 4.5rem) * 0.72, calc(88cqi / (var(--len) * 0.6 + 0.5))); font-weight: var(--display-wght); line-height: 0.88; letter-spacing: -0.035em; white-space: nowrap; }
 
   .media { position: relative; margin: 0; overflow: hidden; background: var(--surface); border-bottom: 1px solid var(--rule); aspect-ratio: var(--ar, 3 / 2); }
   .media :global(picture) { position: absolute; inset: 0; display: block; }
   .media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); }
   .k-graphic .media :global(img) { object-fit: contain; }
+
   @media (hover: hover) and (prefers-reduced-motion: no-preference) {
     .k-photo .media :global(img) { transition: transform 600ms var(--ease); }
     .k-photo:hover .media :global(img) { transform: scale(1.015); }
@@ -127,7 +141,7 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
     .lay-media-right .plate { grid-area: plate; border-bottom: 0; }
     .lay-media-right .body { grid-area: body; }
     .lay-media-right .cta { grid-area: cta; }
-    .lay-media-right .media { grid-area: media; border-left: 1px solid var(--rule); border-bottom: 0; aspect-ratio: auto; min-height: 360px; }
+    .lay-media-right .media { grid-area: media; border-left: 1px solid var(--rule); border-bottom: 0; aspect-ratio: auto; min-height: 330px; }
 
     .lay-half { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr); grid-template-areas: 'media media' 'plate body' 'plate cta'; }
     .lay-half .media { grid-area: media; }
@@ -151,9 +165,6 @@ const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img
   }
 
   @media (max-width: 640px) {
-    .plate { min-height: 150px; }
-    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .plate { min-height: 135px; }
   }
-
-  @media (forced-colors: active) { .cta { border: 1px solid ButtonText; } }
 </style>
