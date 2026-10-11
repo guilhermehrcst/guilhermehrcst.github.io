@@ -246,6 +246,7 @@ function checkProduct(path, html) {
   const resources = checkResources(path, html);
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
+  if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
 }
 
 for (const path of CANONICAL) {
