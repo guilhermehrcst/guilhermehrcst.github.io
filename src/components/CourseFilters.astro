@@ -7,33 +7,81 @@ const { t } = Astro.props;
 const goals: LearningGoalId[] = ['high-school', 'enem', 'uerj', 'vestibular'];
 const formats: LearningFormatId[] = ['course', 'track', 'playlist', 'lessons', 'practice'];
 ---
-<section class="filters" aria-label={t.filters.label} data-course-filters hidden>
-  <div class="filter-block">
-    <p class="meta filter-label">{t.filters.goal}</p>
-    <div class="choices" role="group" aria-label={t.filters.goal}>
-      {goals.map((goal) => <button type="button" aria-pressed="false" data-filter-goal={goal}>{t.goals[goal]}</button>)}
+<details class="filters" data-course-filters hidden>
+  <summary>
+    <span>{t.filters.label}</span>
+    <span aria-hidden="true">+</span>
+  </summary>
+  <div class="filter-content">
+    <div class="filter-block">
+      <p class="meta filter-label">{t.filters.goal}</p>
+      <div class="choices" role="group" aria-label={t.filters.goal}>
+        {goals.map((goal) => <button type="button" aria-pressed="false" data-filter-goal={goal}>{t.goals[goal]}</button>)}
+      </div>
     </div>
-  </div>
-  <div class="filter-block">
-    <p class="meta filter-label">{t.filters.format}</p>
-    <div class="choices" role="group" aria-label={t.filters.format}>
-      {formats.map((format) => <button type="button" aria-pressed="false" data-filter-format={format}>{t.formats[format]}</button>)}
+    <div class="filter-block">
+      <p class="meta filter-label">{t.filters.format}</p>
+      <div class="choices" role="group" aria-label={t.filters.format}>
+        {formats.map((format) => <button type="button" aria-pressed="false" data-filter-format={format}>{t.formats[format]}</button>)}
+      </div>
     </div>
+    <button class="reset" type="button" data-filter-reset>{t.filters.reset}</button>
   </div>
-  <button class="reset" type="button" data-filter-reset>{t.filters.reset}</button>
-</section>
+</details>
 <p class="filter-empty" data-filter-empty aria-live="polite" hidden>{t.filters.empty}</p>
 
 <style>
-  .filters { border-bottom: 1px solid var(--rule); padding: var(--space-md) var(--space-lg); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: var(--space-lg); align-items: end; }
-  .filter-block { min-width: 0; }
+  .filters { border-bottom: 1px solid var(--rule); }
+  .filters > summary {
+    list-style: none;
+    min-height: 58px;
+    padding-inline: var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .filters > summary::-webkit-details-marker { display: none; }
+  .filters > summary:hover, .filters > summary:focus-visible { background: var(--surface); }
+  .filters > summary > span:last-child { font-size: 1.25rem; transition: transform var(--t-ui) var(--ease); }
+  .filters[open] > summary > span:last-child { transform: rotate(45deg); }
+  .filter-content {
+    border-top: 1px solid var(--rule);
+    padding: var(--space-md) var(--space-lg);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    gap: var(--space-lg);
+    align-items: end;
+    background: var(--surface);
+  }
   .filter-label { color: var(--muted); margin-bottom: 8px; }
   .choices { display: flex; flex-wrap: wrap; gap: 6px; }
-  .choices button, .reset { min-height: 40px; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 3px; background: var(--paper); color: var(--ink); font: inherit; font-size: var(--fs-meta-l); cursor: pointer; }
+  .choices button, .reset {
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+    font-size: var(--fs-meta-l);
+    cursor: pointer;
+  }
   .choices button[aria-pressed='true'] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .choices button:focus-visible, .reset:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
   .reset { font-weight: 600; white-space: nowrap; }
   .filter-empty { margin: 0; padding: var(--space-xl) var(--space-lg); border-bottom: 1px solid var(--rule); color: var(--muted); font-size: var(--fs-lead); }
-  @media (max-width: 900px) { .filters { grid-template-columns: 1fr; gap: var(--space-md); } .reset { justify-self: start; } }
-  @media (max-width: 640px) { .filters { padding-inline: var(--space-md); } .choices { gap: 4px; } .choices button, .reset { min-height: 44px; } .filter-empty { padding-inline: var(--space-md); } }
+
+  @media (max-width: 900px) {
+    .filter-content { grid-template-columns: 1fr; gap: var(--space-md); }
+    .reset { justify-self: start; }
+  }
+  @media (max-width: 640px) {
+    .filters > summary, .filter-content { padding-inline: var(--space-md); }
+    .choices { gap: 4px; }
+    .choices button, .reset { min-height: 44px; }
+    .filter-empty { padding-inline: var(--space-md); }
+  }
 </style>

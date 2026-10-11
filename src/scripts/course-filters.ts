@@ -5,7 +5,7 @@ const roots = document.querySelectorAll<HTMLElement>('[data-course-filters]');
 for (const root of roots) {
   const cards = [...document.querySelectorAll<HTMLElement>('[data-learning-resource]')];
   const groups = [...document.querySelectorAll<HTMLElement>('[data-learning-group]')];
-  const areas = [...document.querySelectorAll<HTMLElement>('[data-learning-area-section]')];
+  const areas = [...document.querySelectorAll<HTMLDetailsElement>('details[data-learning-area-section]')];
   const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
   const reset = root.querySelector<HTMLButtonElement>('[data-filter-reset]');
   const goalButtons = [...root.querySelectorAll<HTMLButtonElement>('[data-filter-goal]')];
@@ -27,8 +27,12 @@ for (const root of roots) {
     for (const group of groups) {
       group.hidden = ![...group.querySelectorAll<HTMLElement>('[data-learning-resource]')].some((card) => !card.hidden);
     }
+    const hasActiveFilters = selectedGoals.size > 0 || selectedFormats.size > 0;
     for (const area of areas) {
-      area.hidden = ![...area.querySelectorAll<HTMLElement>('[data-learning-resource]')].some((card) => !card.hidden);
+      const hasVisibleResource = [...area.querySelectorAll<HTMLElement>('[data-learning-resource]')].some((card) => !card.hidden);
+      area.hidden = !hasVisibleResource;
+      if (hasActiveFilters && hasVisibleResource) area.open = true;
+      else if (!hasActiveFilters) area.open = false;
     }
     if (empty) empty.hidden = visible !== 0;
   };
