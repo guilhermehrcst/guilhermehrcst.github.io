@@ -61,6 +61,10 @@ html {
   color-scheme: light;
   scroll-padding-top: var(--space-5);
 }
+/* From 640px the header is sticky and one row (69px, measured): an anchored target lands below it. */
+@media (min-width: 640px) {
+  html { scroll-padding-top: calc(4.5rem + var(--space-5)); }
+}
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
 }
