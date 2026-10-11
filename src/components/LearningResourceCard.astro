@@ -1,0 +1,159 @@
+---
+import { Picture } from 'astro:assets';
+import CourseProvider from './CourseProvider.astro';
+import ExternalLinkIcon from './icons/radix/ExternalLinkIcon.astro';
+import { resourceImages } from '../lib/resource-images';
+import type { CourseImageLayout, PublishedLearningResource } from '../lib/learning-resources';
+import type { CoursesPage } from '../i18n/types';
+
+interface Props {
+  resource: PublishedLearningResource;
+  t: CoursesPage;
+  n?: number;
+  style?: string;
+}
+
+const { resource: r, t, n, style } = Astro.props;
+const img = r.curated?.image;
+const imageSrc = img ? resourceImages[img.id] : undefined;
+const subject = r.technology ? t.technologyTopics[r.technology.topic] : t.subjects[r.subject];
+const facts: [string, string][] = [
+  [t.labels.subject, subject],
+  [t.labels.format, t.formats[r.format]],
+  [t.labels.level, t.levels[r.level]],
+  [t.labels.language, t.languages[r.language]],
+  [t.labels.goals, r.goals.map((goal) => t.goals[goal]).join(' / ')],
+];
+if (r.registration) facts.push([t.labels.registration, t.registration[r.registration]]);
+if (r.duration) facts.push([t.labels.duration, `${r.duration.value} ${r.duration.unit === 'hours' ? t.units.hours : t.units.weeks}`]);
+if (r.certificate) facts.push([t.labels.certificate, t.certificates[r.certificate]]);
+
+const sizes: Record<CourseImageLayout, string> = {
+  opening: '(min-width: 1181px) calc(100vw - 72px), 100vw',
+  'media-right': '(min-width: 1181px) 38vw, 100vw',
+  tile: '(min-width: 1181px) 40vw, 100vw',
+  half: '(min-width: 1181px) 64vw, 100vw',
+  tall: '(min-width: 1181px) 32vw, 100vw',
+  band: '(min-width: 1181px) 62vw, 100vw',
+};
+const widths = imageSrc ? [...[480, 768, 1152].filter((w) => w < imageSrc.width), imageSrc.width] : [];
+const mediaStyle = img ? `${img.ratio ? `--ar: ${img.ratio}; ` : ''}--pos: ${img.position ?? '50% 50%'}` : undefined;
+---
+<li
+  class:list={['lr rv', r.curated && 'is-curated', img && ['has-img', `lay-${img.layout}`, `k-${img.kind}`]]}
+  id={`resource-${r.id}`}
+  style={style}
+  data-learning-resource
+  data-area={r.area}
+  data-subject={r.subject}
+  data-goals={r.goals.join(' ')}
+  data-format={r.format}
+  data-reveal
+>
+  {imageSrc && img && (
+    <figure class="media" style={mediaStyle}>
+      <Picture
+        src={imageSrc}
+        formats={['avif', 'webp']}
+        fallbackFormat="jpeg"
+        quality={85}
+        widths={widths}
+        sizes={sizes[img.layout]}
+        alt={t.imageAlts[img.alt]}
+        loading={img.priority ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    </figure>
+  )}
+  {r.curated && (
+    <div class="plate" aria-hidden="true">
+      <p class="meta plate-top">
+        <span><span class="slash">/</span>{t.labels.curated}</span>
+        {n !== undefined && <span>{String(n).padStart(2, '0')}</span>}
+      </p>
+      <p class="plate-mark" translate="no" style={`--len: ${[...r.curated.plate].length}`}>{r.curated.plate}<span class="slash">/</span></p>
+    </div>
+  )}
+  <div class="body">
+    <p class="meta provider"><CourseProvider name={r.provider} /></p>
+    <h3 class="title" translate="no">{r.title}</h3>
+    <dl class="facts">
+      {facts.map(([key, value]) => <div><dt class="meta">{key}</dt><dd>{value}</dd></div>)}
+    </dl>
+  </div>
+  <a class="cta" href={r.url} target="_blank" rel="noopener noreferrer">
+    <span>{t.labels.cta}<span class="sr-only">: <span translate="no">{r.title}</span> ({t.labels.newTab})</span></span>
+    <ExternalLinkIcon />
+  </a>
+</li>
+
+<style>
+  .lr { position: relative; display: flex; flex-direction: column; min-width: 0; }
+  .lr::after { content: ''; position: absolute; inset: 0 -1px -1px 0; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); pointer-events: none; z-index: 2; }
+  .body { flex: 1; display: flex; flex-direction: column; gap: var(--space-sm); padding: var(--space-md) var(--space-md) var(--space-lg); min-width: 0; }
+  .provider { color: var(--muted); min-height: 40px; display: flex; align-items: center; }
+  .title { font-size: clamp(1.1rem, 1.35vw, 1.32rem); font-weight: 600; line-height: 1.23; letter-spacing: -0.01em; text-wrap: balance; }
+  .is-curated .title { font-size: var(--fs-lead); }
+  .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr)); gap: var(--space-sm) var(--space-md); margin-top: auto; padding-top: var(--space-sm); }
+  .facts dt { color: var(--muted); margin-bottom: 2px; }
+  .facts dd { margin: 0; font-size: var(--fs-meta-l); line-height: 1.35; }
+  .cta { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); min-height: 48px; margin: 0 var(--space-md) var(--space-md); padding-inline: var(--space-md); border-radius: 3px; background: var(--action); color: var(--action-ink); font-size: var(--fs-body); font-weight: 600; text-decoration: none; }
+  .cta:hover, .cta:focus-visible { background: var(--action-hover); }
+  .cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .cta > :global(svg) { width: 16px; height: 16px; flex: none; }
+
+  .plate { container-type: inline-size; display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-md); padding: var(--space-md); background: var(--surface); border-bottom: 1px solid var(--rule); min-height: 190px; overflow: hidden; }
+  .plate-top { display: flex; justify-content: space-between; gap: var(--space-sm); color: var(--muted); }
+  .plate-top > span:first-child { display: inline-flex; gap: 0.5em; color: var(--ink); }
+  .plate-mark { font-size: min(var(--fs-sec, 4.5rem) * 0.78, calc(88cqi / (var(--len) * 0.6 + 0.5))); font-weight: var(--display-wght); line-height: 0.88; letter-spacing: -0.035em; white-space: nowrap; }
+
+  .media { position: relative; margin: 0; overflow: hidden; background: var(--surface); border-bottom: 1px solid var(--rule); aspect-ratio: var(--ar, 3 / 2); }
+  .media :global(picture) { position: absolute; inset: 0; display: block; }
+  .media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); }
+  .k-graphic .media :global(img) { object-fit: contain; }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .k-photo .media :global(img) { transition: transform 600ms var(--ease); }
+    .k-photo:hover .media :global(img) { transform: scale(1.015); }
+  }
+
+  @media (min-width: 1181px) {
+    .lay-opening { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); grid-template-areas: 'media media' 'plate body' 'plate cta'; }
+    .lay-opening .media { grid-area: media; aspect-ratio: 2.4; }
+    .lay-opening .plate { grid-area: plate; border-right: 1px solid var(--rule); border-bottom: 0; padding: var(--space-lg); }
+    .lay-opening .body { grid-area: body; padding: var(--space-lg) var(--space-md); }
+    .lay-opening .cta { grid-area: cta; }
+
+    .lay-media-right { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-areas: 'plate media' 'body media' 'cta media'; }
+    .lay-media-right .plate { grid-area: plate; border-bottom: 0; }
+    .lay-media-right .body { grid-area: body; }
+    .lay-media-right .cta { grid-area: cta; }
+    .lay-media-right .media { grid-area: media; border-left: 1px solid var(--rule); border-bottom: 0; aspect-ratio: auto; min-height: 360px; }
+
+    .lay-half { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr); grid-template-areas: 'media media' 'plate body' 'plate cta'; }
+    .lay-half .media { grid-area: media; }
+    .lay-half .plate { grid-area: plate; border-right: 1px solid var(--rule); border-bottom: 0; }
+    .lay-half .body { grid-area: body; }
+    .lay-half .cta { grid-area: cta; }
+
+    .lay-band { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); grid-template-areas: 'media plate' 'media body' 'media cta'; }
+    .lay-band .media { grid-area: media; border-right: 1px solid var(--rule); border-bottom: 0; }
+    .lay-band .plate { grid-area: plate; border-bottom: 0; }
+    .lay-band .body { grid-area: body; }
+    .lay-band .cta { grid-area: cta; }
+  }
+
+  @media (min-width: 641px) and (max-width: 1180px) {
+    .is-curated { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-areas: 'media media' 'plate body' 'plate cta'; }
+    .is-curated .media { grid-area: media; }
+    .is-curated .plate { grid-area: plate; border-right: 1px solid var(--rule); border-bottom: 0; }
+    .is-curated .body { grid-area: body; }
+    .is-curated .cta { grid-area: cta; }
+  }
+
+  @media (max-width: 640px) {
+    .plate { min-height: 150px; }
+    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (forced-colors: active) { .cta { border: 1px solid ButtonText; } }
+</style>

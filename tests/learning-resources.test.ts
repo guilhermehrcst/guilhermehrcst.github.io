@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { AREA_SUBJECTS, catalogue, publishedResources } from '../src/lib/learning-resources.ts';
+import { AREA_ORDER, AREA_SUBJECTS, catalogue, publishedResources } from '../src/lib/learning-resources.ts';
 
 const legacyPublished = new Map([
   ['cs50x', 'https://cs50.harvard.edu/x/'],
@@ -74,4 +74,9 @@ test('every published technology resource has fresh free-access verification', (
     assert.equal(r.verified.on, '2026-10-11', `${r.id}: stale verification`);
     assert.equal(r.verified.freeAccess, true, `${r.id}: not free-verified`);
   }
+});
+
+
+test('the eight primary areas have one canonical reading order', () => {
+  assert.deepEqual(AREA_ORDER, ['technology', 'math', 'portuguese', 'writing', 'nature', 'humanities', 'english', 'spanish']);
 });

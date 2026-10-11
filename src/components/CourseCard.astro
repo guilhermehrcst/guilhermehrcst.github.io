@@ -15,11 +15,11 @@ import { Picture } from 'astro:assets';
 import CourseProvider from './CourseProvider.astro';
 import ExternalLinkIcon from './icons/radix/ExternalLinkIcon.astro';
 import type { Course, CourseImageLayout } from '../lib/courses';
-import type { CoursesPage } from '../i18n/types';
+import type { LegacyCoursesPage } from '../i18n/types';
 
 interface Props {
   course: Course & { url: string };
-  t: CoursesPage;
+  t: LegacyCoursesPage;
   /** Position among the curator's picks (01 to 06), shown on the plate. Not set for the others. */
   n?: number | undefined;
   /** Optional anchor id (the nav's "Data" stop lands on the first data course). */

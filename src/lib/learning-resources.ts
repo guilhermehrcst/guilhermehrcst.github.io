@@ -65,6 +65,8 @@ export type PublishedLearningResource = LearningResource & {
   verified: ResourceVerification;
 };
 
+export const AREA_ORDER: readonly LearningAreaId[] = ['technology', 'math', 'portuguese', 'writing', 'nature', 'humanities', 'english', 'spanish'];
+
 export const AREA_SUBJECTS: Readonly<Record<LearningAreaId, readonly LearningSubjectId[]>> = {
   technology: ['technology'],
   math: ['math'],
