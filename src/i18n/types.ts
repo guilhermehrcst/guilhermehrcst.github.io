@@ -52,7 +52,18 @@ export interface Dict {
       demoLink: string;
       demo: { subjects: string; objectives: string; areas: string; study: string; practice: string; byObjective: string };
     };
-    objectives: { heading: string; items: Record<ObjectiveId, string> };
+    objectives: { heading: string; lead: string; items: Record<ObjectiveId, string>; facts: (resources: number, tracks?: number) => string };
+    path: {
+      heading: string;
+      lead: string;
+      route: string;
+      steps: Record<'objetivo' | 'materia' | 'assunto' | 'conteudo' | 'pratica', string>;
+      enemMeta: string;
+      pending: string;
+      topicNote: string;
+      official: string;
+      links: { objective: string; subject: string; content: string; practice: string };
+    };
     areas: { heading: string };
     curation: { heading: string; rules: { title: string; body: string }[]; more: string };
   };

@@ -1,9 +1,10 @@
 ---
-// The Home orients; it does not pour out content (spec §5.2). Objective → area; no resource here.
+// The Home orients; it does not pour out content (spec §5.2). Objective → path → area; no resource list here.
 import Base from '../layouts/Base.astro';
 import HomeHero from '../components/HomeHero.astro';
 import ObjectiveList from '../components/ObjectiveList.astro';
 import AreaList from '../components/AreaList.astro';
+import LearningPath from '../components/LearningPath.astro';
 import { routes } from '../lib/routes';
 import { pt as t } from '../i18n/pt';
 
@@ -13,8 +14,19 @@ const c = t.pages.home;
   <HomeHero />
 
   <section class="wrap block" id="objetivo" aria-labelledby="objetivo-title">
-    <h2 id="objetivo-title">{t.home.objectives.heading}</h2>
+    <div class="head">
+      <h2 id="objetivo-title">{t.home.objectives.heading}</h2>
+      <p>{t.home.objectives.lead}</p>
+    </div>
     <ObjectiveList />
+  </section>
+
+  <section class="wrap block" id="caminho" aria-labelledby="caminho-title">
+    <div class="head">
+      <h2 id="caminho-title">{t.home.path.heading}</h2>
+      <p>{t.home.path.lead}</p>
+    </div>
+    <LearningPath />
   </section>
 
   <section class="wrap block" id="areas" aria-labelledby="areas-title">
@@ -39,6 +51,11 @@ const c = t.pages.home;
 <style>
   .block { padding-block: var(--space-7); }
   .block > h2 { font-size: var(--fs-h2); margin-bottom: var(--space-5); }
+  /* A section's head: the title, and beside it on a wide screen, one line of what follows. */
+  .head { display: grid; gap: var(--space-3) var(--space-7); margin-bottom: var(--space-6); }
+  .head h2 { font-size: var(--fs-h2); max-width: 18ch; }
+  .head p { max-width: 44ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
+  @media (min-width: 1024px) { .head { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; } }
   .rules { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 var(--space-7); }
   @media (min-width: 900px) { .rules { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .rules li { padding-block: var(--space-5); border-top: 1px solid var(--rule); }

@@ -2,13 +2,14 @@
 // runs in the browser.
 import { areaOf, publishedResources } from './learning-resources.ts';
 import { OBJECTIVE_ORDER } from './taxonomy.ts';
+import { publishedTracks } from './tech-tracks.ts';
 import type {
   LearningFormatId,
   LearningGoalId,
   LearningSubjectId,
   PublishedLearningResource,
 } from './learning-resources';
-import type { AreaId } from './taxonomy';
+import type { AreaId, ObjectiveId } from './taxonomy';
 
 export type LearningFilter = {
   area?: AreaId;
@@ -53,3 +54,12 @@ export const objectivesFor = (
 ): LearningGoalId[] =>
   OBJECTIVE_ORDER.filter((goal): goal is LearningGoalId =>
     goal !== 'tecnologia' && resources.some((resource) => resource.subject === subject && resource.goals.includes(goal as LearningGoalId)));
+
+/** What an objective really holds: its published resources and, for Tecnologia, its published tracks. */
+export const objectiveFacts = (
+  objective: ObjectiveId,
+  resources: readonly PublishedLearningResource[] = publishedResources,
+): { resources: number; tracks?: number } =>
+  objective === 'tecnologia'
+    ? { resources: resources.filter((resource) => resource.subject === 'tecnologia').length, tracks: publishedTracks().length }
+    : { resources: filterResources(resources, { goals: [objective] }).length };

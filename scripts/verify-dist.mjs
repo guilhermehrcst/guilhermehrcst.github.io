@@ -291,6 +291,21 @@ function checkHome(path, html, resources) {
     const expected = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
     if (JSON.stringify(hrefs) !== JSON.stringify(expected)) fail(path, `#objetivo links ${hrefs.join(',')}`);
   }
+  // The learning path: the five steps, in order, each a real thing. A step that has nothing published yet
+  // says so and links nowhere; the others lead to the page that holds them.
+  const path_ = sectionOf(html, /<section\b[^>]*\sid="caminho"/);
+  if (!path_) fail(path, 'section#caminho missing');
+  else {
+    const steps = [...path_.matchAll(/<li\b[^>]*\sdata-path-step="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
+    const order = ['objetivo', 'materia', 'assunto', 'conteudo', 'pratica'];
+    if (JSON.stringify(steps.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `#caminho steps ${steps.map((m) => m[1]).join(',')}`);
+    for (const [, step, body] of steps) {
+      const links = hrefsIn(body);
+      const pending = /\sdata-path-pending[\s>=]/.test(body);
+      if (pending ? links.length : links.length !== 1 || !links[0].startsWith('/')) fail(path, `#caminho step ${step} links ${links.join(',') || 'nowhere'}`);
+    }
+    for (const id of attrs(path_, /\sdata-demo-resource-id="([^"]+)"/g)) DEMO_RESOURCE_IDS.add(id);
+  }
   const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
   if (!areas) fail(path, 'section#areas missing');
   else checkAreaGroups(path, areas);
@@ -298,7 +313,7 @@ function checkHome(path, html, resources) {
 
   // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
-  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
   if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
   if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
   const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/);

@@ -53,3 +53,14 @@ test('objectivesFor derives, in the Home order, the objectives a subject has res
   assert.deepEqual(objectivesFor('quimica'), ['enem', 'ensino-medio', 'vestibulares']);
   assert.deepEqual(objectivesFor('redacao'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
 });
+
+test('objectiveFacts counts what each objective really holds', async () => {
+  const { objectiveFacts } = await import('../src/lib/learning-library.ts');
+  const { publishedResources } = await import('../src/lib/learning-resources.ts');
+  const tagged = (goal: string) => publishedResources.filter((r) => (r.goals as readonly string[]).includes(goal)).length;
+  assert.deepEqual(objectiveFacts('enem'), { resources: tagged('enem') });
+  assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
+  assert.deepEqual(objectiveFacts('vestibulares'), { resources: tagged('vestibulares') });
+  assert.deepEqual(objectiveFacts('ensino-medio'), { resources: tagged('ensino-medio') });
+  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 17, tracks: 7 });
+});

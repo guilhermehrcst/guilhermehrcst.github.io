@@ -107,6 +107,7 @@ export const pt: Dict = {
     },
     objectives: {
       heading: 'Qual é o seu objetivo?',
+      lead: 'Cinco portas de entrada. Cada uma organiza só o que serve para aquele objetivo.',
       items: {
         enem: 'Entenda a prova, estude por área e pratique com material oficial do INEP.',
         uerj: 'Comece pelas regras oficiais e pratique com questões de provas anteriores.',
@@ -114,6 +115,19 @@ export const pt: Dict = {
         vestibulares: 'Uma base comum, matéria por matéria, para vestibulares em geral.',
         tecnologia: 'Trilhas para aprender programação, computação, dados e inteligência artificial.',
       },
+      facts: (resources, tracks) =>
+        [`${resources} ${resources === 1 ? 'recurso' : 'recursos'}`, tracks && `${tracks} ${tracks === 1 ? 'trilha' : 'trilhas'}`].filter(Boolean).join(' · '),
+    },
+    path: {
+      heading: 'Um caminho mais claro para aprender.',
+      lead: 'Do objetivo à prova, cada passo leva a uma página real. Este é o caminho de quem estuda Matemática para o ENEM, com o que ele tem hoje.',
+      route: 'ENEM · Matemática',
+      steps: { objetivo: 'Objetivo', materia: 'Matéria', assunto: 'Assunto', conteudo: 'Conteúdo', pratica: 'Prática' },
+      enemMeta: 'Prova do INEP: quatro áreas e a redação',
+      pending: 'Em preparação',
+      topicNote: 'Os assuntos entram quando conferidos na Matriz de Referência do Enem, do INEP.',
+      official: 'Fonte oficial',
+      links: { objective: 'Ver o guia do ENEM', subject: 'Ver Matemática', content: 'Ver no guia', practice: 'Ver onde praticar' },
     },
   },
   about: {
