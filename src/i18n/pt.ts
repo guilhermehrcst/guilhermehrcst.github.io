@@ -138,6 +138,7 @@ export const pt: Dict = {
       ] },
       { force: 'Marinha', schools: [
         { acronym: 'CN', name: 'Colégio Naval' },
+        { acronym: 'EN', name: 'Escola Naval' },
       ] },
       { force: 'Aeronáutica', schools: [
         { acronym: 'EEAR', name: 'Escola de Especialistas de Aeronáutica' },

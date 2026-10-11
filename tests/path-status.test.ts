@@ -91,3 +91,12 @@ test('P2: the real state today is consistent', () => {
   assert.deepEqual(problems(), []);
 });
 
+
+test('Pré-Militar names Escola Naval under Marinha, as structure only: edital in verification, no link', async () => {
+  const { pt } = await import('../src/i18n/pt.ts');
+  const marinha = pt.preMilitar.branches.find((b) => b.force === 'Marinha');
+  assert.deepEqual(marinha?.schools.map((s) => s.acronym), ['CN', 'EN']);
+  assert.equal(marinha?.schools.find((s) => s.acronym === 'EN')?.name, 'Escola Naval');
+  assert.equal(pt.preMilitar.status, 'Edital em verificação');
+  for (const school of marinha?.schools ?? []) assert.deepEqual(Object.keys(school).sort(), ['acronym', 'name'], 'no date, link or requirement');
+});
