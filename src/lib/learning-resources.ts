@@ -91,7 +91,7 @@ const tech = (
   subject: 'technology',
   format: 'course',
   goals: ['high-school'],
-  verified: resource.url ? verified() : undefined,
+  ...(resource.url ? { verified: verified() } : {}),
 });
 
 export const catalogue: LearningResource[] = [
