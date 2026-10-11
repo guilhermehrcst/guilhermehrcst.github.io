@@ -37,7 +37,7 @@ for (const exam of ['enem', 'uerj'] as const) {
     for (const section of resolved) {
       for (const r of section.resources) {
         assert.ok(publishedResources.includes(r), r.id);
-        assert.ok(r.goals.includes(exam), `${exam}: ${r.id}`);
+        assert.ok(r.exams?.includes(exam), `${exam}: ${r.id}`);
       }
     }
     assert.equal(new Set(ids).size, ids.length);

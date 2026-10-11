@@ -320,6 +320,9 @@ const hrefsIn = (fragment) => attrs(fragment, /<a\b[^>]*\shref="([^"]+)"/g);
  *  against every page's resource lists once all pages are read). */
 const DEMO_RESOURCE_IDS = new Set();
 const PUBLISHED_RESOURCE_IDS = new Set();
+/** The distinct resources each page renders, and the count the Home prints for each path (V0.4 §5.3). */
+const PAGE_RESOURCE_IDS = new Map();
+const HOME_PATH_COUNTS = new Map();
 
 /** A product demo (a window that shows the real product) is decorative for assistive tech, holds nothing
  *  focusable, shows only real resources, and is captioned by a real link. */
@@ -354,6 +357,10 @@ function checkHome(path, html, resources) {
     if (!/<h2[^>]*>Qual é o seu objetivo\?<\/h2>/.test(objective)) fail(path, '#objetivo must ask "Qual é o seu objetivo?"');
     const hrefs = hrefsIn(objective);
     if (JSON.stringify(hrefs) !== JSON.stringify(PATHS)) fail(path, `#objetivo links ${hrefs.join(',')}`);
+    for (const [, href, n, body] of objective.matchAll(/<a\b[^>]*\shref="([^"]+)"[^>]*\sdata-path-count="(\d+)"[^>]*>([\s\S]*?)<\/a>/g)) {
+      if (!new RegExp(`>${n} recursos?\\b`).test(body)) fail(path, `#objetivo ${href} prints a count other than ${n}`);
+      HOME_PATH_COUNTS.set(href, Number(n));
+    }
   }
   // The learning path: the five steps, in order, each a real thing. A step that has nothing published yet
   // says so and links nowhere; the others lead to the page that holds them.
@@ -525,17 +532,18 @@ function checkUerj(path, html) {
   if (JSON.stringify(subjects) !== JSON.stringify(expected)) fail(path, `#materias links ${subjects.join(',')}`);
 }
 
-/** An objective page that maps subjects by area: only resources tagged for the objective (spec §6.3). */
-function checkObjectiveMap(path, html, resources, goal) {
+/** A path page that maps subjects by area: only resources that declare the path (spec §6.3, V0.4 §5.1). */
+function checkObjectiveMap(path, html, resources, pathId) {
   if (resources.length === 0) fail(path, 'shows at least one resource');
   for (const item of resources) {
-    if (!resourceAttr(item, 'data-goals').split(' ').includes(goal)) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} is not tagged ${goal}`);
+    if (!resourceAttr(item, 'data-paths').split(' ').includes(pathId)) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} does not declare ${pathId}`);
   }
 }
 
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
   for (const item of resources) PUBLISHED_RESOURCE_IDS.add(resourceAttr(item, 'data-resource-id'));
+  PAGE_RESOURCE_IDS.set(path, new Set(resources.map((item) => resourceAttr(item, 'data-resource-id'))));
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
   // Every internal page says where it sits (V0.3): a breadcrumb from Início, through its section.
@@ -641,6 +649,23 @@ for (const path of PREPARING) {
   checkLinks(path, html);
   checkScripts(path, html);
   checkAccessibility(path, html);
+}
+
+/* Every count the Home prints for a path is the number of distinct resources that path's pages render:
+   Vestibular holds its exams' pages too (V0.4 §5.3). Counted from the DOM, never from the data module. */
+{
+  const PATH_PAGES = {
+    '/ensino-medio/': ['/ensino-medio/'],
+    '/vestibulares/': ['/vestibulares/', '/enem/', '/uerj/'],
+    '/ensino-superior/': ['/ensino-superior/'],
+    '/tecnologia/': ['/tecnologia/'],
+  };
+  const counted = [...HOME_PATH_COUNTS.keys()].sort();
+  if (JSON.stringify(counted) !== JSON.stringify(Object.keys(PATH_PAGES).sort())) fail('/', `#objetivo counts ${counted.join(',')}`);
+  for (const [href, pages] of Object.entries(PATH_PAGES)) {
+    const rendered = new Set(pages.flatMap((page) => [...(PAGE_RESOURCE_IDS.get(page) ?? [])]));
+    if (HOME_PATH_COUNTS.get(href) !== rendered.size) fail('/', `#objetivo says ${HOME_PATH_COUNTS.get(href)} for ${href}; its pages render ${rendered.size}`);
+  }
 }
 
 for (const id of DEMO_RESOURCE_IDS) {

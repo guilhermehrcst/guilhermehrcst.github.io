@@ -1,12 +1,12 @@
 // The ENEM and UERJ preparation guides (spec §6.4). They replace the former study tracks, which held
 // hand-kept lists of ids and empty "editorial" sections. Here the resource sections are derived from the
-// catalogue by goal and format, editorial sections cite official sources, and an empty section is never
+// catalogue by exam and format, editorial sections cite official sources, and an empty section is never
 // returned. No asset imports: this module runs under Node's test runner.
-import { publishedResources, type LearningGoalId, type PublishedLearningResource } from './learning-resources.ts';
+import { publishedResources, type PublishedLearningResource } from './learning-resources.ts';
 import type { OfficialSourceId } from './official-sources.ts';
-import { ACADEMIC_SUBJECTS, type SubjectId } from './taxonomy.ts';
+import { ACADEMIC_SUBJECTS, type ExamId, type SubjectId } from './taxonomy.ts';
 
-export type ExamId = 'enem' | 'uerj';
+export type { ExamId };
 export type GuideSectionId = 'entenda' | 'areas' | 'pratique' | 'aprofunde' | 'prepare' | 'materias' | 'provas';
 
 type Select = { practice: boolean };
@@ -41,8 +41,8 @@ export const examGuides: Readonly<Record<ExamId, readonly SectionDefinition[]>> 
   ],
 };
 
-const select = (exam: LearningGoalId, { practice }: Select) =>
-  publishedResources.filter((r) => r.goals.includes(exam) && (r.format === 'practice') === practice);
+const select = (exam: ExamId, { practice }: Select) =>
+  publishedResources.filter((r) => r.exams?.includes(exam) && (r.format === 'practice') === practice);
 
 /** The guide's sections with their resources, without any section that would be empty. */
 export const resolveGuide = (exam: ExamId): ResolvedSection[] =>
@@ -67,4 +67,4 @@ export const ENEM_AREAS: readonly { id: 'linguagens' | 'humanas' | 'natureza' | 
 
 /** The subjects with UERJ resources, in reading order. Derived, so a new UERJ resource adds its subject. */
 export const UERJ_SUBJECTS: readonly SubjectId[] = ACADEMIC_SUBJECTS.filter((id) =>
-  publishedResources.some((r) => r.subject === id && r.goals.includes('uerj')));
+  publishedResources.some((r) => r.subject === id && r.exams?.includes('uerj')));

@@ -14,7 +14,7 @@ const o = t.home.objectives;
     const facts = objectiveFacts(id);
     return (
       <li>
-        <a href={routes.objective(id)}>
+        <a href={routes.objective(id)} data-path-count={PREPARING_PATHS.includes(id) ? undefined : facts.resources}>
           <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
           <span class="name">{OBJECTIVES[id].label}</span>
           <span class="what">{o.items[id]}</span>

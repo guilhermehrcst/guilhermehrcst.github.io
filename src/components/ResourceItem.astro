@@ -28,7 +28,8 @@ const facts = [
   data-resource-id={r.id}
   data-subject={r.subject}
   data-format={r.format}
-  data-goals={r.goals.join(' ')}
+  data-paths={r.paths.join(' ')}
+  data-exams={r.exams?.join(' ')}
 >
   {!compact && <p class="provider"><ProviderMark name={r.provider} /></p>}
   <Heading class="title">

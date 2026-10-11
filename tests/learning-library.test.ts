@@ -5,17 +5,23 @@ import type { PublishedLearningResource } from '../src/lib/learning-resources.ts
 
 const verified = { on: '2026-10-11', by: 'official-page' as const, freeAccess: true as const };
 const items: PublishedLearningResource[] = [
-  { id: 'a', title: 'A', provider: 'P', subject: 'matematica', format: 'course', goals: ['ensino-medio', 'enem'], language: 'pt', level: 'high-school', url: 'https://example.com/a', verified },
-  { id: 'b', title: 'B', provider: 'P', subject: 'matematica', format: 'playlist', goals: ['uerj', 'vestibulares'], language: 'pt', level: 'vestibular', url: 'https://example.com/b', verified },
-  { id: 'c', title: 'C', provider: 'P', subject: 'fisica', format: 'lessons', goals: ['enem', 'uerj'], language: 'pt', level: 'vestibular', url: 'https://example.com/c', verified },
+  { id: 'a', title: 'A', provider: 'P', subject: 'matematica', format: 'course', paths: ['ensino-medio', 'vestibulares'], exams: ['enem'], language: 'pt', level: 'high-school', url: 'https://example.com/a', verified },
+  { id: 'b', title: 'B', provider: 'P', subject: 'matematica', format: 'playlist', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://example.com/b', verified },
+  { id: 'c', title: 'C', provider: 'P', subject: 'fisica', format: 'lessons', paths: ['vestibulares'], exams: ['enem', 'uerj'], language: 'pt', level: 'vestibular', url: 'https://example.com/c', verified },
 ];
 
 test('one selected goal matches a multi-goal resource', () => {
-  assert.deepEqual(filterResources(items, { goals: ['enem'] }).map((r) => r.id), ['a', 'c']);
+  assert.deepEqual(filterResources(items, { exams: ['enem'] }).map((r) => r.id), ['a', 'c']);
 });
 
-test('multiple selected goals use OR semantics', () => {
-  assert.deepEqual(filterResources(items, { goals: ['ensino-medio', 'uerj'] }).map((r) => r.id), ['a', 'b', 'c']);
+test('values inside one dimension use OR semantics', () => {
+  assert.deepEqual(filterResources(items, { exams: ['enem', 'uerj'] }).map((r) => r.id), ['a', 'b', 'c']);
+  assert.deepEqual(filterResources(items, { paths: ['ensino-medio', 'tecnologia'] }).map((r) => r.id), ['a']);
+});
+
+test('path and exam are separate dimensions and combine with AND', () => {
+  assert.deepEqual(filterResources(items, { paths: ['vestibulares'], exams: ['uerj'] }).map((r) => r.id), ['b', 'c']);
+  assert.deepEqual(filterResources(items, { paths: ['ensino-medio'], exams: ['uerj'] }).map((r) => r.id), []);
 });
 
 test('multiple selected formats use OR semantics', () => {
@@ -23,7 +29,7 @@ test('multiple selected formats use OR semantics', () => {
 });
 
 test('dimensions combine with AND semantics', () => {
-  assert.deepEqual(filterResources(items, { area: 'matematica', goals: ['uerj'], formats: ['playlist'] }).map((r) => r.id), ['b']);
+  assert.deepEqual(filterResources(items, { area: 'matematica', exams: ['uerj'], formats: ['playlist'] }).map((r) => r.id), ['b']);
 });
 
 test('the area is derived from the subject', () => {
@@ -58,16 +64,17 @@ test('objectiveFacts counts what each path really holds', async () => {
   const { objectiveFacts } = await import('../src/lib/learning-library.ts');
   const { publishedResources } = await import('../src/lib/learning-resources.ts');
   const { higherEducation } = await import('../src/lib/higher-education.ts');
-  const tagged = (...goals: string[]) => publishedResources.filter((r) => goals.some((g) => (r.goals as readonly string[]).includes(g))).length;
+  const onPath = (path: string) => publishedResources.filter((r) => (r.paths as readonly string[]).includes(path)).length;
+  const forExam = (exam: string) => publishedResources.filter((r) => (r.exams as readonly string[] | undefined)?.includes(exam)).length;
   assert.deepEqual(objectiveFacts('ensino-fundamental'), { resources: 0 });
-  assert.deepEqual(objectiveFacts('ensino-medio'), { resources: tagged('ensino-medio') });
-  // Vestibular holds its exams: everything tagged for vestibulares, ENEM or UERJ.
-  assert.deepEqual(objectiveFacts('vestibulares'), { resources: tagged('vestibulares', 'enem', 'uerj') });
+  assert.deepEqual(objectiveFacts('ensino-medio'), { resources: onPath('ensino-medio') });
+  // Vestibular holds its exams: an exam's resources declare its parent path.
+  assert.deepEqual(objectiveFacts('vestibulares'), { resources: onPath('vestibulares') });
   assert.equal(objectiveFacts('vestibulares').resources, 20);
   assert.deepEqual(objectiveFacts('pre-militar'), { resources: 0 });
   assert.deepEqual(objectiveFacts('ensino-superior'), { resources: higherEducation().flatMap((g) => g.resources).length });
   assert.deepEqual(objectiveFacts('tecnologia'), { resources: 17, tracks: 7 });
-  assert.deepEqual(objectiveFacts('enem'), { resources: tagged('enem') });
+  assert.deepEqual(objectiveFacts('enem'), { resources: forExam('enem') });
   assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
 });
 
