@@ -1,0 +1,14 @@
+---
+// /ensino-medio/: the school subjects through their areas, with the resources for Ensino Médio
+// (spec §6.3). Unlike /materias/, which is an index, this page is a study map for one objective.
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import ObjectiveMap from '../../components/ObjectiveMap.astro';
+import { pt as t } from '../../i18n/pt';
+
+const c = t.pages['ensino-medio'];
+---
+<Base title={c.title} description={c.description}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <ObjectiveMap goal="ensino-medio" />
+</Base>

@@ -1,0 +1,48 @@
+---
+// /uerj/: the UERJ's own process (spec §6.3). Understand the exam and plan from the official rules, then
+// make the past questions of the Revista do Vestibular the spine of the preparation.
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import TrackSection from '../../components/TrackSection.astro';
+import SourceNote from '../../components/SourceNote.astro';
+import ResourceList from '../../components/ResourceList.astro';
+import SubjectLinks from '../../components/SubjectLinks.astro';
+import { resolveGuide, UERJ_SUBJECTS } from '../../lib/exam-guides';
+import { pt as t } from '../../i18n/pt';
+
+const c = t.pages.uerj;
+const g = t.guides.uerj;
+const exams = resolveGuide('uerj').find((s) => s.id === 'provas');
+---
+<Base title={c.title} description={c.description}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+
+  <TrackSection id="entenda" title={g.entenda.title}>
+    <div class="prose">
+      {g.entenda.body.map((p) => <p>{p}</p>)}
+      <SourceNote source="uerj-faq" />
+    </div>
+  </TrackSection>
+
+  <TrackSection id="prepare" title={g.prepare.title}>
+    <div class="prose">
+      {g.prepare.body.map((p) => <p>{p}</p>)}
+      <SourceNote source="uerj-faq" />
+    </div>
+  </TrackSection>
+
+  <TrackSection id="materias" title={g.materias.title} why={g.materias.why}>
+    <SubjectLinks subjects={UERJ_SUBJECTS} />
+  </TrackSection>
+
+  {exams && (
+    <TrackSection id="provas" title={g.provas.title} why={g.provas.why}>
+      <ResourceList resources={exams.resources} compact />
+    </TrackSection>
+  )}
+</Base>
+
+<style>
+  .prose { max-width: var(--measure); }
+  .prose p + p { margin-top: var(--space-4); }
+</style>

@@ -1,0 +1,44 @@
+---
+// The six areas, each with its subjects as direct links (spec §5.2, item 3). An area with a single
+// subject links from its own name, so the same word is not said twice. Used on the Home and /materias/.
+import { routes } from '../lib/routes';
+import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf } from '../lib/taxonomy';
+
+interface Props { headingLevel?: 2 | 3 }
+const { headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
+const areas = AREA_ORDER.map((id) => ({ id, label: AREAS[id].label, subjects: subjectsOf(id) }));
+---
+<ul class="areas" role="list">
+  {areas.map((area) => (
+    <li>
+      <div class="area" id={`area-${area.id}`} data-area={area.id}>
+        {area.subjects.length === 1 ? (
+          <Heading class="name"><a href={routes.subject(area.subjects[0]!)}>{area.label} <span aria-hidden="true">→</span></a></Heading>
+        ) : (
+          <>
+            <Heading class="name">{area.label}</Heading>
+            <ul class="subjects" role="list">
+              {area.subjects.map((id) => <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a></li>)}
+            </ul>
+          </>
+        )}
+      </div>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .areas { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--space-7); }
+  @media (min-width: 640px) { .areas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .areas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  .area { padding-block: var(--space-5) var(--space-6); border-top: 1px solid var(--rule); }
+  .name { font-size: var(--fs-h3); font-weight: 560; margin-bottom: var(--space-3); }
+  .name a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; text-decoration: none; }
+  .name a span { color: var(--muted); }
+  .name a:hover span { color: var(--action); }
+  .subjects { display: flex; flex-wrap: wrap; gap: 0 var(--space-4); }
+  .subjects a { display: inline-flex; align-items: center; min-height: 40px; color: var(--muted); text-decoration: underline; text-decoration-color: var(--rule); }
+  .subjects a:hover { color: var(--action); text-decoration-color: currentColor; }
+</style>

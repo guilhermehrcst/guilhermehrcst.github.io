@@ -1,26 +1,24 @@
 ---
-// Google Sans Flex (OFL-1.1), self-hosted from @fontsource-variable. The opsz build carries
-// weight + optical size only; width, grade, roundness and slant axes are deliberately not shipped.
+// The page shell: head (title, description, canonical, Open Graph), skip link, header, main, footer.
+// Google Sans Flex (OFL-1.1), self-hosted from @fontsource-variable: weight and optical size only.
+// V0.1 is Portuguese only and carries no hreflang (spec §6.6). No JavaScript here.
 import '@fontsource-variable/google-sans-flex/opsz.css';
 import '../styles/global.css';
 import sansLatin from '@fontsource-variable/google-sans-flex/files/google-sans-flex-latin-opsz-normal.woff2?url';
-import Header from '../components/Header.astro';
-import { dicts, routes, hreflang } from '../i18n/routes';
-import type { Lang, RouteId } from '../i18n/types';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { pt as t } from '../i18n/pt';
 
 interface Props {
-  lang: Lang;
-  page: RouteId;
   title: string;
   description: string;
+  /** The 404 and nothing else: not indexed, no canonical. */
   noindex?: boolean;
 }
 
-const { lang, page, title, description, noindex = false } = Astro.props;
-const t = dicts[lang];
+const { title, description, noindex = false } = Astro.props;
 const site = Astro.site ?? new URL('https://guilhermehrcst.github.io');
-const abs = (path: string) => new URL(path, site).href;
-const canonical = abs(routes[page][lang]);
+const canonical = new URL(Astro.url.pathname, site).href;
 ---
 <!doctype html>
 <html lang={t.htmlLang}>
@@ -29,40 +27,24 @@ const canonical = abs(routes[page][lang]);
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{title}</title>
   <meta name="description" content={description}>
-  {noindex && <meta name="robots" content="noindex">}
-  <meta name="theme-color" content="#ffffff">
-  <meta name="color-scheme" content="light only">
-  <link rel="canonical" href={canonical}>
-  <link rel="alternate" hreflang={hreflang.en} href={abs(routes[page].en)}>
-  <link rel="alternate" hreflang={hreflang.pt} href={abs(routes[page].pt)}>
-  <link rel="alternate" hreflang="x-default" href={abs(routes[page].en)}>
+  {noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
+  <meta name="theme-color" content="#faf8f4">
   <meta property="og:type" content="website">
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
-  <meta property="og:url" content={canonical}>
-  <meta property="og:locale" content={t.meta.ogLocale}>
-  <meta property="og:site_name" content="Guilherme Henrique">
+  {!noindex && <meta property="og:url" content={canonical}>}
+  <meta property="og:locale" content={t.ogLocale}>
+  <meta property="og:site_name" content={t.siteName}>
   <meta name="twitter:card" content="summary">
   <link rel="preload" href={sansLatin} as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <!-- Motion gate. Runs before first paint. Without JS, or with reduced motion,
-       the page renders in its final, composed state: motion is enrichment only.
-       The timeout is a fail-open: content is never left hidden. -->
-  <script is:inline>
-    (function () {
-      var d = document.documentElement;
-      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      d.classList.add('motion');
-      setTimeout(function () { d.classList.add('loaded'); }, 1400);
-    })();
-  </script>
 </head>
 <body>
   <a class="skip" href="#main">{t.skip}</a>
-  <Header lang={lang} page={page} />
-  <slot />
-  <script>
-    import '../scripts/motion';
-  </script>
+  <SiteHeader />
+  <main id="main">
+    <slot />
+  </main>
+  <SiteFooter />
 </body>
 </html>

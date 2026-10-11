@@ -1,410 +1,219 @@
+// Interface copy, in Brazilian Portuguese. Names of objectives, areas and subjects live in
+// src/lib/taxonomy.ts; official resource titles are never translated.
 import type { Dict } from './types';
 
-// Limite factual: tudo aqui já existia na versão anterior do site (ver o
-// histórico do git) ou, no currículo, foi fornecido pelo Guilherme para ele
-// (contagem de migrations e Edge Functions, resultado do M7, formação e cursos).
-// Não adicionar métricas, usuários, clientes, cargos nem níveis.
 export const pt: Dict = {
   htmlLang: 'pt-BR',
-  meta: {
-    title: 'Guilherme Henrique — engenharia de software, sistemas e IA',
-    description:
-      'Guilherme Henrique, no Rio de Janeiro. Engenharia de software, sistemas e IA, com trabalhos como Pexiscale e Lume e foco em correção, evidência e experimentação.',
-    ogLocale: 'pt_BR',
-  },
+  ogLocale: 'pt_BR',
+  siteName: 'Pexis Academy',
   skip: 'Pular para o conteúdo',
-  nav: { label: 'Principal', home: 'Início', resume: 'Currículo', courses: 'Cursos', language: 'Idioma' },
-  hero: {
-    meta: ['Rio de Janeiro, Brasil', 'Engenharia de software / Sistemas / IA', 'Agora / Pexiscale + Lume'],
-    blurb: 'Construo software, sistemas e experimentos para resolver problemas reais e explorar novas possibilidades.',
-    cta: 'Ver currículo',
-    photoAlt: 'Guilherme Henrique tirando uma foto no espelho de um elevador.',
+  nav: { label: 'Principal', home: 'Pexis Academy, página inicial' },
+  footer: {
+    tagline: 'Recursos gratuitos e verificados, organizados com direção.',
+    objectives: 'Objetivos',
+    subjects: 'Matérias',
+    academy: 'Pexis Academy',
+    verified: (date) => `Recursos verificados em ${date}.`,
+    licenses: 'Licenças',
   },
-  statement: {
-    label: '01 / Manifesto',
-    mark: 'evidências',
-    text: 'Construo software, sistemas e experimentos e mostro as evidências.',
-    aside:
-      'Trabalho com backends transacionais e com a forma como os dados são representados na memória: áreas em que uma resposta errada pode custar dinheiro ou confiança. Uso ferramentas de IA extensivamente e trato as respostas delas como não verificadas até que um teste, uma medição ou uma consulta mostre o contrário.',
-  },
-  lume: {
-    label: '03 / Pesquisa',
-    name: 'Lume',
-    question:
-      'É possível representar software e dados usando menos memória e menos movimentação de dados, sem abrir mão da correção?',
-    body: 'Um projeto de pesquisa aberto, com núcleo em C++20 e uma baseline em C. Primeira regra: nenhuma afirmação de otimização sem medição.',
-    link: {
-      href: 'https://github.com/guilhermehrcst/lume',
-      text: 'github.com/guilhermehrcst/lume',
-      note: 'Público. Antes chamado PXIR.',
+  pages: {
+    home: {
+      title: 'Pexis Academy: aprenda com direção',
+      description: 'Estude para o ENEM, a UERJ, o Ensino Médio e vestibulares com recursos gratuitos e verificados, organizados por objetivo, área e matéria.',
+      heading: 'Aprenda com direção.',
+      lead: 'Escolha um objetivo e siga um caminho claro até materiais gratuitos, oficiais e verificados.',
     },
-    facts: [
-      {
-        title: 'Verificado ou não executa',
-        body: 'Um verificador é o único caminho para obter um programa executável. O sistema de tipos torna impossível executar uma IR que não tenha sido verificada.',
-      },
-      {
-        title: 'Hipótese, medição, resultado',
-        body: 'Cada marco registra os três, inclusive as hipóteses que foram refutadas.',
-      },
-      {
-        title: 'Sanitizers em três plataformas',
-        body: 'O CI compila no Linux, no macOS e no Windows e roda os testes com AddressSanitizer e UBSan.',
-      },
-    ],
-    ledger: {
-      evidenceLabel: 'Evidência',
-      evidence:
-        'O código, os benchmarks e um relatório de cada marco são públicos. Em um benchmark, reaproveitar um buffer morto reduziu os page faults de 2.016 para 0 por chamada (1 milhão de elementos, medido).',
-      openLabel: 'Em aberto',
-      open: 'Pesquisa em estágio inicial. Nenhuma afirmação de desempenho em produção ou de validade universal; os resultados valem para as cargas de trabalho e as máquinas descritas.',
-    },
-    figure: {
-      alt: 'Esquema: blocos de memória espalhados por um espaço de endereçamento são compactados em uma única região contígua.',
-      caption: 'Fig. 02 — Esquema ilustrativo, não dados reais. Conforme a página rola, as alocações espalhadas se compactam em um layout contíguo; o azul indica dados em movimento.',
-      states: ['espalhado', 'compactando', 'contíguo'],
-      axis: 'Espaço de endereçamento →',
-      legend: ['vivo', 'em movimento', 'morto, recuperado'],
-    },
-  },
-  pexiscale: {
-    label: '02 / Produto',
-    name: 'Pexiscale',
-    question: 'Uma plataforma multi-tenant para o trabalho do dia a dia de pequenas e médias empresas.',
-    body: 'Clientes, catálogo, estoque, orçamentos e pedidos em uma única plataforma, com os dados de cada empresa mantidos isolados. Eu projeto e desenvolvo a plataforma.',
-    link: { href: 'https://pexiscale.com', text: 'pexiscale.com', note: 'No ar.' },
-    facts: [
-      {
-        title: 'Quem decide é o servidor',
-        body: 'O PostgreSQL é a fonte de verdade dos dados comerciais. Preços, estoque e estado dos pedidos são decididos no servidor. A IA interpreta solicitações e sugere ações; a decisão final cabe ao domínio comercial.',
-      },
-      {
-        title: 'O isolamento fica no banco',
-        body: 'Toda linha que pertence a uma empresa carrega o ID da organização e é protegida por row-level security, não por filtros no cliente.',
-      },
-      {
-        title: 'Fronteiras protegidas',
-        body: 'Verificações automatizadas de CI fazem o build falhar se houver regressão nas fronteiras de código legado, deploy ou marketing, ou se segredos forem commitados.',
-      },
-    ],
-    ledger: {
-      evidenceLabel: 'Evidência',
-      evidence:
-        'Pull requests para a branch principal passam por um gate de CI que inclui verificações de fronteira e varredura de segredos.',
-      openLabel: 'Em aberto',
-      open: 'Nem toda funcionalidade implementada está ativa em produção. Algumas dependem de aprovação de provedores e de rollout, e só apresento uma funcionalidade como ativa quando ela de fato está.',
-    },
-    figure: {
-      caption: 'Fig. 03 — O workspace do Pexiscale: vendas, catálogo e a página inicial com a IA. Produto real, dados de demonstração.',
-      shots: {
-        sales: 'Tela de orçamentos do Pexiscale: lista com cliente, valor, situação e data, e ao lado o orçamento selecionado em rascunho, com item, subtotal, descontos, total e as ações de editar, enviar e descartar.',
-        catalog: 'Catálogo do Pexiscale: busca, filtros por situação e estoque, e a lista de produtos com SKU, categoria, preço e unidades disponíveis para venda.',
-        home: 'Página inicial do workspace do Pexiscale: a pergunta “Como posso ajudar hoje?” e o campo para pedir à IA, com a assistente Lila e atalhos para documentos e planilhas.',
-      },
-    },
-  },
-  pexisMachine: {
-    label: '04 / Experimento',
-    name: 'Pexis Machine',
-    kind: 'Laboratório de arquitetura computacional em software',
-    question: 'Como observar o comportamento de uma máquina computacional completa dentro do navegador?',
-    body: 'Um laboratório experimental que simula uma máquina em software. O núcleo de simulação é a fonte de verdade; a interface visual apenas observa o estado produzido por ele.',
-    facts: [
-      {
-        title: 'Máquina em software',
-        body: 'CPU, memória, interconexão e aceleradores são modelados como partes do sistema, não como uma animação decorativa.',
-      },
-      {
-        title: 'Core como fonte de verdade',
-        body: 'A visualização lê o estado produzido pelo simulador; a interface não decide o comportamento da máquina.',
-      },
-      {
-        title: 'Laboratório evolutivo',
-        body: 'O primeiro uso é experimentar ideias ligadas ao Lume, preservando espaço para novos subsistemas e estudos de arquitetura.',
-      },
-    ],
-  },
-  principles: {
-    label: '09 / Método',
-    items: [
-      {
-        title: 'Correção',
-        body: 'Onde uma resposta errada pode custar dinheiro ou confiança, quem decide é o servidor. O cliente pergunta; o domínio responde.',
-      },
-      {
-        title: 'Simplicidade',
-        body: 'A menor arquitetura que continua correta, observável e recuperável. Menos partes móveis, menos lugares para errar.',
-      },
-      {
-        title: 'Evidência',
-        body: 'Tudo é tratado como não verificado até que um teste, uma medição ou uma consulta mostre o contrário, inclusive o que as ferramentas de IA produzem. Hipóteses refutadas continuam registradas.',
-      },
-    ],
-  },
-  about: {
-    label: '05 / Sobre',
-    heading: 'Engenheiro autodidata no Rio de Janeiro.',
-    body: 'Atuo na interseção entre engenharia de software, sistemas e IA. Construo produtos e faço experimentos sobre como computação e dados são representados. Projeto e desenvolvo o Pexiscale e pesquiso memória e movimentação de dados no Lume.',
-    also: 'Também desenvolvo o backend de pedidos e pagamentos da Paulex, minha marca de varejo. Os pedidos são criados apenas no servidor, e uma requisição repetida nunca gera um segundo pedido. O repositório é privado.',
-    cta: 'Ver currículo',
-  },
-  contact: {
-    label: '10 / Contato',
-    heading: 'Contato',
-    items: [
-      { icon: 'email', label: 'E-mail', value: 'guilhermehrcst@gmail.com', href: 'mailto:guilhermehrcst@gmail.com' },
-      { icon: 'linkedin', label: 'LinkedIn', value: 'Guilherme Henrique', href: 'https://www.linkedin.com/in/guilherme-henrique-8927093b6' },
-      { icon: 'github', label: 'GitHub', value: 'guilhermehrcst', href: 'https://github.com/guilhermehrcst' },
-      { icon: 'instagram', label: 'Instagram', value: '@guilhermehrcst', href: 'https://www.instagram.com/guilhermehrcst/' },
-    ],
-  },
-  footer: { place: 'Rio de Janeiro, Brasil', updated: 'Atualizado em 6 de outubro de 2026', top: 'Voltar ao topo' },
-  resume: {
-    meta: {
-      title: 'Currículo — Guilherme Henrique',
-      description:
-        'Currículo de Guilherme Henrique, engenheiro de software no Rio de Janeiro com atuação em backend, sistemas e IA: trabalhos selecionados em Pexiscale, Lume e Pexis Machine, competências, fluxo de trabalho com IA, formação e cursos.',
-    },
-    heading: 'Currículo',
-    print: 'Imprimir currículo',
-    terminal: { path: '~/curriculo', ready: ['sessão iniciada', 'role para executar'], closed: 'sessão encerrada.' },
-    whoami: {
-      role: 'Engenheiro de Software | Backend, Sistemas e IA',
-      place: 'Rio de Janeiro, Brasil',
-      summary:
-        'Engenheiro de software com trajetória predominantemente autodidata e experiência prática em backend, sistemas, bancos de dados, segurança e construção de produtos. Desenvolvo aplicações de ponta a ponta com TypeScript, React e PostgreSQL e exploro programação de sistemas e desempenho com C++. Trabalho com arquitetura multi-tenant, autorização, transações, concorrência, idempotência, testes automatizados e CI/CD. Uso IA de forma estruturada no processo de engenharia e valido o resultado com testes, medições e evidências.',
-    },
-    work: {
-      title: 'Trabalhos selecionados',
-      note: 'Projetos independentes que projeto e desenvolvo. Não são vínculos empregatícios.',
-      pexiscale: {
-        name: 'Pexiscale',
-        kind: 'SaaS multi-tenant / Engenharia de produto',
-        stack: 'TypeScript / React / PostgreSQL / Supabase',
-        points: [
-          'Projetei uma arquitetura SaaS multi-tenant com PostgreSQL, RLS, RBAC e autorização server-side, mantendo o isolamento entre organizações e a separação explícita entre autenticação e autorização.',
-          'Evoluí o banco de dados por meio de mais de 100 migrations PostgreSQL, trabalhando com integridade, transações, concorrência, idempotência e os contratos entre aplicação e banco.',
-          'Desenvolvi cerca de 25 Edge Functions e fluxos server-side para billing e assinaturas com Stripe, integrações e funcionalidades assistidas por IA.',
-          'Automatizei verificações de CI para migrations, fronteiras arquiteturais, vazamento de secrets, contratos entre cliente e banco, topologia de deploy, segurança e performance budgets.',
-        ],
-        figures: [
-          { value: '100+', label: 'migrations PostgreSQL' },
-          { value: '~25', label: 'Edge Functions' },
-        ],
-        link: { href: 'https://pexiscale.com', text: 'pexiscale.com' },
-      },
-      lume: {
-        name: 'Lume',
-        kind: 'Pesquisa experimental em sistemas, open source',
-        stack: 'C++20 / CMake / GCC / Clang',
-        description: 'Plataforma experimental de pesquisa em sistemas, com IR tipada e foco em representação, memória, movimentação de dados e execução eficiente.',
-        points: [
-          'Investiguei como layout de memória, reaproveitamento de buffers e fusão de operações alteram a movimentação de dados, medindo cada hipótese com benchmarks.',
-          'Desenvolvi o núcleo em C++20, com a correção garantida por um verificador: uma IR não verificada não pode ser executada.',
-          'Validei o código em CI no Linux, macOS e Windows, com AddressSanitizer e UBSan em Ubuntu/GCC.',
-        ],
-        link: { href: 'https://github.com/guilhermehrcst/lume', text: 'github.com/guilhermehrcst/lume' },
-        method: {
-          label: 'Todo resultado é classificado',
-          items: [
-            { term: 'Medido', definition: 'Observado em um benchmark.' },
-            { term: 'Inferido', definition: 'Derivado de medições, sem medição direta.' },
-            { term: 'Refutado', definition: 'Hipótese rejeitada pelos dados.' },
-            { term: 'Ainda desconhecido', definition: 'Em aberto. Nenhuma afirmação é feita.' },
-          ],
-        },
-        experiment: {
-          label: 'Experimento controlado / M7',
-          movement: { value: '24 → 16', label: 'bytes por elemento, modelo lógico de movimentação de dados' },
-          time: { value: '≈0,79–0,82×', label: 'tempo medido em relação ao baseline' },
-          text: 'No workload controlado do experimento M7, a fusão reduziu o modelo lógico de movimentação de dados de 24 para 16 bytes por elemento; a execução medida ficou em aproximadamente 0,79–0,82× o tempo do baseline. Um resultado desse workload, não uma afirmação geral.',
-        },
-      },
-      paulex: {
-        name: 'Paulex',
-        kind: 'E-commerce / Engenharia de produto para varejo',
-        stack: 'React / TypeScript / PostgreSQL / Supabase / Vitest / Playwright',
-        domains: ['Catálogo', 'Estoque', 'Pedidos', 'Reservas', 'Pagamentos', 'Webhooks'],
-        points: [
-          'Desenvolvi um sistema de e-commerce que cobre catálogo, estoque, pedidos, reservas, pagamentos, cupons, autenticação e painel administrativo.',
-          'Implementei testes concorrentes em PostgreSQL para cenários como duas sessões disputando estoque, compra simultânea da última unidade e alterações concorrentes em estruturas de preços.',
-          'Estruturei os pagamentos para manter o backend como autoridade sobre os valores: os pedidos são criados apenas no servidor, as requisições são idempotentes e a confirmação chega de forma assíncrona por webhook.',
-          'Automatizei testes com Vitest, Playwright, SQL e GitHub Actions.',
-        ],
-        note: 'Repositório privado.',
-        figure: { value: '60+', label: 'migrations PostgreSQL' },
-      },
-    },
-    capabilities: {
-      title: 'Competências',
-      groups: [
-        { title: 'Linguagens', items: ['TypeScript', 'JavaScript', 'SQL', 'C++', 'HTML', 'CSS'] },
-        {
-          title: 'Backend e dados',
-          items: ['PostgreSQL', 'Supabase', 'Edge Functions', 'APIs', 'Modelagem de bancos de dados', 'Migrations', 'Transações', 'Concorrência', 'Idempotência', 'Row Level Security', 'RBAC', 'Autenticação', 'Autorização'],
-        },
-        { title: 'Frontend e produto', items: ['React', 'Vite', 'TypeScript', 'Desenvolvimento de interfaces', 'Engenharia de produto'] },
-        {
-          title: 'Testes e infraestrutura',
-          items: ['Git', 'GitHub', 'GitHub Actions', 'CI/CD', 'Vitest', 'Playwright', 'Testes de integração', 'Testes em SQL', 'CMake', 'GCC', 'Clang', 'ASan', 'UBSan'],
-        },
-        {
-          title: 'Sistemas e desempenho',
-          items: ['C++', 'Memória', 'Buffers', 'Movimentação de dados', 'Engenharia de desempenho', 'Benchmarking', 'Representações intermediárias', 'Metodologia experimental'],
-        },
-      ],
-    },
-    ai: {
-      title: 'Engenharia assistida por IA',
-      body: 'Uso diferentes modelos e agentes conforme a natureza da tarefa: arquitetura, especificação, implementação assistida, revisão, debugging, testes, análise de segurança, pesquisa técnica, benchmarks e refatoração. Saídas produzidas por IA são tratadas como não verificadas até serem sustentadas por código, testes, medições ou revisão técnica.',
-      flowLabel: 'Fluxo de trabalho',
-      flow: ['Especificar', 'Implementar', 'Verificar', 'Medir'],
-      models: { label: 'Modelos e assistentes', items: ['ChatGPT', 'Claude', 'Gemini', 'DeepSeek'] },
-      agents: { label: 'Agentes e plataformas', items: ['Claude Code', 'Codex', 'Google Antigravity', 'Hermes Agent'] },
-    },
-    education: {
-      title: 'Formação',
-      items: [
-        { institution: 'unisuam', school: 'UNISUAM', program: 'Análise e Desenvolvimento de Sistemas', status: 'Graduação iniciada, não concluída' },
-        { institution: 'marques-rodrigues', school: 'Colégio Marques Rodrigues', program: 'Ensino médio', status: 'Concluído' },
-        { institution: 'joao-paulo', school: 'Jardim Escola João Paulo de Bangu', program: '1º e 2º anos do ensino médio', status: 'Primeiro contato com tecnologia da informação' },
-      ],
-    },
-    coursework: {
-      title: 'Cursos e estudos',
-      items: [
-        { institution: 'harvard', school: 'Harvard University', program: 'CS50: Introduction to Computer Science', status: 'Conteúdo cursado parcialmente' },
-        { institution: 'bradesco', school: 'Fundação Bradesco', program: 'Estudos em tecnologia da informação' },
-      ],
-    },
-    influences: {
-      title: 'Inspirações',
-      intro: 'Referências que influenciam como penso sobre tecnologia, produto, sistemas, engenharia e construção de longo prazo.',
-      descriptions: {
-        jensen: 'Visão sistêmica, computação e execução de longo prazo.',
-        elon: 'Engenharia ambiciosa, primeiros princípios e construção orientada ao futuro.',
-        mark: 'Produto, plataformas e construção em escala.',
-        steve: 'Produto, design, simplicidade e integração entre tecnologia e experiência.',
-        'larry-sergey': 'Informação, sistemas, pesquisa e construção em escala global.',
-        sam: 'IA, produto, escala e infraestrutura tecnológica.',
-        dario: 'Pesquisa em IA, segurança e construção responsável de sistemas de longo prazo.',
-        tim: 'Execução, operações, produto e construção de organizações duráveis.',
-      },
-      quote: 'Referências não são modelos para copiar. São lentes para expandir o que considero possível construir.',
-    },
-  },
-  courses: {
-    meta: {
-      title: 'Cursos gratuitos para Ensino Médio, ENEM, UERJ e tecnologia | Guilherme Henrique',
-      description: 'Biblioteca curada de cursos, aulas e práticas 100% gratuitos para Ensino Médio, ENEM, UERJ, vestibulares e tecnologia.',
-    },
-    eyebrow: ['Curadoria', 'Educação', '2026'],
-    heading: 'biblioteca-gratuita-de-aprendizado',
-    intro: 'Um lugar silencioso e curado para aprender o que importa: matérias do Ensino Médio, preparação para provas e tecnologia. Todo recurso publicado é gratuito para estudar.',
-    nav: {
-      label: 'Áreas de aprendizado',
-      jump: 'Explorar',
-      all: 'Todos os recursos',
-      areas: {
-        technology: 'Tecnologia', math: 'Matemática', portuguese: 'Português', writing: 'Redação',
-        nature: 'Ciências da Natureza', humanities: 'Ciências Humanas', english: 'Inglês', spanish: 'Espanhol',
-      },
-    },
-    areas: {
-      technology: { label: 'Tecnologia', title: 'tecnologia', intro: 'Programação, IA, dados, sistemas e segurança, preservando as melhores escolhas do catálogo original.' },
-      math: { label: 'Matemática', title: 'matematica', intro: 'Matemática do Ensino Médio e preparação para provas, dos fundamentos à resolução de problemas.' },
-      portuguese: { label: 'Português', title: 'portugues', intro: 'Gramática, interpretação e domínio da língua para o Ensino Médio e vestibulares.' },
-      writing: { label: 'Redação', title: 'redacao', intro: 'Argumentação, estrutura e prática deliberada para produzir redações de prova.' },
-      nature: { label: 'Ciências da Natureza', title: 'ciencias-da-natureza', intro: 'Física, Química e Biologia reunidas numa área sem apagar a identidade de cada matéria.' },
-      humanities: { label: 'Ciências Humanas', title: 'ciencias-humanas', intro: 'História, Geografia, Filosofia e Sociologia para contexto, interpretação e vestibulares.' },
-      english: { label: 'Inglês', title: 'ingles', intro: 'Leitura e interpretação com foco nas competências de idioma cobradas nas provas.' },
-      spanish: { label: 'Espanhol', title: 'espanhol', intro: 'Leitura e interpretação para ENEM, UERJ e outros vestibulares.' },
-    },
-    subjects: {
-      technology: 'Tecnologia', math: 'Matemática', portuguese: 'Português', writing: 'Redação',
-      physics: 'Física', chemistry: 'Química', biology: 'Biologia', history: 'História', geography: 'Geografia',
-      philosophy: 'Filosofia', sociology: 'Sociologia', english: 'Inglês', spanish: 'Espanhol',
-    },
-    technologySections: {
-      build: 'Programação e fundamentos', data: 'Dados e inteligência', systems: 'Sistemas e matemática', security: 'Segurança e infraestrutura',
-    },
-    technologyTopics: {
-      cs: 'Ciência da Computação', python: 'Python', web: 'Web', webdev: 'Desenvolvimento Web', ai: 'Inteligência Artificial',
-      genai: 'IA Generativa', datasci: 'Ciência de Dados', 'data-computing': 'Dados e Computação', databases: 'Banco de Dados',
-      algorithms: 'Algoritmos', 'math-cs': 'Matemática e Computação', math: 'Matemática', cybersecurity: 'Cibersegurança',
-      security: 'Segurança', privacy: 'Privacidade e Segurança', 'cloud-ai': 'Cloud e IA',
-    },
-    goals: { 'high-school': 'Ensino Médio', enem: 'ENEM', uerj: 'UERJ', vestibular: 'Vestibulares' },
-    formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', practice: 'Prática / simulados' },
-    levels: {
-      'high-school': 'Ensino Médio', vestibular: 'Preparação para vestibular', beginner: 'Iniciante',
-      'beginner-intermediate': 'Iniciante a intermediário', intermediate: 'Intermediário',
-    },
-    languages: { en: 'Inglês', pt: 'Português', es: 'Espanhol' },
-    registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
-    certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', available: 'Certificado disponível' },
-    imageAlts: {
-      cs50x: 'Auditório do CS50 em Harvard durante apresentação do curso.',
-      cs50p: 'Professor do CS50 durante apresentação em Harvard.',
-      'mit-6100l': 'Página do MIT OpenCourseWare do curso Introduction to Computer Science and Programming in Python.',
-      cs50ai: 'Aula do CS50 AI apresentando uma árvore de decisões.',
-      fluencia: 'Material da Fundação Bradesco sobre curso de inteligência artificial em parceria com a Microsoft.',
-      'fgv-datasci': 'Material da FGV sobre ciência de dados e inteligência artificial.',
-    },
-    units: { hours: 'h', weeks: 'semanas' },
-    labels: {
-      subject: 'Matéria', format: 'Formato', level: 'Nível', language: 'Idioma', goals: 'Útil para',
-      registration: 'Acesso', certificate: 'Certificado', duration: 'Duração', resources: 'recursos',
-      curated: 'Escolha da curadoria', cta: 'Abrir recurso gratuito', newTab: 'abre o site do provedor em nova aba',
-    },
-    filters: { label: 'Filtrar recursos', goal: 'Objetivo', format: 'Formato', reset: 'Limpar filtros', empty: 'Nenhum recurso corresponde a esta combinação.' },
-    tracks: { label: 'Trilhas de estudo', enem: 'Estudar para o ENEM', uerj: 'Estudar para a UERJ' },
-    closing: {
-      title: 'continue-aprendendo',
-      body: 'Esta biblioteca evolui com a qualidade do que existe. Um recurso permanece apenas enquanto continuar útil e realmente gratuito.',
-      prompt: 'Encontrou um recurso gratuito excelente?', cta: 'Sugerir recurso',
-    },
-  },  studyTracks: {
     enem: {
-      meta: { title: 'Trilha gratuita de estudos para o ENEM | Guilherme Henrique', description: 'Trilha curada para o ENEM com recursos 100% gratuitos por matéria e materiais oficiais de prática.' },
-      eyebrow: ['Trilha de estudo', 'ENEM', '2026'],
-      heading: 'estudar-para-o-ENEM',
-      intro: 'Avance por matéria, feche lacunas com intenção e volte ao material oficial para praticar. A trilha reutiliza a mesma biblioteca gratuita verificada em vez de manter um segundo catálogo.',
-      back: 'Voltar para a biblioteca completa',
-      navLabel: 'Seções da trilha ENEM',
-      sections: {
-        start: { title: 'comece-por-aqui', body: 'Mapeie as matérias que mais precisam de atenção e escolha uma sequência pequena. A ideia não é colecionar cursos, mas transformar a biblioteca em rota de estudo.' },
-        math: { title: 'matematica', body: 'Construa fluência com explicação e resolução repetida de problemas.' },
-        languages: { title: 'linguagens-e-portugues', body: 'Trabalhe leitura, interpretação e domínio do Português antes de buscar apenas velocidade.' },
-        writing: { title: 'redacao', body: 'Estude estrutura e argumentação e escreva com frequência, em vez de apenas ler redações-modelo.' },
-        nature: { title: 'ciencias-da-natureza', body: 'Alterne Física, Química e Biologia para impedir que uma matéria engula todo o cronograma.' },
-        humanities: { title: 'ciencias-humanas', body: 'Conecte História, Geografia, Filosofia e Sociologia por interpretação e contexto.' },
-        'foreign-language': { title: 'ingles-ou-espanhol', body: 'Estude o idioma que pretende usar, com ênfase em leitura e interpretação.' },
-        recommended: { title: 'feche-as-lacunas', body: 'Use a biblioteca completa quando precisar de outra explicação ou de uma base mais profunda em alguma matéria.' },
-        practice: { title: 'pratica-oficial', body: 'Feche ciclos com materiais do próprio INEP. A prática deve testar o que a trilha realmente mudou.' },
-      },
-      closing: { title: 'voltar-para-a-biblioteca', body: 'Precisa de outra matéria, formato ou nível? Volte ao catálogo central sem perder o contexto da prova.', cta: 'Abrir biblioteca completa' },
+      title: 'ENEM | Pexis Academy',
+      description: 'Prepare-se para o ENEM: entenda a prova pelas fontes oficiais do INEP, estude por área e pratique com material oficial e gratuito.',
+      eyebrow: 'Objetivo',
+      heading: 'ENEM',
+      lead: 'Um ponto de partida para a preparação: o que a prova avalia, por onde estudar cada área e onde praticar com material oficial.',
     },
     uerj: {
-      meta: { title: 'Trilha gratuita de estudos para a UERJ | Guilherme Henrique', description: 'Trilha curada para a UERJ com recursos 100% gratuitos e questões comentadas oficiais do Vestibular UERJ.' },
-      eyebrow: ['Trilha de estudo', 'UERJ', '2026'],
-      heading: 'estudar-para-a-UERJ',
-      intro: 'Use o acervo oficial de questões como espinha dorsal da preparação. No Exame Discursivo atual, todos fazem Redação e duas disciplinas específicas do curso, então a trilha deve acompanhar a graduação que você pretende disputar.',
-      back: 'Voltar para a biblioteca completa',
-      navLabel: 'Seções da trilha UERJ',
-      sections: {
-        start: { title: 'comece-por-aqui', body: 'Defina o curso que pretende disputar e use as regras oficiais da UERJ para descobrir quais disciplinas específicas merecem mais atenção.' },
-        math: { title: 'matematica', body: 'Use questões comentadas da UERJ para aprender o tipo de raciocínio cobrado pela prova.' },
-        languages: { title: 'portugues-e-literatura', body: 'Treine interpretação e língua diretamente com conjuntos de questões oficiais.' },
-        writing: { title: 'redacao', body: 'Mantenha prática de redação no ciclo semanal. O Exame Discursivo inclui Redação para todos os candidatos.' },
-        nature: { title: 'ciencias-da-natureza', body: 'Priorize as ciências relevantes para o curso pretendido e use as questões oficiais como referência.' },
-        humanities: { title: 'ciencias-humanas', body: 'Treine interpretação com questões de História e Geografia produzidas pela própria universidade.' },
-        'foreign-language': { title: 'lingua-estrangeira', body: 'Use o acervo oficial de questões de idioma quando essa língua fizer parte da sua preparação.' },
-        recommended: { title: 'feche-as-lacunas', body: 'A biblioteca principal continua disponível para estudar fundamentos quando as questões oficiais revelarem uma fraqueza.' },
-        practice: { title: 'pratica-oficial', body: 'Volte às questões comentadas da UERJ depois de cada ciclo de estudo. Elas são a referência mais próxima da própria prova.' },
-      },
-      closing: { title: 'voltar-para-a-biblioteca', body: 'Precisa de teoria antes de voltar às questões da UERJ? Use o catálogo central por matéria e formato.', cta: 'Abrir biblioteca completa' },
+      title: 'UERJ | Pexis Academy',
+      description: 'Prepare-se para o Vestibular Estadual da UERJ: entenda a prova pela fonte oficial e resolva questões comentadas de edições anteriores.',
+      eyebrow: 'Objetivo',
+      heading: 'UERJ',
+      lead: 'A UERJ tem um processo próprio. Comece pelas regras oficiais e faça das questões de provas anteriores a base da sua preparação.',
+    },
+    'ensino-medio': {
+      title: 'Ensino Médio | Pexis Academy',
+      description: 'Estude as matérias do Ensino Médio por área, com cursos e materiais gratuitos e verificados, de Matemática a Idiomas.',
+      eyebrow: 'Objetivo',
+      heading: 'Ensino Médio',
+      lead: 'As matérias da escola organizadas por área, cada uma com recursos gratuitos para estudar no seu ritmo.',
+    },
+    vestibulares: {
+      title: 'Vestibulares | Pexis Academy',
+      description: 'Prepare-se para vestibulares com recursos gratuitos e verificados por matéria, e com um caminho próprio para a UERJ.',
+      eyebrow: 'Objetivo',
+      heading: 'Vestibulares',
+      lead: 'Uma base comum para vestibulares em geral, com recursos por matéria e um caminho específico para a UERJ.',
+    },
+    tecnologia: {
+      title: 'Tecnologia | Pexis Academy',
+      description: 'Aprenda programação, ciência da computação, web, dados, inteligência artificial e segurança com cursos gratuitos de Harvard, MIT e outros.',
+      eyebrow: 'Objetivo e área',
+      heading: 'Tecnologia',
+      lead: 'Trilhas para começar a programar e aprofundar em computação, com cursos gratuitos de universidades e instituições reconhecidas.',
+    },
+    materias: {
+      title: 'Matérias | Pexis Academy',
+      description: 'As matérias da Pexis Academy por área: Matemática, Linguagens, Ciências da Natureza, Ciências Humanas, Idiomas e Tecnologia.',
+      eyebrow: 'Explorar',
+      heading: 'Explore por área',
+      lead: 'Escolha uma matéria para ver onde estudar e onde praticar, sempre com recursos gratuitos e verificados.',
+    },
+    buscar: {
+      title: 'Buscar | Pexis Academy',
+      description: 'Encontre objetivos, áreas, matérias, trilhas e recursos gratuitos da Pexis Academy em um índice completo e pesquisável.',
+      heading: 'Buscar',
+      lead: 'Tudo o que a Pexis Academy organiza, reunido num só índice.',
+    },
+    sobre: {
+      title: 'Sobre | Pexis Academy',
+      description: 'Como a Pexis Academy escolhe e verifica recursos: acesso realmente gratuito, fontes primárias e data de verificação registrada.',
+      heading: 'Sobre a Pexis Academy',
+      lead: 'Um lugar para estudar com direção, usando apenas recursos gratuitos que verificamos na fonte.',
+    },
+    notFound: {
+      title: 'Página não encontrada | Pexis Academy',
+      description: 'O endereço procurado não existe na Pexis Academy. Volte ao início, explore as matérias ou use a busca para continuar.',
+      heading: 'Página não encontrada',
+      lead: 'Este endereço não existe ou deixou de existir. Escolha por onde continuar.',
     },
   },
-
+  home: {
+    cta: 'Escolher meu objetivo',
+    areas: { heading: 'Explore por área' },
+    curation: {
+      heading: 'Como escolhemos os recursos',
+      rules: [
+        { title: 'Gratuito de verdade', body: 'Todo o conteúdo de estudo é gratuito. Sem período de teste, sem trechos de amostra, sem link de afiliado. Alguns pedem uma conta gratuita.' },
+        { title: 'Direto da fonte', body: 'Cada link leva à página oficial do curso, da instituição ou da prova, nunca a um agregador.' },
+        { title: 'Verificado com data', body: 'Conferimos cada recurso na fonte antes de publicar e registramos quando.' },
+      ],
+      more: 'Como verificamos',
+    },
+    objectives: {
+      heading: 'Qual é o seu objetivo?',
+      items: {
+        enem: 'Entenda a prova, estude por área e pratique com material oficial do INEP.',
+        uerj: 'Comece pelas regras oficiais e pratique com questões de provas anteriores.',
+        'ensino-medio': 'As matérias da escola, organizadas por área, com recursos gratuitos para cada uma.',
+        vestibulares: 'Uma base comum, matéria por matéria, para vestibulares em geral.',
+        tecnologia: 'Trilhas para aprender programação, computação, dados e inteligência artificial.',
+      },
+    },
+  },
+  about: {
+    intro: 'A Pexis Academy é um produto da Pexis. Ela não produz aulas: organiza, por objetivo, área e matéria, materiais gratuitos de universidades, instituições públicas e plataformas educacionais, e diz por onde começar.',
+    curation: {
+      heading: 'Regras de curadoria',
+      rules: [
+        { title: 'Acesso realmente gratuito', body: 'O conteúdo de estudo precisa ser inteiramente gratuito. Não publicamos períodos de teste, trechos de amostra, conteúdo atrás de pagamento nem links de afiliado. Uma conta gratuita pode ser exigida; um certificado pago e opcional não impede a publicação, desde que as aulas sejam gratuitas.' },
+        { title: 'Link para a fonte primária', body: 'Cada recurso leva à página oficial do curso ou da instituição. Nunca deduzimos um endereço a partir da estrutura de um site.' },
+        { title: 'Material oficial para as provas', body: 'Para ENEM e UERJ, a prática começa pelo material publicado por quem faz a prova: o INEP e o Vestibular Estadual da UERJ.' },
+        { title: 'Relevância, não promessa', body: 'Marcar um recurso como útil para o ENEM ou para vestibulares é uma indicação editorial, não uma alegação de que o provedor prepara oficialmente para aquela prova.' },
+      ],
+    },
+    verification: {
+      heading: 'Como verificamos',
+      body: [
+        'Antes de publicar, abrimos cada recurso na página do próprio provedor e confirmamos que o conteúdo de estudo é gratuito. Registramos a data e a forma dessa verificação junto com o recurso.',
+        'Um recurso promissor que não conseguimos confirmar fica fora do site, com uma nota explicando o motivo, até ser verificado.',
+      ],
+      latest: (date) => `A verificação mais recente do catálogo foi em ${date}.`,
+    },
+    independence: {
+      heading: 'Independência',
+      body: [
+        'A Pexis Academy não tem vínculo com o INEP, com a UERJ nem com os provedores dos recursos indicados. Os nomes e as marcas pertencem aos seus titulares e aparecem apenas para identificar a origem de cada material.',
+        'Não usamos links de afiliado: indicar um recurso não depende de nenhum acordo com quem o oferece.',
+      ],
+    },
+  },
+  tecnologia: { chooser: 'Escolha uma trilha' },
+  search: {
+    label: 'Buscar na Pexis Academy',
+    placeholder: 'Matéria, prova, trilha ou curso',
+    groups: { objetivo: 'Objetivos', area: 'Áreas', materia: 'Matérias', trilha: 'Trilhas de tecnologia', recurso: 'Recursos' },
+    results: (n) => (n === 1 ? '1 resultado' : `${n} resultados`),
+    empty: 'Nada encontrado. Tente outra palavra, ou explore pelas áreas.',
+  },
+  vestibulares: {
+    uerj: {
+      title: 'Vai prestar a UERJ?',
+      why: 'A UERJ tem um processo próprio, com Exame Discursivo, e um caminho específico aqui.',
+      link: 'Ver o caminho da UERJ',
+    },
+    note: {
+      title: 'Sobre esta seleção',
+      body: 'Os recursos abaixo cobrem conteúdos do Ensino Médio cobrados em vestibulares. Indicá-los para vestibulares é uma escolha editorial: não significa que o provedor prepare oficialmente para um vestibular específico.',
+    },
+  },
+  objectiveMap: {
+    more: (subject) => `Tudo sobre ${subject}`,
+    technology: {
+      title: 'Tecnologia',
+      why: 'Programação, computação, dados e inteligência artificial têm trilhas próprias, para começar do zero ou aprofundar.',
+      link: 'Ver as trilhas de tecnologia',
+    },
+  },
+  guides: {
+    count: (n) => (n === 1 ? '1 recurso' : `${n} recursos`),
+    uerj: {
+      entenda: {
+        title: 'Entenda a prova',
+        body: ['No Exame Discursivo da UERJ, todos os candidatos fazem a prova de Redação e duas disciplinas específicas.'],
+      },
+      prepare: {
+        title: 'Monte sua preparação',
+        body: [
+          'As disciplinas específicas dependem do curso que você pretende disputar, e as regras oficiais dizem quais são.',
+          'Escolha o curso, descubra as suas duas disciplinas e dê a elas a maior parte do seu tempo, sem deixar a Redação de lado.',
+        ],
+      },
+      materias: { title: 'Estude por matéria', why: 'As matérias com questões da UERJ para praticar. Cada página reúne também cursos gratuitos para estudar o conteúdo.' },
+      provas: { title: 'Resolva provas anteriores', why: 'A Revista do Vestibular da UERJ reúne questões comentadas de edições atuais e anteriores. É a forma mais direta de conhecer o estilo da prova.' },
+    },
+    enem: {
+      entenda: {
+        title: 'Entenda a prova',
+        body: [
+          'O Enem avalia quatro áreas do conhecimento (Linguagens, Códigos e suas Tecnologias; Ciências Humanas e suas Tecnologias; Ciências da Natureza e suas Tecnologias; Matemática e suas Tecnologias) e uma redação.',
+          'As matrizes de referência do INEP descrevem o que cada área avalia. São o ponto de partida mais seguro para decidir o que estudar.',
+        ],
+      },
+      areas: { title: 'Estude por área', why: 'As matérias de cada área, como o INEP organiza a prova. Comece pela que mais precisa da sua atenção.' },
+      pratique: { title: 'Pratique', why: 'Resolver provas anteriores é a forma mais direta de conhecer o exame. O INEP publica as provas e os gabaritos das edições anteriores.' },
+      aprofunde: { title: 'Aprofunde por área', why: 'Cursos gratuitos para revisar o conteúdo de cada área do Enem.' },
+    },
+  },
+  source: { label: 'Fonte oficial:', verified: (date) => `verificada em ${date}` },
+  subject: {
+    map: 'Mapa de estudo',
+    eyebrow: 'Matéria',
+    content: 'Para estudar',
+    practice: 'Para praticar',
+    objectives: 'Por objetivo',
+    objectivesLead: (subject) => `Veja como ${subject} entra na preparação de cada objetivo.`,
+  },
+  subjectPage: (subject, area) => ({
+    title: `${subject} | Pexis Academy`,
+    description: `Estude ${subject} com recursos gratuitos e verificados para o Ensino Médio, o ENEM e vestibulares, com links diretos para as fontes.`,
+    eyebrow: area,
+    heading: subject,
+    lead: `O que estudar em ${subject} e onde encontrar material gratuito e verificado.`,
+  }),
+  notFound: { home: 'Página inicial', subjects: 'Explorar as matérias', search: 'Buscar' },
+  resource: {
+    formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', practice: 'Prática' },
+    languages: { pt: 'Em português', en: 'Em inglês', es: 'Em espanhol' },
+    registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
+    certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', available: 'Certificado disponível' },
+    units: { hours: 'h', weeks: 'semanas' },
+    newTab: 'abre o site do provedor em nova aba',
+  },
 };

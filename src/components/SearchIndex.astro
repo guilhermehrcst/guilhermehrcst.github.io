@@ -1,0 +1,64 @@
+---
+// /buscar/ (spec §6.8): the whole index as a directory, grouped by kind. Without JavaScript this is the
+// complete page. src/scripts/search.ts reveals the form and filters these same entries in place.
+import { buildSearchIndex, type SearchKind } from '../lib/search-index';
+import { routes } from '../lib/routes';
+import { pt as t } from '../i18n/pt';
+
+const index = buildSearchIndex();
+const kinds: SearchKind[] = ['objetivo', 'area', 'materia', 'trilha', 'recurso'];
+const groups = kinds.map((kind) => ({ kind, label: t.search.groups[kind], entries: index.filter((e) => e.kind === kind) }));
+---
+<div class="wrap search" data-search>
+  <form role="search" action={routes.search} method="get" hidden data-search-form>
+    <label for="q">{t.search.label}</label>
+    <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder={t.search.placeholder} data-search-input>
+  </form>
+  <p class="status" aria-live="polite" data-search-status data-one={t.search.results(1)} data-many={t.search.results(0).replace('0', '{n}')}></p>
+  <p class="empty" hidden data-search-empty>{t.search.empty} <a href={routes.subjectIndex}>{t.search.groups.area}</a></p>
+
+  {groups.map((group) => (
+    <section class="group" aria-labelledby={`grupo-${group.kind}`} data-search-group>
+      <h2 id={`grupo-${group.kind}`}>{group.label}</h2>
+      <ul role="list">
+        {group.entries.map((e) => (
+          <li data-search-entry data-entry-id={e.id} data-terms={e.terms}>
+            <a href={e.url}><span class="title">{e.title}</span> <span class="context">{e.context}</span></a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<script>
+  import '../scripts/search';
+</script>
+
+<style>
+  form { display: grid; gap: var(--space-2); max-width: 40rem; margin-bottom: var(--space-3); }
+  form[hidden] { display: none; }
+  label { font-weight: 600; }
+  input {
+    width: 100%;
+    min-height: 52px;
+    padding-inline: var(--space-4);
+    font: inherit;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--muted);
+    border-radius: var(--radius);
+  }
+  input:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-color: var(--action); }
+  .status { min-height: 1.6em; font-size: var(--fs-small); color: var(--muted); }
+  .empty { margin-top: var(--space-4); }
+  .group { margin-top: var(--space-6); }
+  .group h2 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-2); }
+  ul { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--space-7); }
+  @media (min-width: 768px) { ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  li { border-top: 1px solid var(--rule); }
+  li a { display: grid; padding-block: var(--space-2); text-decoration: none; }
+  .title { font-weight: 500; }
+  li a:hover .title { text-decoration: underline; }
+  .context { font-size: var(--fs-small); color: var(--muted); }
+</style>

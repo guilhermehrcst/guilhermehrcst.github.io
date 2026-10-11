@@ -1,12 +1,26 @@
-# guilhermehrcst.github.io
+# Pexis Academy
 
-Personal site of Guilherme Henrique. Static output, built with [Astro](https://astro.build), TypeScript and hand-written CSS. No backend, no analytics, no third-party requests at runtime (fonts are self-hosted).
+A free, Portuguese-first place to study with direction: ENEM, UERJ, Ensino Médio, vestibulares and technology. Pexis Academy does not produce lessons; it organises free resources from universities, public institutions and educational platforms by objective, area and subject, and says where to start.
 
-| Page | English | Português |
-|---|---|---|
-| Home | `/` | `/pt/` |
-| Résumé | `/resume/` | `/pt/curriculo/` |
-| Courses (curated free courses) | `/courses/` | `/pt/cursos/` |
+Static output, built with [Astro](https://astro.build), TypeScript and hand-written CSS. No backend, no accounts, no analytics, no cookies, no third-party requests at runtime (fonts are self-hosted). The only JavaScript runs on `/buscar/`, and the page is complete without it.
+
+Design and plan: `docs/superpowers/specs/2026-10-11-pexis-academy-v01-design.md`, `docs/superpowers/plans/2026-10-11-pexis-academy-v01.md`.
+
+## Routes
+
+| Route | Page |
+| --- | --- |
+| `/` | Home: choose an objective, or explore by area |
+| `/enem/`, `/uerj/`, `/ensino-medio/`, `/vestibulares/` | Objectives |
+| `/tecnologia/` | Technology: objective, area and its tracks |
+| `/materias/` | All areas and subjects ("Explorar") |
+| `/materias/{matematica,portugues,redacao,fisica,quimica,biologia,historia,geografia,filosofia,sociologia,ingles,espanhol}/` | Subjects |
+| `/buscar/` | Search: a full directory, filtered in the browser |
+| `/sobre/` | Curation rules, verification, independence |
+
+`/pt/` and the former `/courses/*`, `/pt/cursos/*` routes redirect (a page that refreshes to its destination, `noindex`: GitHub Pages cannot send HTTP redirects). `/resume/` and `/pt/curriculo/` are gone and answer with the 404.
+
+Every URL comes from `src/lib/routes.ts`, derived from `src/lib/taxonomy.ts`. Pages never write an internal path by hand.
 
 ## Develop
 
@@ -14,113 +28,61 @@ Requires Node 22.12+.
 
 ```sh
 npm ci
-npm run dev      # http://localhost:4321
-npm run build    # astro build + scripts/verify-dist.mjs
-npx astro check  # type check, including EN/PT parity
+npm run dev       # http://localhost:4321
+npm test          # unit tests (tests/**/*.test.{ts,mjs}, Node's test runner)
+npx astro check   # types
+npm run build     # astro build + scripts/verify-dist.mjs
 ```
 
-## Typography
+CI (`.github/workflows/deploy.yml`) runs the same three steps; a push to `main` deploys `dist/` to GitHub Pages.
 
-- **Google Sans Flex** (SIL OFL 1.1) is the only text and display family. It is self-hosted from `@fontsource-variable/google-sans-flex`, which republishes the Google Fonts release (`github.com/google/fonts`). Only the `opsz` build is shipped: weight and optical size. Width, grade, roundness and slant axes are deliberately left out.
-- Metadata, labels and section indices are the same family, small, uppercase, tracked, with tabular figures (`.meta`). JetBrains Mono is no longer shipped.
-- Licences are published with the site at `/licenses/` (Google Sans Flex, OFL; Radix Icons, MIT).
-- Monumental all-caps lines use the `--display-*` and `--fit-*` tokens in `src/styles/global.css`. Their optical size is pinned to the display cut so the fit-to-grid maths is identical on every viewport; `--fit-name` is the measured advance of `GUILHERME` at the display weight and tracking. If the display weight, tracking or font changes, re-measure it (render `GUILHERME` at 250px with the same weight, tracking and `opsz 144`, divide its width by 250, and add ~0.7%) or the names stop spanning the grid.
+## Content model
 
-## Scale and rhythm
+All content is typed TypeScript, validated at build time.
 
-- **One ladder, in `global.css`** (values at 1440x900): hero name 180, display 108 (`--fs-display-l`: Lume, Pexiscale, the principles, footer; 0.6 of the hero), headline L 72 (`--fs-statement`), headline 43 (`--fs-h3`: questions, about; the hero statement follows this step, bounded by the window height: 37), lead 22 (`--fs-lead`), body 17 (`--fs-body`), meta 13-15 (`--fs-meta`, `--fs-meta-l`). Components take sizes from these tokens; do not add one-off sizes. Sizes that change with the layout are **one continuous function of the viewport width**, not one value per breakpoint: a per-breakpoint value jumps by 20-30% when the window grows by a pixel.
-- **The hero is one composition with two bounds**: the name is the smaller of the grid width (`--fit-name`) and `(--hero-split - chrome) / 1.68`, with `--hero-split: 45svh`, so the photo and the column start at about 45% of the window; the column's rows, statement and action are the smaller of a width rule and a share of `--hero-rest` (what is left under the split), so on a laptop the whole hero ends at the fold, and on a tall window it keeps its width-based size. `1.68` is two lines at `line-height: 0.84`; if either changes, change both.
-- **Spacing scale**: `--space-xs` ... `--space-2xl` and `--space-section` (all `clamp`). Gaps in components come from here or from `--margin` / `--gap`; the old per-component `clamp(56px, 9vw, 140px)`-style values are gone. `--space-section` no longer depends on the window height.
-- **Header**: `--header-h` is 60-68px on desktop and tablet (`4.4vw`) and 57px on mobile (two rows of ~28px); the 1px rule is on top of it.
+- `src/lib/taxonomy.ts`: objectives, areas, subjects and their topics. A subject belongs to exactly one area; the area is never stored anywhere else.
+- `src/lib/learning-resources.ts`: the catalogue, the single definition of every resource.
+- `src/lib/exam-guides.ts`: the ENEM and UERJ guides. Resource sections are derived from the catalogue by goal and format; editorial sections cite official sources.
+- `src/lib/official-sources.ts`: official INEP and UERJ pages, with their verification.
+- `src/lib/tech-tracks.ts`: the technology tracks, as ordered lists of catalogue ids.
+- `src/lib/search-index.ts`: the search index, derived from all of the above.
+- `src/i18n/pt.ts`: interface copy (V0.1 is Portuguese only; the typed shape is kept for a future `/en/`).
 
-## Colour
+### Add a resource
 
-Tokens live once, in `:root` of `src/styles/global.css`: `--gh-blue #078EFB`, `--gh-black`, `--gh-white`, `--gh-gray-50/200/300/600`, `--gh-void`. Components use the semantic roles (`--paper`, `--ink`, `--muted`, `--rule`, `--surface`, `--signal`, `--void*`); no hex codes elsewhere. The blue is a signature (roughly 10%): the slash, rules, arrows, focus rings, diagram marks, one marked word. It is 3.35:1 on white, so it is never used for small text; text is blue only at 24px and above (contact hover). Lume stays dark (`--gh-void`).
+1. Open the resource on the provider's own page and confirm that the learning content is entirely free (no trial, no paywall, no teaser, no affiliate link; a free account is fine; a paid optional certificate is fine when the lessons are free).
+2. Add it to `catalogue` in `src/lib/learning-resources.ts` with its official title (never translated), provider, subject, format, goals, language, level and `url`, and `verified: { on, by, freeAccess: true }`. Duration and certificate only when the provider's page states them.
+3. A resource that cannot be confirmed stays with `url: null` and a `review` note: it is not shown.
+4. A new provider host must also be added to `COURSE_HOSTS` in `scripts/verify-dist.mjs` (a test keeps that list equal to the catalogue).
+5. Record the evidence in `docs/superpowers/research/2026-10-11-learning-library-sources.md`.
 
-**Action blue** is a separate, functional colour: `--gh-action #0B57D0` (hover `#0842A0`, white text, 6.4:1 and 9.1:1), used only for the primary call to action of a Courses cell (`CourseCard.astro`). Blue means *act*; navigation, filters, category links and secondary links stay neutral, and the decorative `--signal` blue is unchanged.
+Subject pages, objective pages, the search index and the footer's verification date update from the data.
 
-The slash is a component of the system: `.sl` / `.slash` in `global.css`. It nudges 0.12em on link hover and slides in once when a section label or giant heading enters.
+### Add a technology track
 
-## AI tool icons (résumé, section 04)
+Add it to `src/lib/tech-tracks.ts` with ids of published technology resources. A track without a verified resource is `planned` and never shown.
 
-`src/assets/ai/*.png` are the supplied artworks for the eight tools, kept exactly as received (1254px; some carry EXIF or a C2PA manifest, which the build drops). Astro converts them at build time to 28/56/84px WebP (~1 KB each). They are decorative (`alt=""`, `aria-hidden`); every name stays text. `src/lib/ai-tools.ts` maps each `AiToolName` (a closed union in `i18n/types.ts`) to its icon and an optical scale, and the mapping is exhaustive: a missing icon fails `astro check`.
+### Add topics to a subject (learning map)
 
-## Résumé 07, influences (web only)
+Each topic needs a source (`TopicSourceId`), and is published only after it was checked against that source. The Mathematics map is prepared but unpublished: see "Pexis Academy: re-verification" in the source audit.
 
-`src/lib/influences.ts` holds the eight people, in reading order (name, photo, crop, brands; a missing or repeated id fails `astro check` or the build) and the brand marks; the one-line texts are in the dictionaries, keyed by `InfluenceId`, so EN and PT cannot drift. The section is a horizontal rail, from the page grid's left edge to the window's right edge (just under five columns in view on a desktop, about three on a tablet, one and a quarter on a phone). It is a native scroller (touch, trackpad, wheel, arrow keys once focused) and, with JavaScript and without `prefers-reduced-motion`, drifts slowly on its own (one full set every 64 s): a hidden copy of the set (`aria-hidden`, `inert`) follows the original, and the drift subtracts one set-width when it passes it, which shows the same pixels (column and gap widths are whole pixels for this). It pauses under the pointer, on focus, during any touch, wheel or key scroll (and 2.5 s after), off screen and in a hidden tab. Without JavaScript the rail is a static row of the eight. OpenAI's mark is the horizontal signature as supplied; Anthropic's mark is the "A\" served on anthropic.com (`brands/anthropic.svg`, rendered once to PNG). The photographs are wide shots, so each one has a crop window (centre and width as fractions of the photo, against the fixed 8:9 frame); a window that leaves the photo fails the build. Brand artworks sit on large transparent canvases, so each carries its measured content box and an optical height. Photos and logos are built by Astro (WebP, responsive, lazy). The section is hidden in print. The source photos and logos are kept as supplied; their EXIF is harmless and the build drops it.
+## Build invariants
 
-## Courses catalogue
+`scripts/verify-dist.mjs` checks `dist/` after every build and fails the deploy on any violation, among them:
 
-`src/lib/courses.ts` is the only place courses are defined: section, official title (not translated), institution, category/level/language (labels in the dictionaries), and `certificate`/`duration` only when the course's own page states them. `url` must be the institution's own page for that course, never an aggregator, blog or affiliate link, and never derived from a domain's structure; each published URL records how it was confirmed (`checked`). An entry with `url: null` keeps a `review` note and is not rendered. The page lays itself out from the data (curator's picks get a typographic plate; the others are compact cells; spans follow the count), so adding a course is one entry. A new institution host also needs adding to `COURSE_HOSTS` in `scripts/verify-dist.mjs`.
+- exactly the 21 canonical pages, the 7 redirects and the 404, nothing else;
+- per page: `lang="pt-BR"`, title and description patterns, canonical, Open Graph, one `h1`, unique ids, landmarks, the header navigation;
+- every internal link resolves; every external link is HTTPS, to an allowed host, in a new tab with `rel="noopener noreferrer"`;
+- every resource is an item of a resource list, with one outbound link that says it opens in a new tab;
+- page-specific structure (the Home's sections, the ENEM and UERJ sections, subject pages, technology tracks, the search directory);
+- JavaScript only on `/buscar/`, no third-party requests, no secrets, and no trace of the former personal site.
 
-## Hero photo
+Its lists (routes, redirects, hosts) are written by hand on purpose: they are an independent barrier against a mistake in `src/lib/routes.ts`, and tests keep the copies equal where they mirror data.
 
-`src/assets/hero/guilherme.jpg` is the only image of a person on the site: a 4:5 crop (980x1225) of the original, with no colour grading and **no metadata** (EXIF/GPS stripped). It was cropped on purpose to leave out the posters on the elevator walls. Astro generates the WebP sizes and the JPEG fallback at build time. Never commit the uncropped original: it is a phone photo and this repository's history is permanent.
+## Visual system
 
-## Structure
+"Acadêmica acolhedora": warm paper, graphite ink, one functional blue (`--action`, links and calls to action), hairlines and space instead of shadows and cards. Tokens live once, in `:root` of `src/styles/global.css`; no hex code elsewhere. Google Sans Flex (SIL OFL 1.1) is self-hosted from `@fontsource-variable/google-sans-flex`; licences are published at `/licenses/`. Motion is limited to small hover and focus transitions and is off under `prefers-reduced-motion`.
 
-- `src/i18n/` — `types.ts` defines one `Dict` shape; `en.ts` and `pt.ts` implement it. A key missing in either language is a type error. `routes.ts` is the single source of truth for URLs and `hreflang` pairs.
-- `src/components/` — one component per section of the home (`Hero`, `Statement`, `DitherBand`, `Lume`, `Pexiscale`, `Principles`, `About`, `Contact`, `Monument`), plus `Header`, `Label`, `ProjectDetail`, `Resume` (the résumé page, with `Command` for its section prompts) and `Courses` + `CourseCard` (the Courses page).
-- `src/lib/` — deterministic models shared by the server render and the canvas: `dither.ts` (8×8 Bayer band) and `lume-model.ts` (seeded schematic of memory compaction).
-- `src/scripts/motion.ts` — every runtime animation, in one file.
-- `src/styles/global.css` — tokens (palette, grid, type, motion) and base.
-- `scripts/verify-dist.mjs` — post-build invariants: all routes exist; `lang`, canonical and `hreflang` are correct; pages are indexable or `noindex` as declared; internal links resolve; no third-party resources; external links are limited to an allowlist (the contacts below, Lume, Pexiscale), except on the Courses pages, where course links may also go to the institutions' own hosts (exact list, HTTPS, `target="_blank"` with `rel="noopener noreferrer"`); no secret-shaped strings.
+## Kept, unused
 
-## Motion
-
-The page is complete without JavaScript and under `prefers-reduced-motion: reduce`; motion is enrichment. Scrolling is native: no smooth-scroll library, no snapping, no parallax. Only these things animate:
-
-1. Hero name rises through a line mask once on load (CSS, 850 ms, expo-out).
-2. Section slashes, rules, the marked word and the Lume column grid reveal once on first view (`data-reveal` → `.is-in`; transform and opacity only). The header's reading-progress line is a CSS scroll timeline, with no JS.
-3. The dither band between the statement and Lume follows scroll position.
-4. The Lume schematic compacts with scroll position (reversible).
-5. The Pexiscale screenshots fade in once on first view (the same `data-reveal`, opacity only).
-6. Résumé: the title rises once on load; each section's command opens through a short mask on first view and a cursor shows for a few frames, then turns off.
-
-Without JS, the server-rendered SVGs show the final state. Under reduced motion, canvases draw the final state once and nothing else moves.
-
-## Résumé
-
-`/resume/` and `/pt/curriculo/` render `Resume.astro` from `dict.resume` (typed in `i18n/types.ts`; project bullets, method, workflow and study rows are fixed-length tuples, so EN and PT cannot drift). Each section opens with a small monospaced command (system monospace stack, no font shipped) and answers it in the Home's type. All content is text in the DOM. There is no contact section on purpose: contact lives on the Home. `@media print` turns it into a plain black-on-white document (no header, footer, motion or dark block) for Print → Save as PDF; the *Print résumé* button appears only when JavaScript runs.
-
-## Course images
-
-The six curator's picks on `/courses/` and `/pt/cursos/` carry an image: the supplied files, unmodified, in `src/assets/courses/` (Astro makes the AVIF/WebP/JPEG sizes at build, never upscaled: the largest is the file itself, 1536px). Each is declared in `src/lib/courses.ts` (`curated.image`: `layout`, `kind`, `position`, `ratio`; the alt text is a key into `courses.imageAlts`, so EN and PT both have one), and `CourseCard.astro` composes the cell around it. There is no logic by title anywhere. A **photo** may be cropped by its frame (`position` keeps its focus) and leans in 1.5% on hover; a **graphic** (it has its own text) keeps its frame, never zooms, and the black letterbox bars of the supplied MIT and FGV frames are trimmed by that frame, not by editing the files. `scripts/verify-dist.mjs` fails the build if any `<img>` lacks `alt`, `width` or `height`, or any srcset candidate is missing.
-
-## Courses layout
-
-Three compositions, by width: **desktop** from 1181px, **tablet** 641 to 1180px (an iPad in landscape is 1180 wide), **phone** up to 640px. The boundary is declared in `Courses.astro`, `CourseCard.astro` and `CourseProvider.astro` only (the Home, the Résumé and the header keep their own, at 1024px). On a tablet every curator's pick runs the full row and the other courses go two by two; from 901px a graphic (MIT, FGV, the Fluência poster) sits beside the text instead of running the width, so a frame is never wider than its own pixels. The curator's picks are numbered 01 to 06 on their own, in reading order (their place in the catalogue is not their number). Section heads are `clamp(200px, 21vw, 320px)` tall and the closing `clamp(180px, 18vw, 280px)`; the heading sizes are not touched.
-
-## Pexiscale figure
-
-Fig. 03 on the Home is the product itself: three screenshots of the Pexiscale workspace with demo data, in `src/assets/pexiscale/` (sales, the full screen with its navigation, leads; the catalogue and the AI home follow as details cropped to their content, in one shared frame). The browser around them (tabs, address bar, status bar) is cropped away and nothing inside the product is edited; Astro makes the AVIF/WebP/JPEG sizes, never upscaled. Each screenshot has its own alt text (`pexiscale.figure.shots`, EN and PT) and the caption says it is the real product with demo data.
-
-## Icons
-
-**Radix Icons are the default family for new interface icons.** The package (`@radix-ui/react-icons`) ships React components and the site has no React, so it is not a dependency: each glyph in use is one `.astro` file in `src/components/icons/radix/` holding the package's SVG unchanged (path, viewBox, fill rules; MIT, licence in `/licenses/RadixIcons-MIT.txt`). A component carries no colour, size or spacing, only `currentColor`, an optional `class`, `width`/`height` (15 by default, as in the original) and `aria-hidden` (on by default; `aria-label` makes it announced). Add a glyph only when something uses it. The site's own earlier SVGs stay as they are, and no other icon family is introduced without an explicit decision.
-
-## Course call to action
-
-Each course has one action, "Acessar curso" / "Go to course": a 48px button in the action blue that closes the cell, inset by the cell's own padding, with the Radix Icons `ExternalLinkIcon` on the right (`components/icons/radix/ExternalLinkIcon.astro`; see Icons). It opens the institution's page with `target="_blank" rel="noopener noreferrer"`; the icon is decorative and the link's text says where it goes.
-
-## Institution marks
-
-On the Courses page each course's institution is shown as its mark, not its name: the supplied logos, unmodified, in `src/assets/providers/`. `src/lib/providers.ts` is the one registry (each mark's artwork box, measured from the file, and its optical height; the catalogue's `institution` string is the key), and `CourseProvider.astro` draws it: the mark whole (`object-fit: contain`, its empty margin trimmed by the box, never the artwork), at one slot height so neighbouring titles line up, scaled down on tablet and phone. A partnership (Fundação Bradesco + Microsoft) is two marks and a quiet "+", with the full name as the group's accessible name. An institution without a mark renders its name as text. The MIT OpenCourseWare logo is white, so it sits on the ink. Microsoft is its horizontal signature (the four squares and the wordmark; supplied as a 2172 x 724 RGBA file, transparent around the artwork). The slot is 40px, Harvard's shield is drawn at 40px and the wordmarks smaller, which is what makes them read as equals. In a partnership the two marks are announced once, by the full name, as one image (`role="img"`, the marks inside have an empty alt). Official names (course title, plate, institution) carry `translate="no"`, so a browser's automatic translation leaves them alone.
-
-## Deploy
-
-The site is deployed by `.github/workflows/deploy.yml` (build → verify → upload `dist/` → deploy), with **Settings → Pages → Build and deployment → Source: GitHub Actions**. A push to `main` (or a manual run on `main`) deploys; a pull request only builds and verifies. There are two jobs on purpose: the build runs third-party code (npm packages) with a read-only token, and only the deploy job has `pages: write` and `id-token: write`. Both run on a pinned `ubuntu-24.04` image.
-
-**If the deploy job fails without starting** (the annotation reads "The job was not started because it was repeatedly not acquired"), GitHub could not give it a runner: it is not the site, the build or the workflow (the build job above it is green, and the same workflow has deployed on every other push). Use *Re-run failed jobs* on that run (it reuses the build's artifact, which lives one day) or *Re-run all jobs*; the next push to `main` deploys anyway.
-
-**Rollback**: revert the commit on `main`; the push deploys the previous state. As an emergency, switching Source back to "Deploy from a branch" publishes the legacy static site that is still in the repository root (`index.html`, `pt/index.html`, `assets/style.css`, with `.nojekyll`); the Astro build does not use those files.
-
-After the new site is confirmed live from Actions, delete the legacy root files in a follow-up change.
-
-To use a custom domain later, add it under Pages settings. Do not use a pexiscale.com subdomain.
-
-## Rules for this repository
-
-It is public and its history is permanent. Never commit secrets, `.env` files, addresses, ID numbers, customer or store data, or code from private repositories. The contacts in the contact section (email, LinkedIn, Instagram, GitHub) are published on purpose and are the only personal data meant to be public. Describe decisions in text instead.
-
-Copy rules: no invented achievements, metrics, users, clients or titles. Every claim on the site already existed on the previous version (see git history) or is a direct restatement of it.
+`src/lib/resource-images.ts` and `src/assets/courses` hold the curated images of six technology courses. V0.1 does not show images in resource lists; they stay until a visual decision (spec §2.2).

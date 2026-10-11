@@ -1,211 +1,524 @@
-// Post-build invariants for dist/. Runs after `astro build`; any violation
-// fails the build (and therefore the deploy). No dependencies.
+// Post-build invariants for dist/. Runs after `astro build`; any violation fails the build (and
+// therefore the deploy). No dependencies.
+//
+// The lists below are written out by hand on purpose. They repeat what src/lib/routes.ts derives, so an
+// accidental change there is caught here by an independent path (spec R10), not confirmed by it.
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 
 const DIST = new URL('../dist/', import.meta.url).pathname;
 const SITE = 'https://guilhermehrcst.github.io';
 
-/** Every page, its language, and whether it is a placeholder (noindex). */
-const PAGES = [
-  { path: '/', lang: 'en', noindex: false, pair: '/pt/' },
-  { path: '/pt/', lang: 'pt-BR', noindex: false, pair: '/' },
-  { path: '/resume/', lang: 'en', noindex: false, pair: '/pt/curriculo/' },
-  { path: '/pt/curriculo/', lang: 'pt-BR', noindex: false, pair: '/resume/' },
-  { path: '/courses/', lang: 'en', noindex: false, pair: '/pt/cursos/' },
-  { path: '/pt/cursos/', lang: 'pt-BR', noindex: false, pair: '/courses/' },
-  { path: '/courses/enem/', lang: 'en', noindex: false, pair: '/pt/cursos/enem/' },
-  { path: '/pt/cursos/enem/', lang: 'pt-BR', noindex: false, pair: '/courses/enem/' },
-  { path: '/courses/uerj/', lang: 'en', noindex: false, pair: '/pt/cursos/uerj/' },
-  { path: '/pt/cursos/uerj/', lang: 'pt-BR', noindex: false, pair: '/courses/uerj/' },
+/** The indexable pages of V0.1 (spec §5.1). */
+const CANONICAL = [
+  '/', '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/', '/materias/',
+  '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
+  '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
+  '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
+  '/materias/ingles/', '/materias/espanhol/',
+  '/buscar/', '/sobre/',
 ];
 
-/** The only external destinations this site may link to. Personal data is published on purpose and only here. */
-const EXTERNAL_ALLOW = new Set([
-  'mailto:guilhermehrcst@gmail.com',
-  'https://www.linkedin.com/in/guilherme-henrique-8927093b6',
-  'https://www.instagram.com/guilhermehrcst/',
-  'https://github.com/guilhermehrcst',
-  'https://github.com/guilhermehrcst/lume',
-  'https://pexiscale.com',
-]);
+/** Routes of the former personal site that keep a destination (spec §8.4). */
+const REDIRECTS = {
+  '/pt/': '/',
+  '/courses/': '/materias/',
+  '/pt/cursos/': '/materias/',
+  '/courses/enem/': '/enem/',
+  '/pt/cursos/enem/': '/enem/',
+  '/courses/uerj/': '/uerj/',
+  '/pt/cursos/uerj/': '/uerj/',
+};
 
-/** Course pages may also link out, but only to the institutions' own sites (exact hosts, HTTPS), and
- *  every such link must open in a new tab without handing the page a reference back (noopener noreferrer). */
-const COURSE_PAGES = new Set([
-  '/courses/', '/pt/cursos/',
-  '/courses/enem/', '/pt/cursos/enem/',
-  '/courses/uerj/', '/pt/cursos/uerj/',
-]);
-const GENERAL_COURSE_PAGES = new Set(['/courses/', '/pt/cursos/']);
-const STUDY_TRACK_PAGES = new Set(['/courses/enem/', '/pt/cursos/enem/', '/courses/uerj/', '/pt/cursos/uerj/']);
-const LEARNING_AREAS = ['technology', 'math', 'portuguese', 'writing', 'nature', 'humanities', 'english', 'spanish'];
-const COURSE_HOSTS = new Set([
+/** Routes of the former personal site that are gone: they fall through to the 404 (spec §8.4, Q2). */
+const GONE = ['/resume/', '/pt/curriculo/'];
+
+/** The header navigation, in order (spec §6.5). */
+const HEADER_NAV = [
+  ['/materias/', 'Explorar'],
+  ['/enem/', 'ENEM'],
+  ['/uerj/', 'UERJ'],
+  ['/tecnologia/', 'Tecnologia'],
+  ['/buscar/', 'Buscar'],
+];
+
+/** Hosts a page may link out to: the providers of published resources and the official exam pages.
+ *  Mirrors COURSE_HOSTS in src/lib/learning-resources.ts and OFFICIAL_HOSTS in src/lib/official-sources.ts
+ *  (a unit test keeps the copies equal). */
+const COURSE_HOSTS = [
   'cs50.harvard.edu',
   'ocw.mit.edu',
   'www.ev.org.br',
   'educacao-executiva.fgv.br',
   'www.netacad.com',
-  'learn.microsoft.com',
-  'skillsbuild.org',
   'kultivi.com',
   'www.gov.br',
   'www.revista.vestibular.uerj.br',
-]);
+];
+const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
+const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
 
-/** The Home: one narrative shell, with exactly one terminal, hidden from assistive tech, and ten
- *  chapters, each exactly once and in this order (src/lib/narrative-state.ts: NARRATIVE_ORDER). */
-const HOME_PAGES = new Set(['/', '/pt/']);
-const NARRATIVE_ORDER = ['whoami', 'pexiscale', 'lume', 'pexis-machine', 'capabilities', 'ai-workflow', 'education', 'influences', 'principles', 'contact'];
-const RESUME_PAGES = new Set(['/resume/', '/pt/curriculo/']);
-/** The résumé's terminal session, in order (src/lib/resume-session.ts: RESUME_STEPS). */
-const RESUME_STEPS = ['whoami', 'projects', 'capabilities', 'ai-workflow', 'education', 'influences', 'contact', 'exit'];
-const decode = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
-const textOf = (html) => decode(html.replace(/<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>/g, ' ').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ');
+/** Pages that may run JavaScript. Every other page is complete, static HTML (spec §7). */
+const SCRIPT_PAGES = new Set(['/buscar/']);
+
+/** The former personal site must leave no trace (spec §3, §9.2). The site's own origin is allowed only
+ *  inside canonical and og:url, which are stripped before this check runs. */
+const DENY = [/Guilherme/, /guilhermehrcst/, /linkedin\.com\/in\//, /instagram\.com\//, /Pexiscale/, /pexiscale\.com/, /\bLume\b/, /Pexis Machine/];
 
 const SECRET_PATTERNS = [/AKIA[0-9A-Z]{16}/, /sk_(live|test)_[0-9a-zA-Z]{10,}/, /-----BEGIN [A-Z ]*PRIVATE KEY-----/, /ghp_[0-9A-Za-z]{30,}/, /eyJhbGciOi/];
-
-/** The terminal's markup: from its root to the end of its chapter data (it holds no nested <template>). */
-function terminalHtml(html) {
-  const start = html.search(/<[a-z]+\b[^>]*\sdata-narrative-terminal[\s>=]/);
-  const end = html.indexOf('</template>', start);
-  return start < 0 || end < 0 ? '' : html.slice(start, end + '</template>'.length);
-}
 
 const errors = [];
 const fail = (page, msg) => errors.push(`${page}: ${msg}`);
 const fileFor = (p) => join(DIST, p.endsWith('/') ? p + 'index.html' : p);
 const attrs = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
+const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
+const meta = (html, attr, name) => new RegExp(`<meta ${attr}="${name}" content="([^"]*)"`).exec(html)?.[1];
 
-for (const pg of PAGES) {
-  const file = fileFor(pg.path);
-  if (!existsSync(file)) { fail(pg.path, 'missing'); continue; }
-  const html = readFileSync(file, 'utf8');
+/* Generic checks: they hold for any page this site builds. -------------------------------------- */
 
-  if (!html.includes(`<html lang="${pg.lang}"`)) fail(pg.path, `expected <html lang="${pg.lang}">`);
-  if (!/<title>[^<]{5,}<\/title>/.test(html)) fail(pg.path, 'missing <title>');
-  if (!/<meta name="description" content="[^"]{20,}"/.test(html)) fail(pg.path, 'missing description');
-  if (!html.includes(`<link rel="canonical" href="${SITE}${pg.path}"`)) fail(pg.path, 'canonical mismatch');
+function checkLandmarks(path, html) {
+  const ids = attrs(html, /\sid="([^"]+)"/g);
+  const dup = ids.filter((id, i) => ids.indexOf(id) !== i);
+  if (dup.length) fail(path, `duplicate id: ${[...new Set(dup)].join(', ')}`);
+  if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(path, 'skip link or main landmark missing');
+  if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(path, 'expected exactly one <h1>');
+}
 
-  const en = pg.lang === 'en' ? pg.path : pg.pair;
-  const pt = pg.lang === 'en' ? pg.pair : pg.path;
-  for (const [hl, href] of [['en', en], ['pt-BR', pt], ['x-default', en]]) {
-    if (!html.includes(`<link rel="alternate" hreflang="${hl}" href="${SITE}${href}"`)) fail(pg.path, `hreflang ${hl} → ${href} missing`);
-  }
-
-  const robots = /<meta name="robots" content="noindex"/.test(html);
-  if (robots !== pg.noindex) fail(pg.path, pg.noindex ? 'placeholder must be noindex' : 'must be indexable');
-
-  if (!/<main id="main"/.test(html) || !/href="#main"/.test(html)) fail(pg.path, 'skip link or main landmark missing');
-  if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) fail(pg.path, 'expected exactly one <h1>');
-
-  // The narrative terminal belongs to the Home only, and repeats what the page says: aria-hidden.
-  const shells = html.match(/<[a-z]+\b[^>]*\sdata-home-narrative[\s>=][^>]*>/g) ?? [];
-  const terminals = html.match(/<[a-z]+\b[^>]*\sdata-narrative-terminal[\s>=][^>]*>/g) ?? [];
-  if (HOME_PAGES.has(pg.path)) {
-    if (shells.length !== 1) fail(pg.path, `expected one data-home-narrative, found ${shells.length}`);
-    if (terminals.length !== 1) fail(pg.path, `expected one data-narrative-terminal, found ${terminals.length}`);
-    for (const t of terminals) if (!/\saria-hidden="true"/.test(t)) fail(pg.path, 'narrative terminal must be aria-hidden="true"');
-    if (/<(?:input|textarea|select|form|button)\b|contenteditable/.test(terminalHtml(html))) fail(pg.path, 'narrative terminal must not accept input');
-
-    // The ten chapters, once each, in reading order.
-    const ids = attrs(html, /\sdata-narrative-section="([^"]+)"/g);
-    if (ids.join() !== NARRATIVE_ORDER.join()) fail(pg.path, `narrative sections ${ids.join()} != ${NARRATIVE_ORDER.join()}`);
-    if (!/<h2 id="pm-title"[^>]*>Pexis Machine</.test(html)) fail(pg.path, 'Pexis Machine heading missing');
-
-    // A narrator, not a second source: every line the terminal can print is already on the page,
-    // outside the terminal (a joined flow, A → B → C, is checked step by step).
-    const lines = attrs(terminalHtml(html), /<p data-narrative-line[^>]*>([^<]*)<\/p>/g).map(decode);
-    if (lines.length === 0) fail(pg.path, 'narrative terminal has no chapter lines');
-    const page = textOf(html.replace(terminalHtml(html), ' '));
-    for (const line of lines) {
-      for (const part of line.split(' → ')) if (!page.includes(part)) fail(pg.path, `terminal line not on the page: ${part}`);
-    }
-  } else if (shells.length || terminals.length) {
-    fail(pg.path, 'narrative terminal outside the Home');
-  }
-  if (/class="[^"]*\binfl-n\b/.test(html)) fail(pg.path, 'influence cards must not be numbered (.infl-n)');
-  if (RESUME_PAGES.has(pg.path) && !/\sdata-print[\s>=]/.test(html)) fail(pg.path, 'résumé print action (data-print) missing');
-  if (RESUME_PAGES.has(pg.path)) {
-    // One terminal session: the steps once each and in order, the hero (the h1) and the closing
-    // footer inside it, no images, and nothing that accepts input.
-    const steps = attrs(html, /\sdata-step="([^"]+)"/g);
-    if (steps.join() !== RESUME_STEPS.join()) fail(pg.path, `résumé steps ${steps.join()} != ${RESUME_STEPS.join()}`);
-    const term = /<main id="main" class="term"[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
-    if (!term) fail(pg.path, 'résumé terminal (main.term) missing');
-    if (!/<h1[\s>]/.test(term)) fail(pg.path, 'résumé title must be inside the terminal');
-    if (!/<footer\b[^>]*data-step="exit"/.test(term)) fail(pg.path, 'résumé must close with the exit footer inside the terminal');
-    if (/<img\b/.test(html)) fail(pg.path, 'résumé terminal must have no images');
-    if (/<(?:input|textarea|select|form)\b|contenteditable/.test(html)) fail(pg.path, 'résumé terminal must not accept input');
-    if (/Paulex/.test(term)) fail(pg.path, 'projects --selected is Pexiscale, Lume and Pexis Machine only');
-  }
-
-  // Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare `alt`) and reserves its box (width and
-  // height), so nothing shifts when it loads.
+/** Every image says what it is (alt, empty only when decorative; Astro prints an empty alt as a bare
+ *  `alt`) and reserves its box (width and height), so nothing shifts when it loads. */
+function checkImages(path, html) {
   for (const tag of html.match(/<img\b[^>]*>/g) ?? []) {
-    if (!/\salt(?=[\s=>])/.test(tag)) fail(pg.path, `<img> without alt: ${tag.slice(0, 80)}`);
-    if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) fail(pg.path, `<img> without width and height: ${tag.slice(0, 80)}`);
+    if (!/\salt(?=[\s=>])/.test(tag)) fail(path, `<img> without alt: ${tag.slice(0, 80)}`);
+    if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) fail(path, `<img> without width and height: ${tag.slice(0, 80)}`);
   }
+}
 
-  // Resources must be first-party: no third-party requests.
+/** Resources must be first-party: no third-party requests. */
+function checkThirdParty(path, html) {
   for (const src of attrs(html, /<(?:script|img|source|video|iframe)[^>]*\ssrc="([^"]+)"/g)) {
-    if (!src.startsWith('/')) fail(pg.path, `external resource ${src}`);
+    if (!src.startsWith('/')) fail(path, `external resource ${src}`);
   }
   for (const m of html.matchAll(/<link\b([^>]*)>/g)) {
     const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
     const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
-    if (/stylesheet|preload|icon|modulepreload/.test(rel) && !href.startsWith('/')) fail(pg.path, `external ${rel} ${href}`);
-  }
-
-  // The general library must expose the eight primary areas exactly once, in semantic SSR markup.
-  if (GENERAL_COURSE_PAGES.has(pg.path)) {
-    for (const area of LEARNING_AREAS) {
-      const count = (html.match(new RegExp(`id="area-${area}"`, 'g')) ?? []).length;
-      if (count !== 1) fail(pg.path, `expected one primary area ${area}, found ${count}`);
-    }
-  }
-
-  // A study track is not an empty editorial shell: at least one shared verified resource must render.
-  if (STUDY_TRACK_PAGES.has(pg.path) && !/\sdata-learning-resource[\s>=]/.test(html)) {
-    fail(pg.path, 'study track has no learning resources');
-  }
-
-  // Course links: verified hosts only, HTTPS, new tab with noopener noreferrer.
-  const courseLinks = new Set();
-  if (COURSE_PAGES.has(pg.path)) {
-    for (const m of html.matchAll(/<a\b([^>]*)>/g)) {
-      if (!/target="_blank"/.test(m[1])) continue;
-      const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
-      let url;
-      try { url = new URL(href.replace(/&amp;/g, '&')); } catch { fail(pg.path, `bad course url ${href}`); continue; }
-      if (url.protocol !== 'https:') fail(pg.path, `course link not https: ${href}`);
-      if (!COURSE_HOSTS.has(url.hostname)) fail(pg.path, `course link to a non-official host: ${href}`);
-      const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
-      if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) fail(pg.path, `course link without rel="noopener noreferrer": ${href}`);
-      courseLinks.add(href);
-    }
-    if (courseLinks.size === 0) fail(pg.path, 'course page has no course links');
-  }
-
-  // Links: internal ones must resolve; external ones must be on the allowlist (or be a checked course link).
-  for (const raw of attrs(html, /<a\b[^>]*\shref="([^"]+)"/g)) {
-    const href = raw.replace(/&amp;/g, '&');
-    if (href.startsWith('#')) {
-      if (!html.includes(`id="${href.slice(1)}"`)) fail(pg.path, `dangling anchor ${href}`);
-      continue;
-    }
-    if (href.startsWith('/')) {
-      const target = href.split('#')[0];
-      if (!existsSync(fileFor(target))) fail(pg.path, `broken internal link ${href}`);
-      continue;
-    }
-    if (!EXTERNAL_ALLOW.has(href) && !courseLinks.has(raw)) fail(pg.path, `external link not on allowlist: ${href}`);
+    if (/stylesheet|preload|icon|modulepreload/.test(rel) && !href.startsWith('/')) fail(path, `external ${rel} ${href}`);
   }
 }
 
-// Assets referenced from HTML and CSS must exist.
-const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
+/** Internal links resolve and anchors exist. Every external link goes to an allowed host over HTTPS, in
+ *  a new tab, without handing the page a reference back (noopener noreferrer). */
+function checkLinks(path, html) {
+  for (const m of html.matchAll(/<a\b([^>]*)>/g)) {
+    const raw = /\shref="([^"]+)"/.exec(m[1])?.[1];
+    if (raw === undefined) continue;
+    const href = raw.replace(/&amp;/g, '&');
+    if (href.startsWith('#')) {
+      if (!html.includes(`id="${href.slice(1)}"`)) fail(path, `dangling anchor ${href}`);
+      continue;
+    }
+    if (href.startsWith('/')) {
+      const [target, hash] = href.split('#');
+      if (!existsSync(fileFor(target))) fail(path, `broken internal link ${href}`);
+      else if (hash && !readFileSync(fileFor(target), 'utf8').includes(`id="${hash}"`)) fail(path, `dangling anchor ${href}`);
+      continue;
+    }
+    let url;
+    try { url = new URL(href); } catch { fail(path, `bad link ${href}`); continue; }
+    if (url.protocol !== 'https:') fail(path, `external link not https: ${href}`);
+    if (!EXTERNAL_HOSTS.has(url.hostname)) fail(path, `external link to a host that is not allowed: ${href}`);
+    if (!/target="_blank"/.test(m[1])) fail(path, `external link must open in a new tab: ${href}`);
+    const rel = /rel="([^"]+)"/.exec(m[1])?.[1] ?? '';
+    if (!/\bnoopener\b/.test(rel) || !/\bnoreferrer\b/.test(rel)) fail(path, `external link without rel="noopener noreferrer": ${href}`);
+  }
+}
+
+function checkScripts(path, html) {
+  const scripts = html.match(/<script\b[^>]*>/g) ?? [];
+  if (!SCRIPT_PAGES.has(path)) {
+    if (scripts.length) fail(path, 'content pages carry no JavaScript');
+    return;
+  }
+  // The one script of a page that has one: a first-party module (inlined or from /_astro/).
+  if (scripts.length !== 1 || !/type="module"/.test(scripts[0])) fail(path, `expected exactly one module script, found ${scripts.length}`);
+  for (const tag of scripts) {
+    const src = /\ssrc="([^"]+)"/.exec(tag)?.[1];
+    if (src && !src.startsWith('/_astro/')) fail(path, `script from outside the site: ${src}`);
+  }
+}
+
+/* Accessibility, structurally (spec §7): what can be read from the HTML without a browser. */
+const decode = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+/** A link's accessible name: aria-label, else its text without what is hidden from assistive tech. */
+const nameOf = (attributes, inner) => {
+  const label = /\saria-label="([^"]*)"/.exec(attributes)?.[1];
+  if (label !== undefined) return decode(label).trim();
+  return decode(inner.replace(/<([a-z]+)\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+};
+
+function checkAccessibility(path, html) {
+  const main = html.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, '');
+  // Headings never skip a level on the way down.
+  let previous = 0;
+  for (const m of main.matchAll(/<h([1-6])[\s>]/g)) {
+    const level = Number(m[1]);
+    if (previous && level > previous + 1) fail(path, `heading skips from h${previous} to h${level}`);
+    previous = level;
+  }
+  // Every link has a name, and one name never leads to two different places.
+  const names = new Map();
+  for (const m of main.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)) {
+    const href = /\shref="([^"]*)"/.exec(m[1])?.[1] ?? '';
+    const name = nameOf(m[1], m[2]);
+    if (!name) { fail(path, `link without an accessible name: ${href}`); continue; }
+    if (names.has(name) && names.get(name) !== href) fail(path, `"${name}" leads to ${names.get(name)} and ${href}`);
+    names.set(name, href);
+    if (/target="_blank"/.test(m[1]) && !/class="sr-only"[^>]*>[^<]*nova aba/.test(m[2])) fail(path, `new-tab link does not say so: ${href}`);
+  }
+  // Navigation landmarks are told apart.
+  const navs = [...main.matchAll(/<nav\b([^>]*)>/g)].map((m) => /aria-label(?:ledby)?="([^"]+)"/.exec(m[1])?.[1] ?? '');
+  if (navs.some((n) => !n)) fail(path, 'every nav has a label');
+  if (new Set(navs).size !== navs.length) fail(path, `nav labels repeat: ${navs.join(', ')}`);
+  if (/\stabindex="[1-9]/.test(main)) fail(path, 'no positive tabindex');
+}
+
+/* Canonical pages. --------------------------------------------------------------------------------- */
+
+function checkHead(path, html) {
+  if (!html.includes('<html lang="pt-BR"')) fail(path, 'expected <html lang="pt-BR">');
+  const title = /<title>([^<]*)<\/title>/.exec(html)?.[1] ?? '';
+  if (title.length < 5) fail(path, 'missing <title>');
+  if (path === '/' ? !title.startsWith('Pexis Academy') : !title.endsWith('| Pexis Academy')) fail(path, `title pattern: ${title}`);
+  const description = meta(html, 'name', 'description') ?? '';
+  if (description.length < 70 || description.length > 160) fail(path, `description must be 70-160 characters (${description.length})`);
+  if (!html.includes(`<link rel="canonical" href="${SITE}${path}"`)) fail(path, 'canonical mismatch');
+  if (meta(html, 'property', 'og:site_name') !== 'Pexis Academy') fail(path, 'og:site_name must be Pexis Academy');
+  if (meta(html, 'property', 'og:locale') !== 'pt_BR') fail(path, 'og:locale must be pt_BR');
+  if (/hreflang=/.test(html)) fail(path, 'V0.1 is Portuguese only: no hreflang');
+  if (/<meta name="robots" content="[^"]*noindex/.test(html)) fail(path, 'must be indexable');
+  // "About 60 characters" (spec §8.1), held to 65 so a long subject name still fits.
+  if (title.length > 65) fail(path, `title longer than 65 characters (${title.length})`);
+  if (meta(html, 'property', 'og:title') !== title) fail(path, 'og:title must equal the title');
+  if (meta(html, 'property', 'og:description') !== description) fail(path, 'og:description must equal the description');
+  if (meta(html, 'property', 'og:url') !== `${SITE}${path}`) fail(path, 'og:url must equal the canonical');
+  if (meta(html, 'name', 'twitter:card') !== 'summary') fail(path, 'twitter:card must be summary');
+  if (/og:image/.test(html)) fail(path, 'no og:image in V0.1');
+  seenTitles.push([path, title]);
+  seenDescriptions.push([path, description]);
+}
+const seenTitles = [];
+const seenDescriptions = [];
+function checkUnique(list, what) {
+  const byValue = new Map();
+  for (const [path, value] of list) byValue.set(value, [...(byValue.get(value) ?? []), path]);
+  for (const [value, paths] of byValue) if (paths.length > 1) fail(paths.join(', '), `share the same ${what}: ${value}`);
+}
+
+function checkShell(path, html) {
+  if (!/<header\b/.test(html) || !/<footer\b/.test(html)) fail(path, 'header or footer landmark missing');
+  const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
+  if (!nav) { fail(path, 'main navigation (aria-label="Principal") missing'); return; }
+  const items = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => [m[1], m[2].replace(/<[^>]+>/g, '').trim()]);
+  if (JSON.stringify(items) !== JSON.stringify(HEADER_NAV)) fail(path, `header navigation ${JSON.stringify(items)}`);
+  for (const m of nav.matchAll(/<a\b([^>]*)>/g)) {
+    const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
+    const current = /aria-current="page"/.test(m[1]);
+    const expected = href === path || (href === '/materias/' && path.startsWith('/materias/'));
+    if (current !== expected) fail(path, `aria-current on ${href} should be ${expected}`);
+  }
+}
+
+/* Product rules: what each page promises. --------------------------------------------------------- */
+
+/** Every rendered resource: an item of a resource list, named in its own language (translate="no"),
+ *  with exactly one link out, which says it opens in a new tab. Returns the resource items. */
+function checkResources(path, html) {
+  const items = [...html.matchAll(/<li\b([^>]*\sdata-resource-id="[^"]+"[^>]*)>([\s\S]*?)<\/li>/g)];
+  const inLists = [...html.matchAll(/<ul\b[^>]*\sdata-resource-list[\s>=][\s\S]*?<\/ul>/g)]
+    .reduce((n, m) => n + (m[0].match(/\sdata-resource-id="/g) ?? []).length, 0);
+  if (inLists !== items.length) fail(path, `every resource must be an item of a resource list (${inLists}/${items.length})`);
+  for (const [, attributes, body] of items) {
+    const id = /data-resource-id="([^"]+)"/.exec(attributes)?.[1] ?? '?';
+    const links = [...body.matchAll(/<a\b([^>]*)>/g)];
+    if (links.length !== 1 || !/target="_blank"/.test(links[0][1])) fail(path, `resource ${id} needs exactly one outbound link`);
+    if (!/translate="no"/.test(body)) fail(path, `resource ${id}: the official title must carry translate="no"`);
+    if (!/class="sr-only"[^>]*>[^<]*nova aba/.test(body)) fail(path, `resource ${id}: the link must say it opens in a new tab`);
+  }
+  return items;
+}
+
+/** The hrefs of the links inside the first element matching `open`, up to its closing `tag`. */
+function sectionOf(html, open, tag = 'section') {
+  const start = html.search(open);
+  if (start < 0) return null;
+  const end = html.indexOf(`</${tag}>`, start);
+  return html.slice(start, end < 0 ? undefined : end);
+}
+const hrefsIn = (fragment) => attrs(fragment, /<a\b[^>]*\shref="([^"]+)"/g);
+
+/** The Home orients; it does not pour out content (spec §5.2). */
+function checkHome(path, html, resources) {
+  const objective = sectionOf(html, /<section\b[^>]*\sid="objetivo"/);
+  if (!objective) fail(path, 'section#objetivo missing');
+  else {
+    if (!/<h2[^>]*>Qual é o seu objetivo\?<\/h2>/.test(objective)) fail(path, '#objetivo must ask "Qual é o seu objetivo?"');
+    const hrefs = hrefsIn(objective);
+    const expected = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+    if (JSON.stringify(hrefs) !== JSON.stringify(expected)) fail(path, `#objetivo links ${hrefs.join(',')}`);
+  }
+  const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
+  if (!areas) fail(path, 'section#areas missing');
+  else checkAreaGroups(path, areas);
+  if (resources.length) fail(path, `the Home lists no resources (found ${resources.length})`);
+
+  // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
+  const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
+  const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
+  if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
+  const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/);
+  if (curation && !hrefsIn(curation).includes('/sobre/')) fail(path, '#curadoria must lead to /sobre/');
+}
+
+/** The six areas, in order, each linking exactly its subjects (spec §5.2, item 3; §6.1). */
+const AREA_GROUPS = [
+  ['matematica', ['/materias/matematica/']],
+  ['linguagens', ['/materias/portugues/', '/materias/redacao/']],
+  ['natureza', ['/materias/fisica/', '/materias/quimica/', '/materias/biologia/']],
+  ['humanas', ['/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/']],
+  ['idiomas', ['/materias/ingles/', '/materias/espanhol/']],
+  ['tecnologia', ['/tecnologia/']],
+];
+function checkAreaGroups(path, fragment) {
+  const groups = [...fragment.matchAll(/<(\w+)\b[^>]*\sdata-area="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => [m[2], hrefsIn(m[3])]);
+  if (JSON.stringify(groups) !== JSON.stringify(AREA_GROUPS)) fail(path, `area groups ${JSON.stringify(groups)}`);
+}
+
+/** /sobre/: the curation policy, how verification works (with the same date as the footer), and
+ *  independence from the institutions cited (spec §6.3). */
+function checkAbout(path, html) {
+  for (const id of ['curadoria', 'verificacao', 'afiliacao']) {
+    if (!new RegExp(`<section\\b[^>]*\\sid="${id}"`).test(html)) fail(path, `section#${id} missing`);
+  }
+  const verification = sectionOf(html, /<section\b[^>]*\sid="verificacao"/) ?? '';
+  const footerDate = /<time datetime="([^"]+)" data-verified-on/.exec(html)?.[1];
+  const pageDate = /<time datetime="([^"]+)"/.exec(verification)?.[1];
+  if (!footerDate || pageDate !== footerDate) fail(path, `verification date ${pageDate} must match the footer's ${footerDate}`);
+}
+
+const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+const resourceAttr = (item, name) => new RegExp(`\\s${name}="([^"]*)"`).exec(item[1])?.[1] ?? '';
+
+/** A subject page: content, then practice, then the objectives it serves (spec §6.3). An empty
+ *  subject is never published. */
+function checkSubject(path, html, resources) {
+  const subject = path.split('/')[2];
+  if (resources.length === 0) fail(path, 'a subject page shows at least one resource');
+  for (const item of resources) {
+    if (resourceAttr(item, 'data-subject') !== subject) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} is not ${subject}`);
+  }
+  const content = sectionOf(html, /<section\b[^>]*\sid="conteudo"/);
+  const practice = sectionOf(html, /<section\b[^>]*\sid="pratique"/);
+  const objectives = sectionOf(html, /<section\b[^>]*\sid="objetivos"/);
+  if (content && /data-format="practice"/.test(content)) fail(path, '#conteudo holds no practice');
+  if (practice && /data-format="(?!practice")/.test(practice)) fail(path, '#pratique holds practice only');
+  if (!content && !practice) fail(path, 'neither #conteudo nor #pratique');
+  // A learning map, when present, is an ordered list of plain items that names its source; V0.1 topics have no pages.
+  const map = sectionOf(html, /<section\b[^>]*\sdata-learning-map[\s>=]/);
+  if (map) {
+    if (!/<ol\b/.test(map) || !/data-source-note/.test(map)) fail(path, 'a learning map is an <ol> that cites its source');
+    const items = /<ol\b[\s\S]*?<\/ol>/.exec(map)?.[0] ?? '';
+    if (/<a\b/.test(items)) fail(path, 'learning-map topics have no pages in V0.1');
+  }
+  if (!objectives) fail(path, 'section#objetivos missing');
+  else for (const href of hrefsIn(objectives)) if (!OBJECTIVE_PATHS.includes(href)) fail(path, `#objetivos links ${href}`);
+}
+
+const sectionIds = (html) => attrs(/<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '', /<section\b[^>]*\sid="([^"]+)"/g);
+
+/** An official source cited on the page: a note with a link to an official host and the verification date. */
+function checkSourceNote(path, fragment, where) {
+  const note = /<[a-z]+\b[^>]*\sdata-source-note[\s\S]*?<\/(p|div)>/.exec(fragment)?.[0];
+  if (!note) { fail(path, `${where}: official source note missing`); return; }
+  const hosts = hrefsIn(note).map((h) => { try { return new URL(h).hostname; } catch { return ''; } });
+  if (!hosts.some((h) => OFFICIAL_HOSTS.includes(h))) fail(path, `${where}: source note must link an official page`);
+  if (!/<time datetime="\d{4}-\d{2}-\d{2}"/.test(note)) fail(path, `${where}: source note must date its verification`);
+}
+
+/** The ENEM as INEP organises it: four areas and the essay, each linking its subjects. */
+const ENEM_GROUPS = [
+  ['linguagens', ['/materias/portugues/', '/materias/ingles/', '/materias/espanhol/']],
+  ['humanas', ['/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/']],
+  ['natureza', ['/materias/fisica/', '/materias/quimica/', '/materias/biologia/']],
+  ['matematica', ['/materias/matematica/']],
+  ['redacao', ['/materias/redacao/']],
+];
+
+/** /enem/: a preparation hub, not a list of courses (spec §6.3). */
+function checkEnem(path, html) {
+  const ids = sectionIds(html);
+  if (JSON.stringify(ids) !== JSON.stringify(['entenda', 'areas', 'pratique', 'aprofunde'])) fail(path, `ENEM sections ${ids.join(',')}`);
+  checkSourceNote(path, sectionOf(html, /<section\b[^>]*\sid="entenda"/) ?? '', '#entenda');
+  checkSourceNote(path, sectionOf(html, /<section\b[^>]*\sid="pratique"/) ?? '', '#pratique');
+  const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/) ?? '';
+  const groups = [...areas.matchAll(/<(\w+)\b[^>]*\sdata-exam-area="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => [m[2], hrefsIn(m[3])]);
+  if (JSON.stringify(groups) !== JSON.stringify(ENEM_GROUPS)) fail(path, `ENEM area groups ${JSON.stringify(groups)}`);
+  const deepen = sectionOf(html, /<section\b[^>]*\sid="aprofunde"/) ?? '';
+  if (!/\sdata-resource-id="/.test(deepen)) fail(path, '#aprofunde shows at least one resource');
+  if (/data-format="practice"/.test(deepen)) fail(path, '#aprofunde holds no practice');
+}
+
+/** /uerj/: its own personality, with past exams as the spine (spec §6.3). */
+const UERJ_PRACTICE = ['uerj-math-practice', 'uerj-portuguese-practice', 'uerj-writing-practice', 'uerj-physics-practice', 'uerj-history-practice', 'uerj-geography-practice', 'uerj-spanish-practice'];
+function checkUerj(path, html) {
+  const ids = sectionIds(html);
+  if (JSON.stringify(ids) !== JSON.stringify(['entenda', 'prepare', 'materias', 'provas'])) fail(path, `UERJ sections ${ids.join(',')}`);
+  checkSourceNote(path, sectionOf(html, /<section\b[^>]*\sid="entenda"/) ?? '', '#entenda');
+  const prepare = sectionOf(html, /<section\b[^>]*\sid="prepare"/) ?? '';
+  checkSourceNote(path, prepare, '#prepare');
+  if (/<table\b/.test(prepare)) fail(path, '#prepare points to the official rules; it copies no table');
+  const exams = sectionOf(html, /<section\b[^>]*\sid="provas"/) ?? '';
+  const found = attrs(exams, /\sdata-resource-id="([^"]+)"/g).sort();
+  if (JSON.stringify(found) !== JSON.stringify([...UERJ_PRACTICE].sort())) fail(path, `#provas must hold the seven UERJ collections (${found.join(',')})`);
+  const subjects = hrefsIn(sectionOf(html, /<section\b[^>]*\sid="materias"/) ?? '');
+  const expected = ['/materias/matematica/', '/materias/portugues/', '/materias/redacao/', '/materias/fisica/', '/materias/historia/', '/materias/geografia/', '/materias/espanhol/'];
+  if (JSON.stringify(subjects) !== JSON.stringify(expected)) fail(path, `#materias links ${subjects.join(',')}`);
+}
+
+/** An objective page that maps subjects by area: only resources tagged for the objective (spec §6.3). */
+function checkObjectiveMap(path, html, resources, goal) {
+  if (resources.length === 0) fail(path, 'shows at least one resource');
+  for (const item of resources) {
+    if (!resourceAttr(item, 'data-goals').split(' ').includes(goal)) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} is not tagged ${goal}`);
+  }
+}
+
+function checkProduct(path, html) {
+  const resources = checkResources(path, html);
+  if (path === '/') checkHome(path, html, resources);
+  if (path === '/sobre/') checkAbout(path, html);
+  if (path === '/enem/') checkEnem(path, html);
+  if (path === '/uerj/') checkUerj(path, html);
+  if (path === '/vestibulares/') {
+    checkObjectiveMap(path, html, resources, 'vestibulares');
+    const ids = sectionIds(html);
+    if (ids[0] !== 'uerj' || ids[1] !== 'nota-editorial') fail(path, `Vestibulares opens with the UERJ, then the editorial note (${ids.join(',')})`);
+    if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="uerj"/) ?? '').includes('/uerj/')) fail(path, '#uerj leads to /uerj/');
+  }
+  if (path === '/buscar/') {
+    // The directory: without JavaScript it links every content page (Home, Buscar and Sobre are in the
+    // shell of every page); with it, a hidden search form filters the same entries.
+    const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
+    const linked = new Set(hrefsIn(main).map((h) => h.split('#')[0]));
+    for (const page of CANONICAL.filter((p) => !['/', '/buscar/', '/sobre/'].includes(p))) {
+      if (!linked.has(page)) fail(path, `the directory does not reach ${page}`);
+    }
+    const entries = main.match(/<li\b[^>]*\sdata-search-entry[\s>=][^>]*>/g) ?? [];
+    if (entries.length < 60) fail(path, `expected the full index, found ${entries.length} entries`);
+    for (const li of entries) {
+      const terms = /\sdata-terms="([^"]+)"/.exec(li)?.[1] ?? '';
+      if (!terms || terms !== terms.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()) fail(path, `entry without normalized terms: ${li.slice(0, 80)}`);
+    }
+    if (!/<form\b[^>]*role="search"[^>]*\shidden[\s>=]/.test(main)) fail(path, 'the search form starts hidden (revealed by JavaScript)');
+  }
+  if (path === '/tecnologia/') {
+    const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
+    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade'];
+    if (JSON.stringify(tracks.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `tracks ${tracks.map((m) => m[1]).join(',')}`);
+    for (const [, id, body] of tracks) if (!/\sdata-resource-id="/.test(body)) fail(path, `track ${id} is empty`);
+  }
+  if (path === '/ensino-medio/') {
+    checkObjectiveMap(path, html, resources, 'ensino-medio');
+    const ids = sectionIds(html);
+    if (JSON.stringify(ids) !== JSON.stringify(['matematica', 'linguagens', 'natureza', 'humanas', 'idiomas', 'tecnologia'])) fail(path, `Ensino Médio sections ${ids.join(',')}`);
+    if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="tecnologia"/) ?? '').includes('/tecnologia/')) fail(path, '#tecnologia leads to /tecnologia/');
+  }
+  if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
+  if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
+}
+
+for (const path of CANONICAL) {
+  const file = fileFor(path);
+  if (!existsSync(file)) { fail(path, 'missing'); continue; }
+  const html = readFileSync(file, 'utf8');
+  checkHead(path, html);
+  checkShell(path, html);
+  checkLandmarks(path, html);
+  checkProduct(path, html);
+  checkImages(path, html);
+  checkThirdParty(path, html);
+  checkLinks(path, html);
+  checkScripts(path, html);
+  checkAccessibility(path, html);
+}
+
+checkUnique(seenTitles, 'title');
+checkUnique(seenDescriptions, 'description');
+
+/* Redirects, gone routes and the 404. ------------------------------------------------------------- */
+
+for (const [from, to] of Object.entries(REDIRECTS)) {
+  const file = fileFor(from);
+  if (!existsSync(file)) { fail(from, 'redirect page missing'); continue; }
+  const html = readFileSync(file, 'utf8');
+  if (!/<meta name="robots" content="[^"]*noindex/.test(html)) fail(from, 'redirect must be noindex');
+  if (!new RegExp(`<meta http-equiv="refresh" content="0;\\s*url=${to.replace(/\//g, '\\/')}"`).test(html)) fail(from, `redirect must refresh to ${to}`);
+  if (!CANONICAL.includes(to) || !existsSync(fileFor(to))) fail(from, `redirect target ${to} is not a canonical page`);
+  if (!html.includes(`<link rel="canonical" href="${SITE}${to}">`)) fail(from, `redirect must name ${to} as canonical`);
+}
+for (const path of GONE) {
+  if (existsSync(join(DIST, path))) fail(path, 'must be gone (404)');
+}
+{
+  const file = join(DIST, '404.html');
+  if (!existsSync(file)) fail('/404.html', 'missing');
+  else {
+    const html = readFileSync(file, 'utf8');
+    if (!/<meta name="robots" content="[^"]*noindex/.test(html)) fail('/404.html', 'must be noindex');
+    if (!html.includes('<html lang="pt-BR"')) fail('/404.html', 'expected <html lang="pt-BR">');
+    checkLandmarks('/404.html', html);
+    checkLinks('/404.html', html);
+    checkScripts('/404.html', html);
+    checkAccessibility('/404.html', html);
+    for (const href of ['/', '/materias/', '/buscar/']) {
+      if (!new RegExp(`<main[\\s\\S]*href="${href}"[\\s\\S]*</main>`).test(html)) fail('/404.html', `must offer a way to ${href}`);
+    }
+  }
+}
+
 const files = walk(DIST);
+
+/* The stylesheet keeps a visible focus and honours reduced motion (spec §7). */
+{
+  const css = files.filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n');
+  if (!/:focus-visible\s*\{[^}]*outline:\s*2px/.test(css)) fail('css', 'a visible :focus-visible outline is required');
+  if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*transition:\s*none/.test(css)) fail('css', 'reduced motion must switch transitions off');
+}
+
+/* Sitemap and robots (spec §8.2): the sitemap lists exactly the canonical pages, absolute; no redirect,
+   no 404. Compared with the hand-written list above: two independent sources must agree (spec R10). */
+{
+  const sitemap = join(DIST, 'sitemap.xml');
+  if (!existsSync(sitemap)) fail('/sitemap.xml', 'missing');
+  else {
+    const xml = readFileSync(sitemap, 'utf8');
+    if (!/^<\?xml version="1.0" encoding="UTF-8"\?>\s*<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/.test(xml)) fail('/sitemap.xml', 'not a sitemap urlset');
+    const locs = attrs(xml, /<loc>([^<]+)<\/loc>/g);
+    const expected = CANONICAL.map((p) => SITE + p);
+    if (JSON.stringify([...locs].sort()) !== JSON.stringify([...expected].sort())) fail('/sitemap.xml', `locations differ from the canonical pages: ${locs.length} vs ${expected.length}`);
+  }
+  const robots = join(DIST, 'robots.txt');
+  if (!existsSync(robots)) fail('/robots.txt', 'missing');
+  else if (!readFileSync(robots, 'utf8').includes(`Sitemap: ${SITE}/sitemap.xml`)) fail('/robots.txt', 'must point to the sitemap');
+}
+
+/* The whole of dist/. ----------------------------------------------------------------------------- */
+
+const known = new Set([...CANONICAL, ...Object.keys(REDIRECTS)].map((p) => fileFor(p)).concat(join(DIST, '404.html')));
+for (const f of files.filter((f) => f.endsWith('.html'))) {
+  if (!known.has(f)) fail('/' + relative(DIST, f).split(sep).join('/'), 'page not in the canonical inventory');
+}
+
 for (const f of files.filter((f) => /\.(html|css|js)$/.test(f))) {
   const text = readFileSync(f, 'utf8');
   const refs = [...text.matchAll(/(?:src|href)="(\/_astro\/[^"]+)"|url\((\/_astro\/[^)]+)\)/g)].map((m) => m[1] ?? m[2]);
@@ -221,10 +534,15 @@ for (const f of files.filter((f) => /\.(html|css|js)$/.test(f))) {
     if (!existsSync(join(DIST, ref))) fail(f, `missing asset ${ref}`);
   }
   for (const re of SECRET_PATTERNS) if (re.test(text)) fail(f, `matches secret pattern ${re}`);
+
+  const visible = text
+    .replace(/<link rel="canonical" href="[^"]*">/g, '')
+    .replace(/<meta property="og:url" content="[^"]*">/g, '');
+  for (const re of DENY) if (re.test(visible)) fail('/' + relative(DIST, f).split(sep).join('/'), `trace of the former personal site: ${re}`);
 }
 
 if (errors.length) {
   console.error(`verify-dist: ${errors.length} problem(s)\n  ` + errors.join('\n  '));
   process.exit(1);
 }
-console.log(`verify-dist: ${PAGES.length} pages, ${files.length} files — all invariants hold.`);
+console.log(`verify-dist: ${CANONICAL.length} pages, ${Object.keys(REDIRECTS).length} redirects, 404, ${files.length} files — all invariants hold.`);

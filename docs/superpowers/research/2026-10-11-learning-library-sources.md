@@ -79,3 +79,61 @@ All legacy entries with non-null URLs were re-checked on 2026-10-11 for free lea
 - Cisco Networking Academy: the official Introduction to Cybersecurity page marks the course as Free.
 
 Held-back Microsoft Learn / IBM records remain unpublished because the intended exact Portuguese resource could not be confirmed.
+
+## Pexis Academy: re-verification
+
+Date: 2026-10-11 (Pexis Academy V0.1 implementation, plan T3.2 and T4.3).
+
+### Access from the build environment
+
+The official INEP and UERJ pages could not be opened from the implementation environment on this date:
+the outbound proxy refused `www.gov.br` (HTTP 403 on CONNECT) and a second fetcher could not resolve the
+host. This is an environment limit, not evidence that any page changed. The official pages recorded above
+were verified on this same date by the original audit, and that verification stands. Nothing below is
+published on the strength of the search index alone unless stated.
+
+### ENEM reference matrix: Mathematics learning map (not published)
+
+Goal: the learning map of `/materias/matematica/` (spec §6.1). Rule: each proposed item must match an
+object of knowledge of the ENEM reference matrix; an item without a match is dropped; if the matrix cannot
+be opened, no map is published (plan T4.3).
+
+Evidence available today, by search index only (method `search-index`), pointing to INEP documents:
+`https://download.inep.gov.br/download/enem/matriz_referencia.pdf` and
+`https://download.inep.gov.br/enem/outros_documentos/enem_matriz_de_referencia_v1.pdf`. The index groups
+the Mathematics objects of knowledge into numerical, geometric, statistics and probability, algebraic,
+and algebraic-geometric knowledge, and notes that the list differs between editions.
+
+Prepared mapping, to confirm against the official PDF before publishing:
+
+| Proposed item | Object of knowledge in the matrix (per the index) | Status |
+| --- | --- | --- |
+| Fundamentos | no corresponding object | dropped |
+| Aritmética | conhecimentos numéricos (operações em conjuntos numéricos, razões e proporções, porcentagem e juros) | pending |
+| Álgebra | conhecimentos algébricos (equações e inequações) | pending |
+| Funções | conhecimentos algébricos (funções do 1º e 2º graus, polinomiais, racionais, exponenciais e logarítmicas) | pending |
+| Geometria | conhecimentos geométricos | pending |
+| Trigonometria | trigonometria do ângulo agudo; ciclo trigonométrico e funções trigonométricas | pending |
+| Estatística | representação e análise de dados; medidas de tendência central; desvios e variância | pending |
+| Probabilidade | noções de probabilidade | pending |
+
+Decision: `SUBJECTS.matematica.topics` stays empty in V0.1. Publishing needs the official PDF opened at
+its source; then the table above becomes the list in `src/lib/taxonomy.ts` and the test in
+`tests/taxonomy.test.ts` changes with it.
+
+### Claims the ENEM and UERJ pages make
+
+Every factual sentence of "Entenda a prova" and "Monte sua preparação" is listed here with its source.
+No dates, cut-off scores, question counts or calendars are published (spec R5): they change every edition.
+
+| Page | Claim (as published) | Official source cited on the page | Evidence |
+| --- | --- | --- | --- |
+| `/enem/` | The ENEM assesses four areas of knowledge (Linguagens, Códigos e suas Tecnologias; Ciências Humanas e suas Tecnologias; Ciências da Natureza e suas Tecnologias; Matemática e suas Tecnologias) and an essay. | INEP reference matrices | Official page verified by this audit on 2026-10-11; corroborated by search index the same day (INEP's ENEM page, MEC's "Como funciona o Enem" guide). |
+| `/enem/` | The reference matrices describe what each area assesses. | INEP reference matrices | What the document is (title and purpose of the official page). |
+| `/enem/` | INEP publishes the tests and answer keys of previous editions. | INEP "Provas e gabaritos" | Official page verified by this audit on 2026-10-11. |
+| `/uerj/` | In the Exame Discursivo every candidate writes the essay (Redação) and takes two specific subjects. | UERJ FAQ | Official FAQ, verified by this audit on 2026-10-11 (section "UERJ official practice"). |
+| `/uerj/` | The specific subjects depend on the course chosen; the official rules say which. | UERJ FAQ | Same FAQ; the page sends the reader to it rather than copying any table. |
+| `/uerj/` | The Revista do Vestibular publishes commented questions from current and previous editions as study references. | links to the Revista collections | Section "UERJ official practice" above. |
+
+"Provas e gabaritos" is cited as an official source in the ENEM practice section, not added to the
+catalogue: it covers every subject, and a catalogue resource has exactly one (plan T3.2, option a).

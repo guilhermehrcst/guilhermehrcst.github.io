@@ -1,0 +1,15 @@
+---
+// "Explorar": the six areas and their subjects (spec §6.3). The parent of every /materias/{subject}/.
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import AreaList from '../../components/AreaList.astro';
+import { pt as t } from '../../i18n/pt';
+
+const c = t.pages.materias;
+---
+<Base title={c.title} description={c.description}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <div class="wrap">
+    <AreaList headingLevel={2} />
+  </div>
+</Base>

@@ -1,0 +1,67 @@
+---
+// The site map, derived from the taxonomy and the routes (spec §5.2, item 5), the date the catalogue
+// was last verified (from the data, never typed) and the licences of what the site ships.
+import { routes } from '../lib/routes';
+import { ACADEMIC_SUBJECTS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
+import { VERIFIED_ON } from '../lib/learning-resources';
+import { formatDate } from '../lib/dates';
+import { pt as t } from '../i18n/pt';
+
+const date = formatDate(VERIFIED_ON);
+---
+<footer class="site-footer">
+  <div class="wrap grid">
+    <div class="about">
+      <p class="brand">Pexis Academy</p>
+      <p class="muted">{t.footer.tagline}</p>
+      <p class="muted small"><time datetime={VERIFIED_ON} data-verified-on>{t.footer.verified(date)}</time></p>
+    </div>
+    <nav aria-label={t.footer.objectives}>
+      <p class="eyebrow">{t.footer.objectives}</p>
+      <ul role="list">
+        {OBJECTIVE_ORDER.map((id) => <li><a href={routes.objective(id)}>{OBJECTIVES[id].label}</a></li>)}
+      </ul>
+    </nav>
+    <nav aria-label={t.footer.subjects}>
+      <p class="eyebrow">{t.footer.subjects}</p>
+      <ul role="list" class="cols">
+        {ACADEMIC_SUBJECTS.map((id) => <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a></li>)}
+      </ul>
+    </nav>
+    <nav aria-label={t.footer.academy}>
+      <p class="eyebrow">{t.footer.academy}</p>
+      <ul role="list">
+        <li><a href={routes.subjectIndex}>Explorar</a></li>
+        <li><a href={routes.search}>Buscar</a></li>
+        <li><a href={routes.about}>Sobre</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap legal">
+    <p class="muted small">
+      {t.footer.licenses}:{' '}<a href="/licenses/GoogleSansFlex-OFL.txt">Google Sans Flex (OFL)</a>,{' '}<a href="/licenses/RadixIcons-MIT.txt">Radix Icons (MIT)</a>.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { margin-top: var(--space-8); border-top: 1px solid var(--rule); background: var(--surface); }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    padding-block: var(--space-7) var(--space-6);
+  }
+  @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .grid { grid-template-columns: 2fr 1fr 2fr 1fr; } }
+
+  .brand { font-weight: 620; margin-bottom: var(--space-2); }
+  .muted { color: var(--muted); }
+  .small { font-size: var(--fs-small); margin-top: var(--space-3); }
+  .eyebrow { margin-bottom: var(--space-2); }
+  ul { display: grid; gap: 0; }
+  .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); }
+  li a { display: inline-flex; align-items: center; min-height: 36px; text-decoration: none; }
+  li a:hover { text-decoration: underline; }
+  .legal > p { margin: 0; padding-block: var(--space-4) var(--space-6); border-top: 1px solid var(--rule); }
+</style>

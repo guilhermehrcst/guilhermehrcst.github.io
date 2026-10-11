@@ -1,0 +1,43 @@
+---
+// "Qual é o seu objetivo?": the five ways in, in the Home's order (spec §5.2, item 2). A list of
+// directions, each one line of what the student will find there.
+import { routes } from '../lib/routes';
+import { OBJECTIVE_ORDER, OBJECTIVES } from '../lib/taxonomy';
+import { pt as t } from '../i18n/pt';
+---
+<ul class="objectives" role="list">
+  {OBJECTIVE_ORDER.map((id) => (
+    <li>
+      <a href={routes.objective(id)}>
+        <span class="name">{OBJECTIVES[id].label}</span>
+        <span class="what">{t.home.objectives.items[id]}</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .objectives { border-bottom: 1px solid var(--rule); }
+  li { border-top: 1px solid var(--rule); }
+  a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'name arrow' 'what arrow';
+    align-items: center;
+    column-gap: var(--space-5);
+    row-gap: var(--space-1);
+    padding-block: var(--space-5);
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .name { grid-area: name; font-size: var(--fs-h2); font-weight: 540; letter-spacing: -0.02em; line-height: 1.15; }
+  .what { grid-area: what; color: var(--muted); max-width: 46ch; }
+  .arrow { grid-area: arrow; font-size: var(--fs-h3); color: var(--muted); transition: transform var(--t-ui) var(--ease), color var(--t-ui); }
+  a:hover .arrow, a:focus-visible .arrow { color: var(--action); transform: translateX(4px); }
+  a:hover .name { color: var(--action); }
+
+  @media (min-width: 900px) {
+    a { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) auto; grid-template-areas: 'name what arrow'; }
+  }
+</style>
