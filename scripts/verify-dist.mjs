@@ -205,6 +205,15 @@ function checkHome(path, html, resources) {
   if (!areas) fail(path, 'section#areas missing');
   else checkAreaGroups(path, areas);
   if (resources.length) fail(path, `the Home lists no resources (found ${resources.length})`);
+
+  // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
+  const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
+  const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
+  if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
+  const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/);
+  if (curation && !hrefsIn(curation).includes('/sobre/')) fail(path, '#curadoria must lead to /sobre/');
 }
 
 /** The six areas, in order, each linking exactly its subjects (spec §5.2, item 3; §6.1). */

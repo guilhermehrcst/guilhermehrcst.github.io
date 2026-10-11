@@ -87,6 +87,15 @@ export const pt: Dict = {
   home: {
     cta: 'Escolher meu objetivo',
     areas: { heading: 'Explore por área' },
+    curation: {
+      heading: 'Como escolhemos os recursos',
+      rules: [
+        { title: 'Gratuito de verdade', body: 'Todo o conteúdo de estudo é gratuito. Sem período de teste, sem trechos de amostra, sem link de afiliado. Alguns pedem uma conta gratuita.' },
+        { title: 'Direto da fonte', body: 'Cada link leva à página oficial do curso, da instituição ou da prova, nunca a um agregador.' },
+        { title: 'Verificado com data', body: 'Conferimos cada recurso na fonte antes de publicar e registramos quando.' },
+      ],
+      more: 'Como verificamos',
+    },
     objectives: {
       heading: 'Qual é o seu objetivo?',
       items: {

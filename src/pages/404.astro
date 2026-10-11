@@ -17,7 +17,7 @@ const ways = [
   <PageIntro heading={c.heading} lead={c.lead} />
   <nav class="wrap ways" aria-label={c.heading}>
     <ul role="list">
-      {ways.map((w) => <li><a href={w.href}>{w.label} <span aria-hidden="true">→</span></a></li>)}
+      {ways.map((w) => <li><a href={w.href}>{w.label}{' '}<span aria-hidden="true">→</span></a></li>)}
     </ul>
   </nav>
 </Base>
