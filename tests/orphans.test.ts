@@ -15,8 +15,10 @@ const sources = [...walk('src'), ...walk('tests'), 'astro.config.mjs'].filter((p
 const importsOf = (path: string) => [...read(path).matchAll(/(?:from|import)\s+['"]([^'"]+)['"]/g)].map((m) => m[1]!);
 const imported = new Set(sources.flatMap((p) => importsOf(p).map((spec) => spec.split('/').pop()!.replace(/\.(ts|astro)$/, ''))));
 
-/** Kept on purpose, unused in V0.1: the curated course images wait for a visual decision (spec §2.2). */
-const EXCEPTIONS = new Set(['resource-images']);
+/** Kept on purpose, unused in V0.1: the curated course images wait for a visual decision (spec §2.2).
+ *  featured (V0.4 M1): the editorial selection in staging, validated by tests/featured.test.ts until the
+ *  path pages render it (M3); remove it from here then. */
+const EXCEPTIONS = new Set(['resource-images', 'featured']);
 
 test('every component is used', () => {
   for (const path of walk('src/components')) {
