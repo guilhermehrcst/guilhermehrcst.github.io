@@ -9,8 +9,8 @@ import type { CoursesPage } from '../i18n/types';
 interface Props {
   resource: PublishedLearningResource;
   t: CoursesPage;
-  n?: number;
-  style?: string;
+  n?: number | undefined;
+  style?: string | undefined;
 }
 
 const { resource: r, t, n, style } = Astro.props;
