@@ -35,7 +35,7 @@ const areas = AREA_ORDER.map((id) => ({ id, label: AREAS[id].label, subjects: su
 
   .area { padding-block: var(--space-5) var(--space-6); border-top: 1px solid var(--rule); }
   .name { font-size: var(--fs-h3); font-weight: 560; margin-bottom: var(--space-3); }
-  .name a { text-decoration: none; }
+  .name a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; text-decoration: none; }
   .name a span { color: var(--muted); }
   .name a:hover span { color: var(--action); }
   .subjects { display: flex; flex-wrap: wrap; gap: 0 var(--space-4); }
