@@ -160,6 +160,22 @@ function checkHead(path, html) {
   if (meta(html, 'property', 'og:locale') !== 'pt_BR') fail(path, 'og:locale must be pt_BR');
   if (/hreflang=/.test(html)) fail(path, 'V0.1 is Portuguese only: no hreflang');
   if (/<meta name="robots" content="[^"]*noindex/.test(html)) fail(path, 'must be indexable');
+  // "About 60 characters" (spec §8.1), held to 65 so a long subject name still fits.
+  if (title.length > 65) fail(path, `title longer than 65 characters (${title.length})`);
+  if (meta(html, 'property', 'og:title') !== title) fail(path, 'og:title must equal the title');
+  if (meta(html, 'property', 'og:description') !== description) fail(path, 'og:description must equal the description');
+  if (meta(html, 'property', 'og:url') !== `${SITE}${path}`) fail(path, 'og:url must equal the canonical');
+  if (meta(html, 'name', 'twitter:card') !== 'summary') fail(path, 'twitter:card must be summary');
+  if (/og:image/.test(html)) fail(path, 'no og:image in V0.1');
+  seenTitles.push([path, title]);
+  seenDescriptions.push([path, description]);
+}
+const seenTitles = [];
+const seenDescriptions = [];
+function checkUnique(list, what) {
+  const byValue = new Map();
+  for (const [path, value] of list) byValue.set(value, [...(byValue.get(value) ?? []), path]);
+  for (const [value, paths] of byValue) if (paths.length > 1) fail(paths.join(', '), `share the same ${what}: ${value}`);
 }
 
 function checkShell(path, html) {
@@ -400,6 +416,9 @@ for (const path of CANONICAL) {
   checkScripts(path, html);
 }
 
+checkUnique(seenTitles, 'title');
+checkUnique(seenDescriptions, 'description');
+
 /* Redirects, gone routes and the 404. ------------------------------------------------------------- */
 
 for (const [from, to] of Object.entries(REDIRECTS)) {
@@ -409,6 +428,7 @@ for (const [from, to] of Object.entries(REDIRECTS)) {
   if (!/<meta name="robots" content="[^"]*noindex/.test(html)) fail(from, 'redirect must be noindex');
   if (!new RegExp(`<meta http-equiv="refresh" content="0;\\s*url=${to.replace(/\//g, '\\/')}"`).test(html)) fail(from, `redirect must refresh to ${to}`);
   if (!CANONICAL.includes(to) || !existsSync(fileFor(to))) fail(from, `redirect target ${to} is not a canonical page`);
+  if (!html.includes(`<link rel="canonical" href="${SITE}${to}">`)) fail(from, `redirect must name ${to} as canonical`);
 }
 for (const path of GONE) {
   if (existsSync(join(DIST, path))) fail(path, 'must be gone (404)');
