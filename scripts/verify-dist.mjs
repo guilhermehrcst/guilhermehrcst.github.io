@@ -14,6 +14,10 @@ const PAGES = [
   { path: '/pt/curriculo/', lang: 'pt-BR', noindex: false, pair: '/resume/' },
   { path: '/courses/', lang: 'en', noindex: false, pair: '/pt/cursos/' },
   { path: '/pt/cursos/', lang: 'pt-BR', noindex: false, pair: '/courses/' },
+  { path: '/courses/enem/', lang: 'en', noindex: false, pair: '/pt/cursos/enem/' },
+  { path: '/pt/cursos/enem/', lang: 'pt-BR', noindex: false, pair: '/courses/enem/' },
+  { path: '/courses/uerj/', lang: 'en', noindex: false, pair: '/pt/cursos/uerj/' },
+  { path: '/pt/cursos/uerj/', lang: 'pt-BR', noindex: false, pair: '/courses/uerj/' },
 ];
 
 /** The only external destinations this site may link to. Personal data is published on purpose and only here. */
@@ -28,7 +32,14 @@ const EXTERNAL_ALLOW = new Set([
 
 /** Course pages may also link out, but only to the institutions' own sites (exact hosts, HTTPS), and
  *  every such link must open in a new tab without handing the page a reference back (noopener noreferrer). */
-const COURSE_PAGES = new Set(['/courses/', '/pt/cursos/']);
+const COURSE_PAGES = new Set([
+  '/courses/', '/pt/cursos/',
+  '/courses/enem/', '/pt/cursos/enem/',
+  '/courses/uerj/', '/pt/cursos/uerj/',
+]);
+const GENERAL_COURSE_PAGES = new Set(['/courses/', '/pt/cursos/']);
+const STUDY_TRACK_PAGES = new Set(['/courses/enem/', '/pt/cursos/enem/', '/courses/uerj/', '/pt/cursos/uerj/']);
+const LEARNING_AREAS = ['technology', 'math', 'portuguese', 'writing', 'nature', 'humanities', 'english', 'spanish'];
 const COURSE_HOSTS = new Set([
   'cs50.harvard.edu',
   'ocw.mit.edu',
@@ -37,6 +48,9 @@ const COURSE_HOSTS = new Set([
   'www.netacad.com',
   'learn.microsoft.com',
   'skillsbuild.org',
+  'kultivi.com',
+  'www.gov.br',
+  'www.revista.vestibular.uerj.br',
 ]);
 
 /** The Home: one narrative shell, with exactly one terminal, hidden from assistive tech, and ten
@@ -143,7 +157,20 @@ for (const pg of PAGES) {
     if (/stylesheet|preload|icon|modulepreload/.test(rel) && !href.startsWith('/')) fail(pg.path, `external ${rel} ${href}`);
   }
 
-  // Course links: official hosts only, HTTPS, new tab with noopener noreferrer.
+  // The general library must expose the eight primary areas exactly once, in semantic SSR markup.
+  if (GENERAL_COURSE_PAGES.has(pg.path)) {
+    for (const area of LEARNING_AREAS) {
+      const count = (html.match(new RegExp(`id="area-${area}"`, 'g')) ?? []).length;
+      if (count !== 1) fail(pg.path, `expected one primary area ${area}, found ${count}`);
+    }
+  }
+
+  // A study track is not an empty editorial shell: at least one shared verified resource must render.
+  if (STUDY_TRACK_PAGES.has(pg.path) && !/\sdata-learning-resource[\s>=]/.test(html)) {
+    fail(pg.path, 'study track has no learning resources');
+  }
+
+  // Course links: verified hosts only, HTTPS, new tab with noopener noreferrer.
   const courseLinks = new Set();
   if (COURSE_PAGES.has(pg.path)) {
     for (const m of html.matchAll(/<a\b([^>]*)>/g)) {

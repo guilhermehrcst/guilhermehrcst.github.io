@@ -1,0 +1,50 @@
+---
+import LearningResourceCard from './LearningResourceCard.astro';
+import { resourcesByIds } from '../lib/learning-library';
+import { publishedResources } from '../lib/learning-resources';
+import type { CoursesPage, StudyTrackPage } from '../i18n/types';
+import type { StudyTrackSectionDefinition } from '../lib/study-tracks';
+
+interface Props {
+  index: number;
+  definition: StudyTrackSectionDefinition;
+  copy: StudyTrackPage['sections'][StudyTrackSectionDefinition['id']];
+  courses: CoursesPage;
+}
+
+const { index, definition, copy, courses } = Astro.props;
+const resources = resourcesByIds(publishedResources, definition.resourceIds);
+const span = resources.length <= 1 ? 12 : resources.length === 2 ? 6 : 4;
+---
+<section class="track-section" id={`track-${definition.id}`} aria-labelledby={`track-${definition.id}-title`}>
+  <div class="track-head">
+    <p class="meta step">{String(index + 1).padStart(2, '0')} <span class="slash" aria-hidden="true">/</span></p>
+    <div>
+      <h2 id={`track-${definition.id}-title`}>{copy.title}<span class="slash" aria-hidden="true">/</span></h2>
+      <p>{copy.body}</p>
+    </div>
+  </div>
+  {resources.length > 0 && (
+    <ul class="track-grid">
+      {resources.map((resource, resourceIndex) => <LearningResourceCard resource={resource} t={courses} style={`--span: ${span}; --i: ${resourceIndex}`} />)}
+    </ul>
+  )}
+</section>
+
+<style>
+  .track-section { border-bottom: 1px solid var(--rule); }
+  .track-head { display: grid; grid-template-columns: minmax(100px, 2fr) minmax(0, 10fr); min-height: 220px; }
+  .step { padding: var(--space-lg); color: var(--muted); border-right: 1px solid var(--rule); }
+  .track-head > div { display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-md); padding: var(--space-lg); }
+  h2 { font-size: clamp(2rem, 4.5vw, 5rem); font-weight: 600; line-height: 0.95; letter-spacing: -0.025em; }
+  .track-head p:not(.step) { max-width: 52rem; color: var(--muted); font-size: var(--fs-lead); line-height: 1.4; }
+  .track-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+  .track-grid > :global(li) { grid-column: span var(--span, 4); }
+  @media (max-width: 1180px) { .track-grid > :global(li) { grid-column: span 6; } .track-grid > :global(li:last-child:nth-child(odd)) { grid-column: 1 / -1; } }
+  @media (max-width: 640px) {
+    .track-head { grid-template-columns: 1fr; min-height: 0; }
+    .step { border-right: 0; border-bottom: 1px solid var(--rule); padding: var(--space-md); }
+    .track-head > div { padding: var(--space-xl) var(--space-md); }
+    .track-grid > :global(li), .track-grid > :global(li:last-child:nth-child(odd)) { grid-column: 1 / -1; }
+  }
+</style>

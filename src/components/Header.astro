@@ -1,10 +1,11 @@
 ---
 import { dicts, routes } from '../i18n/routes';
-import type { Lang, PageId } from '../i18n/types';
+import type { Lang, PageId, RouteId } from '../i18n/types';
 
-interface Props { lang: Lang; page: PageId }
+interface Props { lang: Lang; page: RouteId }
 const { lang, page } = Astro.props;
 const t = dicts[lang];
+const activePage: PageId = page === 'courses-enem' || page === 'courses-uerj' ? 'courses' : page;
 const items: { id: PageId; text: string }[] = [
   { id: 'home', text: t.nav.home },
   { id: 'resume', text: t.nav.resume },
@@ -20,7 +21,7 @@ const langs: Lang[] = lang === 'en' ? ['en', 'pt'] : ['pt', 'en'];
       <ul>
         {items.map((it) => (
           <li>
-            <a href={routes[it.id][lang]} aria-current={it.id === page ? 'page' : undefined}>
+            <a href={routes[it.id][lang]} aria-current={it.id === activePage ? 'page' : undefined}>
               {it.text}<span class="sl" aria-hidden="true">/</span>
             </a>
           </li>

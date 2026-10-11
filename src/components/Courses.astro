@@ -1,226 +1,187 @@
 ---
-// The Courses page: a public, curated catalogue of free courses, each linking to its institution's
-// own page. A publication more than a list: one framed grid of hairlines (hero, an anchor bar, four
-// sections, a closing line), giant lowercase slug headings, and course cells that share their lines.
-// Data: src/lib/courses.ts. Copy: the `courses` dictionary (EN/PT). Layout is derived from the data,
-// so a new course needs no markup.
 import Base from '../layouts/Base.astro';
 import Monument from './Monument.astro';
-import CourseCard from './CourseCard.astro';
-import { dicts } from '../i18n/routes';
-import { published, sectionOrder } from '../lib/courses';
-import type { Course, CourseImageLayout } from '../lib/courses';
-import type { CourseNavId, Lang } from '../i18n/types';
+import LearningResourceCard from './LearningResourceCard.astro';
+import CourseFilters from './CourseFilters.astro';
+import { dicts, routes } from '../i18n/routes';
+import { AREA_ORDER, AREA_SUBJECTS, publishedResources } from '../lib/learning-resources';
+import type { CourseImageLayout, LearningAreaId, LearningSubjectId, PublishedLearningResource, TechnologySectionId } from '../lib/learning-resources';
+import type { Lang } from '../i18n/types';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = dicts[lang].courses;
-const email = dicts[lang].contact.items.find((i) => i.icon === 'email')?.href;
+const email = dicts[lang].contact.items.find((item) => item.icon === 'email')?.href;
+const techOrder: TechnologySectionId[] = ['build', 'data', 'systems', 'security'];
 
-// Column spans on the 12-column catalogue grid for n cells: four make a 2x2; otherwise rows of three,
-// where a lone remainder takes the whole row and a pair splits it.
-const spans = (n: number): number[] =>
-  Array.from({ length: n }, (_, i) => {
-    if (n === 4) return 6;
-    const rest = n % 3;
-    if (rest === 0 || i < n - rest) return 4;
-    return rest === 1 ? 12 : 6;
-  });
-
-// A cell with an image takes the span its layout needs (lib/courses.ts); the others share the row.
-const layoutSpan: Record<CourseImageLayout, number> = { opening: 12, 'media-right': 7, tile: 5, half: 8, tall: 4, band: 12 };
-const spanOf = (c: Course, fallback: number): number => {
-  const layout = c.curated?.image?.layout;
-  return layout ? layoutSpan[layout] : fallback;
-};
-
-// The curator's picks are numbered on their own, 01 to 06 in reading order: their place in the
-// catalogue says nothing about the pick (it would skip 04 to 06, which are not picks).
-let pick = 0;
-const firstData = published.find((c) => c.section === 'data' && c.category === 'datasci')?.id;
-const sections = sectionOrder.map((id) => {
-  const all = published.filter((c) => c.section === id);
-  return {
-    id,
-    ...t.sections[id],
-    count: all.length,
-    features: all.filter((c) => c.curated).map((c) => ({ c, n: ++pick })),
-    compacts: all.filter((c) => !c.curated),
-  };
+const spans = (n: number): number[] => Array.from({ length: n }, (_, index) => {
+  if (n === 4) return 6;
+  const rest = n % 3;
+  if (rest === 0 || index < n - rest) return 4;
+  return rest === 1 ? 12 : 6;
 });
+const layoutSpan: Record<CourseImageLayout, number> = { opening: 12, 'media-right': 7, tile: 5, half: 8, tall: 4, band: 12 };
+const spanOf = (resource: PublishedLearningResource, fallback: number) => resource.curated?.image ? layoutSpan[resource.curated.image.layout] : fallback;
 
-const navTargets: Record<CourseNavId, string> = {
-  all: t.anchors.all,
-  programming: t.sections.build.title,
-  ai: t.sections.data.title,
-  data: firstData ? t.anchors.data : t.sections.data.title,
-  systems: t.sections.systems.title,
-  security: t.sections.security.title,
+type ResourceGroup = { id: string; label?: string; items: PublishedLearningResource[] };
+const groupsFor = (area: LearningAreaId): ResourceGroup[] => {
+  const items = publishedResources.filter((resource) => resource.area === area);
+  if (area === 'technology') {
+    return techOrder
+      .map((id) => ({ id, label: t.technologySections[id], items: items.filter((resource) => resource.technology?.section === id) }))
+      .filter((group) => group.items.length > 0);
+  }
+  if (area === 'nature' || area === 'humanities') {
+    return AREA_SUBJECTS[area]
+      .map((subject: LearningSubjectId) => ({ id: subject, label: t.subjects[subject], items: items.filter((resource) => resource.subject === subject) }))
+      .filter((group) => group.items.length > 0);
+  }
+  return [{ id: area, items }];
 };
-const navOrder: CourseNavId[] = ['all', 'programming', 'ai', 'data', 'systems', 'security'];
+
+let pick = 0;
+const sections = AREA_ORDER.map((area) => ({
+  area,
+  copy: t.areas[area],
+  groups: groupsFor(area),
+  count: publishedResources.filter((resource) => resource.area === area).length,
+}));
 ---
 <Base lang={lang} page="courses" title={t.meta.title} description={t.meta.description}>
-  <main id="main" class="cp">
+  <main id="main" class="library">
     <div class="frame">
       <header class="row head hero">
         <div class="cell cell-l">
           <p class="meta eyebrow">
-            {t.eyebrow.map((w, i) => (<>{i > 0 && <span class="slash" aria-hidden="true">/</span>}<span>{w}</span></>))}
+            {t.eyebrow.map((word, index) => (<>{index > 0 && <span class="slash" aria-hidden="true">/</span>}<span>{word}</span></>))}
           </p>
           <h1 class="h-hero">{t.heading}<span class="slash" aria-hidden="true">/</span></h1>
         </div>
-        <div class="cell cell-r">
-          <p class="lead">{t.intro}</p>
-        </div>
+        <div class="cell cell-r"><p class="lead">{t.intro}</p></div>
       </header>
 
       <nav class="row jump" aria-label={t.nav.label}>
         <span class="jump-k" aria-hidden="true">{t.nav.jump}</span>
         <ul>
-          {navOrder.map((k) => (
-            <li><a href={`#${navTargets[k]}`}>{t.nav.items[k]}</a></li>
-          ))}
+          <li><a href="#library-start">{t.nav.all}</a></li>
+          {AREA_ORDER.map((area) => <li><a href={`#area-${area}`}>{t.nav.areas[area]}</a></li>)}
         </ul>
       </nav>
 
-      <div id={t.anchors.all}>
-        {sections.map((s, si) => (
-          <section class="cs" id={s.title} aria-labelledby={`${s.title}-h`}>
+      <CourseFilters t={t} />
+
+      <nav class="study-paths" aria-label={t.tracks.label}>
+        <p class="meta">{t.tracks.label}</p>
+        <a href={routes['courses-enem'][lang]}>{t.tracks.enem}<span aria-hidden="true">→</span></a>
+        <a href={routes['courses-uerj'][lang]}>{t.tracks.uerj}<span aria-hidden="true">→</span></a>
+      </nav>
+
+      <div id="library-start">
+        {sections.map((section, sectionIndex) => (
+          <section class="area" id={`area-${section.area}`} aria-labelledby={`area-${section.area}-title`} data-learning-area-section>
             <div class="row head">
               <div class="cell cell-l">
-                <p class="meta count">{String(si + 1).padStart(2, '0')} <span class="slash" aria-hidden="true">/</span> {s.count} {t.labels.courses}</p>
-                <h2 class="h-sec" id={`${s.title}-h`}>{s.title}<span class="slash" aria-hidden="true">/</span></h2>
+                <p class="meta count">{String(sectionIndex + 1).padStart(2, '0')} <span class="slash" aria-hidden="true">/</span> {section.count} {t.labels.resources}</p>
+                <h2 class="h-sec" id={`area-${section.area}-title`}>{section.copy.title}<span class="slash" aria-hidden="true">/</span></h2>
               </div>
-              <div class="cell cell-r">
-                <p class="lead">{s.intro}</p>
-              </div>
+              <div class="cell cell-r"><p class="lead">{section.copy.intro}</p></div>
             </div>
-            {s.features.length > 0 && (
-              <ul class="cg cg-f">
-                {s.features.map(({ c, n }, i) => {
-                  const span = spanOf(c, spans(s.features.length)[i]!);
-                  return <CourseCard course={c} t={t} n={n} anchor={c.id === firstData ? t.anchors.data : undefined} wide={span === 12} style={`--span: ${span}; --i: ${i}`} />;
-                })}
-              </ul>
-            )}
-            {s.compacts.length > 0 && (
-              <ul class="cg cg-c">
-                {s.compacts.map((c, i) => {
-                  const span = spanOf(c, spans(s.compacts.length)[i]!);
-                  return <CourseCard course={c} t={t} anchor={c.id === firstData ? t.anchors.data : undefined} wide={span === 12} style={`--span: ${span}; --i: ${i}`} />;
-                })}
-              </ul>
-            )}
+
+            {section.groups.map((group) => {
+              const fallback = spans(group.items.length);
+              return (
+                <div class="group" data-learning-group>
+                  {group.label && <div class="group-head"><p class="meta">{section.copy.label}</p><h3>{group.label}</h3></div>}
+                  <ul class="resource-grid">
+                    {group.items.map((resource, index) => {
+                      const n = resource.curated ? ++pick : undefined;
+                      const span = spanOf(resource, fallback[index] ?? 4);
+                      return <LearningResourceCard resource={resource} t={t} n={n} style={`--span: ${span}; --i: ${index}`} />;
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
           </section>
         ))}
       </div>
 
       <section class="row head closing" aria-labelledby="closing-h">
-        <div class="cell cell-l">
-          <h2 class="h-sec" id="closing-h">{t.closing.title}<span class="slash" aria-hidden="true">/</span></h2>
-        </div>
+        <div class="cell cell-l"><h2 class="h-sec" id="closing-h">{t.closing.title}<span class="slash" aria-hidden="true">/</span></h2></div>
         <div class="cell cell-r">
           <p class="lead">{t.closing.body}</p>
-          {email && (
-            <p class="suggest">
-              <span>{t.closing.prompt}</span>
-              <a href={email}><span class="u">{t.closing.cta}</span> <span class="arrow" aria-hidden="true">→</span></a>
-            </p>
-          )}
+          {email && <p class="suggest"><span>{t.closing.prompt}</span><a href={email}><span class="u">{t.closing.cta}</span> <span aria-hidden="true">→</span></a></p>}
         </div>
       </section>
     </div>
   </main>
   <Monument lang={lang} page="courses" />
+  <script>
+    import '../scripts/course-filters';
+  </script>
 </Base>
 
 <style>
-  .cp { --fs-hero: clamp(2.5rem, 6vw, 7rem); --fs-sec: clamp(2.25rem, 5vw, 5.5rem); padding-top: var(--header-h); }
-  /* Smooth jumps from the anchor bar, only when motion is welcome (global reduced-motion forces auto). */
-  @media (prefers-reduced-motion: no-preference) {
-    :global(html:has(.cp)) { scroll-behavior: smooth; }
-  }
-
-  /* The frame: two vertical hairlines at the page margins; every row is closed by a hairline. */
+  .library { --fs-hero: clamp(2.5rem, 6vw, 7rem); --fs-sec: clamp(2.25rem, 5vw, 5.5rem); padding-top: var(--header-h); }
+  @media (prefers-reduced-motion: no-preference) { :global(html:has(.library)) { scroll-behavior: smooth; } }
   .frame { margin-inline: var(--margin); border-inline: 1px solid var(--rule); }
   .row { border-bottom: 1px solid var(--rule); }
-
-  /* Head rows (hero, each section, closing): a wide left cell whose heading sits on the bottom edge,
-     a narrower right cell for the supporting line, split by a vertical hairline. */
   .head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
-  .cell { padding: var(--space-lg) var(--space-lg) var(--space-lg); display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-md); min-width: 0; }
+  .cell { padding: var(--space-lg); display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-md); min-width: 0; }
   .cell-r { border-left: 1px solid var(--rule); }
   .hero .cell { min-height: clamp(360px, 52svh, 620px); }
-  .cs .head .cell { min-height: clamp(200px, 21vw, 320px); }
+  .area > .head .cell { min-height: clamp(200px, 21vw, 320px); }
   .closing .cell { min-height: clamp(180px, 18vw, 280px); }
-
   .eyebrow { display: flex; gap: 0.75em; margin-bottom: auto; color: var(--muted); }
   .count { color: var(--muted); }
-  .h-hero, .h-sec {
-    font-weight: 600;
-    line-height: 0.95;
-    letter-spacing: -0.022em;
-    font-variation-settings: var(--display-opsz);
-    hyphens: manual;
-    overflow-wrap: normal;
-  }
+  .h-hero, .h-sec { font-weight: 600; line-height: 0.95; letter-spacing: -0.022em; font-variation-settings: var(--display-opsz); overflow-wrap: anywhere; }
   .h-hero { font-size: var(--fs-hero); }
   .h-sec { font-size: var(--fs-sec); }
-  .h-hero .slash, .h-sec .slash { margin-left: 0.02em; }
   .lead { font-size: var(--fs-lead); line-height: 1.35; color: var(--muted); text-wrap: pretty; max-width: 30em; }
 
-  /* Anchor bar: "Jump to", then the categories; scrolls sideways on a phone. Not sticky: the site
-     header is already fixed, a second fixed bar would compete with it. */
   .jump { display: flex; align-items: stretch; min-height: 64px; }
-  .jump-k { flex: none; display: flex; align-items: center; padding-inline: var(--space-lg); border-right: 1px solid var(--rule); color: var(--muted); font-size: var(--fs-body); }
+  .jump-k { flex: none; display: flex; align-items: center; padding-inline: var(--space-lg); border-right: 1px solid var(--rule); color: var(--muted); }
   .jump ul { display: flex; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
   .jump ul::-webkit-scrollbar { display: none; }
   .jump li { flex: none; display: flex; }
-  .jump a {
-    position: relative;
-    display: flex;
-    align-items: center;
-    min-height: 48px;
-    padding-inline: var(--space-md);
-    font-size: var(--fs-body);
-    font-weight: 500;
-    text-decoration: none;
-    white-space: nowrap;
-  }
+  .jump a { position: relative; display: flex; align-items: center; min-height: 48px; padding-inline: var(--space-md); font-weight: 500; text-decoration: none; white-space: nowrap; }
   .jump a::after { content: ''; position: absolute; left: var(--space-md); right: var(--space-md); bottom: 12px; height: 2px; background: var(--signal); transform: scaleX(0); transform-origin: left; transition: transform var(--t-ui) var(--ease); }
   .jump a:hover::after, .jump a:focus-visible::after { transform: scaleX(1); }
-  .jump a:focus-visible { outline-offset: -4px; }
 
-  /* The catalogue grid: twelve columns, no gaps; the cells draw the shared hairlines. */
-  .cg { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); border-bottom: 1px solid var(--rule); }
-  .cg > :global(li) { grid-column: span var(--span, 4); }
-  .cg-f + .cg-c { margin-top: -1px; }
+  .study-paths { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4.5fr) minmax(0, 4.5fr); border-bottom: 1px solid var(--rule); }
+  .study-paths > * { min-height: 64px; display: flex; align-items: center; padding-inline: var(--space-lg); }
+  .study-paths .meta { color: var(--muted); }
+  .study-paths a { justify-content: space-between; gap: var(--space-md); border-left: 1px solid var(--rule); font-weight: 600; text-decoration: none; }
+  .study-paths a:hover span, .study-paths a:focus-visible span { transform: translateX(3px); }
+  .study-paths a span { transition: transform var(--t-ui) var(--ease); }
 
-  .suggest { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px var(--space-sm); font-size: var(--fs-body); }
+  .group { border-bottom: 1px solid var(--rule); }
+  .group-head { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); align-items: baseline; gap: var(--space-md); padding: var(--space-md) var(--space-lg); border-bottom: 1px solid var(--rule); }
+  .group-head .meta { color: var(--muted); }
+  .group-head h3 { font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 600; letter-spacing: -0.015em; }
+  .resource-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .resource-grid > :global(li) { grid-column: span var(--span, 4); transition-delay: calc(var(--i, 0) * 50ms); }
+
+  .suggest { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px var(--space-sm); }
   .suggest a { text-decoration: none; font-weight: 600; }
 
-  /* Entrance: each cell fades in once, a little staggered (opacity only; see global .rv). */
-  .cg > :global(li) { transition-delay: calc(var(--i, 0) * 60ms); }
-
-  /* Tablet (and a narrow desktop window): features run full width, plate beside the facts; the other
-     courses two by two. The page composes itself at 1180px, the width of an iPad in landscape: three
-     cells across are too tight below it. CourseCard.astro and CourseProvider.astro use the same
-     boundary. */
   @media (max-width: 1180px) {
-    .cg-f > :global(li) { grid-column: 1 / -1; }
-    .cg-c > :global(li) { grid-column: span 6; }
-    .cg-c > :global(li:last-child:nth-child(odd)) { grid-column: 1 / -1; }
+    .resource-grid > :global(li) { grid-column: span 6; }
+    .resource-grid > :global(li:last-child:nth-child(odd)) { grid-column: 1 / -1; }
+    .resource-grid > :global(li.is-curated) { grid-column: 1 / -1; }
   }
-
-  /* Phone: one column; heads stack, the vertical hairline becomes a horizontal one. */
   @media (max-width: 640px) {
     .head { grid-template-columns: minmax(0, 1fr); }
     .cell-r { border-left: 0; border-top: 1px solid var(--rule); }
     .cell { padding: var(--space-lg) var(--space-md); }
     .hero .cell-l { min-height: 0; padding-top: var(--space-xl); }
-    .hero .cell-r, .cs .head .cell, .closing .cell { min-height: 0; }
-    .cs .head .cell-l { padding-top: var(--space-2xl); }
+    .hero .cell-r, .area > .head .cell, .closing .cell { min-height: 0; }
+    .area > .head .cell-l { padding-top: var(--space-2xl); }
     .jump-k { padding-inline: var(--space-md); }
-    .cg > :global(li), .cg-c > :global(li:last-child:nth-child(odd)) { grid-column: 1 / -1; }
+    .resource-grid > :global(li), .resource-grid > :global(li:last-child:nth-child(odd)) { grid-column: 1 / -1; }
+    .group-head { grid-template-columns: 1fr; padding-inline: var(--space-md); gap: 4px; }
+    .study-paths { grid-template-columns: 1fr; }
+    .study-paths > * { padding-inline: var(--space-md); }
+    .study-paths a { border-left: 0; border-top: 1px solid var(--rule); }
   }
 </style>
