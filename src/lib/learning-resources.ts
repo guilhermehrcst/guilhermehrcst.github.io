@@ -76,6 +76,9 @@ export const AREA_SUBJECTS: Readonly<Record<LearningAreaId, readonly LearningSub
   spanish: ['spanish'],
 };
 
+const VERIFIED_ON = '2026-10-11';
+const verified = (): ResourceVerification => ({ on: VERIFIED_ON, by: 'official-page', freeAccess: true });
+
 const tech = (
   resource: Omit<LearningResource, 'area' | 'subject' | 'format' | 'goals'> & {
     technology: { section: TechnologySectionId; topic: TechnologyTopicId };
@@ -86,6 +89,7 @@ const tech = (
   subject: 'technology',
   format: 'course',
   goals: ['high-school'],
+  verified: resource.url ? verified() : undefined,
 });
 
 export const catalogue: LearningResource[] = [
@@ -109,6 +113,31 @@ export const catalogue: LearningResource[] = [
   tech({ id: 'fgv-security', title: 'Segurança Digital', provider: 'FGV', level: 'beginner', language: 'pt', url: 'https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/seguranca-digital', certificate: 'statement', duration: { value: 5, unit: 'hours' }, technology: { section: 'security', topic: 'security' } }),
   tech({ id: 'fgv-privacy', title: 'Proteção de Dados', provider: 'FGV', level: 'beginner', language: 'pt', url: 'https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/protecao-de-dados', duration: { value: 5, unit: 'hours' }, technology: { section: 'security', topic: 'privacy' } }),
   tech({ id: 'ms-azure-ai', title: 'Fundamentos de Inteligência Artificial no Azure', provider: 'Microsoft Learn', level: 'beginner', language: 'pt', url: null, review: 'No current pt-BR Microsoft Learn path with this exact title was confirmed. Re-evaluate the intended official path before publishing.', technology: { section: 'security', topic: 'cloud-ai' } }),
+
+  // Ensino Médio / vestibular. Provider pages were re-opened on 2026-10-11 and
+  // only resources whose represented learning content is fully free are published.
+  { id: 'kultivi-math-enem', title: 'Matemática para ENEM', provider: 'Kultivi', area: 'math', subject: 'math', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/matematica', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-portuguese-enem', title: 'Português para ENEM', provider: 'Kultivi', area: 'portuguese', subject: 'portuguese', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/portugues', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-writing-enem', title: 'Redação para ENEM', provider: 'Kultivi', area: 'writing', subject: 'writing', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/redacao-para-enem', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-physics-enem', title: 'Física para ENEM', provider: 'Kultivi', area: 'nature', subject: 'physics', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/fisica', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-chemistry-enem', title: 'Química para ENEM', provider: 'Kultivi', area: 'nature', subject: 'chemistry', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/quimica', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-biology-enem', title: 'Biologia para ENEM', provider: 'Kultivi', area: 'nature', subject: 'biology', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/biologia', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-history-enem', title: 'História para ENEM', provider: 'Kultivi', area: 'humanities', subject: 'history', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/historia-2', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-geography-enem', title: 'Geografia para ENEM', provider: 'Kultivi', area: 'humanities', subject: 'geography', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/geografia', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-philosophy-enem', title: 'Filosofia para ENEM', provider: 'Kultivi', area: 'humanities', subject: 'philosophy', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/filosofia', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-sociology-enem', title: 'Sociologia para ENEM', provider: 'Kultivi', area: 'humanities', subject: 'sociology', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/sociologia', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-english-enem', title: 'Inglês para ENEM', provider: 'Kultivi', area: 'english', subject: 'english', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/ingles-para-enem', verified: verified(), registration: 'required', certificate: 'available' },
+  { id: 'kultivi-spanish-enem', title: 'Espanhol para ENEM', provider: 'Kultivi', area: 'spanish', subject: 'spanish', format: 'course', goals: ['high-school', 'enem', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://kultivi.com/curso/espanhol-para-enem', verified: verified(), registration: 'required', certificate: 'available' },
+
+  // Official practice and guidance. These are first-party exam resources, not third-party prep.
+  { id: 'inep-writing-2026', title: 'A Redação do Enem 2026 — Cartilha do Participante', provider: 'INEP', area: 'writing', subject: 'writing', format: 'practice', goals: ['enem'], language: 'pt', level: 'vestibular', url: 'https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante', verified: verified(), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-portuguese-practice', title: 'Questões de Língua Portuguesa e Literatura', provider: 'Revista do Vestibular UERJ', area: 'portuguese', subject: 'portuguese', format: 'practice', goals: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=1', verified: verified(), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-writing-practice', title: 'Questões de Língua Portuguesa Instrumental com Redação', provider: 'Revista do Vestibular UERJ', area: 'writing', subject: 'writing', format: 'practice', goals: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=11', verified: verified(), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-math-practice', title: 'Questões de Matemática', provider: 'Revista do Vestibular UERJ', area: 'math', subject: 'math', format: 'practice', goals: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=9', verified: verified(), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-history-practice', title: 'Questões de História', provider: 'Revista do Vestibular UERJ', area: 'humanities', subject: 'history', format: 'practice', goals: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=5', verified: verified(), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-geography-practice', title: 'Questões de Geografia', provider: 'Revista do Vestibular UERJ', area: 'humanities', subject: 'geography', format: 'practice', goals: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=6', verified: verified(), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-spanish-practice', title: 'Questões de Espanhol', provider: 'Revista do Vestibular UERJ', area: 'spanish', subject: 'spanish', format: 'practice', goals: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=2', verified: verified(), registration: 'not-required', certificate: 'none' },
+  { id: 'uerj-physics-practice', title: 'Questões de Física', provider: 'Revista do Vestibular UERJ', area: 'nature', subject: 'physics', format: 'practice', goals: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aano=&anivel=dificil&aseq_area=&aseq_disciplina=8&aseq_etapa=&sb=Buscar', verified: verified(), registration: 'not-required', certificate: 'none' },
 ];
 
 export const isPublishedResource = (resource: LearningResource): resource is PublishedLearningResource =>

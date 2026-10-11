@@ -52,3 +52,26 @@ test('the legacy technology catalogue keeps every previously published id and UR
     assert.equal(r.subject, 'technology');
   }
 });
+
+
+test('V0.1 seed covers every academic area and school subject', () => {
+  for (const area of ['math', 'portuguese', 'writing', 'english', 'spanish'] as const) {
+    assert.ok(publishedResources.some((r) => r.area === area), `missing area ${area}`);
+  }
+  for (const subject of ['physics', 'chemistry', 'biology', 'history', 'geography', 'philosophy', 'sociology'] as const) {
+    assert.ok(publishedResources.some((r) => r.subject === subject), `missing subject ${subject}`);
+  }
+});
+
+test('V0.1 seed includes free practice for ENEM and UERJ', () => {
+  for (const goal of ['enem', 'uerj'] as const) {
+    assert.ok(publishedResources.some((r) => r.format === 'practice' && r.goals.includes(goal)), `missing practice for ${goal}`);
+  }
+});
+
+test('every published technology resource has fresh free-access verification', () => {
+  for (const r of publishedResources.filter((item) => item.area === 'technology')) {
+    assert.equal(r.verified.on, '2026-10-11', `${r.id}: stale verification`);
+    assert.equal(r.verified.freeAccess, true, `${r.id}: not free-verified`);
+  }
+});
