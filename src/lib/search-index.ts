@@ -23,8 +23,10 @@ export interface SearchEntry {
 const entry = (kind: SearchKind, key: string, title: string, url: string, context: string, extra: readonly string[] = []): SearchEntry =>
   ({ id: `${kind}:${key}`, kind, title, url, context, terms: normalize([title, context, ...extra].join(' ')) });
 
-/** Where a resource is shown: its subject's page, or the first technology track that holds it. */
-const homeOf = (id: string, subject: SubjectId): string => {
+/** Where a resource is shown: its subject's page, or the first technology track that holds it. A resource
+ *  without a subject has no such page yet: the build fails rather than send the student somewhere it is not. */
+export const resourceHome = ({ id, subject }: { id: string; subject: SubjectId | null }): string => {
+  if (subject === null) throw new Error(`search-index: ${id} has no subject and no page shows it yet`);
   if (subject !== 'tecnologia') return routes.subject(subject);
   const track = publishedTracks().find((t) => t.resourceIds.includes(id));
   return `${routes.objective('tecnologia')}${track ? `#${track.id}` : ''}`;
@@ -41,6 +43,9 @@ export const buildSearchIndex = (): SearchEntry[] => [
     return entry('materia', id, SUBJECTS[id].label, routes.subject(id), area === SUBJECTS[id].label ? 'Matéria' : area);
   }),
   ...publishedTracks().map((t) => entry('trilha', t.id, t.label, `${routes.objective('tecnologia')}#${t.id}`, 'Trilha de Tecnologia', [t.why])),
-  ...publishedResources.map((r) => entry('recurso', r.id, r.title, homeOf(r.id, r.subject),
-    `${r.provider} · ${SUBJECTS[r.subject].label}`, [AREAS[areaOf(r)].label])),
+  ...publishedResources.map((r) => {
+    const area = areaOf(r);
+    return entry('recurso', r.id, r.title, resourceHome(r),
+      `${r.provider} · ${r.subject === null ? '' : SUBJECTS[r.subject].label}`, area === null ? [] : [AREAS[area].label]);
+  }),
 ];

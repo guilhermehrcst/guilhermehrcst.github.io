@@ -49,7 +49,8 @@ export interface LearningResource {
   id: string;
   title: string;
   provider: string;
-  subject: LearningSubjectId;
+  /** null for a multidisciplinary resource (a complete past exam): it has no subject, never a false one. */
+  subject: LearningSubjectId | null;
   format: LearningFormatId;
   /** The paths this resource serves: at least one, declared resource by resource. */
   paths: readonly [PathId, ...PathId[]];
@@ -140,15 +141,16 @@ export const isPublishedResource = (resource: LearningResource): resource is Pub
 
 export const publishedResources = catalogue.filter(isPublishedResource);
 
-/** A resource's area, derived from its subject. */
-export const areaOf = (resource: Pick<LearningResource, 'subject'>): AreaId => SUBJECTS[resource.subject].area;
+/** A resource's area, derived from its subject; a multidisciplinary resource has none. */
+export const areaOf = (resource: Pick<LearningResource, 'subject'>): AreaId | null =>
+  resource.subject === null ? null : SUBJECTS[resource.subject].area;
 
 /** The hosts of published resources: the only places a page may link out to for a resource.
  *  scripts/verify-dist.mjs keeps a hand-written copy; tests/verify-dist-hosts.test.ts keeps them equal. */
 export const COURSE_HOSTS: ReadonlySet<string> = new Set(publishedResources.map((resource) => new URL(resource.url).hostname));
 
 for (const resource of catalogue) {
-  if (!(resource.subject in SUBJECTS)) throw new Error(`learning-resources: ${resource.id} has an unknown subject`);
+  if (resource.subject !== null && !(resource.subject in SUBJECTS)) throw new Error(`learning-resources: ${resource.id} has an unknown subject`);
   if (!resource.paths.length || new Set(resource.paths).size !== resource.paths.length) throw new Error(`learning-resources: ${resource.id} needs distinct paths`);
   if (resource.paths.some((path) => !PATH_ORDER.includes(path))) throw new Error(`learning-resources: ${resource.id} has an unknown path`);
   for (const exam of resource.exams ?? []) {
@@ -157,7 +159,7 @@ for (const resource of catalogue) {
   }
   // Technology is its own path (spec §1.3): never counted in Ensino Médio, which lists school subjects only.
   if (resource.subject === 'tecnologia' && !resource.paths.includes('tecnologia')) throw new Error(`learning-resources: ${resource.id} is technology outside Tecnologia`);
-  if (resource.paths.includes('ensino-medio') && SUBJECTS[resource.subject].area === 'tecnologia') throw new Error(`learning-resources: ${resource.id} puts technology in Ensino Médio`);
+  if (resource.paths.includes('ensino-medio') && areaOf(resource) === 'tecnologia') throw new Error(`learning-resources: ${resource.id} puts technology in Ensino Médio`);
   if (resource.url && !resource.url.startsWith('https://')) throw new Error(`learning-resources: ${resource.id} url must be https`);
   if (resource.verified && (!resource.url || !resource.verified.freeAccess)) throw new Error(`learning-resources: ${resource.id} has invalid verification`);
   if (!resource.url && !resource.review?.trim()) throw new Error(`learning-resources: ${resource.id} is held back without a review note`);

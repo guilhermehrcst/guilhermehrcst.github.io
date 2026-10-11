@@ -18,7 +18,7 @@ const sections = new Map(resolveGuide('enem').map((s) => [s.id, s]));
 const practice = sections.get('pratique');
 const deepen = sections.get('aprofunde');
 const deepenByArea = ENEM_AREAS
-  .map((area) => ({ ...area, resources: (deepen?.resources ?? []).filter((r) => area.subjects.includes(r.subject)) }))
+  .map((area) => ({ ...area, resources: (deepen?.resources ?? []).filter((r) => r.subject !== null && area.subjects.includes(r.subject)) }))
   .filter((area) => area.resources.length > 0);
 ---
 <Base title={c.title} description={c.description}>

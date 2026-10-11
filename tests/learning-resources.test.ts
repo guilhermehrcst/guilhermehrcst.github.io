@@ -85,8 +85,9 @@ test('published resources are HTTPS and explicitly verified free', () => {
 
 test('the subject is the only source of the area', () => {
   for (const r of catalogue) {
-    assert.ok(r.subject in SUBJECTS, `${r.id}: unknown subject ${r.subject}`);
     assert.ok(!('area' in r), `${r.id}: carries its own area`);
+    if (r.subject === null) { assert.equal(areaOf(r), null, r.id); continue; }
+    assert.ok(r.subject in SUBJECTS, `${r.id}: unknown subject ${r.subject}`);
     assert.equal(areaOf(r), SUBJECTS[r.subject].area, r.id);
   }
 });

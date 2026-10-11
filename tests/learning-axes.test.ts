@@ -101,3 +101,27 @@ test('verify-dist keeps an independent, equal list of the practice formats', asy
   const { PRACTICE_FORMATS } = await import('../src/lib/learning-resources.ts') as { PRACTICE_FORMATS?: readonly string[] };
   assert.deepEqual([...body.matchAll(/'([^']+)'/g)].map((m) => m[1]), PRACTICE_FORMATS ?? ['missing']);
 });
+
+// Multidisciplinary resources (spec §5.1): a complete past exam covers many subjects. It has no subject,
+// never a false one; it is reached by its path or exam, never by an area or subject filter.
+test('a resource without a subject is reached by path and exam, never by area or subject', async () => {
+  const { filterResources } = await import('../src/lib/learning-library.ts');
+  const { areaOf } = await import('../src/lib/learning-resources.ts');
+  const verified = { on: '2026-10-11', by: 'official-page' as const, freeAccess: true as const };
+  const exam = { id: 'x', title: 'X', provider: 'P', subject: null, format: 'past-exam', paths: ['vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: 'https://example.com/x', verified };
+  const one = { ...exam, id: 'y', subject: 'matematica', format: 'course' };
+  const items = [exam, one] as unknown as Parameters<typeof filterResources>[0];
+  assert.equal(areaOf(exam as never), null);
+  assert.deepEqual(filterResources(items, { exams: ['enem'] }).map((r) => r.id), ['x', 'y']);
+  assert.deepEqual(filterResources(items, { paths: ['vestibulares'], formats: ['past-exam'] }).map((r) => r.id), ['x']);
+  assert.deepEqual(filterResources(items, { area: 'matematica' }).map((r) => r.id), ['y']);
+  assert.deepEqual(filterResources(items, { subject: 'matematica' }).map((r) => r.id), ['y']);
+});
+
+test('the search index never sends a resource without a subject to a page that does not show it', async () => {
+  const { resourceHome } = await import('../src/lib/search-index.ts') as { resourceHome?: (r: { id: string; subject: string | null }) => string };
+  assert.equal(typeof resourceHome, 'function');
+  assert.equal(resourceHome!({ id: 'kultivi-math-enem', subject: 'matematica' }), '/materias/matematica/');
+  assert.equal(resourceHome!({ id: 'cs50x', subject: 'tecnologia' }), '/tecnologia/#comecar-a-programar');
+  assert.throws(() => resourceHome!({ id: 'x', subject: null }), /no page shows/);
+});

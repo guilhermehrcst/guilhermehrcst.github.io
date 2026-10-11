@@ -18,6 +18,7 @@ const list = institutions(Object.keys(providerMarks)).map(({ provider, resources
   if (resources.some((r) => r.format !== 'course')) throw new Error(`OfficialSources: ${provider} has a resource that is not a course`);
   const [first] = resources;
   if (!first) throw new Error(`OfficialSources: ${provider} has no resource`);
+  if (first.subject === null) throw new Error(`OfficialSources: ${provider} has a resource without a subject; say where`);
   const page = SUBJECTS[first.subject];
   if (resources.some((r) => r.subject !== first.subject)) throw new Error(`OfficialSources: ${provider} spans pages; say where`);
   // The anchor is the published track that holds the first course: a real section on that page.
