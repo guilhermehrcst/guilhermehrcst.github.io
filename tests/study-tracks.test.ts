@@ -14,6 +14,7 @@ for (const exam of ['enem', 'uerj'] as const) {
       for (const id of section.resourceIds) {
         const resource = byId.get(id);
         assert.ok(resource, `${exam}: missing ${id}`);
+        if (!resource) throw new Error(`${exam}: missing ${id}`);
         assert.equal(resource.verified.freeAccess, true);
         assert.ok(resource.goals.includes(exam), `${exam}: ${id} lacks matching goal`);
       }
