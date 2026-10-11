@@ -321,12 +321,26 @@ function checkUerj(path, html) {
   if (JSON.stringify(subjects) !== JSON.stringify(expected)) fail(path, `#materias links ${subjects.join(',')}`);
 }
 
+/** An objective page that maps subjects by area: only resources tagged for the objective (spec §6.3). */
+function checkObjectiveMap(path, html, resources, goal) {
+  if (resources.length === 0) fail(path, 'shows at least one resource');
+  for (const item of resources) {
+    if (!resourceAttr(item, 'data-goals').split(' ').includes(goal)) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} is not tagged ${goal}`);
+  }
+}
+
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
   if (path === '/enem/') checkEnem(path, html);
   if (path === '/uerj/') checkUerj(path, html);
+  if (path === '/ensino-medio/') {
+    checkObjectiveMap(path, html, resources, 'ensino-medio');
+    const ids = sectionIds(html);
+    if (JSON.stringify(ids) !== JSON.stringify(['matematica', 'linguagens', 'natureza', 'humanas', 'idiomas', 'tecnologia'])) fail(path, `Ensino Médio sections ${ids.join(',')}`);
+    if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="tecnologia"/) ?? '').includes('/tecnologia/')) fail(path, '#tecnologia leads to /tecnologia/');
+  }
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
 }

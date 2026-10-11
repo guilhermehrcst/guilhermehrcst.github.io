@@ -134,6 +134,14 @@ export const pt: Dict = {
       ],
     },
   },
+  objectiveMap: {
+    more: (subject) => `Tudo sobre ${subject}`,
+    technology: {
+      title: 'Tecnologia',
+      why: 'Programação, computação, dados e inteligência artificial têm trilhas próprias, para começar do zero ou aprofundar.',
+      link: 'Ver as trilhas de tecnologia',
+    },
+  },
   guides: {
     count: (n) => (n === 1 ? '1 recurso' : `${n} recursos`),
     uerj: {
