@@ -4,7 +4,7 @@ import type {
   LearningLanguageId,
   LearningRegistrationId,
 } from '../lib/learning-resources';
-import type { ObjectiveId } from '../lib/taxonomy';
+import type { PathId } from '../lib/taxonomy';
 
 // The shape of the interface copy. V0.1 is Portuguese only (spec §6.6): `Lang` has one member, and the
 // shape is kept so that a future /en/ adds a dictionary and `astro check` enforces parity again.
@@ -24,6 +24,7 @@ export interface PageCopy extends PageMeta {
 
 export type PageKey =
   | 'home' | 'enem' | 'uerj' | 'ensino-medio' | 'vestibulares' | 'tecnologia'
+  | 'ensino-fundamental' | 'pre-militar' | 'ensino-superior'
   | 'materias' | 'buscar' | 'sobre' | 'notFound';
 
 export interface Dict {
@@ -31,19 +32,44 @@ export interface Dict {
   ogLocale: 'pt_BR';
   siteName: 'Pexis Academy';
   skip: string;
-  nav: { label: string; home: string };
+  nav: { label: string; home: string; mobile: string; menu: string; paths: string };
+  breadcrumb: { label: string; home: string };
   footer: {
-    tagline: string;
-    objectives: string;
     subjects: string;
-    academy: string;
     verified: (date: string) => string;
     licenses: string;
-    technology: string;
     independence: string;
     nav: { explore: string; search: string; about: string; verification: string };
+    about: string;
+    formation: string;
+    explore: string;
+    marks: string;
   };
   pages: Record<PageKey, PageCopy>;
+  /** Copy of a path in preparation and of the new paths (V0.3). */
+  preparing: { label: string; why: string; meanwhile: string };
+  fundamental: {
+    stagesTitle: string;
+    stagesWhy: string;
+    stages: { title: string; body: string }[];
+    subjectsTitle: string;
+    subjectsWhy: string;
+    subjects: string[];
+    rule: string;
+    medio: string;
+  };
+  preMilitar: {
+    processesTitle: string;
+    processesWhy: string;
+    branches: { force: string; schools: { acronym: string; name: string }[] }[];
+    status: string;
+    howTitle: string;
+    how: string[];
+    scope: string;
+    medio: string;
+  };
+  explore: { paths: string; areas: string };
+  superior: { note: string; groupsTitle: string };
   home: {
     hero: {
       eyebrow: string;
@@ -53,9 +79,9 @@ export interface Dict {
       note: string;
       demoCaption: string;
       demoLink: string;
-      demo: { subjects: string; objectives: string; areas: string; study: string; practice: string; byObjective: string };
+      demo: { study: string; practice: string; official: string; officialWhy: string; steps: { path: string; exam: string; area: string; content: string; practice: string } };
     };
-    objectives: { heading: string; lead: string; items: Record<ObjectiveId, string>; facts: (resources: number, tracks?: number) => string };
+    objectives: { heading: string; lead: string; items: Record<PathId, string>; facts: (resources: number, tracks?: number) => string };
     sources: {
       heading: string;
       lead: string;
@@ -69,12 +95,12 @@ export interface Dict {
       heading: string;
       lead: string;
       route: string;
-      steps: Record<'objetivo' | 'materia' | 'assunto' | 'conteudo' | 'pratica', string>;
-      enemMeta: string;
+      steps: Record<'objetivo' | 'area' | 'assunto' | 'conteudo' | 'pratica', string>;
+      vestMeta: string;
+      subjectMeta: (subject: string) => string;
       pending: string;
       topicNote: string;
-      official: string;
-      links: { objective: string; subject: string; content: string; practice: string };
+      links: { objective: string; area: string; subject: string; content: string; practice: string };
     };
     areas: { heading: string; lead: string; subjects: (n: number) => string };
     tracks: {
@@ -82,6 +108,7 @@ export interface Dict {
       lead: string;
       kinds: { guide: string; track: string };
       titles: { enem: string; uerj: string };
+      why: { enem: string; uerj: string };
       steps: (n: number) => string;
       links: { enem: string; uerj: string; track: string };
     };
@@ -97,7 +124,10 @@ export interface Dict {
   subjectPage: (subject: string, area: string) => PageCopy;
   tecnologia: { chooser: string };
   search: { label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string };
-  vestibulares: { uerj: { title: string; why: string; link: string }; note: { title: string; body: string } };
+  vestibulares: {
+    exams: { title: string; why: string; items: Record<'enem' | 'uerj', { name: string; what: string; link: string }> };
+    note: { title: string; body: string };
+  };
   objectiveMap: { more: (subject: string) => string; technology: { title: string; why: string; link: string } };
   guides: {
     count: (n: number) => string;

@@ -1,4 +1,4 @@
-// The search index (spec §6.8): one entry per objective, area, subject, published track and published
+// The search index (spec §6.8): one entry per path and exam, area, subject, published track and published
 // resource, in a fixed order. Pure and deterministic. Every entry leads to a page of the site (a
 // resource leads to where it is shown, never straight out), so /buscar/ stays a directory of the site.
 // About 70 entries live inline in /buscar/; past ~500, move the index to a JSON file built at build time
@@ -7,7 +7,7 @@ import { areaOf, publishedResources } from './learning-resources.ts';
 import { routes } from './routes.ts';
 import { normalize } from './search-normalize.ts';
 import { publishedTracks } from './tech-tracks.ts';
-import { AREA_ORDER, AREAS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECT_ORDER, SUBJECTS, subjectsOf, type SubjectId } from './taxonomy.ts';
+import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf, type SubjectId } from './taxonomy.ts';
 
 export type SearchKind = 'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso';
 
@@ -31,7 +31,8 @@ const homeOf = (id: string, subject: SubjectId): string => {
 };
 
 export const buildSearchIndex = (): SearchEntry[] => [
-  ...OBJECTIVE_ORDER.map((id) => entry('objetivo', id, OBJECTIVES[id].label, routes.objective(id), 'Objetivo')),
+  ...PATH_ORDER.map((id) => entry('objetivo', id, OBJECTIVES[id].label, routes.objective(id), PREPARING_PATHS.includes(id) ? 'Caminho em preparação' : 'Caminho')),
+  ...EXAM_ORDER.map((id) => entry('objetivo', id, OBJECTIVES[id].label, routes.objective(id), OBJECTIVES[EXAM_PARENT[id]].label, ['vestibular', 'prova'])),
   ...AREA_ORDER.map((id) => entry('area', id, AREAS[id].label, `${routes.subjectIndex}#area-${id}`, 'Área',
     subjectsOf(id).map((s) => SUBJECTS[s].label))),
   // A subject's context is its area, or "Matéria" when the area has the subject's own name (Matemática).

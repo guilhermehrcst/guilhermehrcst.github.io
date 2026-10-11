@@ -1,0 +1,52 @@
+---
+// /ensino-fundamental/ (V0.3): a path in preparation. It states its organisation (two stages, the
+// planned subjects) and that it has no verified resource yet. It never borrows Ensino Médio material.
+// noindex and out of the sitemap until it has published resources.
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import PreparingNote from '../../components/PreparingNote.astro';
+import TrackSection from '../../components/TrackSection.astro';
+import { routes } from '../../lib/routes';
+import { pt as t } from '../../i18n/pt';
+
+const c = t.pages['ensino-fundamental'];
+const f = t.fundamental;
+---
+<Base title={c.title} description={c.description} noindex>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <PreparingNote />
+
+  <TrackSection id="etapas" title={f.stagesTitle} why={f.stagesWhy}>
+    <ol class="stages" role="list">
+      {f.stages.map((stage, i) => (
+        <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span class="name">{stage.title}</span><span class="body">{stage.body}</span></li>
+      ))}
+    </ol>
+  </TrackSection>
+
+  <TrackSection id="disciplinas" title={f.subjectsTitle} why={f.subjectsWhy}>
+    <ul class="subjects" role="list">
+      {f.subjects.map((name) => <li><span>{name}</span><span class="state">{t.preparing.label}</span></li>)}
+    </ul>
+    <p class="rule">{f.rule}</p>
+  </TrackSection>
+
+  <TrackSection id="enquanto-isso" title={t.preparing.meanwhile}>
+    <p><a class="more" href={routes.objective('ensino-medio')}>{f.medio}{' '}<span aria-hidden="true">→</span></a></p>
+  </TrackSection>
+</Base>
+
+<style>
+  .stages { display: grid; gap: 0; border-top: 1px solid var(--rule-strong); }
+  @media (min-width: 768px) { .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-6); } }
+  .stages li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); padding-block: var(--space-5); border-bottom: 1px solid var(--rule); }
+  .n { grid-row: span 2; font-size: var(--fs-small); color: var(--muted); font-variant-numeric: tabular-nums; line-height: 2; }
+  .name { font-family: var(--serif); font-size: var(--fs-h3); }
+  .body { color: var(--muted); }
+  .subjects { display: grid; border-top: 1px solid var(--rule-strong); }
+  @media (min-width: 768px) { .subjects { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-6); } }
+  .subjects li { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); min-height: 52px; border-bottom: 1px solid var(--rule); font-weight: 500; }
+  .subjects .state { font-size: 0.75rem; font-weight: 500; color: var(--muted); }
+  .rule { margin-top: var(--space-5); max-width: var(--measure); color: var(--muted); }
+  .more { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+</style>

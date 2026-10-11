@@ -1,11 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { canonicalPaths, HEADER_NAV, LEGACY_REDIRECTS, routes } from '../src/lib/routes.ts';
+import { canonicalPaths, EXPLORE_MENU, HEADER_NAV, LEGACY_REDIRECTS, preparingPaths, routes, sectionOf } from '../src/lib/routes.ts';
 
 // Written out by hand on purpose: an independent barrier against an accidental change to routes.ts
 // (spec R10). scripts/verify-dist.mjs carries its own copy.
 const CANONICAL = [
-  '/', '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/', '/materias/',
+  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
   '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
@@ -13,9 +13,16 @@ const CANONICAL = [
   '/buscar/', '/sobre/',
 ];
 
-test('the 21 canonical routes, exactly and in a stable order', () => {
+test('the 22 canonical routes, exactly and in a stable order', () => {
   assert.deepEqual(canonicalPaths(), CANONICAL);
   assert.deepEqual(canonicalPaths(), canonicalPaths());
+});
+
+test('the paths in preparation have pages but are not canonical (noindex, out of the sitemap)', () => {
+  assert.deepEqual(preparingPaths(), ['/ensino-fundamental/', '/pre-militar/']);
+  for (const path of preparingPaths()) assert.ok(!canonicalPaths().includes(path), path);
+  assert.equal(routes.objective('pre-militar'), '/pre-militar/');
+  assert.equal(routes.objective('ensino-superior'), '/ensino-superior/');
 });
 
 test('every route is lowercase, unaccented, slash-terminated and unique', () => {
@@ -51,12 +58,30 @@ test('legacy routes redirect to existing canonical pages; the résumé is gone',
   assert.ok(!('/pt/curriculo/' in LEGACY_REDIRECTS));
 });
 
-test('the header navigation, in order', () => {
+test('the header navigation, in order: the Explorar menu, then four direct links (V0.3)', () => {
+  assert.equal(EXPLORE_MENU.label, 'Explorar');
+  assert.deepEqual(EXPLORE_MENU.items.map((item) => [item.label, item.href]), [
+    ['Ensino Fundamental', '/ensino-fundamental/'],
+    ['Ensino Médio', '/ensino-medio/'],
+    ['Vestibular', '/vestibulares/'],
+    ['Pré-Militar', '/pre-militar/'],
+    ['Ensino Superior', '/ensino-superior/'],
+    ['Tecnologia', '/tecnologia/'],
+  ]);
+  assert.deepEqual([EXPLORE_MENU.all.label, EXPLORE_MENU.all.href], ['Todas as matérias', '/materias/']);
   assert.deepEqual(HEADER_NAV.map((item) => [item.label, item.href]), [
-    ['Explorar', '/materias/'],
-    ['ENEM', '/enem/'],
-    ['UERJ', '/uerj/'],
+    ['Vestibular', '/vestibulares/'],
+    ['Pré-Militar', '/pre-militar/'],
     ['Tecnologia', '/tecnologia/'],
     ['Buscar', '/buscar/'],
   ]);
+});
+
+test('a section of the header is current on its own page and on the pages inside it', () => {
+  assert.equal(sectionOf('/vestibulares/'), '/vestibulares/');
+  assert.equal(sectionOf('/enem/'), '/vestibulares/');
+  assert.equal(sectionOf('/uerj/'), '/vestibulares/');
+  assert.equal(sectionOf('/materias/fisica/'), '/materias/');
+  assert.equal(sectionOf('/tecnologia/'), '/tecnologia/');
+  assert.equal(sectionOf('/sobre/'), null);
 });

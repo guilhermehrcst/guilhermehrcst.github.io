@@ -3,7 +3,11 @@
 // anywhere else. Labels are domain data (they name things), so they live here and not in the UI copy.
 // No asset imports: this module runs under Node's test runner.
 
-export type ObjectiveId = 'enem' | 'uerj' | 'ensino-medio' | 'vestibulares' | 'tecnologia';
+/** The six paths a student starts from (V0.3), and the exams that live inside Vestibular. */
+export type PathId = 'ensino-fundamental' | 'ensino-medio' | 'vestibulares' | 'pre-militar' | 'ensino-superior' | 'tecnologia';
+export type ExamId = 'enem' | 'uerj';
+/** Every page that is an objective: a path or an exam. Its route is /{id}/. */
+export type ObjectiveId = PathId | ExamId;
 export type AreaId = 'matematica' | 'linguagens' | 'natureza' | 'humanas' | 'idiomas' | 'tecnologia';
 export type SubjectId =
   | 'matematica' | 'portugues' | 'redacao'
@@ -32,15 +36,25 @@ export interface Subject {
   topics: readonly Topic[];
 }
 
-export const OBJECTIVE_ORDER: readonly ObjectiveId[] = ['enem', 'uerj', 'ensino-medio', 'vestibulares', 'tecnologia'];
+/** The approved order of the paths (Home, header menu, footer). */
+export const PATH_ORDER: readonly PathId[] = ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'pre-militar', 'ensino-superior', 'tecnologia'];
+export const EXAM_ORDER: readonly ExamId[] = ['enem', 'uerj'];
+/** Where each exam lives: inside Vestibular, never as a path of its own. */
+export const EXAM_PARENT: Readonly<Record<ExamId, PathId>> = { enem: 'vestibulares', uerj: 'vestibulares' };
+/** Paths whose page states that it is in preparation: no verified resource yet, so noindex and out of the
+ *  sitemap. A path leaves this list only with published resources (docs/superpowers/specs, V0.3 §2.1). */
+export const PREPARING_PATHS: readonly PathId[] = ['ensino-fundamental', 'pre-militar'];
 export const AREA_ORDER: readonly AreaId[] = ['matematica', 'linguagens', 'natureza', 'humanas', 'idiomas', 'tecnologia'];
 
 export const OBJECTIVES: Readonly<Record<ObjectiveId, { label: string }>> = {
+  'ensino-fundamental': { label: 'Ensino Fundamental' },
+  'ensino-medio': { label: 'Ensino Médio' },
+  vestibulares: { label: 'Vestibular' },
+  'pre-militar': { label: 'Pré-Militar' },
+  'ensino-superior': { label: 'Ensino Superior' },
+  tecnologia: { label: 'Tecnologia' },
   enem: { label: 'ENEM' },
   uerj: { label: 'UERJ' },
-  'ensino-medio': { label: 'Ensino Médio' },
-  vestibulares: { label: 'Vestibulares' },
-  tecnologia: { label: 'Tecnologia' },
 };
 
 export const AREAS: Readonly<Record<AreaId, { label: string }>> = {

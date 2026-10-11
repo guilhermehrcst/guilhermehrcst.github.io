@@ -28,6 +28,11 @@ const pairs: [string, string, number][] = [
   ['ink', 'tint-brand', 7], ['muted', 'tint-brand', 4.5], ['action', 'tint-brand', 4.5],
   // The official artwork is white on the brand red; text set on the plate uses --on-action.
   ['on-action', 'brand', 7],
+  // The institutional header and footer (V0.3): text and secondary text on the wine, at rest and on hover.
+  ['on-brand', 'brand', 7], ['on-brand-muted', 'brand', 4.5],
+  ['on-brand', 'brand-deep', 7], ['on-brand-muted', 'brand-deep', 4.5],
+  // The menus open on paper panels under the wine header.
+  ['ink', 'raised', 7], ['action', 'raised', 4.5],
   ['ink', 'tint-sand', 7], ['muted', 'tint-sand', 4.5],
 ];
 for (const [fg, bg, min] of pairs) {

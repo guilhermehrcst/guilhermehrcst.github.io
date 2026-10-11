@@ -9,15 +9,20 @@ import { join, relative, sep } from 'node:path';
 const DIST = new URL('../dist/', import.meta.url).pathname;
 const SITE = 'https://guilhermehrcst.github.io';
 
-/** The indexable pages of V0.1 (spec §5.1). */
+/** The indexable pages (V0.3: each ready path, Vestibular's exams after it). */
 const CANONICAL = [
-  '/', '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/', '/materias/',
+  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
   '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
   '/materias/ingles/', '/materias/espanhol/',
   '/buscar/', '/sobre/',
 ];
+
+/** The six paths, in the approved order (V0.3), and the paths still in preparation: built and linked, but
+ *  noindex, out of the sitemap, and listing no resource. */
+const PATHS = ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/pre-militar/', '/ensino-superior/', '/tecnologia/'];
+const PREPARING = ['/ensino-fundamental/', '/pre-militar/'];
 
 /** Routes of the former personal site that keep a destination (spec §8.4). */
 const REDIRECTS = {
@@ -33,11 +38,20 @@ const REDIRECTS = {
 /** Routes of the former personal site that are gone: they fall through to the 404 (spec §8.4, Q2). */
 const GONE = ['/resume/', '/pt/curriculo/'];
 
-/** The header navigation, in order (spec §6.5). */
+/** The header navigation (V0.3): the "Explorar" menu (the six paths, then every subject), then four
+ *  direct links, in this order. */
+const EXPLORE_MENU = [
+  ['/ensino-fundamental/', 'Ensino Fundamental'],
+  ['/ensino-medio/', 'Ensino Médio'],
+  ['/vestibulares/', 'Vestibular'],
+  ['/pre-militar/', 'Pré-Militar'],
+  ['/ensino-superior/', 'Ensino Superior'],
+  ['/tecnologia/', 'Tecnologia'],
+  ['/materias/', 'Todas as matérias'],
+];
 const HEADER_NAV = [
-  ['/materias/', 'Explorar'],
-  ['/enem/', 'ENEM'],
-  ['/uerj/', 'UERJ'],
+  ['/vestibulares/', 'Vestibular'],
+  ['/pre-militar/', 'Pré-Militar'],
   ['/tecnologia/', 'Tecnologia'],
   ['/buscar/', 'Buscar'],
 ];
@@ -73,7 +87,7 @@ const fileFor = (p) => join(DIST, p.endsWith('/') ? p + 'index.html' : p);
 const attrs = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
 /** The footer is the site map: every objective, every subject, search and about (hand-written, independent of the routes module). */
 const FOOTER_PAGES = [
-  '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/',
+  ...PATHS, '/enem/', '/uerj/',
   '/materias/', '/materias/matematica/', '/materias/portugues/', '/materias/redacao/', '/materias/fisica/', '/materias/quimica/',
   '/materias/biologia/', '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
   '/materias/ingles/', '/materias/espanhol/', '/buscar/', '/sobre/',
@@ -246,17 +260,32 @@ function checkShell(path, html) {
   const footer = /<footer\b[\s\S]*<\/footer>/.exec(html)?.[0] ?? '';
   const footerLinks = new Set(hrefsIn(footer));
   for (const page of FOOTER_PAGES) if (!footerLinks.has(page)) fail(path, `the footer does not link ${page}`);
+  // A path in preparation says so wherever it is linked, the footer included (V0.3 §2.1).
+  for (const page of PREPARING) {
+    if (!new RegExp(`href="${page}"[^>]*>[^<]*</a>\\s*<span\\b[^>]*\\sdata-path-state[^>]*>Em preparação</span>`).test(footer)) fail(path, `the footer marks ${page} as in preparation`);
+  }
   if (!/<img\b[^>]*src="\/_astro\/lockup-white\.[^"]+"[^>]*alt="Pexis Academy"|<img\b[^>]*alt="Pexis Academy"[^>]*src="\/_astro\/lockup-white\./.test(footer)) fail(path, 'the footer shows the official lockup');
-  const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
+  // The header is the institutional wine (checked in the stylesheet below), with the Explorar menu and the
+  // direct links in order, and a mobile menu that reaches the same places. No JavaScript: native <details>.
+  const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(header)?.[1];
   if (!nav) { fail(path, 'main navigation (aria-label="Principal") missing'); return; }
-  const items = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => [m[1], m[2].replace(/<[^>]+>/g, '').trim()]);
-  if (JSON.stringify(items) !== JSON.stringify(HEADER_NAV)) fail(path, `header navigation ${JSON.stringify(items)}`);
-  for (const m of nav.matchAll(/<a\b([^>]*)>/g)) {
+  const menu = /<details\b[^>]*data-menu="explorar"[^>]*>([\s\S]*?)<\/details>/.exec(nav)?.[1] ?? '';
+  if (!/<summary\b[^>]*>\s*Explorar\b/.test(menu)) fail(path, 'the Explorar menu is a <summary> named "Explorar"');
+  const linkItems = (fragment) => [...fragment.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
+    .map((m) => [m[1], m[2].replace(/<span class="tag"[\s\S]*?<\/span>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/ →$/, '').trim()]);
+  const menuHrefs = hrefsIn(menu);
+  if (JSON.stringify(menuHrefs) !== JSON.stringify(EXPLORE_MENU.map((i) => i[0]))) fail(path, `Explorar menu ${menuHrefs.join(',')}`);
+  const direct = linkItems(nav.replace(/<details\b[\s\S]*?<\/details>/, ''));
+  if (JSON.stringify(direct) !== JSON.stringify(HEADER_NAV)) fail(path, `header navigation ${JSON.stringify(direct)}`);
+  for (const m of header.matchAll(/<a\b([^>]*)>/g)) {
     const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
     const current = /aria-current="page"/.test(m[1]);
-    const expected = href === path || (href === '/materias/' && path.startsWith('/materias/'));
-    if (current !== expected) fail(path, `aria-current on ${href} should be ${expected}`);
+    if (current !== (href === path)) fail(path, `aria-current on ${href} should be ${href === path}`);
   }
+  const mobile = /<details\b[^>]*data-menu="mobile"[^>]*>([\s\S]*?)<\/details>/.exec(header)?.[1] ?? '';
+  if (!/<summary\b/.test(mobile)) fail(path, 'the mobile menu is a <details> with a <summary>');
+  const mobileHrefs = new Set(hrefsIn(mobile));
+  for (const [href] of [...EXPLORE_MENU, ...HEADER_NAV]) if (!mobileHrefs.has(href)) fail(path, `the mobile menu does not reach ${href}`);
 }
 
 /* Product rules: what each page promises. --------------------------------------------------------- */
@@ -313,14 +342,18 @@ function checkHome(path, html, resources) {
   if (!hero.includes('href="#objetivo"') || !hero.includes('href="/materias/"')) fail(path, 'the hero offers "#objetivo" and "/materias/"');
   const window = /<figure\b[^>]*\sdata-product-window[\s\S]*?<\/figure>/.exec(hero)?.[0];
   if (!window) fail(path, 'the hero shows the product (figure[data-product-window])');
-  else checkProductWindow(path, window);
+  else {
+    checkProductWindow(path, window);
+    // The hero's window shows a real route (V0.3): Vestibular, ENEM, Matemática, content, practice.
+    const route = attrs(window, /\sdata-route-step="([^"]+)"/g);
+    if (JSON.stringify(route) !== JSON.stringify(['caminho', 'prova', 'area', 'conteudo', 'pratica'])) fail(path, `hero route ${route.join(',')}`);
+  }
   const objective = sectionOf(html, /<section\b[^>]*\sid="objetivo"/);
   if (!objective) fail(path, 'section#objetivo missing');
   else {
     if (!/<h2[^>]*>Qual é o seu objetivo\?<\/h2>/.test(objective)) fail(path, '#objetivo must ask "Qual é o seu objetivo?"');
     const hrefs = hrefsIn(objective);
-    const expected = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
-    if (JSON.stringify(hrefs) !== JSON.stringify(expected)) fail(path, `#objetivo links ${hrefs.join(',')}`);
+    if (JSON.stringify(hrefs) !== JSON.stringify(PATHS)) fail(path, `#objetivo links ${hrefs.join(',')}`);
   }
   // The learning path: the five steps, in order, each a real thing. A step that has nothing published yet
   // says so and links nowhere; the others lead to the page that holds them.
@@ -328,7 +361,7 @@ function checkHome(path, html, resources) {
   if (!path_) fail(path, 'section#caminho missing');
   else {
     const steps = [...path_.matchAll(/<li\b[^>]*\sdata-path-step="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
-    const order = ['objetivo', 'materia', 'assunto', 'conteudo', 'pratica'];
+    const order = ['objetivo', 'area', 'assunto', 'conteudo', 'pratica'];
     if (JSON.stringify(steps.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `#caminho steps ${steps.map((m) => m[1]).join(',')}`);
     for (const [, step, body] of steps) {
       const links = hrefsIn(body);
@@ -505,13 +538,36 @@ function checkProduct(path, html) {
   for (const item of resources) PUBLISHED_RESOURCE_IDS.add(resourceAttr(item, 'data-resource-id'));
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
+  // Every internal page says where it sits (V0.3): a breadcrumb from Início, through its section.
+  if (path !== '/') {
+    const crumbs = /<nav\b[^>]*\sdata-breadcrumb[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1];
+    if (!crumbs) fail(path, 'an internal page carries a breadcrumb');
+    else {
+      const trail = hrefsIn(crumbs);
+      if (trail[0] !== '/') fail(path, 'the breadcrumb starts at Início');
+      if (/^\/materias\/[a-z-]+\/$/.test(path) && JSON.stringify(trail) !== JSON.stringify(['/', '/materias/'])) fail(path, `a subject's breadcrumb goes through Explorar (${trail.join(',')})`);
+    }
+  }
+  if (path === '/materias/') {
+    const paths = hrefsIn(sectionOf(html, /<section\b[^>]*\sid="caminhos"/) ?? '');
+    if (JSON.stringify(paths) !== JSON.stringify(PATHS)) fail(path, `Explorar lists the six paths in order (${paths.join(',')})`);
+  }
+  // An exam lives inside Vestibular: its breadcrumb leads back there (V0.3).
+  if (path === '/enem/' || path === '/uerj/') {
+    const crumbs = /<nav\b[^>]*\sdata-breadcrumb[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1] ?? '';
+    if (JSON.stringify(hrefsIn(crumbs)) !== JSON.stringify(['/', '/vestibulares/'])) fail(path, `breadcrumb ${hrefsIn(crumbs).join(',') || 'missing'}`);
+    if (!/aria-current="page"/.test(crumbs)) fail(path, 'the breadcrumb marks the current page');
+  }
   if (path === '/enem/') checkEnem(path, html);
   if (path === '/uerj/') checkUerj(path, html);
   if (path === '/vestibulares/') {
     checkObjectiveMap(path, html, resources, 'vestibulares');
+    // Vestibular is the hub of its exams (V0.3): it opens with them, ENEM then UERJ, then the editorial note.
     const ids = sectionIds(html);
-    if (ids[0] !== 'uerj' || ids[1] !== 'nota-editorial') fail(path, `Vestibulares opens with the UERJ, then the editorial note (${ids.join(',')})`);
-    if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="uerj"/) ?? '').includes('/uerj/')) fail(path, '#uerj leads to /uerj/');
+    if (ids[0] !== 'provas' || ids[1] !== 'nota-editorial') fail(path, `Vestibular opens with its exams, then the editorial note (${ids.join(',')})`);
+    const exams = hrefsIn(sectionOf(html, /<section\b[^>]*\sid="provas"/) ?? '');
+    if (JSON.stringify(exams) !== JSON.stringify(['/enem/', '/uerj/'])) fail(path, `#provas links ${exams.join(',')}`);
+    if (!/<h1[^>]*>Vestibular<\/h1>/.test(html)) fail(path, 'the page is titled "Vestibular"');
   }
   if (path === '/buscar/') {
     // The directory: without JavaScript it links every content page (Home, Buscar and Sobre are in the
@@ -541,6 +597,12 @@ function checkProduct(path, html) {
     if (JSON.stringify(ids) !== JSON.stringify(['matematica', 'linguagens', 'natureza', 'humanas', 'idiomas', 'tecnologia'])) fail(path, `Ensino Médio sections ${ids.join(',')}`);
     if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="tecnologia"/) ?? '').includes('/tecnologia/')) fail(path, '#tecnologia leads to /tecnologia/');
   }
+  if (path === '/ensino-superior/') {
+    // University courses only, by field: the two fields of V0.3, each with courses.
+    const groups = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].map((m) => [m[1], (m[2].match(/\sdata-resource-id="/g) ?? []).length]);
+    if (JSON.stringify(groups.map((g) => g[0])) !== JSON.stringify(['matematica', 'computacao'])) fail(path, `Ensino Superior groups ${groups.map((g) => g[0]).join(',')}`);
+    for (const [id, n] of groups) if (n < 2) fail(path, `group ${id} lists ${n} courses`);
+  }
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
 }
@@ -553,6 +615,27 @@ for (const path of CANONICAL) {
   checkShell(path, html);
   checkLandmarks(path, html);
   checkProduct(path, html);
+  checkImages(path, html);
+  checkThirdParty(path, html);
+  checkLinks(path, html);
+  checkScripts(path, html);
+  checkAccessibility(path, html);
+}
+
+/* Paths in preparation: real pages, linked from the Home, the header and the footer, that say what
+   they are and list nothing. Not canonical, not in the sitemap. */
+for (const path of PREPARING) {
+  const file = fileFor(path);
+  if (!existsSync(file)) { fail(path, 'missing'); continue; }
+  const html = readFileSync(file, 'utf8');
+  if (!/<meta name="robots" content="[^"]*noindex/.test(html)) fail(path, 'a path in preparation is noindex');
+  if (/<link rel="canonical"/.test(html)) fail(path, 'a path in preparation has no canonical');
+  if (!/\sdata-preparing[\s>=]/.test(html)) fail(path, 'a path in preparation says so ([data-preparing])');
+  if (/\sdata-resource-id="/.test(html)) fail(path, 'a path in preparation lists no resource');
+  if (!html.includes('<html lang="pt-BR"')) fail(path, 'expected <html lang="pt-BR">');
+  if (!/<title>[^<]*\| Pexis Academy<\/title>/.test(html)) fail(path, 'title pattern');
+  checkShell(path, html);
+  checkLandmarks(path, html);
   checkImages(path, html);
   checkThirdParty(path, html);
   checkLinks(path, html);
@@ -603,6 +686,9 @@ const files = walk(DIST);
 {
   const css = files.filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n');
   if (!/:focus-visible\s*\{[^}]*outline:\s*2px/.test(css)) fail('css', 'a visible :focus-visible outline is required');
+  // The institutional header and footer stand on the brand wine (V0.3).
+  if (!/\.site-header\[[^\]]+\]\s*\{[^}]*background:\s*var\(--brand\)|\.site-header\s*\{[^}]*background:\s*var\(--brand\)/.test(css)) fail('css', 'the header stands on the brand wine');
+  if (!/\.site-footer\[[^\]]+\]\s*\{[^}]*background:\s*var\(--brand\)|\.site-footer\s*\{[^}]*background:\s*var\(--brand\)/.test(css)) fail('css', 'the footer stands on the brand wine');
   if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*transition:\s*none/.test(css)) fail('css', 'reduced motion must switch transitions off');
 }
 
@@ -625,7 +711,7 @@ const files = walk(DIST);
 
 /* The whole of dist/. ----------------------------------------------------------------------------- */
 
-const known = new Set([...CANONICAL, ...Object.keys(REDIRECTS)].map((p) => fileFor(p)).concat(join(DIST, '404.html')));
+const known = new Set([...CANONICAL, ...PREPARING, ...Object.keys(REDIRECTS)].map((p) => fileFor(p)).concat(join(DIST, '404.html')));
 for (const f of files.filter((f) => f.endsWith('.html'))) {
   if (!known.has(f)) fail('/' + relative(DIST, f).split(sep).join('/'), 'page not in the canonical inventory');
 }
@@ -656,4 +742,4 @@ if (errors.length) {
   console.error(`verify-dist: ${errors.length} problem(s)\n  ` + errors.join('\n  '));
   process.exit(1);
 }
-console.log(`verify-dist: ${CANONICAL.length} pages, ${Object.keys(REDIRECTS).length} redirects, 404, ${files.length} files — all invariants hold.`);
+console.log(`verify-dist: ${CANONICAL.length} pages, ${PREPARING.length} in preparation, ${Object.keys(REDIRECTS).length} redirects, 404, ${files.length} files — all invariants hold.`);

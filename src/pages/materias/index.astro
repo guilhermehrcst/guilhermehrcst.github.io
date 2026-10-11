@@ -1,7 +1,9 @@
 ---
-// "Explorar": the six areas and their subjects (spec §6.3). The parent of every /materias/{subject}/.
+// "Explorar" (V0.3): the hub behind the header's Explorar menu. The six paths first (the same index as the
+// Home, with real counts), then every area and its subjects. The parent of every /materias/{subject}/.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
+import ObjectiveList from '../../components/ObjectiveList.astro';
 import AreaList from '../../components/AreaList.astro';
 import { pt as t } from '../../i18n/pt';
 
@@ -9,7 +11,17 @@ const c = t.pages.materias;
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
-  <div class="wrap">
-    <AreaList headingLevel={2} />
-  </div>
+  <section class="wrap block" id="caminhos" aria-labelledby="caminhos-title">
+    <h2 id="caminhos-title">{t.explore.paths}</h2>
+    <ObjectiveList />
+  </section>
+  <section class="wrap block" id="areas" aria-labelledby="areas-title">
+    <h2 id="areas-title">{t.explore.areas}</h2>
+    <AreaList headingLevel={3} />
+  </section>
 </Base>
+
+<style>
+  .block { padding-bottom: var(--space-7); }
+  .block > h2 { margin-bottom: var(--space-5); font-size: var(--fs-h2); }
+</style>

@@ -1,19 +1,42 @@
 ---
-// The top of every page: an optional eyebrow, the page's one H1, and a lead. A slot follows for an
-// action (the Home's call to action).
-interface Props { eyebrow?: string | undefined; heading: string; lead: string }
-const { eyebrow, heading, lead } = Astro.props;
+// The top of every internal page (V0.3): a quiet band under the wine header, with a breadcrumb (where the
+// page sits: Início, then its section if it has one), an eyebrow (what the page is), the page's one H1 and
+// a lead. A slot follows for an action. The 404 has no breadcrumb (crumbs={false}).
+import { routes } from '../lib/routes';
+import { pt as t } from '../i18n/pt';
+
+interface Crumb { label: string; href: string }
+interface Props { eyebrow?: string | undefined; heading: string; lead: string; crumbs?: readonly Crumb[] | false }
+const { eyebrow, heading, lead, crumbs = [] } = Astro.props;
+const trail = crumbs === false ? [] : [{ label: t.breadcrumb.home, href: routes.home }, ...crumbs];
 ---
-<header class="intro wrap">
-  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-  <h1>{heading}</h1>
-  <p class="lead">{lead}</p>
-  <slot />
-</header>
+<div class="band">
+  <header class="intro wrap">
+    {trail.length > 0 && (
+      <nav class="crumbs" aria-label={t.breadcrumb.label} data-breadcrumb>
+        <ol role="list">
+          {trail.map((crumb) => <li><a href={crumb.href}>{crumb.label}</a></li>)}
+          <li aria-current="page">{heading}</li>
+        </ol>
+      </nav>
+    )}
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{heading}</h1>
+    <p class="lead">{lead}</p>
+    <slot />
+  </header>
+</div>
 
 <style>
-  .intro { padding-block: var(--space-8) var(--space-7); }
-  .eyebrow { margin-bottom: var(--space-4); }
-  h1 { font-size: var(--fs-h1); font-weight: 540; letter-spacing: -0.025em; line-height: 1.05; max-width: 18ch; }
-  .lead { margin-top: var(--space-5); max-width: 40ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
+  .band { margin-bottom: var(--space-7); background: var(--surface); border-bottom: 1px solid var(--rule); }
+  .intro { padding-block: var(--space-6) var(--space-7); }
+  .crumbs { margin-bottom: var(--space-6); }
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-2); font-size: var(--fs-small); color: var(--muted); }
+  .crumbs li + li::before { content: '/'; margin-right: var(--space-2); color: var(--rule-strong); }
+  .crumbs a { display: inline-flex; align-items: center; min-height: 32px; color: var(--muted); text-decoration-color: var(--rule-strong); }
+  .crumbs a:hover { color: var(--action); text-decoration-color: currentColor; }
+  .crumbs [aria-current] { color: var(--ink); font-weight: 500; }
+  .eyebrow { margin-bottom: var(--space-3); color: var(--action); }
+  h1 { font-size: var(--fs-h1); font-weight: 460; letter-spacing: -0.03em; line-height: 1.02; max-width: 16ch; }
+  .lead { margin-top: var(--space-4); max-width: 46ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
 </style>

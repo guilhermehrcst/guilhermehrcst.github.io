@@ -1,0 +1,24 @@
+---
+// The state of a path in preparation, said once, near the top: it has no verified resource yet, so it
+// shows none (V0.3 §2.1). verify-dist reads [data-preparing] and checks the page lists no resource.
+import { pt as t } from '../i18n/pt';
+---
+<aside class="wrap" data-preparing aria-label={t.preparing.label}>
+  <div class="note">
+    <p class="state"><span class="dot" aria-hidden="true"></span>{t.preparing.label}</p>
+    <p class="why">{t.preparing.why}</p>
+  </div>
+</aside>
+
+<style>
+  .note {
+    display: grid;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+    padding-block: var(--space-5);
+    border-block: 1px solid var(--rule-strong);
+  }
+  .state { display: inline-flex; align-items: center; gap: var(--space-2); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--action); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--action); }
+  .why { max-width: var(--measure); color: var(--muted); }
+</style>

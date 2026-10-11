@@ -14,6 +14,12 @@
   --action: #720111;
   --action-hover: #8c1023;
   --on-action: #faf8f4;
+  /* The institutional wine grounds (header, footer): text, secondary text, a deeper wine for hover and
+     the current item, and hairlines. Measured in tests/contrast.test.ts. */
+  --on-brand: #ffffff;
+  --on-brand-muted: #e9c6cb;
+  --brand-deep: #5a000d;
+  --brand-line: #94394a;
   /* Quiet grounds for product panels and bands: a pale brand tint and a sand, no heavy shadow. */
   --raised: #fffdf9;
   --tint-brand: #f6e9ea;
@@ -61,11 +67,8 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   color-scheme: light;
-  scroll-padding-top: var(--space-5);
-}
-/* From 640px the header is sticky and one row (69px, measured): an anchored target lands below it. */
-@media (min-width: 640px) {
-  html { scroll-padding-top: calc(4.5rem + var(--space-5)); }
+  /* The header is sticky and one row at every width (65px, measured; V0.3): an anchored target lands below it. */
+  scroll-padding-top: calc(4.5rem + var(--space-5));
 }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }

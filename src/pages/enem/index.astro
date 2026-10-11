@@ -8,6 +8,8 @@ import SourceNote from '../../components/SourceNote.astro';
 import ResourceList from '../../components/ResourceList.astro';
 import SubjectLinks from '../../components/SubjectLinks.astro';
 import { ENEM_AREAS, resolveGuide } from '../../lib/exam-guides';
+import { routes } from '../../lib/routes';
+import { OBJECTIVES } from '../../lib/taxonomy';
 import { pt as t } from '../../i18n/pt';
 
 const c = t.pages.enem;
@@ -20,7 +22,7 @@ const deepenByArea = ENEM_AREAS
   .filter((area) => area.resources.length > 0);
 ---
 <Base title={c.title} description={c.description}>
-  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} crumbs={[{ label: OBJECTIVES.vestibulares.label, href: routes.objective('vestibulares') }]} />
 
   <TrackSection id="entenda" title={g.entenda.title}>
     <div class="prose">

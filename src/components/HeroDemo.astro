@@ -1,85 +1,107 @@
 ---
-// The hero's product window: the real /materias/matematica/ page in miniature, built from the catalogue at
-// build time (the same resources, facts and objectives the page shows). Nothing here is invented: no topic
-// that has no page, no progress, no user. Decorative: the real page is one click away (ProductWindow).
+// The hero's product window (V0.3): a real route through the Academy, Vestibular → ENEM → Matemática →
+// content → practice, read from the same data the pages use. The rail names each step; the pane shows what
+// the route ends in: the course the ENEM guide lists for Matemática and the official INEP practice. The
+// build fails if the route stops being true. Decorative for assistive tech: the real guide is one click
+// away (ProductWindow's caption). No progress, no user, nothing invented.
 import ProductWindow from './ProductWindow.astro';
-import { filterResources, objectivesFor } from '../lib/learning-library';
+import { ENEM_AREAS, resolveGuide } from '../lib/exam-guides';
+import { resourcesByIds } from '../lib/learning-library';
 import { publishedResources } from '../lib/learning-resources';
+import { officialSources } from '../lib/official-sources';
 import { routes } from '../lib/routes';
-import { AREA_ORDER, AREAS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
+import { EXAM_PARENT, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
-const subject = SUBJECTS.matematica;
-const all = filterResources(publishedResources, { subject: subject.id });
-const study = all.filter((r) => r.format !== 'practice');
-const practice = all.filter((r) => r.format === 'practice');
-const objectives = objectivesFor(subject.id);
 const d = t.home.hero.demo;
 const l = t.resource;
-const facts = (r: (typeof all)[number]) =>
-  [l.formats[r.format], r.registration && l.registration[r.registration]].filter(Boolean).join(' · ');
+const subject = SUBJECTS.matematica;
+const area = ENEM_AREAS.find((a) => a.subjects.includes(subject.id));
+const [content] = resourcesByIds(publishedResources, ['kultivi-math-enem']);
+const practice = officialSources['inep-provas-gabaritos'];
+const guide = resolveGuide('enem');
+if (EXAM_PARENT.enem !== 'vestibulares') throw new Error('HeroDemo: ENEM is not inside Vestibular');
+if (!area || !content) throw new Error('HeroDemo: the ENEM area or the content is missing');
+if (!guide.find((s) => s.id === 'aprofunde')?.resources.some((r) => r.id === content.id)) throw new Error('HeroDemo: the content is not in the ENEM guide');
+if (!guide.find((s) => s.id === 'pratique')?.sources.includes('inep-provas-gabaritos')) throw new Error('HeroDemo: the practice source is not in the ENEM guide');
+
+const route = [
+  { id: 'caminho', label: d.steps.path, value: OBJECTIVES.vestibulares.label },
+  { id: 'prova', label: d.steps.exam, value: OBJECTIVES.enem.label },
+  { id: 'area', label: d.steps.area, value: subject.label, meta: area.label },
+  { id: 'conteudo', label: d.steps.content, value: content.provider },
+  { id: 'pratica', label: d.steps.practice, value: 'INEP' },
+];
+const facts = [l.formats[content.format], content.registration && l.registration[content.registration]].filter(Boolean).join(' · ');
 ---
 <ProductWindow
   class="hero-demo"
-  path={routes.subject(subject.id)}
+  path={`${OBJECTIVES.vestibulares.label} / ${OBJECTIVES.enem.label} / ${subject.label}`}
   caption={t.home.hero.demoCaption}
-  href={routes.subject(subject.id)}
+  href={routes.objective('enem')}
   linkLabel={t.home.hero.demoLink}
 >
   <div class="app">
-    <div class="side">
-      <p class="label">{d.objectives}</p>
-      <ul role="list">{OBJECTIVE_ORDER.map((id) => <li>{OBJECTIVES[id].label}</li>)}</ul>
-      <p class="label">{d.areas}</p>
-      <ul role="list">
-        {AREA_ORDER.map((id) => <li class:list={[id === subject.area && 'on']}>{AREAS[id].label}</li>)}
-      </ul>
-    </div>
-    <div class="page">
-      <p class="crumbs">{d.subjects} <span>/</span> {subject.label}</p>
+    <ol class="rail" role="list">
+      {route.map((step, i) => (
+        <li data-route-step={step.id} class:list={[i >= 3 && 'lit']}>
+          <span class="node">{i + 1}</span>
+          <span class="text">
+            <span class="label">{step.label}</span>
+            <span class="value">{step.value}</span>
+            {step.meta && <span class="meta">{step.meta}</span>}
+          </span>
+        </li>
+      ))}
+    </ol>
+    <div class="pane">
+      <p class="crumbs">{OBJECTIVES.vestibulares.label} <span>/</span> {OBJECTIVES.enem.label} <span>/</span> {subject.label}</p>
       <p class="title">{subject.label}</p>
+      <p class="area">{area.label}</p>
+
       <p class="part">{d.study}</p>
-      {study.map((r) => (
-        <div class="res" data-demo-resource-id={r.id}>
-          <p class="prov">{r.provider}</p>
-          <p class="name" translate="no">{r.title}</p>
-          <p class="facts">{facts(r)}</p>
-        </div>
-      ))}
+      <div class="card" data-demo-resource-id={content.id}>
+        <p class="prov">{content.provider}</p>
+        <p class="name" translate="no">{content.title}</p>
+        <p class="facts">{facts}</p>
+      </div>
+
       <p class="part">{d.practice}</p>
-      {practice.map((r) => (
-        <div class="res" data-demo-resource-id={r.id}>
-          <p class="prov">{r.provider}</p>
-          <p class="name" translate="no">{r.title}</p>
-          <p class="facts">{facts(r)}</p>
-        </div>
-      ))}
-      <p class="part">{d.byObjective}</p>
-      <p class="chips">{objectives.map((id) => <span>{OBJECTIVES[id].label}</span>)}</p>
+      <div class="card official">
+        <p class="prov">INEP <span class="badge">{d.official}</span></p>
+        <p class="name">{practice.title}</p>
+        <p class="facts">{d.officialWhy}</p>
+      </div>
     </div>
   </div>
 </ProductWindow>
 
 <style>
   .app { display: grid; grid-template-columns: minmax(0, 1fr); font-size: 0.8125rem; line-height: 1.45; }
-  @media (min-width: 640px) { .app { grid-template-columns: 10.5rem minmax(0, 1fr); } }
+  @media (min-width: 640px) { .app { grid-template-columns: 11.5rem minmax(0, 1fr); } }
 
-  .side { display: none; padding: var(--space-4) var(--space-3); border-right: 1px solid var(--rule); background: var(--surface); }
-  @media (min-width: 640px) { .side { display: block; } }
-  .label { margin: var(--space-3) 0 var(--space-1); padding-inline: var(--space-2); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-  .label:first-child { margin-top: 0; }
-  .side li { padding: 0.28rem var(--space-2); border-radius: var(--radius); color: var(--ink); }
-  .side li.on { background: var(--tint-brand); color: var(--action); font-weight: 600; }
+  /* The route: five steps on a rail; the two the route ends in are lit. */
+  .rail { display: none; position: relative; padding: var(--space-5) var(--space-4); border-right: 1px solid var(--rule); background: var(--surface); }
+  @media (min-width: 640px) { .rail { display: grid; align-content: start; gap: var(--space-4); } }
+  .rail li { position: relative; display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: var(--space-3); }
+  .rail li:not(:last-child)::before { content: ''; position: absolute; left: calc(0.75rem - 0.5px); top: 1.6rem; bottom: calc(-1 * var(--space-4) + 2px); border-left: 1px solid var(--rule-strong); }
+  .node { display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1px solid var(--rule-strong); background: var(--raised); font-size: 0.6875rem; font-weight: 600; color: var(--muted); }
+  .lit .node { border-color: var(--action); background: var(--action); color: var(--on-action); }
+  .text { display: grid; }
+  .label { font-size: 0.625rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .value { font-family: var(--serif); font-size: 1rem; color: var(--ink); line-height: 1.25; }
+  .meta { font-size: 0.6875rem; color: var(--muted); }
 
-  .page { padding: var(--space-5) var(--space-5) var(--space-6); }
+  .pane { padding: var(--space-5) var(--space-5) var(--space-6); }
   .crumbs { color: var(--muted); }
   .crumbs span { margin-inline: 0.3em; color: var(--rule-strong); }
   .title { margin-top: var(--space-2); font-family: var(--serif); font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.375rem); font-weight: 460; line-height: 1.05; letter-spacing: -0.02em; }
-  .part { margin-top: var(--space-5); padding-bottom: var(--space-2); border-bottom: 1px solid var(--rule); font-family: var(--serif); font-size: 1rem; font-weight: 560; }
-  .res { padding-block: var(--space-3); border-bottom: 1px solid var(--rule); }
-  .prov { color: var(--muted); font-size: 0.75rem; }
+  .area { margin-top: var(--space-1); color: var(--muted); }
+  .part { margin-top: var(--space-5); margin-bottom: var(--space-2); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .card { padding: var(--space-3) var(--space-4); border: 1px solid var(--rule); border-radius: var(--radius); background: var(--raised); }
+  .card.official { border-color: var(--action); box-shadow: inset 3px 0 0 var(--action); }
+  .prov { display: flex; align-items: center; gap: var(--space-2); color: var(--muted); font-size: 0.75rem; }
+  .badge { padding: 0.05rem 0.45rem; border-radius: 999px; background: var(--tint-brand); color: var(--action); font-size: 0.625rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
   .name { margin-top: 0.15rem; font-weight: 600; font-size: 0.9375rem; color: var(--ink); }
   .facts { color: var(--muted); font-size: 0.75rem; }
-  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
-  .chips span { padding: 0.2rem 0.6rem; border: 1px solid var(--rule-strong); border-radius: 999px; font-size: 0.75rem; color: var(--ink); }
 </style>
