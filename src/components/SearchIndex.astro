@@ -23,8 +23,7 @@ const groups = kinds.map((kind) => ({ kind, label: t.search.groups[kind], entrie
       <ul role="list">
         {group.entries.map((e) => (
           <li data-search-entry data-entry-id={e.id} data-terms={e.terms}>
-            <a href={e.url}>{e.title}</a>
-            <span class="context">{e.context}</span>
+            <a href={e.url}><span class="title">{e.title}</span> <span class="context">{e.context}</span></a>
           </li>
         ))}
       </ul>
@@ -57,8 +56,9 @@ const groups = kinds.map((kind) => ({ kind, label: t.search.groups[kind], entrie
   .group h2 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-2); }
   ul { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--space-7); }
   @media (min-width: 768px) { ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  li { display: grid; padding-block: var(--space-2); border-top: 1px solid var(--rule); }
-  li a { font-weight: 500; text-decoration: none; }
-  li a:hover { text-decoration: underline; }
+  li { border-top: 1px solid var(--rule); }
+  li a { display: grid; padding-block: var(--space-2); text-decoration: none; }
+  .title { font-weight: 500; }
+  li a:hover .title { text-decoration: underline; }
   .context { font-size: var(--fs-small); color: var(--muted); }
 </style>

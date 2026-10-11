@@ -146,6 +146,41 @@ function checkScripts(path, html) {
   }
 }
 
+/* Accessibility, structurally (spec §7): what can be read from the HTML without a browser. */
+const decode = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+/** A link's accessible name: aria-label, else its text without what is hidden from assistive tech. */
+const nameOf = (attributes, inner) => {
+  const label = /\saria-label="([^"]*)"/.exec(attributes)?.[1];
+  if (label !== undefined) return decode(label).trim();
+  return decode(inner.replace(/<([a-z]+)\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+};
+
+function checkAccessibility(path, html) {
+  const main = html.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, '');
+  // Headings never skip a level on the way down.
+  let previous = 0;
+  for (const m of main.matchAll(/<h([1-6])[\s>]/g)) {
+    const level = Number(m[1]);
+    if (previous && level > previous + 1) fail(path, `heading skips from h${previous} to h${level}`);
+    previous = level;
+  }
+  // Every link has a name, and one name never leads to two different places.
+  const names = new Map();
+  for (const m of main.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)) {
+    const href = /\shref="([^"]*)"/.exec(m[1])?.[1] ?? '';
+    const name = nameOf(m[1], m[2]);
+    if (!name) { fail(path, `link without an accessible name: ${href}`); continue; }
+    if (names.has(name) && names.get(name) !== href) fail(path, `"${name}" leads to ${names.get(name)} and ${href}`);
+    names.set(name, href);
+    if (/target="_blank"/.test(m[1]) && !/class="sr-only"[^>]*>[^<]*nova aba/.test(m[2])) fail(path, `new-tab link does not say so: ${href}`);
+  }
+  // Navigation landmarks are told apart.
+  const navs = [...main.matchAll(/<nav\b([^>]*)>/g)].map((m) => /aria-label(?:ledby)?="([^"]+)"/.exec(m[1])?.[1] ?? '');
+  if (navs.some((n) => !n)) fail(path, 'every nav has a label');
+  if (new Set(navs).size !== navs.length) fail(path, `nav labels repeat: ${navs.join(', ')}`);
+  if (/\stabindex="[1-9]/.test(main)) fail(path, 'no positive tabindex');
+}
+
 /* Canonical pages. --------------------------------------------------------------------------------- */
 
 function checkHead(path, html) {
@@ -414,6 +449,7 @@ for (const path of CANONICAL) {
   checkThirdParty(path, html);
   checkLinks(path, html);
   checkScripts(path, html);
+  checkAccessibility(path, html);
 }
 
 checkUnique(seenTitles, 'title');
@@ -443,10 +479,20 @@ for (const path of GONE) {
     checkLandmarks('/404.html', html);
     checkLinks('/404.html', html);
     checkScripts('/404.html', html);
+    checkAccessibility('/404.html', html);
     for (const href of ['/', '/materias/', '/buscar/']) {
       if (!new RegExp(`<main[\\s\\S]*href="${href}"[\\s\\S]*</main>`).test(html)) fail('/404.html', `must offer a way to ${href}`);
     }
   }
+}
+
+const files = walk(DIST);
+
+/* The stylesheet keeps a visible focus and honours reduced motion (spec §7). */
+{
+  const css = files.filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n');
+  if (!/:focus-visible\s*\{[^}]*outline:\s*2px/.test(css)) fail('css', 'a visible :focus-visible outline is required');
+  if (!/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*transition:\s*none/.test(css)) fail('css', 'reduced motion must switch transitions off');
 }
 
 /* Sitemap and robots (spec §8.2): the sitemap lists exactly the canonical pages, absolute; no redirect,
@@ -468,7 +514,6 @@ for (const path of GONE) {
 
 /* The whole of dist/. ----------------------------------------------------------------------------- */
 
-const files = walk(DIST);
 const known = new Set([...CANONICAL, ...Object.keys(REDIRECTS)].map((p) => fileFor(p)).concat(join(DIST, '404.html')));
 for (const f of files.filter((f) => f.endsWith('.html'))) {
   if (!known.has(f)) fail('/' + relative(DIST, f).split(sep).join('/'), 'page not in the canonical inventory');
