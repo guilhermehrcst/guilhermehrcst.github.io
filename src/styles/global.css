@@ -113,6 +113,9 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* The HTML hidden state must beat component display declarations such as flex/grid. */
+[hidden] { display: none !important; }
+
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
