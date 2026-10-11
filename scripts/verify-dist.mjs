@@ -509,13 +509,22 @@ function checkProduct(path, html) {
   for (const item of resources) PUBLISHED_RESOURCE_IDS.add(resourceAttr(item, 'data-resource-id'));
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
+  // An exam lives inside Vestibular: its breadcrumb leads back there (V0.3).
+  if (path === '/enem/' || path === '/uerj/') {
+    const crumbs = /<nav\b[^>]*\sdata-breadcrumb[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1] ?? '';
+    if (JSON.stringify(hrefsIn(crumbs)) !== JSON.stringify(['/', '/vestibulares/'])) fail(path, `breadcrumb ${hrefsIn(crumbs).join(',') || 'missing'}`);
+    if (!/aria-current="page"/.test(crumbs)) fail(path, 'the breadcrumb marks the current page');
+  }
   if (path === '/enem/') checkEnem(path, html);
   if (path === '/uerj/') checkUerj(path, html);
   if (path === '/vestibulares/') {
     checkObjectiveMap(path, html, resources, 'vestibulares');
+    // Vestibular is the hub of its exams (V0.3): it opens with them, ENEM then UERJ, then the editorial note.
     const ids = sectionIds(html);
-    if (ids[0] !== 'uerj' || ids[1] !== 'nota-editorial') fail(path, `Vestibulares opens with the UERJ, then the editorial note (${ids.join(',')})`);
-    if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="uerj"/) ?? '').includes('/uerj/')) fail(path, '#uerj leads to /uerj/');
+    if (ids[0] !== 'provas' || ids[1] !== 'nota-editorial') fail(path, `Vestibular opens with its exams, then the editorial note (${ids.join(',')})`);
+    const exams = hrefsIn(sectionOf(html, /<section\b[^>]*\sid="provas"/) ?? '');
+    if (JSON.stringify(exams) !== JSON.stringify(['/enem/', '/uerj/'])) fail(path, `#provas links ${exams.join(',')}`);
+    if (!/<h1[^>]*>Vestibular<\/h1>/.test(html)) fail(path, 'the page is titled "Vestibular"');
   }
   if (path === '/buscar/') {
     // The directory: without JavaScript it links every content page (Home, Buscar and Sobre are in the

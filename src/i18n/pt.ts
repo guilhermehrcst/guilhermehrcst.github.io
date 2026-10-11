@@ -8,6 +8,7 @@ export const pt: Dict = {
   siteName: 'Pexis Academy',
   skip: 'Pular para o conteúdo',
   nav: { label: 'Principal', home: 'Pexis Academy, página inicial' },
+  breadcrumb: { label: 'Você está em', home: 'Início' },
   footer: {
     tagline: 'Recursos gratuitos e verificados, organizados com direção.',
     objectives: 'Objetivos',
@@ -29,35 +30,35 @@ export const pt: Dict = {
     enem: {
       title: 'ENEM | Pexis Academy',
       description: 'Prepare-se para o ENEM: entenda a prova pelas fontes oficiais do INEP, estude por área e pratique com material oficial e gratuito.',
-      eyebrow: 'Objetivo',
+      eyebrow: 'Prova',
       heading: 'ENEM',
       lead: 'Um ponto de partida para a preparação: o que a prova avalia, por onde estudar cada área e onde praticar com material oficial.',
     },
     uerj: {
       title: 'UERJ | Pexis Academy',
       description: 'Prepare-se para o Vestibular Estadual da UERJ: entenda a prova pela fonte oficial e resolva questões comentadas de edições anteriores.',
-      eyebrow: 'Objetivo',
+      eyebrow: 'Prova',
       heading: 'UERJ',
       lead: 'A UERJ tem um processo próprio. Comece pelas regras oficiais e faça das questões de provas anteriores a base da sua preparação.',
     },
     'ensino-medio': {
       title: 'Ensino Médio | Pexis Academy',
       description: 'Estude as matérias do Ensino Médio por área, com cursos e materiais gratuitos e verificados, de Matemática a Idiomas.',
-      eyebrow: 'Objetivo',
+      eyebrow: 'Caminho',
       heading: 'Ensino Médio',
       lead: 'As matérias da escola organizadas por área, cada uma com recursos gratuitos para estudar no seu ritmo.',
     },
     vestibulares: {
-      title: 'Vestibulares | Pexis Academy',
-      description: 'Prepare-se para vestibulares com recursos gratuitos e verificados por matéria, e com um caminho próprio para a UERJ.',
-      eyebrow: 'Objetivo',
-      heading: 'Vestibulares',
-      lead: 'Uma base comum para vestibulares em geral, com recursos por matéria e um caminho específico para a UERJ.',
+      title: 'Vestibular | Pexis Academy',
+      description: 'Prepare-se para o vestibular: guias do ENEM e da UERJ com material oficial, e uma base comum de recursos gratuitos por matéria.',
+      eyebrow: 'Caminho',
+      heading: 'Vestibular',
+      lead: 'ENEM, UERJ e uma base comum para vestibulares em geral, matéria por matéria.',
     },
     tecnologia: {
       title: 'Tecnologia | Pexis Academy',
       description: 'Aprenda programação, ciência da computação, web, dados, inteligência artificial e segurança com cursos gratuitos de Harvard, MIT e outros.',
-      eyebrow: 'Objetivo e área',
+      eyebrow: 'Caminho e área',
       heading: 'Tecnologia',
       lead: 'Trilhas para começar a programar e aprofundar em computação, com cursos gratuitos de universidades e instituições reconhecidas.',
     },
@@ -282,10 +283,13 @@ export const pt: Dict = {
     empty: 'Nada encontrado. Tente outra palavra, ou explore pelas áreas.',
   },
   vestibulares: {
-    uerj: {
-      title: 'Vai prestar a UERJ?',
-      why: 'A UERJ tem um processo próprio, com Exame Discursivo, e um caminho específico aqui.',
-      link: 'Ver o caminho da UERJ',
+    exams: {
+      title: 'Escolha a prova',
+      why: 'Cada prova tem um guia próprio, com o que ela avalia, onde estudar e onde praticar com material oficial.',
+      items: {
+        enem: { name: 'ENEM', what: 'Exame Nacional do Ensino Médio, aplicado pelo INEP.', link: 'Abrir o guia do ENEM' },
+        uerj: { name: 'UERJ', what: 'Vestibular Estadual da Universidade do Estado do Rio de Janeiro.', link: 'Abrir o guia da UERJ' },
+      },
     },
     note: {
       title: 'Sobre esta seleção',

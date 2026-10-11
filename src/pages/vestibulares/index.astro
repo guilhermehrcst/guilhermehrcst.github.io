@@ -1,22 +1,40 @@
 ---
-// /vestibulares/: a common base for entrance exams in general, the UERJ first (the one specific exam with
-// a verified source), and an honest note on what the "vestibulares" tag means (spec §6.3). No other
-// exam is named: none has been verified.
+// /vestibulares/ — "Vestibular" (V0.3): the hub of entrance exams. It opens with the exams that have a
+// guide (ENEM, UERJ), then an honest note on what the "vestibulares" tag means, then the common base by
+// subject (spec §6.3). No other exam is named: none has been verified.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import TrackSection from '../../components/TrackSection.astro';
 import ObjectiveMap from '../../components/ObjectiveMap.astro';
+import { objectiveFacts } from '../../lib/learning-library';
+import { resolveGuide } from '../../lib/exam-guides';
 import { routes } from '../../lib/routes';
+import { EXAM_ORDER } from '../../lib/taxonomy';
 import { pt as t } from '../../i18n/pt';
 
 const c = t.pages.vestibulares;
 const v = t.vestibulares;
+const exams = EXAM_ORDER.map((id) => ({
+  id,
+  ...v.exams.items[id],
+  steps: resolveGuide(id).length,
+  resources: objectiveFacts(id).resources,
+}));
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
 
-  <TrackSection id="uerj" title={v.uerj.title} why={v.uerj.why}>
-    <p><a class="more" href={routes.objective('uerj')}>{v.uerj.link}{' '}<span aria-hidden="true">→</span></a></p>
+  <TrackSection id="provas" title={v.exams.title} why={v.exams.why}>
+    <ul class="exams" role="list">
+      {exams.map((exam) => (
+        <li>
+          <p class="name" translate="no">{exam.name}</p>
+          <p class="what">{exam.what}</p>
+          <p class="facts">{t.home.tracks.steps(exam.steps)} · {t.home.objectives.facts(exam.resources)}</p>
+          <a href={routes.objective(exam.id)}>{exam.link}{' '}<span aria-hidden="true">→</span></a>
+        </li>
+      ))}
+    </ul>
   </TrackSection>
 
   <TrackSection id="nota-editorial" title={v.note.title}>
@@ -27,6 +45,12 @@ const v = t.vestibulares;
 </Base>
 
 <style>
-  .more { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 500; }
+  .exams { display: grid; gap: var(--space-5); }
+  @media (min-width: 768px) { .exams { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .exams li { display: grid; gap: var(--space-2); padding: var(--space-6); background: var(--raised); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
+  .name { font-family: var(--serif); font-size: clamp(2rem, 1.6rem + 1.4vw, 2.75rem); line-height: 1; letter-spacing: -0.02em; }
+  .what { color: var(--ink); }
+  .facts { font-size: var(--fs-small); color: var(--muted); }
+  .exams a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; margin-top: var(--space-2); font-weight: 560; }
   .note { max-width: var(--measure); color: var(--muted); }
 </style>

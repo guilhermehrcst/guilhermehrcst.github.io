@@ -1,10 +1,23 @@
 ---
-// The top of every page: an optional eyebrow, the page's one H1, and a lead. A slot follows for an
-// action (the Home's call to action).
-interface Props { eyebrow?: string | undefined; heading: string; lead: string }
-const { eyebrow, heading, lead } = Astro.props;
+// The top of every page: an optional breadcrumb (where the page sits: an exam inside Vestibular), an
+// optional eyebrow, the page's one H1, and a lead. A slot follows for an action.
+import { routes } from '../lib/routes';
+import { pt as t } from '../i18n/pt';
+
+interface Crumb { label: string; href: string }
+interface Props { eyebrow?: string | undefined; heading: string; lead: string; crumbs?: readonly Crumb[] }
+const { eyebrow, heading, lead, crumbs } = Astro.props;
+const trail = crumbs ? [{ label: t.breadcrumb.home, href: routes.home }, ...crumbs] : [];
 ---
 <header class="intro wrap">
+  {trail.length > 0 && (
+    <nav class="crumbs" aria-label={t.breadcrumb.label} data-breadcrumb>
+      <ol role="list">
+        {trail.map((crumb) => <li><a href={crumb.href}>{crumb.label}</a></li>)}
+        <li aria-current="page">{heading}</li>
+      </ol>
+    </nav>
+  )}
   {eyebrow && <p class="eyebrow">{eyebrow}</p>}
   <h1>{heading}</h1>
   <p class="lead">{lead}</p>
@@ -13,6 +26,12 @@ const { eyebrow, heading, lead } = Astro.props;
 
 <style>
   .intro { padding-block: var(--space-8) var(--space-7); }
+  .crumbs { margin-bottom: var(--space-5); }
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-2); font-size: var(--fs-small); color: var(--muted); }
+  .crumbs li + li::before { content: '/'; margin-right: var(--space-2); color: var(--rule-strong); }
+  .crumbs a { display: inline-flex; align-items: center; min-height: 32px; color: var(--muted); }
+  .crumbs a:hover { color: var(--action); }
+  .crumbs [aria-current] { color: var(--ink); font-weight: 500; }
   .eyebrow { margin-bottom: var(--space-4); }
   h1 { font-size: var(--fs-h1); font-weight: 540; letter-spacing: -0.025em; line-height: 1.05; max-width: 18ch; }
   .lead { margin-top: var(--space-5); max-width: 40ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
