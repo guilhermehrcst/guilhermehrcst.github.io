@@ -14,7 +14,7 @@ const groups = kinds.map((kind) => ({ kind, label: t.search.groups[kind], entrie
     <label for="q">{t.search.label}</label>
     <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder={t.search.placeholder} data-search-input>
   </form>
-  <p class="status" aria-live="polite" data-search-status></p>
+  <p class="status" aria-live="polite" data-search-status data-one={t.search.results(1)} data-many={t.search.results(0).replace('0', '{n}')}></p>
   <p class="empty" hidden data-search-empty>{t.search.empty} <a href={routes.subjectIndex}>{t.search.groups.area}</a></p>
 
   {groups.map((group) => (
@@ -31,6 +31,10 @@ const groups = kinds.map((kind) => ({ kind, label: t.search.groups[kind], entrie
     </section>
   ))}
 </div>
+
+<script>
+  import '../scripts/search';
+</script>
 
 <style>
   form { display: grid; gap: var(--space-2); max-width: 40rem; margin-bottom: var(--space-3); }

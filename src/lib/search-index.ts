@@ -34,7 +34,11 @@ export const buildSearchIndex = (): SearchEntry[] => [
   ...OBJECTIVE_ORDER.map((id) => entry('objetivo', id, OBJECTIVES[id].label, routes.objective(id), 'Objetivo')),
   ...AREA_ORDER.map((id) => entry('area', id, AREAS[id].label, `${routes.subjectIndex}#area-${id}`, 'Área',
     subjectsOf(id).map((s) => SUBJECTS[s].label))),
-  ...SUBJECT_ORDER.map((id) => entry('materia', id, SUBJECTS[id].label, routes.subject(id), AREAS[SUBJECTS[id].area].label)),
+  // A subject's context is its area, or "Matéria" when the area has the subject's own name (Matemática).
+  ...SUBJECT_ORDER.map((id) => {
+    const area = AREAS[SUBJECTS[id].area].label;
+    return entry('materia', id, SUBJECTS[id].label, routes.subject(id), area === SUBJECTS[id].label ? 'Matéria' : area);
+  }),
   ...publishedTracks().map((t) => entry('trilha', t.id, t.label, `${routes.objective('tecnologia')}#${t.id}`, 'Trilha de Tecnologia', [t.why])),
   ...publishedResources.map((r) => entry('recurso', r.id, r.title, homeOf(r.id, r.subject),
     `${r.provider} · ${SUBJECTS[r.subject].label}`, [AREAS[areaOf(r)].label])),

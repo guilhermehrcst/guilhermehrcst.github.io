@@ -59,7 +59,7 @@ const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista
 const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
 
 /** Pages that may run JavaScript. Every other page is complete, static HTML (spec §7). */
-const SCRIPT_PAGES = new Set([]);
+const SCRIPT_PAGES = new Set(['/buscar/']);
 
 /** The former personal site must leave no trace (spec §3, §9.2). The site's own origin is allowed only
  *  inside canonical and og:url, which are stripped before this check runs. */
@@ -133,7 +133,17 @@ function checkLinks(path, html) {
 }
 
 function checkScripts(path, html) {
-  if (!SCRIPT_PAGES.has(path) && /<script\b/.test(html)) fail(path, 'content pages carry no JavaScript');
+  const scripts = html.match(/<script\b[^>]*>/g) ?? [];
+  if (!SCRIPT_PAGES.has(path)) {
+    if (scripts.length) fail(path, 'content pages carry no JavaScript');
+    return;
+  }
+  // The one script of a page that has one: a first-party module (inlined or from /_astro/).
+  if (scripts.length !== 1 || !/type="module"/.test(scripts[0])) fail(path, `expected exactly one module script, found ${scripts.length}`);
+  for (const tag of scripts) {
+    const src = /\ssrc="([^"]+)"/.exec(tag)?.[1];
+    if (src && !src.startsWith('/_astro/')) fail(path, `script from outside the site: ${src}`);
+  }
 }
 
 /* Canonical pages. --------------------------------------------------------------------------------- */
