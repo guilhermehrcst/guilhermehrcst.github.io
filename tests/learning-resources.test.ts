@@ -28,7 +28,7 @@ test('resource ids are unique', () => {
 
 test('published resources are HTTPS and explicitly verified free', () => {
   for (const r of publishedResources) {
-    assert.match(r.url, /^https:\/\//);
+    assert.ok(/^https:\/\//.test(r.url));
     assert.equal(r.verified.freeAccess, true);
     assert.ok(r.verified.on.length > 0);
     assert.ok(r.verified.by.length > 0);
@@ -47,6 +47,7 @@ test('the legacy technology catalogue keeps every previously published id and UR
   for (const [id, url] of legacyPublished) {
     const r = catalogue.find((item) => item.id === id);
     assert.ok(r, `missing ${id}`);
+    if (!r) throw new Error(`missing ${id}`);
     assert.equal(r.url, url, `${id}: URL drifted`);
     assert.equal(r.area, 'technology');
     assert.equal(r.subject, 'technology');
