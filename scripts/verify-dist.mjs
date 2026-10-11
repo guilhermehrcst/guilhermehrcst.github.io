@@ -182,8 +182,31 @@ function checkResources(path, html) {
   return items;
 }
 
+/** The hrefs of the links inside the first element matching `open`, up to its closing `tag`. */
+function sectionOf(html, open, tag = 'section') {
+  const start = html.search(open);
+  if (start < 0) return null;
+  const end = html.indexOf(`</${tag}>`, start);
+  return html.slice(start, end < 0 ? undefined : end);
+}
+const hrefsIn = (fragment) => attrs(fragment, /<a\b[^>]*\shref="([^"]+)"/g);
+
+/** The Home orients; it does not pour out content (spec §5.2). */
+function checkHome(path, html, resources) {
+  const objective = sectionOf(html, /<section\b[^>]*\sid="objetivo"/);
+  if (!objective) fail(path, 'section#objetivo missing');
+  else {
+    if (!/<h2[^>]*>Qual é o seu objetivo\?<\/h2>/.test(objective)) fail(path, '#objetivo must ask "Qual é o seu objetivo?"');
+    const hrefs = hrefsIn(objective);
+    const expected = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+    if (JSON.stringify(hrefs) !== JSON.stringify(expected)) fail(path, `#objetivo links ${hrefs.join(',')}`);
+  }
+  if (resources.length) fail(path, `the Home lists no resources (found ${resources.length})`);
+}
+
 function checkProduct(path, html) {
-  checkResources(path, html);
+  const resources = checkResources(path, html);
+  if (path === '/') checkHome(path, html, resources);
 }
 
 for (const path of CANONICAL) {

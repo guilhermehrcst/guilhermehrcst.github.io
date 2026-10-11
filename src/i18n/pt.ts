@@ -84,6 +84,19 @@ export const pt: Dict = {
       lead: 'Este endereço não existe ou deixou de existir. Escolha por onde continuar.',
     },
   },
+  home: {
+    cta: 'Escolher meu objetivo',
+    objectives: {
+      heading: 'Qual é o seu objetivo?',
+      items: {
+        enem: 'Entenda a prova, estude por área e pratique com material oficial do INEP.',
+        uerj: 'Comece pelas regras oficiais e pratique com questões de provas anteriores.',
+        'ensino-medio': 'As matérias da escola, organizadas por área, com recursos gratuitos para cada uma.',
+        vestibulares: 'Uma base comum, matéria por matéria, para vestibulares em geral.',
+        tecnologia: 'Trilhas para aprender programação, computação, dados e inteligência artificial.',
+      },
+    },
+  },
   subjectPage: (subject, area) => ({
     title: `${subject} | Pexis Academy`,
     description: `Estude ${subject} com recursos gratuitos e verificados para o Ensino Médio, o ENEM e vestibulares, com links diretos para as fontes.`,

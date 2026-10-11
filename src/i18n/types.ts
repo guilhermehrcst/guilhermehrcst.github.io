@@ -4,6 +4,7 @@ import type {
   LearningLanguageId,
   LearningRegistrationId,
 } from '../lib/learning-resources';
+import type { ObjectiveId } from '../lib/taxonomy';
 
 // The shape of the interface copy. V0.1 is Portuguese only (spec §6.6): `Lang` has one member, and the
 // shape is kept so that a future /en/ adds a dictionary and `astro check` enforces parity again.
@@ -40,6 +41,10 @@ export interface Dict {
     licenses: string;
   };
   pages: Record<PageKey, PageCopy>;
+  home: {
+    cta: string;
+    objectives: { heading: string; items: Record<ObjectiveId, string> };
+  };
   subjectPage: (subject: string, area: string) => PageCopy;
   notFound: { home: string; subjects: string; search: string };
   resource: {
