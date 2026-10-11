@@ -25,7 +25,9 @@ const pairs: [string, string, number][] = [
   ['action', 'paper', 4.5], ['action', 'surface', 4.5], ['action-hover', 'paper', 4.5],
   ['on-action', 'action', 4.5], ['on-action', 'action-hover', 4.5],
   ['ink', 'raised', 7], ['muted', 'raised', 4.5], ['action', 'raised', 4.5],
-  ['ink', 'tint-blue', 7], ['muted', 'tint-blue', 4.5], ['action', 'tint-blue', 4.5],
+  ['ink', 'tint-brand', 7], ['muted', 'tint-brand', 4.5], ['action', 'tint-brand', 4.5],
+  // The official artwork is white on the brand red; text set on the plate uses --on-action.
+  ['on-action', 'brand', 7],
   ['ink', 'tint-sand', 7], ['muted', 'tint-sand', 4.5],
 ];
 for (const [fg, bg, min] of pairs) {
@@ -52,11 +54,7 @@ test('no hex colour outside :root, but the theme-color meta, which equals --pape
   }
 });
 
-test('the favicon is the temporary typographic signature, in the current tokens', () => {
-  // No official Academy symbol is in the repository (the red book asset is pending): the favicon is a
-  // serif "P" in ink on paper, never an invented mark.
-  const svg = readFileSync(new URL('public/favicon.svg', root), 'utf8').toLowerCase();
-  const colours = [...svg.matchAll(/fill="(#[0-9a-f]{6})"/g)].map((m) => m[1]);
-  assert.deepEqual(colours, [token('paper'), token('ink')]);
-  assert.ok(/<text\b[^>]*>p<\/text>/.test(svg), 'a typographic P');
+test('one action colour, and it is the brand red (the official mark leads; no blue competes)', () => {
+  assert.equal(token('action'), token('brand'));
+  assert.ok(!/#0c5fe8/i.test(css), 'the former blue is gone');
 });

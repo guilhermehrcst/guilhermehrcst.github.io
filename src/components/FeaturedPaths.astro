@@ -24,7 +24,7 @@ const paths = [
     steps: resolveGuide('enem').map((section) => g.enem[section.id as keyof typeof g.enem].title),
     href: routes.objective('enem'),
     link: f.links.enem,
-    tone: 'blue',
+    tone: 'brand',
   },
   {
     id: 'uerj',
@@ -83,7 +83,7 @@ const paths = [
   }
   /* A coloured head names the path; the body says what is inside, in order. */
   .top { padding: var(--space-5) var(--space-5) var(--space-6); }
-  .tone-blue .top { background: var(--tint-blue); }
+  .tone-brand .top { background: var(--tint-brand); }
   .tone-sand .top { background: var(--tint-sand); }
   .tone-ink .top { background: var(--surface); }
   .kind { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }

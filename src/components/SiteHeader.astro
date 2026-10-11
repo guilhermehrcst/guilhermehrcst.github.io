@@ -1,6 +1,11 @@
 ---
 // Brand and the five entry points (spec §6.5). Plain links: no menu button, no JavaScript. On a phone
 // the items wrap under the brand; the page never scrolls sideways.
+// The brand is the official Pexis Academy lockup, white as supplied, on a plate of the brand red that
+// hangs from the top edge (src/assets/brand, scripts/brand-assets.mjs). The artwork is never redrawn: it
+// is shown whole, 46px tall, the smallest size at which "ACADEMY" keeps 6px letters (13.1% of the art).
+import { Image } from 'astro:assets';
+import lockup from '../assets/brand/lockup-white.png';
 import { HEADER_NAV, routes } from '../lib/routes';
 import { pt as t } from '../i18n/pt';
 
@@ -9,9 +14,8 @@ const isCurrent = (href: string) => href === path || (href === routes.subjectInd
 ---
 <header class="site-header">
   <div class="wrap bar">
-    <a class="brand" href={routes.home} aria-label={t.nav.home}>
-      <!-- Temporary typographic signature: the official Academy symbol (the red book) is pending. -->
-      <span class="sig-a">Pexis</span><span class="sig-b">Academy</span>
+    <a class="brand" href={routes.home} aria-label={t.nav.home} data-brand>
+      <Image src={lockup} alt="" height={46} densities={[1, 2, 3]} format="png" loading="eager" fetchpriority="high" />
     </a>
     <nav aria-label={t.nav.label}>
       <ul role="list">
@@ -41,23 +45,18 @@ const isCurrent = (href: string) => href === path || (href === routes.subjectInd
     justify-content: space-between;
     column-gap: var(--space-6);
     row-gap: var(--space-1);
-    padding-block: var(--space-3);
   }
+  /* The plate: the brand red, flush with the top of the page and the header's bottom rule. */
   .brand {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.32em;
-    min-height: 44px;
-    padding-top: 0.35em;
-    font-family: var(--serif);
-    font-size: 1.375rem;
-    letter-spacing: -0.015em;
-    text-decoration: none;
-    color: var(--ink);
+    display: block;
+    flex: none;
+    /* Clear space around the artwork: a fifth of its height above and below, more at the sides. */
+    padding: 10px 20px;
+    background: var(--brand);
+    line-height: 0;
   }
-  .sig-a { font-weight: 640; }
-  .sig-b { font-weight: 380; color: var(--muted); }
-  .brand:hover .sig-b { color: var(--action); }
+  .brand :global(img) { display: block; width: auto; height: 46px; }
+  .brand:focus-visible { outline-offset: -4px; outline-color: var(--on-action); }
 
   ul { display: flex; flex-wrap: wrap; gap: 0 var(--space-1); margin-inline: calc(-1 * var(--space-2)); }
   nav a {
@@ -78,5 +77,12 @@ const isCurrent = (href: string) => href === path || (href === routes.subjectInd
     text-decoration-color: var(--action);
     text-decoration-thickness: 2px;
     text-underline-offset: 0.45em;
+  }
+  /* Phone: the five items on one row under the plate (down to 360px), each still 44px tall.
+     After the base rules: same specificity, so order decides. */
+  @media (max-width: 639px) {
+    nav { width: 100%; padding-block: var(--space-1); }
+    ul { gap: 0; margin-inline: -6px; }
+    nav a { padding-inline: 6px; font-size: 0.875rem; }
   }
 </style>

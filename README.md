@@ -81,7 +81,17 @@ Its lists (routes, redirects, hosts) are written by hand on purpose: they are an
 
 ## Visual system
 
-"Acadêmica acolhedora": warm paper, graphite ink, one functional blue (`--action`, links and calls to action), hairlines and space instead of shadows and cards. Tokens live once, in `:root` of `src/styles/global.css`; no hex code elsewhere. Google Sans Flex (SIL OFL 1.1) is self-hosted from `@fontsource-variable/google-sans-flex`; licences are published at `/licenses/`. Motion is limited to small hover and focus transitions and is off under `prefers-reduced-motion`.
+"Acadêmica acolhedora": warm paper, graphite ink, hairlines and space instead of shadows and cards.
+
+**Brand red.** The brand red `#720111` (`--brand`) is measured from the official artwork. It is also the only action colour (`--action`): links, calls to action and highlights. No second hue competes with the mark; the former blue is retired, and a test fails if it returns.
+
+**Tokens.** Tokens live once, in `:root` of `src/styles/global.css`; no hex code appears elsewhere.
+
+**Fonts.** Two typefaces are self-hosted, both under the SIL OFL 1.1: Newsreader (`@fontsource-variable/newsreader`) for headings and Google Sans Flex (`@fontsource-variable/google-sans-flex`) for text. Their licences are published at `/licenses/`.
+
+**Identity.** The official Pexis Academy artwork is kept as supplied in `src/assets/brand/source`. It appears white on a plate of the brand red, never redrawn. `scripts/brand-assets.mjs` derives the lockup, the symbol and the icons, and `tests/brand.test.ts` checks them against its manifest. Rules of use: `docs/superpowers/brand/2026-10-11-pexis-academy-identity.md`.
+
+**Motion.** Motion is limited to small hover and focus transitions and is off under `prefers-reduced-motion`.
 
 ## Kept, unused
 

@@ -17,6 +17,13 @@ declare module 'node:assert/strict' {
 }
 declare module 'node:fs' {
   export function readFileSync(path: URL | string, encoding: 'utf8'): string;
+  export function readFileSync(path: URL | string): { toString(): string };
+  export function existsSync(path: URL | string): boolean;
   export function readdirSync(path: URL | string): string[];
   export function statSync(path: URL | string): { isDirectory(): boolean };
+}
+declare module 'node:crypto' {
+  export function createHash(algorithm: 'sha256'): {
+    update(data: { toString(): string }): { digest(encoding: 'hex'): string };
+  };
 }
