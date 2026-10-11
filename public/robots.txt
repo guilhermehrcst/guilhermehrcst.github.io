@@ -1,0 +1,5 @@
+# If the site moves to its own domain, change this line with astro.config.mjs `site`.
+User-agent: *
+Allow: /
+
+Sitemap: https://guilhermehrcst.github.io/sitemap.xml

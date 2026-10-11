@@ -429,6 +429,23 @@ for (const path of GONE) {
   }
 }
 
+/* Sitemap and robots (spec §8.2): the sitemap lists exactly the canonical pages, absolute; no redirect,
+   no 404. Compared with the hand-written list above: two independent sources must agree (spec R10). */
+{
+  const sitemap = join(DIST, 'sitemap.xml');
+  if (!existsSync(sitemap)) fail('/sitemap.xml', 'missing');
+  else {
+    const xml = readFileSync(sitemap, 'utf8');
+    if (!/^<\?xml version="1.0" encoding="UTF-8"\?>\s*<urlset xmlns="http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9">/.test(xml)) fail('/sitemap.xml', 'not a sitemap urlset');
+    const locs = attrs(xml, /<loc>([^<]+)<\/loc>/g);
+    const expected = CANONICAL.map((p) => SITE + p);
+    if (JSON.stringify([...locs].sort()) !== JSON.stringify([...expected].sort())) fail('/sitemap.xml', `locations differ from the canonical pages: ${locs.length} vs ${expected.length}`);
+  }
+  const robots = join(DIST, 'robots.txt');
+  if (!existsSync(robots)) fail('/robots.txt', 'missing');
+  else if (!readFileSync(robots, 'utf8').includes(`Sitemap: ${SITE}/sitemap.xml`)) fail('/robots.txt', 'must point to the sitemap');
+}
+
 /* The whole of dist/. ----------------------------------------------------------------------------- */
 
 const files = walk(DIST);
