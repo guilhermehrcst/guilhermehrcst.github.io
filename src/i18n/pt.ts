@@ -61,6 +61,27 @@ export const pt: Dict = {
       heading: 'Tecnologia',
       lead: 'Trilhas para começar a programar e aprofundar em computação, com cursos gratuitos de universidades e instituições reconhecidas.',
     },
+    'ensino-fundamental': {
+      title: 'Ensino Fundamental | Pexis Academy',
+      description: 'Ensino Fundamental na Pexis Academy: uma área em preparação, organizada por anos e disciplinas, que só receberá recursos verificados.',
+      eyebrow: 'Caminho',
+      heading: 'Ensino Fundamental',
+      lead: 'Do 1º ao 9º ano, organizado por etapa e por disciplina. Esta área ainda não tem recursos publicados.',
+    },
+    'pre-militar': {
+      title: 'Pré-Militar | Pexis Academy',
+      description: 'Pré-Militar na Pexis Academy: uma central em preparação para entender os processos seletivos de escolas e academias militares.',
+      eyebrow: 'Caminho',
+      heading: 'Pré-Militar',
+      lead: 'Uma central para entender os processos seletivos de escolas e academias militares, com cada detalhe conferido no edital oficial.',
+    },
+    'ensino-superior': {
+      title: 'Ensino Superior | Pexis Academy',
+      description: 'Disciplinas universitárias gratuitas, de Matemática e Computação, publicadas por universidades como o MIT e Harvard e verificadas na fonte.',
+      eyebrow: 'Caminho',
+      heading: 'Ensino Superior',
+      lead: 'Disciplinas de cursos universitários, publicadas gratuitamente pelas próprias universidades.',
+    },
     materias: {
       title: 'Matérias | Pexis Academy',
       description: 'As matérias da Pexis Academy por área: Matemática, Linguagens, Ciências da Natureza, Ciências Humanas, Idiomas e Tecnologia.',
@@ -87,6 +108,59 @@ export const pt: Dict = {
       lead: 'Este endereço não existe ou deixou de existir. Escolha por onde continuar.',
     },
   },
+  preparing: {
+    label: 'Em preparação',
+    why: 'Só publicamos um recurso depois de conferi-lo na página de quem o publica. Esta área ainda não tem nenhum recurso verificado, por isso não mostra nenhum.',
+    meanwhile: 'Enquanto isso',
+  },
+  fundamental: {
+    stagesTitle: 'Como esta área vai se organizar',
+    stagesWhy: 'O Ensino Fundamental tem nove anos, em duas etapas. Cada etapa terá seus próprios materiais.',
+    stages: [
+      { title: 'Anos iniciais', body: 'Do 1º ao 5º ano.' },
+      { title: 'Anos finais', body: 'Do 6º ao 9º ano.' },
+    ],
+    subjectsTitle: 'Disciplinas previstas',
+    subjectsWhy: 'Cada disciplina entra quando houver material gratuito, adequado à etapa e verificado na fonte.',
+    subjects: ['Português', 'Matemática', 'Ciências', 'História', 'Geografia', 'Inglês'],
+    rule: 'Materiais do Ensino Médio não são apresentados aqui como se servissem ao Fundamental.',
+    medio: 'Já está no Ensino Médio? Veja as matérias por área',
+  },
+  preMilitar: {
+    processesTitle: 'Processos seletivos que vamos organizar',
+    processesWhy: 'Cada escola e academia tem o próprio processo seletivo, com etapas, matérias e requisitos definidos no edital. Nenhum deles é resumido aqui antes de ser conferido na fonte oficial.',
+    branches: [
+      { force: 'Exército', schools: [
+        { acronym: 'ESA', name: 'Escola de Sargentos das Armas' },
+        { acronym: 'EsPCEx', name: 'Escola Preparatória de Cadetes do Exército' },
+        { acronym: 'IME', name: 'Instituto Militar de Engenharia' },
+      ] },
+      { force: 'Marinha', schools: [
+        { acronym: 'CN', name: 'Colégio Naval' },
+      ] },
+      { force: 'Aeronáutica', schools: [
+        { acronym: 'EEAR', name: 'Escola de Especialistas de Aeronáutica' },
+        { acronym: 'EPCAR', name: 'Escola Preparatória de Cadetes do Ar' },
+        { acronym: 'AFA', name: 'Academia da Força Aérea' },
+        { acronym: 'ITA', name: 'Instituto Tecnológico de Aeronáutica' },
+      ] },
+    ],
+    status: 'Edital em verificação',
+    howTitle: 'O que cada processo vai reunir',
+    how: [
+      'Como o processo seletivo funciona, segundo o edital.',
+      'O link para o edital e para a página oficial.',
+      'As matérias cobradas, como o edital as define.',
+      'Provas anteriores publicadas pela própria instituição.',
+      'Materiais gratuitos para estudar cada matéria.',
+    ],
+    scope: 'Esta área não oferece treinamento físico, avaliação médica nem simulados.',
+    medio: 'Estude as matérias do Ensino Médio por área',
+  },
+  superior: {
+    note: 'Por enquanto, Matemática e Computação: são as áreas em que já verificamos cursos universitários gratuitos. Outras áreas do conhecimento entram à medida que verificarmos cursos na fonte.',
+    groupsTitle: 'Áreas',
+  },
   home: {
     hero: {
       eyebrow: 'Gratuito · Em português · Fontes oficiais',
@@ -108,6 +182,10 @@ export const pt: Dict = {
       lead: 'Três pontos de partida, cada um com as etapas em ordem.',
       kinds: { guide: 'Guia', track: 'Trilha' },
       titles: { enem: 'Preparação para o ENEM', uerj: 'Preparação para a UERJ' },
+      why: {
+        enem: 'Entenda a prova, estude por área e pratique com material oficial do INEP.',
+        uerj: 'Comece pelas regras oficiais e pratique com questões de provas anteriores.',
+      },
       steps: (n) => `${n} etapas`,
       links: { enem: 'Abrir o guia do ENEM', uerj: 'Abrir o guia da UERJ', track: 'Abrir a trilha' },
     },
@@ -135,12 +213,13 @@ export const pt: Dict = {
     },
     objectives: {
       heading: 'Qual é o seu objetivo?',
-      lead: 'Cinco portas de entrada. Cada uma organiza só o que serve para aquele objetivo.',
+      lead: 'Seis caminhos, da escola à universidade e à tecnologia. Cada um reúne só o que serve para ele.',
       items: {
-        enem: 'Entenda a prova, estude por área e pratique com material oficial do INEP.',
-        uerj: 'Comece pelas regras oficiais e pratique com questões de provas anteriores.',
+        'ensino-fundamental': 'Do 1º ao 9º ano, por etapa e por disciplina.',
         'ensino-medio': 'As matérias da escola, organizadas por área, com recursos gratuitos para cada uma.',
-        vestibulares: 'Uma base comum, matéria por matéria, para vestibulares em geral.',
+        vestibulares: 'ENEM, UERJ e uma base comum, matéria por matéria, com material oficial para praticar.',
+        'pre-militar': 'Os processos seletivos de escolas e academias militares, conferidos no edital.',
+        'ensino-superior': 'Disciplinas universitárias de Matemática e Computação, publicadas pelas universidades.',
         tecnologia: 'Trilhas para aprender programação, computação, dados e inteligência artificial.',
       },
       facts: (resources, tracks) =>

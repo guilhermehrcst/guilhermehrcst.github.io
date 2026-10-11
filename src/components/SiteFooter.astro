@@ -7,7 +7,7 @@
 import { Image } from 'astro:assets';
 import lockup from '../assets/brand/lockup-white.png';
 import { routes } from '../lib/routes';
-import { ACADEMIC_SUBJECTS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
+import { ACADEMIC_SUBJECTS, EXAM_ORDER, OBJECTIVES, PATH_ORDER, SUBJECTS } from '../lib/taxonomy';
 import { publishedTracks } from '../lib/tech-tracks';
 import { VERIFIED_ON } from '../lib/learning-resources';
 import { formatDate } from '../lib/dates';
@@ -28,7 +28,7 @@ const tracks = publishedTracks();
     <nav aria-label={f.objectives}>
       <p class="eyebrow">{f.objectives}</p>
       <ul role="list">
-        {OBJECTIVE_ORDER.map((id) => <li><a href={routes.objective(id)}>{OBJECTIVES[id].label}</a></li>)}
+        {[...PATH_ORDER, ...EXAM_ORDER].map((id) => <li><a href={routes.objective(id)}>{OBJECTIVES[id].label}</a></li>)}
       </ul>
     </nav>
     <nav aria-label={f.subjects}>

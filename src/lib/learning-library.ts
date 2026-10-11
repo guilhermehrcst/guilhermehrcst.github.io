@@ -1,7 +1,7 @@
 // Pure selections over the catalogue. Pages compose lists at build time from these; nothing here
 // runs in the browser.
 import { areaOf, publishedResources } from './learning-resources.ts';
-import { OBJECTIVE_ORDER } from './taxonomy.ts';
+import { higherEducation } from './higher-education.ts';
 import { publishedTracks } from './tech-tracks.ts';
 import type {
   LearningFormatId,
@@ -52,17 +52,31 @@ export const objectivesFor = (
   subject: LearningSubjectId,
   resources: readonly PublishedLearningResource[] = publishedResources,
 ): LearningGoalId[] =>
-  OBJECTIVE_ORDER.filter((goal): goal is LearningGoalId =>
-    goal !== 'tecnologia' && resources.some((resource) => resource.subject === subject && resource.goals.includes(goal as LearningGoalId)));
+  GOAL_ORDER.filter((goal) => resources.some((resource) => resource.subject === subject && resource.goals.includes(goal)));
 
-/** What an objective really holds: its published resources and, for Tecnologia, its published tracks. */
+/** The order in which a subject page lists the objectives it serves (exams first, as since V0.1). */
+const GOAL_ORDER: readonly LearningGoalId[] = ['enem', 'uerj', 'ensino-medio', 'vestibulares'];
+
+/** What a path or exam really holds, counted from the catalogue. Vestibular holds its exams; Ensino
+ *  Superior holds its university courses; Tecnologia adds its tracks; a path in preparation holds nothing. */
 export const objectiveFacts = (
   objective: ObjectiveId,
   resources: readonly PublishedLearningResource[] = publishedResources,
-): { resources: number; tracks?: number } =>
-  objective === 'tecnologia'
-    ? { resources: resources.filter((resource) => resource.subject === 'tecnologia').length, tracks: publishedTracks().length }
-    : { resources: filterResources(resources, { goals: [objective] }).length };
+): { resources: number; tracks?: number } => {
+  switch (objective) {
+    case 'tecnologia':
+      return { resources: resources.filter((resource) => resource.subject === 'tecnologia').length, tracks: publishedTracks().length };
+    case 'vestibulares':
+      return { resources: filterResources(resources, { goals: ['vestibulares', 'enem', 'uerj'] }).length };
+    case 'ensino-superior':
+      return { resources: higherEducation().flatMap((group) => group.resources).length };
+    case 'ensino-fundamental':
+    case 'pre-militar':
+      return { resources: 0 };
+    default:
+      return { resources: filterResources(resources, { goals: [objective] }).length };
+  }
+};
 
 /** The institutions among these provider names that publish something, each with its published resources
  *  (catalogue order). A provider with nothing published is left out: the Home never shows an empty name. */

@@ -4,7 +4,7 @@ import type {
   LearningLanguageId,
   LearningRegistrationId,
 } from '../lib/learning-resources';
-import type { ObjectiveId } from '../lib/taxonomy';
+import type { PathId } from '../lib/taxonomy';
 
 // The shape of the interface copy. V0.1 is Portuguese only (spec §6.6): `Lang` has one member, and the
 // shape is kept so that a future /en/ adds a dictionary and `astro check` enforces parity again.
@@ -24,6 +24,7 @@ export interface PageCopy extends PageMeta {
 
 export type PageKey =
   | 'home' | 'enem' | 'uerj' | 'ensino-medio' | 'vestibulares' | 'tecnologia'
+  | 'ensino-fundamental' | 'pre-militar' | 'ensino-superior'
   | 'materias' | 'buscar' | 'sobre' | 'notFound';
 
 export interface Dict {
@@ -44,6 +45,29 @@ export interface Dict {
     nav: { explore: string; search: string; about: string; verification: string };
   };
   pages: Record<PageKey, PageCopy>;
+  /** Copy of a path in preparation and of the new paths (V0.3). */
+  preparing: { label: string; why: string; meanwhile: string };
+  fundamental: {
+    stagesTitle: string;
+    stagesWhy: string;
+    stages: { title: string; body: string }[];
+    subjectsTitle: string;
+    subjectsWhy: string;
+    subjects: string[];
+    rule: string;
+    medio: string;
+  };
+  preMilitar: {
+    processesTitle: string;
+    processesWhy: string;
+    branches: { force: string; schools: { acronym: string; name: string }[] }[];
+    status: string;
+    howTitle: string;
+    how: string[];
+    scope: string;
+    medio: string;
+  };
+  superior: { note: string; groupsTitle: string };
   home: {
     hero: {
       eyebrow: string;
@@ -55,7 +79,7 @@ export interface Dict {
       demoLink: string;
       demo: { subjects: string; objectives: string; areas: string; study: string; practice: string; byObjective: string };
     };
-    objectives: { heading: string; lead: string; items: Record<ObjectiveId, string>; facts: (resources: number, tracks?: number) => string };
+    objectives: { heading: string; lead: string; items: Record<PathId, string>; facts: (resources: number, tracks?: number) => string };
     sources: {
       heading: string;
       lead: string;
@@ -82,6 +106,7 @@ export interface Dict {
       lead: string;
       kinds: { guide: string; track: string };
       titles: { enem: string; uerj: string };
+      why: { enem: string; uerj: string };
       steps: (n: number) => string;
       links: { enem: string; uerj: string; track: string };
     };

@@ -1,11 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { canonicalPaths, HEADER_NAV, LEGACY_REDIRECTS, routes } from '../src/lib/routes.ts';
+import { canonicalPaths, HEADER_NAV, LEGACY_REDIRECTS, preparingPaths, routes } from '../src/lib/routes.ts';
 
 // Written out by hand on purpose: an independent barrier against an accidental change to routes.ts
 // (spec R10). scripts/verify-dist.mjs carries its own copy.
 const CANONICAL = [
-  '/', '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/', '/materias/',
+  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
   '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
@@ -13,9 +13,16 @@ const CANONICAL = [
   '/buscar/', '/sobre/',
 ];
 
-test('the 21 canonical routes, exactly and in a stable order', () => {
+test('the 22 canonical routes, exactly and in a stable order', () => {
   assert.deepEqual(canonicalPaths(), CANONICAL);
   assert.deepEqual(canonicalPaths(), canonicalPaths());
+});
+
+test('the paths in preparation have pages but are not canonical (noindex, out of the sitemap)', () => {
+  assert.deepEqual(preparingPaths(), ['/ensino-fundamental/', '/pre-militar/']);
+  for (const path of preparingPaths()) assert.ok(!canonicalPaths().includes(path), path);
+  assert.equal(routes.objective('pre-militar'), '/pre-militar/');
+  assert.equal(routes.objective('ensino-superior'), '/ensino-superior/');
 });
 
 test('every route is lowercase, unaccented, slash-terminated and unique', () => {

@@ -1,0 +1,64 @@
+---
+// /pre-militar/ (V0.3): a path in preparation. It names the selection processes it will organise, by
+// their official names only: no requirement, subject, date or link, because no edital could be checked
+// at its official source yet. No physical or medical training, no simulated exam. noindex and out of
+// the sitemap until it has published, verified material.
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import PreparingNote from '../../components/PreparingNote.astro';
+import TrackSection from '../../components/TrackSection.astro';
+import { routes } from '../../lib/routes';
+import { pt as t } from '../../i18n/pt';
+
+const c = t.pages['pre-militar'];
+const m = t.preMilitar;
+---
+<Base title={c.title} description={c.description} noindex>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <PreparingNote />
+
+  <TrackSection id="processos" title={m.processesTitle} why={m.processesWhy}>
+    <div class="forces">
+      {m.branches.map((branch) => (
+        <section class="force" aria-label={branch.force}>
+          <p class="force-name">{branch.force}</p>
+          <ul role="list">
+            {branch.schools.map((school) => (
+              <li>
+                <span class="acronym" translate="no">{school.acronym}</span>
+                <span class="name">{school.name}</span>
+                <span class="state">{m.status}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </TrackSection>
+
+  <TrackSection id="como" title={m.howTitle}>
+    <ol class="how" role="list">
+      {m.how.map((item, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span>{item}</span></li>)}
+    </ol>
+    <p class="scope">{m.scope}</p>
+  </TrackSection>
+
+  <TrackSection id="enquanto-isso" title={t.preparing.meanwhile}>
+    <p><a class="more" href={routes.objective('ensino-medio')}>{m.medio}{' '}<span aria-hidden="true">→</span></a></p>
+  </TrackSection>
+</Base>
+
+<style>
+  .forces { display: grid; gap: var(--space-6); }
+  @media (min-width: 900px) { .forces { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .force-name { padding-bottom: var(--space-2); border-bottom: 1px solid var(--rule-strong); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .force li { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: var(--space-3); padding-block: var(--space-3); border-bottom: 1px solid var(--rule); }
+  .acronym { grid-row: span 2; font-family: var(--serif); font-size: 1.25rem; font-weight: 500; }
+  .name { font-weight: 500; }
+  .state { font-size: 0.75rem; color: var(--muted); }
+  .how { display: grid; border-top: 1px solid var(--rule-strong); max-width: 48rem; }
+  .how li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); padding-block: var(--space-3); border-bottom: 1px solid var(--rule); }
+  .how .n { font-size: var(--fs-small); color: var(--muted); font-variant-numeric: tabular-nums; line-height: 1.7; }
+  .scope { margin-top: var(--space-5); max-width: var(--measure); color: var(--muted); }
+  .more { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+</style>

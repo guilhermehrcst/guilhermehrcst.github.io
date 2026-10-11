@@ -1,6 +1,6 @@
 // Every internal URL, derived from the taxonomy (spec §6.2). Pages never write an internal path by
 // hand: they ask here. URLs stay short and human; the technical grouping stays in the code.
-import { ACADEMIC_SUBJECTS, OBJECTIVE_ORDER, SUBJECTS, type ObjectiveId, type SubjectId } from './taxonomy.ts';
+import { ACADEMIC_SUBJECTS, EXAM_ORDER, PATH_ORDER, PREPARING_PATHS, SUBJECTS, type ObjectiveId, type SubjectId } from './taxonomy.ts';
 
 const objective = (id: ObjectiveId): string => `/${id}/`;
 
@@ -24,15 +24,19 @@ export const routes = {
   about: '/sobre/',
 } as const;
 
-/** The indexable pages of V0.1, in a stable order. */
+/** The indexable pages, in a stable order: each ready path, with Vestibular's exams right after it. */
 export const canonicalPaths = (): string[] => [
   routes.home,
-  ...OBJECTIVE_ORDER.map(objective),
+  ...PATH_ORDER.filter((id) => !PREPARING_PATHS.includes(id)).flatMap((id) =>
+    id === 'vestibulares' ? [objective(id), ...EXAM_ORDER.map(objective)] : [objective(id)]),
   routes.subjectIndex,
   ...ACADEMIC_SUBJECTS.map(subject),
   routes.search,
   routes.about,
 ];
+
+/** Pages of paths in preparation: built and linked, but noindex and out of the sitemap. */
+export const preparingPaths = (): string[] => PREPARING_PATHS.map(objective);
 
 /** Routes of the former personal site that keep a destination (spec §8.4). The résumé has none: it is gone. */
 export const LEGACY_REDIRECTS: Readonly<Record<string, string>> = {

@@ -1,0 +1,28 @@
+---
+// /ensino-superior/ (V0.3): university courses already verified in the catalogue, grouped by field
+// (src/lib/higher-education.ts, fail-closed ids). It says plainly which fields it covers today; it never
+// presents a curriculum or a degree.
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import TrackSection from '../../components/TrackSection.astro';
+import ResourceList from '../../components/ResourceList.astro';
+import { higherEducation } from '../../lib/higher-education';
+import { pt as t } from '../../i18n/pt';
+
+const c = t.pages['ensino-superior'];
+const groups = higherEducation();
+---
+<Base title={c.title} description={c.description}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <p class="wrap note">{t.superior.note}</p>
+
+  {groups.map((group) => (
+    <TrackSection id={group.id} title={group.label} why={group.why}>
+      <ResourceList resources={group.resources} />
+    </TrackSection>
+  ))}
+</Base>
+
+<style>
+  .note { max-width: var(--measure); margin-bottom: var(--space-4); padding-left: var(--space-4); border-left: 2px solid var(--action); color: var(--ink); }
+</style>

@@ -6,7 +6,7 @@ import ProductWindow from './ProductWindow.astro';
 import { filterResources, objectivesFor } from '../lib/learning-library';
 import { publishedResources } from '../lib/learning-resources';
 import { routes } from '../lib/routes';
-import { AREA_ORDER, AREAS, OBJECTIVE_ORDER, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
+import { AREA_ORDER, AREAS, OBJECTIVES, PATH_ORDER, SUBJECTS } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
 const subject = SUBJECTS.matematica;
@@ -29,7 +29,7 @@ const facts = (r: (typeof all)[number]) =>
   <div class="app">
     <div class="side">
       <p class="label">{d.objectives}</p>
-      <ul role="list">{OBJECTIVE_ORDER.map((id) => <li>{OBJECTIVES[id].label}</li>)}</ul>
+      <ul role="list">{PATH_ORDER.map((id) => <li>{OBJECTIVES[id].label}</li>)}</ul>
       <p class="label">{d.areas}</p>
       <ul role="list">
         {AREA_ORDER.map((id) => <li class:list={[id === subject.area && 'on']}>{AREAS[id].label}</li>)}

@@ -9,15 +9,20 @@ import { join, relative, sep } from 'node:path';
 const DIST = new URL('../dist/', import.meta.url).pathname;
 const SITE = 'https://guilhermehrcst.github.io';
 
-/** The indexable pages of V0.1 (spec §5.1). */
+/** The indexable pages (V0.3: each ready path, Vestibular's exams after it). */
 const CANONICAL = [
-  '/', '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/', '/materias/',
+  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
   '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
   '/materias/ingles/', '/materias/espanhol/',
   '/buscar/', '/sobre/',
 ];
+
+/** The six paths, in the approved order (V0.3), and the paths still in preparation: built and linked, but
+ *  noindex, out of the sitemap, and listing no resource. */
+const PATHS = ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/pre-militar/', '/ensino-superior/', '/tecnologia/'];
+const PREPARING = ['/ensino-fundamental/', '/pre-militar/'];
 
 /** Routes of the former personal site that keep a destination (spec §8.4). */
 const REDIRECTS = {
@@ -73,7 +78,7 @@ const fileFor = (p) => join(DIST, p.endsWith('/') ? p + 'index.html' : p);
 const attrs = (html, re) => [...html.matchAll(re)].map((m) => m[1]);
 /** The footer is the site map: every objective, every subject, search and about (hand-written, independent of the routes module). */
 const FOOTER_PAGES = [
-  '/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/',
+  ...PATHS, '/enem/', '/uerj/',
   '/materias/', '/materias/matematica/', '/materias/portugues/', '/materias/redacao/', '/materias/fisica/', '/materias/quimica/',
   '/materias/biologia/', '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
   '/materias/ingles/', '/materias/espanhol/', '/buscar/', '/sobre/',
@@ -319,8 +324,7 @@ function checkHome(path, html, resources) {
   else {
     if (!/<h2[^>]*>Qual é o seu objetivo\?<\/h2>/.test(objective)) fail(path, '#objetivo must ask "Qual é o seu objetivo?"');
     const hrefs = hrefsIn(objective);
-    const expected = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
-    if (JSON.stringify(hrefs) !== JSON.stringify(expected)) fail(path, `#objetivo links ${hrefs.join(',')}`);
+    if (JSON.stringify(hrefs) !== JSON.stringify(PATHS)) fail(path, `#objetivo links ${hrefs.join(',')}`);
   }
   // The learning path: the five steps, in order, each a real thing. A step that has nothing published yet
   // says so and links nowhere; the others lead to the page that holds them.
@@ -541,6 +545,12 @@ function checkProduct(path, html) {
     if (JSON.stringify(ids) !== JSON.stringify(['matematica', 'linguagens', 'natureza', 'humanas', 'idiomas', 'tecnologia'])) fail(path, `Ensino Médio sections ${ids.join(',')}`);
     if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="tecnologia"/) ?? '').includes('/tecnologia/')) fail(path, '#tecnologia leads to /tecnologia/');
   }
+  if (path === '/ensino-superior/') {
+    // University courses only, by field: the two fields of V0.3, each with courses.
+    const groups = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].map((m) => [m[1], (m[2].match(/\sdata-resource-id="/g) ?? []).length]);
+    if (JSON.stringify(groups.map((g) => g[0])) !== JSON.stringify(['matematica', 'computacao'])) fail(path, `Ensino Superior groups ${groups.map((g) => g[0]).join(',')}`);
+    for (const [id, n] of groups) if (n < 2) fail(path, `group ${id} lists ${n} courses`);
+  }
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
 }
@@ -553,6 +563,27 @@ for (const path of CANONICAL) {
   checkShell(path, html);
   checkLandmarks(path, html);
   checkProduct(path, html);
+  checkImages(path, html);
+  checkThirdParty(path, html);
+  checkLinks(path, html);
+  checkScripts(path, html);
+  checkAccessibility(path, html);
+}
+
+/* Paths in preparation: real pages, linked from the Home, the header and the footer, that say what
+   they are and list nothing. Not canonical, not in the sitemap. */
+for (const path of PREPARING) {
+  const file = fileFor(path);
+  if (!existsSync(file)) { fail(path, 'missing'); continue; }
+  const html = readFileSync(file, 'utf8');
+  if (!/<meta name="robots" content="[^"]*noindex/.test(html)) fail(path, 'a path in preparation is noindex');
+  if (/<link rel="canonical"/.test(html)) fail(path, 'a path in preparation has no canonical');
+  if (!/\sdata-preparing[\s>=]/.test(html)) fail(path, 'a path in preparation says so ([data-preparing])');
+  if (/\sdata-resource-id="/.test(html)) fail(path, 'a path in preparation lists no resource');
+  if (!html.includes('<html lang="pt-BR"')) fail(path, 'expected <html lang="pt-BR">');
+  if (!/<title>[^<]*\| Pexis Academy<\/title>/.test(html)) fail(path, 'title pattern');
+  checkShell(path, html);
+  checkLandmarks(path, html);
   checkImages(path, html);
   checkThirdParty(path, html);
   checkLinks(path, html);
@@ -625,7 +656,7 @@ const files = walk(DIST);
 
 /* The whole of dist/. ----------------------------------------------------------------------------- */
 
-const known = new Set([...CANONICAL, ...Object.keys(REDIRECTS)].map((p) => fileFor(p)).concat(join(DIST, '404.html')));
+const known = new Set([...CANONICAL, ...PREPARING, ...Object.keys(REDIRECTS)].map((p) => fileFor(p)).concat(join(DIST, '404.html')));
 for (const f of files.filter((f) => f.endsWith('.html'))) {
   if (!known.has(f)) fail('/' + relative(DIST, f).split(sep).join('/'), 'page not in the canonical inventory');
 }
@@ -656,4 +687,4 @@ if (errors.length) {
   console.error(`verify-dist: ${errors.length} problem(s)\n  ` + errors.join('\n  '));
   process.exit(1);
 }
-console.log(`verify-dist: ${CANONICAL.length} pages, ${Object.keys(REDIRECTS).length} redirects, 404, ${files.length} files — all invariants hold.`);
+console.log(`verify-dist: ${CANONICAL.length} pages, ${PREPARING.length} in preparation, ${Object.keys(REDIRECTS).length} redirects, 404, ${files.length} files — all invariants hold.`);
