@@ -11,7 +11,7 @@ import SectionNav from '../../components/SectionNav.astro';
 import FeaturedResources from '../../components/FeaturedResources.astro';
 import PathResources from '../../components/PathResources.astro';
 import { placedOnPath } from '../../lib/placement';
-import { featuredReady } from '../../lib/featured';
+import { featuredShown } from '../../lib/featured';
 import { mapNavItems, objectiveFacts } from '../../lib/learning-library';
 import { resolveGuide } from '../../lib/exam-guides';
 import { routes } from '../../lib/routes';
@@ -27,7 +27,7 @@ const exams = EXAM_ORDER.map((id) => ({
   resources: objectiveFacts(id).resources,
 }));
 const nav = [
-  ...(featuredReady('vestibulares') ? [{ id: 'destaques', label: t.featured.title }] : []),
+  ...(featuredShown('vestibulares') ? [{ id: 'destaques', label: t.featured.title }] : []),
   { id: 'provas', label: v.exams.title, why: exams.map((exam) => exam.name).join(', ') },
   { id: 'nota-editorial', label: v.note.title },
   ...mapNavItems('vestibulares', { practice: false }, (n) => t.home.objectives.facts(n)),

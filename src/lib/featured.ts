@@ -10,7 +10,21 @@ import { PATH_ORDER, type PathId } from './taxonomy.ts';
 export type FeaturedState = 'staging' | 'final';
 
 export const FEATURED_PER_PATH = 10;
-export const FEATURED_STATE = 'staging' as FeaturedState;
+
+/** The explicit release of each path's highlights (V0.4 Gate B, P2). Filling ten ids in staging publishes
+ *  nothing: a path's highlights are shown only once released, and a release without ten valid highlights
+ *  fails the build. */
+export type FeaturedRelease = 'staging' | 'released';
+export const FEATURED_RELEASE: Readonly<Record<PathId, FeaturedRelease>> = {
+  'ensino-fundamental': 'staging',
+  'ensino-medio': 'staging',
+  vestibulares: 'staging',
+  'pre-militar': 'staging',
+  'ensino-superior': 'staging',
+  tecnologia: 'staging',
+};
+/** 'final' only when every path is released. Derived, never typed. */
+export const FEATURED_STATE: FeaturedState = PATH_ORDER.every((path) => FEATURED_RELEASE[path] === 'released') ? 'final' : 'staging';
 
 export const FEATURED_RESOURCE_IDS_BY_PATH: Readonly<Record<PathId, readonly string[]>> = {
   'ensino-fundamental': [],
@@ -69,6 +83,13 @@ export const featuredReady = (
   resources: readonly PublishedLearningResource[] = publishedResources,
 ): boolean =>
   selection[path].length === FEATURED_PER_PATH && featuredProblems(selection, 'staging', resources).length === 0;
+
+/** Whether a path page shows its highlights: released, and ready. */
+export const featuredShown = (path: PathId): boolean => FEATURED_RELEASE[path] === 'released' && featuredReady(path);
+
+for (const path of PATH_ORDER) {
+  if (FEATURED_RELEASE[path] === 'released' && !featuredReady(path)) throw new Error(`featured: ${path} is released without ten valid highlights`);
+}
 
 /** A path's highlights, in editorial order. */
 export const featuredFor = (path: PathId): PublishedLearningResource[] => {

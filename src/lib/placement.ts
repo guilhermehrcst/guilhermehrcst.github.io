@@ -14,9 +14,8 @@ import { guideShows } from './exam-guides.ts';
 import { HIGHER_EDUCATION_GROUPS } from './higher-education.ts';
 import { routes } from './routes.ts';
 import { publishedTracks } from './tech-tracks.ts';
-import { ACADEMIC_SUBJECTS, EXAM_ORDER, PATH_ORDER, PREPARING_PATHS, type ExamId, type PathId, type SubjectId } from './taxonomy.ts';
+import { ACADEMIC_SUBJECTS, EXAM_ORDER, PATH_ORDER, PATH_STATUS, type ExamId, type PathId, type PathState, type SubjectId } from './taxonomy.ts';
 
-export type PathState = 'preparing' | 'active';
 export type PathStates = Readonly<Record<PathId, PathState>>;
 
 /** What placement reads of a resource. */
@@ -32,8 +31,7 @@ export const SUBJECT_PAGE_PATHS: readonly PathId[] = ['ensino-medio', 'vestibula
 /** The path pages with a general section (#materiais or #outras-provas). */
 export const GENERAL_SECTION_PATHS: readonly PathId[] = ['ensino-fundamental', 'vestibulares', 'pre-militar'];
 
-const currentStates = (): PathStates =>
-  Object.fromEntries(PATH_ORDER.map((path) => [path, PREPARING_PATHS.includes(path) ? 'preparing' : 'active'])) as Record<PathId, PathState>;
+const currentStates = (): PathStates => PATH_STATUS;
 
 /** Whether a subject's page shows this resource (the rule SubjectResources renders by). */
 export const subjectPageShows = (r: Placeable, subject: SubjectId): boolean =>

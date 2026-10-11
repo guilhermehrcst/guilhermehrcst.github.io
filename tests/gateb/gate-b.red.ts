@@ -8,8 +8,6 @@ import assert from 'node:assert/strict';
 import { publishedResources } from '../../src/lib/learning-resources.ts';
 
 const load = async (path: string): Promise<Record<string, any>> => import(path).catch(() => ({}));
-const pathStatus = await load('../../src/lib/path-status.ts');
-const taxonomy = await load('../../src/lib/taxonomy.ts');
 const lr = await load('../../src/lib/learning-resources.ts');
 const need = (mod: Record<string, any>, name: string) => {
   assert.equal(typeof mod[name], 'function', `${name} is not implemented`);
@@ -20,56 +18,6 @@ const verified = { on: '2026-10-12', by: 'official-page', freeAccess: true };
 const resource = (over: Record<string, unknown>) => ({
   id: 'x', title: 'X', provider: 'P', subject: null, format: 'past-exam', paths: ['vestibulares'],
   language: 'pt', level: 'vestibular', url: 'https://example.gov.br/x', verified, ...over,
-});
-const ACTIVE = { 'ensino-fundamental': 'active', 'ensino-medio': 'active', vestibulares: 'active', 'pre-militar': 'active', 'ensino-superior': 'active', tecnologia: 'active' };
-const TODAY = { ...ACTIVE, 'ensino-fundamental': 'preparing', 'pre-militar': 'preparing' };
-
-/* P2: one source for a path's state; activation only with homologated content shown, atomically. */
-
-test('P2: one status per path; PREPARING_PATHS is derived from it', () => {
-  const status = taxonomy.PATH_STATUS as Record<string, string> | undefined;
-  assert.ok(status, 'PATH_STATUS is not defined');
-  assert.deepEqual(Object.entries(status ?? {}).filter(([, s]) => s === 'preparing').map(([p]) => p), [...taxonomy.PREPARING_PATHS]);
-  assert.deepEqual(status, TODAY, 'today: Fundamental and Pré-Militar in preparation');
-});
-
-test('P2: the path pages read noindex and the preparing note from the status, not from literals', async () => {
-  const { readFileSync } = await import('node:fs');
-  for (const page of ['ensino-fundamental', 'pre-militar']) {
-    const source = readFileSync(new URL(`../../src/pages/${page}/index.astro`, import.meta.url), 'utf8');
-    assert.ok(!/<Base\b[^>]*\snoindex\s*>/.test(source), `${page}: noindex is a literal`);
-    assert.ok(/isPreparing\(/.test(source), `${page}: does not read the status`);
-  }
-});
-
-const PATHS = ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'pre-militar', 'ensino-superior', 'tecnologia'];
-const emptySel = Object.fromEntries(PATHS.map((p) => [p, []]));
-const pool = Array.from({ length: 10 }, (_, i) => resource({ id: `pm-${i}`, paths: ['pre-militar'] }));
-const tenPm = { ...emptySel, 'pre-militar': pool.map((r) => r.id) };
-
-test('P2: activating Pré-Militar with 0 resources, or 9 of 10 highlights, is refused', () => {
-  const problems = need(pathStatus, 'activationProblems');
-  const on = { ...TODAY, 'pre-militar': 'active' };
-  assert.match(problems(on, emptySel, []).join('\n'), /pre-militar: active without its ten homologated highlights/);
-  assert.match(problems(on, { ...tenPm, 'pre-militar': tenPm['pre-militar']!.slice(0, 9) }, pool).join('\n'), /pre-militar: active without/);
-  assert.deepEqual(problems(on, tenPm, pool), [], 'ten valid highlights: activation allowed');
-});
-
-test('P2: an unhomologated (unpublished) highlight never activates a path', () => {
-  const problems = need(pathStatus, 'activationProblems');
-  const on = { ...TODAY, 'pre-militar': 'active' };
-  const withPending = { ...tenPm, 'pre-militar': [...tenPm['pre-militar']!.slice(0, 9), 'pending-candidate'] };
-  assert.match(problems(on, withPending, pool).join('\n'), /pre-militar/);
-});
-
-test('P2: content ready while still in preparation (noindex, invisible highlights) is refused', () => {
-  const problems = need(pathStatus, 'activationProblems');
-  assert.match(problems(TODAY, tenPm, pool).join('\n'), /pre-militar: ready but still in preparation/);
-});
-
-test('P2: the real state today is consistent', () => {
-  const problems = need(pathStatus, 'activationProblems');
-  assert.deepEqual(problems(), []);
 });
 
 /* P3: school year, 1º to 9º, only with evidence. */

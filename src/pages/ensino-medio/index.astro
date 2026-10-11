@@ -8,13 +8,13 @@ import SectionNav from '../../components/SectionNav.astro';
 import FeaturedResources from '../../components/FeaturedResources.astro';
 import ObjectiveMap from '../../components/ObjectiveMap.astro';
 import { mapNavItems } from '../../lib/learning-library';
-import { featuredReady } from '../../lib/featured';
+import { featuredShown } from '../../lib/featured';
 import { pt as t } from '../../i18n/pt';
 
 const c = t.pages['ensino-medio'];
 const tech = t.objectiveMap.technology;
 const nav = [
-  ...(featuredReady('ensino-medio') ? [{ id: 'destaques', label: t.featured.title }] : []),
+  ...(featuredShown('ensino-medio') ? [{ id: 'destaques', label: t.featured.title }] : []),
   ...mapNavItems('ensino-medio', {}, (n) => t.home.objectives.facts(n)),
   { id: 'tecnologia', label: tech.title, why: tech.link },
 ];

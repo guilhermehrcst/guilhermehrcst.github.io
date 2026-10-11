@@ -648,6 +648,13 @@ for (const path of CANONICAL) {
   checkAccessibility(path, html);
 }
 
+/* An active path page never says it is in preparation (V0.4 Gate B, P2): its state and its page agree. */
+for (const path of PATHS.filter((p) => !PREPARING.includes(p))) {
+  const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+  if (/\sdata-preparing[\s>=]/.test(html)) fail(path, 'an active path does not say it is in preparation');
+  if (/<meta name="robots" content="[^"]*noindex/.test(html)) fail(path, 'an active path is indexable');
+}
+
 /* Paths in preparation: real pages, linked from the Home, the header and the footer, that say what
    they are and list nothing. Not canonical, not in the sitemap. */
 for (const path of PREPARING) {

@@ -41,9 +41,22 @@ export const PATH_ORDER: readonly PathId[] = ['ensino-fundamental', 'ensino-medi
 export const EXAM_ORDER: readonly ExamId[] = ['enem', 'uerj'];
 /** Where each exam lives: inside Vestibular, never as a path of its own. */
 export const EXAM_PARENT: Readonly<Record<ExamId, PathId>> = { enem: 'vestibulares', uerj: 'vestibulares' };
-/** Paths whose page states that it is in preparation: no verified resource yet, so noindex and out of the
- *  sitemap. A path leaves this list only with published resources (docs/superpowers/specs, V0.3 §2.1). */
-export const PREPARING_PATHS: readonly PathId[] = ['ensino-fundamental', 'pre-militar'];
+export type PathState = 'preparing' | 'active';
+/** The publication state of each path: the one source (V0.4 Gate B, P2). A path in preparation is noindex,
+ *  out of the sitemap, says so, and shows no resource. Fundamental and Pré-Militar become active only with
+ *  their ten homologated highlights released and a page that shows their resources (src/lib/path-status.ts
+ *  fails the build otherwise); scripts/verify-dist.mjs keeps its own, independent list. */
+export const PATH_STATUS: Readonly<Record<PathId, PathState>> = {
+  'ensino-fundamental': 'preparing',
+  'ensino-medio': 'active',
+  vestibulares: 'active',
+  'pre-militar': 'preparing',
+  'ensino-superior': 'active',
+  tecnologia: 'active',
+};
+/** Derived from PATH_STATUS, never typed. */
+export const PREPARING_PATHS: readonly PathId[] = PATH_ORDER.filter((path) => PATH_STATUS[path] === 'preparing');
+export const isPreparing = (path: PathId): boolean => PATH_STATUS[path] === 'preparing';
 export const AREA_ORDER: readonly AreaId[] = ['matematica', 'linguagens', 'natureza', 'humanas', 'idiomas', 'tecnologia'];
 
 export const OBJECTIVES: Readonly<Record<ObjectiveId, { label: string }>> = {

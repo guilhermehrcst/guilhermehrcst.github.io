@@ -9,7 +9,7 @@ import TrackSection from '../../components/TrackSection.astro';
 import ResourceList from '../../components/ResourceList.astro';
 import SectionNav from '../../components/SectionNav.astro';
 import FeaturedResources from '../../components/FeaturedResources.astro';
-import { featuredReady } from '../../lib/featured';
+import { featuredShown } from '../../lib/featured';
 import { anchorPlan } from '../../lib/search-index';
 import { routes } from '../../lib/routes';
 import { resourcesByIds } from '../../lib/learning-library';
@@ -21,7 +21,7 @@ const c = t.pages.tecnologia;
 const tracks = publishedTracks().map((track) => ({ ...track, resources: resourcesByIds(publishedResources, track.resourceIds) }));
 const plan = anchorPlan(routes.objective('tecnologia'), tracks.map((track) => track.resources));
 const nav = [
-  ...(featuredReady('tecnologia') ? [{ id: 'destaques', label: t.featured.title }] : []),
+  ...(featuredShown('tecnologia') ? [{ id: 'destaques', label: t.featured.title }] : []),
   ...tracks.map((track) => ({ id: track.id, label: track.label, why: track.why })),
 ];
 ---
