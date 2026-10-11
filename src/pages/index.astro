@@ -5,6 +5,7 @@ import HomeHero from '../components/HomeHero.astro';
 import ObjectiveList from '../components/ObjectiveList.astro';
 import AreaList from '../components/AreaList.astro';
 import LearningPath from '../components/LearningPath.astro';
+import OfficialSources from '../components/OfficialSources.astro';
 import { routes } from '../lib/routes';
 import { pt as t } from '../i18n/pt';
 
@@ -27,6 +28,14 @@ const c = t.pages.home;
       <p>{t.home.path.lead}</p>
     </div>
     <LearningPath />
+  </section>
+
+  <section class="wrap block" id="fontes" aria-labelledby="fontes-title">
+    <div class="head">
+      <h2 id="fontes-title">{t.home.sources.heading}</h2>
+      <p>{t.home.sources.lead}</p>
+    </div>
+    <OfficialSources />
   </section>
 
   <section class="wrap block" id="areas" aria-labelledby="areas-title">

@@ -63,3 +63,13 @@ export const objectiveFacts = (
   objective === 'tecnologia'
     ? { resources: resources.filter((resource) => resource.subject === 'tecnologia').length, tracks: publishedTracks().length }
     : { resources: filterResources(resources, { goals: [objective] }).length };
+
+/** The institutions among these provider names that publish something, each with its published resources
+ *  (catalogue order). A provider with nothing published is left out: the Home never shows an empty name. */
+export const institutions = (
+  providers: readonly string[],
+  resources: readonly PublishedLearningResource[] = publishedResources,
+): { provider: string; resources: PublishedLearningResource[] }[] =>
+  providers
+    .map((provider) => ({ provider, resources: resources.filter((resource) => resource.provider === provider) }))
+    .filter((institution) => institution.resources.length > 0);

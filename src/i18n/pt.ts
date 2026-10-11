@@ -118,6 +118,15 @@ export const pt: Dict = {
       facts: (resources, tracks) =>
         [`${resources} ${resources === 1 ? 'recurso' : 'recursos'}`, tracks && `${tracks} ${tracks === 1 ? 'trilha' : 'trilhas'}`].filter(Boolean).join(' · '),
     },
+    sources: {
+      heading: 'Aprenda com fontes oficiais.',
+      lead: 'Universidades e instituições que publicam cursos gratuitos. Indicamos o que cada uma oferece e levamos você à página de quem publica.',
+      independence: 'A Pexis Academy é independente. Nenhuma destas instituições produz, revisa ou financia a Academy; os nomes e as marcas são delas.',
+      count: (resources, page) => `${resources} ${resources === 1 ? 'curso' : 'cursos'} em ${page}`,
+      exams: 'Para as provas, a fonte é quem as aplica:',
+      examLinks: { enem: 'INEP, no guia do ENEM', uerj: 'Vestibular Estadual UERJ, no guia da UERJ' },
+      pending: 'Outras instituições entram à medida que verificamos, na página delas, um curso gratuito.',
+    },
     path: {
       heading: 'Um caminho mais claro para aprender.',
       lead: 'Do objetivo à prova, cada passo leva a uma página real. Este é o caminho de quem estuda Matemática para o ENEM, com o que ele tem hoje.',

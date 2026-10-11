@@ -153,7 +153,12 @@ const decode = (s) => s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&qu
 const nameOf = (attributes, inner) => {
   const label = /\saria-label="([^"]*)"/.exec(attributes)?.[1];
   if (label !== undefined) return decode(label).trim();
-  return decode(inner.replace(/<([a-z]+)\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/\1>/g, '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+  // As a browser computes it: an image counts by its alt, an element with role="img" by its label.
+  const named = inner
+    .replace(/<([a-z]+)\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/\1>/g, '')
+    .replace(/<[a-z]+\b[^>]*\srole="img"[^>]*\saria-label="([^"]*)"[^>]*>/g, ' $1 ')
+    .replace(/<img\b[^>]*\salt="([^"]*)"[^>]*>/g, ' $1 ');
+  return decode(named.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
 };
 
 function checkAccessibility(path, html) {
@@ -306,6 +311,21 @@ function checkHome(path, html, resources) {
     }
     for (const id of attrs(path_, /\sdata-demo-resource-id="([^"]+)"/g)) DEMO_RESOURCE_IDS.add(id);
   }
+  // Official sources: institutions that publish free material here, each leading to that material on this
+  // site. Never a partner, a sponsor or an endorsement (docs/superpowers/research/2026-10-11-official-brands.md).
+  const sources = sectionOf(html, /<section\b[^>]*\sid="fontes"/);
+  if (!sources) fail(path, 'section#fontes missing');
+  else {
+    const cells = [...sources.matchAll(/<li\b[^>]*\sdata-institution="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
+    if (cells.length < 3) fail(path, `#fontes shows ${cells.length} institutions`);
+    for (const [, name, body] of cells) {
+      const links = hrefsIn(body);
+      if (links.length !== 1 || !/^\/[^#]*#[\w-]+$/.test(links[0])) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
+    }
+  }
+  const plain = main.replace(/<[^>]+>/g, ' ');
+  const claim = /parceir|patrocin|apoiad|endoss|oficial da pexis/i.exec(plain);
+  if (claim) fail(path, `the Home claims an association ("${claim[0]}")`);
   const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
   if (!areas) fail(path, 'section#areas missing');
   else checkAreaGroups(path, areas);
@@ -313,7 +333,7 @@ function checkHome(path, html, resources) {
 
   // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
-  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'fontes', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
   if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
   if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
   const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/);

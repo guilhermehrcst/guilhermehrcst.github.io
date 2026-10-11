@@ -53,6 +53,15 @@ export interface Dict {
       demo: { subjects: string; objectives: string; areas: string; study: string; practice: string; byObjective: string };
     };
     objectives: { heading: string; lead: string; items: Record<ObjectiveId, string>; facts: (resources: number, tracks?: number) => string };
+    sources: {
+      heading: string;
+      lead: string;
+      independence: string;
+      count: (resources: number, page: string) => string;
+      exams: string;
+      examLinks: { enem: string; uerj: string };
+      pending: string;
+    };
     path: {
       heading: string;
       lead: string;
