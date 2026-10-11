@@ -6,11 +6,11 @@ import '../styles/global.css';
 import sansLatin from '@fontsource-variable/google-sans-flex/files/google-sans-flex-latin-opsz-normal.woff2?url';
 import Header from '../components/Header.astro';
 import { dicts, routes, hreflang } from '../i18n/routes';
-import type { Lang, PageId } from '../i18n/types';
+import type { Lang, RouteId } from '../i18n/types';
 
 interface Props {
   lang: Lang;
-  page: PageId;
+  page: RouteId;
   title: string;
   description: string;
   noindex?: boolean;

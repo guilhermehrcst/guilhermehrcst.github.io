@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Monument from './Monument.astro';
 import LearningResourceCard from './LearningResourceCard.astro';
 import CourseFilters from './CourseFilters.astro';
-import { dicts } from '../i18n/routes';
+import { dicts, routes } from '../i18n/routes';
 import { AREA_ORDER, AREA_SUBJECTS, publishedResources } from '../lib/learning-resources';
 import type { CourseImageLayout, LearningAreaId, LearningSubjectId, PublishedLearningResource, TechnologySectionId } from '../lib/learning-resources';
 import type { Lang } from '../i18n/types';
@@ -69,6 +69,12 @@ const sections = AREA_ORDER.map((area) => ({
       </nav>
 
       <CourseFilters t={t} />
+
+      <nav class="study-paths" aria-label={t.tracks.label}>
+        <p class="meta">{t.tracks.label}</p>
+        <a href={routes['courses-enem'][lang]}>{t.tracks.enem}<span aria-hidden="true">→</span></a>
+        <a href={routes['courses-uerj'][lang]}>{t.tracks.uerj}<span aria-hidden="true">→</span></a>
+      </nav>
 
       <div id="library-start">
         {sections.map((section, sectionIndex) => (
@@ -142,6 +148,13 @@ const sections = AREA_ORDER.map((area) => ({
   .jump a::after { content: ''; position: absolute; left: var(--space-md); right: var(--space-md); bottom: 12px; height: 2px; background: var(--signal); transform: scaleX(0); transform-origin: left; transition: transform var(--t-ui) var(--ease); }
   .jump a:hover::after, .jump a:focus-visible::after { transform: scaleX(1); }
 
+  .study-paths { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4.5fr) minmax(0, 4.5fr); border-bottom: 1px solid var(--rule); }
+  .study-paths > * { min-height: 64px; display: flex; align-items: center; padding-inline: var(--space-lg); }
+  .study-paths .meta { color: var(--muted); }
+  .study-paths a { justify-content: space-between; gap: var(--space-md); border-left: 1px solid var(--rule); font-weight: 600; text-decoration: none; }
+  .study-paths a:hover span, .study-paths a:focus-visible span { transform: translateX(3px); }
+  .study-paths a span { transition: transform var(--t-ui) var(--ease); }
+
   .group { border-bottom: 1px solid var(--rule); }
   .group-head { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); align-items: baseline; gap: var(--space-md); padding: var(--space-md) var(--space-lg); border-bottom: 1px solid var(--rule); }
   .group-head .meta { color: var(--muted); }
@@ -167,5 +180,8 @@ const sections = AREA_ORDER.map((area) => ({
     .jump-k { padding-inline: var(--space-md); }
     .resource-grid > :global(li), .resource-grid > :global(li:last-child:nth-child(odd)) { grid-column: 1 / -1; }
     .group-head { grid-template-columns: 1fr; padding-inline: var(--space-md); gap: 4px; }
+    .study-paths { grid-template-columns: 1fr; }
+    .study-paths > * { padding-inline: var(--space-md); }
+    .study-paths a { border-left: 0; border-top: 1px solid var(--rule); }
   }
 </style>

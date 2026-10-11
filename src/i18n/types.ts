@@ -5,6 +5,7 @@ export type Lang = 'en' | 'pt';
 
 /** Page identities. Each exists in both languages; see routes.ts. */
 export type PageId = 'home' | 'resume' | 'courses';
+export type RouteId = PageId | 'courses-enem' | 'courses-uerj';
 
 export interface Fact {
   title: string;
@@ -176,6 +177,7 @@ export interface Dict {
   footer: { place: string; updated: string; top: string };
   resume: Resume;
   courses: CoursesPage;
+  studyTracks: Record<ExamId, StudyTrackPage>;
 }
 
 import type {
@@ -191,6 +193,7 @@ import type {
   TechnologySectionId,
   TechnologyTopicId,
 } from '../lib/learning-resources';
+import type { ExamId, StudyTrackSectionId } from '../lib/study-tracks';
 
 /* Courses page ------------------------------------------------------------------------------- */
 
@@ -270,5 +273,18 @@ export interface CoursesPage {
     reset: string;
     empty: string;
   };
+  tracks: { label: string; enem: string; uerj: string };
   closing: { title: string; body: string; prompt: string; cta: string };
+}
+
+
+export interface StudyTrackPage {
+  meta: { title: string; description: string };
+  eyebrow: [string, string, string];
+  heading: string;
+  intro: string;
+  back: string;
+  navLabel: string;
+  sections: Record<StudyTrackSectionId, { title: string; body: string }>;
+  closing: { title: string; body: string; cta: string };
 }
