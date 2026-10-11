@@ -1,0 +1,34 @@
+{
+  "brandRed": "#720111",
+  "artwork": {
+    "box": {
+      "left": 97,
+      "top": 276,
+      "width": 1481,
+      "height": 413
+    },
+    "symbol": {
+      "left": 97,
+      "top": 276,
+      "width": 477,
+      "height": 413
+    },
+    "lockup": {
+      "width": 1481,
+      "height": 413
+    },
+    "mark": {
+      "width": 477,
+      "height": 413
+    }
+  },
+  "sha256": {
+    "src/assets/brand/source/pexis-academy-horizontal-white.png": "1415d3a25dd41cb0eaaedbb0f44ba667dc3e199d2820adf4c9beb7f84c840f21",
+    "src/assets/brand/source/pexis-academy-stacked-red.png": "868ed4a6580f95c2f9136dc908dce26a524c24227724b9d0969f4f02264036c5",
+    "src/assets/brand/lockup-white.png": "1b94e795b314ebc797465478cce417dd5dbe361955529991c08e07999835a5ed",
+    "src/assets/brand/symbol-white.png": "5492737feb773e41d2cbffeb2b45665c7d4bdcd0718b6e4041e0804260e450f4",
+    "public/favicon-32.png": "199c074ca95e037f0ad77dc2e5327e348eadee2e9337c2bd0f5f62c2ff96efb7",
+    "public/apple-touch-icon.png": "eee63895fa7a99b18557bd51580f04c569eeb3fa669c496a441c1fded0f7148c",
+    "public/icon-192.png": "bb1641b34609dce16aaf6730e49613aa2e64dd0fd7cf8ae3bbe696b1c737cafe"
+  }
+}
