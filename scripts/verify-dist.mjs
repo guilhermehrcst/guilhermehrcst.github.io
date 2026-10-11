@@ -338,7 +338,12 @@ function checkHome(path, html, resources) {
   if (!hero.includes('href="#objetivo"') || !hero.includes('href="/materias/"')) fail(path, 'the hero offers "#objetivo" and "/materias/"');
   const window = /<figure\b[^>]*\sdata-product-window[\s\S]*?<\/figure>/.exec(hero)?.[0];
   if (!window) fail(path, 'the hero shows the product (figure[data-product-window])');
-  else checkProductWindow(path, window);
+  else {
+    checkProductWindow(path, window);
+    // The hero's window shows a real route (V0.3): Vestibular, ENEM, Matemática, content, practice.
+    const route = attrs(window, /\sdata-route-step="([^"]+)"/g);
+    if (JSON.stringify(route) !== JSON.stringify(['caminho', 'prova', 'area', 'conteudo', 'pratica'])) fail(path, `hero route ${route.join(',')}`);
+  }
   const objective = sectionOf(html, /<section\b[^>]*\sid="objetivo"/);
   if (!objective) fail(path, 'section#objetivo missing');
   else {
@@ -352,7 +357,7 @@ function checkHome(path, html, resources) {
   if (!path_) fail(path, 'section#caminho missing');
   else {
     const steps = [...path_.matchAll(/<li\b[^>]*\sdata-path-step="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
-    const order = ['objetivo', 'materia', 'assunto', 'conteudo', 'pratica'];
+    const order = ['objetivo', 'area', 'assunto', 'conteudo', 'pratica'];
     if (JSON.stringify(steps.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `#caminho steps ${steps.map((m) => m[1]).join(',')}`);
     for (const [, step, body] of steps) {
       const links = hrefsIn(body);

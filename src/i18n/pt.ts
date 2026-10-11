@@ -27,7 +27,7 @@ export const pt: Dict = {
   pages: {
     home: {
       title: 'Pexis Academy: aprenda com direção',
-      description: 'Estude para o ENEM, a UERJ, o Ensino Médio e vestibulares com recursos gratuitos e verificados, organizados por objetivo, área e matéria.',
+      description: 'Estude com direção: Ensino Fundamental, Médio, Vestibular, Pré-Militar, Ensino Superior e Tecnologia, com recursos gratuitos verificados na fonte.',
       heading: 'Aprenda com direção.',
       lead: 'Escolha um objetivo e siga um caminho claro até materiais gratuitos, oficiais e verificados.',
     },
@@ -173,9 +173,15 @@ export const pt: Dict = {
       primary: 'Escolher meu objetivo',
       secondary: 'Explorar matérias',
       note: 'Sem cadastro na Pexis Academy. Cada recurso leva à página oficial de quem o publica.',
-      demoCaption: 'Uma página real da Pexis Academy, com os recursos que ela mostra hoje.',
-      demoLink: 'Abrir Matemática',
-      demo: { subjects: 'Matérias', objectives: 'Objetivos', areas: 'Áreas', study: 'Para estudar', practice: 'Para praticar', byObjective: 'Por objetivo' },
+      demoCaption: 'Um caminho real da Pexis Academy, com os recursos que ele mostra hoje.',
+      demoLink: 'Abrir o guia do ENEM',
+      demo: {
+        study: 'Para estudar',
+        practice: 'Para praticar',
+        official: 'Fonte oficial',
+        officialWhy: 'Provas e gabaritos das edições anteriores, publicados por quem aplica a prova.',
+        steps: { path: 'Caminho', exam: 'Prova', area: 'Matéria', content: 'Conteúdo', practice: 'Prática' },
+      },
     },
     areas: {
       heading: 'Explore por área',
@@ -241,14 +247,13 @@ export const pt: Dict = {
     },
     path: {
       heading: 'Um caminho mais claro para aprender.',
-      lead: 'Do objetivo à prova, cada passo leva a uma página real. Este é o caminho de quem estuda Matemática para o ENEM, com o que ele tem hoje.',
-      route: 'ENEM · Matemática',
-      steps: { objetivo: 'Objetivo', materia: 'Matéria', assunto: 'Assunto', conteudo: 'Conteúdo', pratica: 'Prática' },
-      enemMeta: 'Prova do INEP: quatro áreas e a redação',
+      lead: 'Do objetivo à prática, cada passo leva a uma página real. Este é o caminho de quem estuda Física para o vestibular, com o que ele tem hoje.',
+      route: 'Vestibular · Física',
+      steps: { objetivo: 'Objetivo', area: 'Área', assunto: 'Assunto', conteudo: 'Conteúdo', pratica: 'Prática' },
+      vestMeta: 'ENEM, UERJ e uma base comum por matéria',
       pending: 'Em preparação',
       topicNote: 'Os assuntos entram quando conferidos na Matriz de Referência do Enem, do INEP.',
-      official: 'Fonte oficial',
-      links: { objective: 'Ver o guia do ENEM', subject: 'Ver Matemática', content: 'Ver no guia', practice: 'Ver onde praticar' },
+      links: { objective: 'Abrir Vestibular', subject: 'Ver Física', content: 'Ver em Vestibular', practice: 'Ver as provas da UERJ' },
     },
   },
   about: {

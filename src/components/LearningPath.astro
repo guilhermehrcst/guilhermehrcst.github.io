@@ -1,30 +1,27 @@
 ---
-// "Um caminho mais claro para aprender.": one real path through the product, ENEM → Matemática → topic →
-// content → practice, read from the same data the pages use. A step with nothing published says so and
-// links nowhere (Matemática has no verified topics yet). The build fails if the path stops being true:
-// the resource must sit in the ENEM guide's study section, the source in its practice section.
-import { resolveGuide, ENEM_AREAS } from '../lib/exam-guides';
+// "Um caminho mais claro para aprender." (V0.3): Objetivo → Área → Assunto → Conteúdo → Prática, shown on
+// one real route that differs from the hero's: Vestibular → Física → (topic) → Física para ENEM →
+// Questões de Física da UERJ. A step with nothing published says so and links nowhere (no topic is
+// verified yet). The build fails if the route stops being true: the course must be tagged for Vestibular,
+// the practice must be in the UERJ guide, and the UERJ must live inside Vestibular.
+import { resolveGuide } from '../lib/exam-guides';
 import { resourcesByIds } from '../lib/learning-library';
 import { publishedResources } from '../lib/learning-resources';
-import { officialSources } from '../lib/official-sources';
 import { routes } from '../lib/routes';
-import { OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
+import { AREAS, EXAM_PARENT, OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
 const p = t.home.path;
 const l = t.resource;
-const subject = SUBJECTS.matematica;
-const area = ENEM_AREAS.find((a) => a.subjects.includes(subject.id));
-const [content] = resourcesByIds(publishedResources, ['kultivi-math-enem']);
-const practice = officialSources['inep-provas-gabaritos'];
-const guide = resolveGuide('enem');
-const inGuide = (section: string) => guide.find((s) => s.id === section);
-if (!area || !content) throw new Error('LearningPath: the ENEM area or the content is missing');
-if (!inGuide('aprofunde')?.resources.some((r) => r.id === content.id)) throw new Error('LearningPath: the content is not in the ENEM guide');
-if (!inGuide('pratique')?.sources.includes('inep-provas-gabaritos')) throw new Error('LearningPath: the practice source is not in the ENEM guide');
+const subject = SUBJECTS.fisica;
+const [content, practice] = resourcesByIds(publishedResources, ['kultivi-physics-enem', 'uerj-physics-practice']);
+if (!content || !practice) throw new Error('LearningPath: the course or the practice is missing');
+if (!content.goals.includes('vestibulares')) throw new Error('LearningPath: the course is not tagged for Vestibular');
+if (EXAM_PARENT.uerj !== 'vestibulares') throw new Error('LearningPath: the UERJ is not inside Vestibular');
+if (!resolveGuide('uerj').find((s) => s.id === 'provas')?.resources.some((r) => r.id === practice.id)) throw new Error('LearningPath: the practice is not in the UERJ guide');
 const topic = subject.topics.find((item) => item.published);
+const facts = (r: typeof content) => [r.provider, l.formats[r.format], r.registration && l.registration[r.registration]].filter(Boolean).join(' · ');
 
-const enem = routes.objective('enem');
 type Step = {
   id: keyof typeof p.steps;
   value?: string;
@@ -34,22 +31,15 @@ type Step = {
   resourceId?: string;
   noTranslate?: boolean;
 };
+const vest = routes.objective('vestibulares');
 const steps: Step[] = [
-  { id: 'objetivo', value: OBJECTIVES.enem.label, meta: p.enemMeta, href: enem, link: p.links.objective },
-  { id: 'materia', value: subject.label, meta: area.label, href: routes.subject(subject.id), link: p.links.subject },
+  { id: 'objetivo', value: OBJECTIVES.vestibulares.label, meta: p.vestMeta, href: vest, link: p.links.objective },
+  { id: 'area', value: subject.label, meta: AREAS[subject.area].label, href: routes.subject(subject.id), link: p.links.subject },
   topic
     ? { id: 'assunto', value: topic.label, meta: subject.label, href: routes.subject(subject.id), link: p.links.subject }
     : { id: 'assunto', meta: p.topicNote },
-  {
-    id: 'conteudo',
-    value: content.title,
-    meta: [content.provider, l.formats[content.format], content.registration && l.registration[content.registration]].filter(Boolean).join(' · '),
-    href: `${enem}#aprofunde`,
-    link: p.links.content,
-    resourceId: content.id,
-    noTranslate: true,
-  },
-  { id: 'pratica', value: practice.title, meta: `INEP · ${p.official}`, href: `${enem}#pratique`, link: p.links.practice },
+  { id: 'conteudo', value: content.title, meta: facts(content), href: `${vest}#${subject.area}`, link: p.links.content, resourceId: content.id, noTranslate: true },
+  { id: 'pratica', value: practice.title, meta: facts(practice), href: `${routes.objective('uerj')}#provas`, link: p.links.practice, resourceId: practice.id },
 ];
 ---
 <div class="panel">

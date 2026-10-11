@@ -82,7 +82,7 @@ export interface Dict {
       note: string;
       demoCaption: string;
       demoLink: string;
-      demo: { subjects: string; objectives: string; areas: string; study: string; practice: string; byObjective: string };
+      demo: { study: string; practice: string; official: string; officialWhy: string; steps: { path: string; exam: string; area: string; content: string; practice: string } };
     };
     objectives: { heading: string; lead: string; items: Record<PathId, string>; facts: (resources: number, tracks?: number) => string };
     sources: {
@@ -98,11 +98,10 @@ export interface Dict {
       heading: string;
       lead: string;
       route: string;
-      steps: Record<'objetivo' | 'materia' | 'assunto' | 'conteudo' | 'pratica', string>;
-      enemMeta: string;
+      steps: Record<'objetivo' | 'area' | 'assunto' | 'conteudo' | 'pratica', string>;
+      vestMeta: string;
       pending: string;
       topicNote: string;
-      official: string;
       links: { objective: string; subject: string; content: string; practice: string };
     };
     areas: { heading: string; lead: string; subjects: (n: number) => string };

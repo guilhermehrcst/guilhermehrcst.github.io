@@ -68,13 +68,15 @@ const o = t.home.objectives;
 
   @media (min-width: 900px) {
     a {
-      grid-template-columns: 3rem minmax(0, 4fr) minmax(0, 5fr) 11rem 2rem;
+      grid-template-columns: 3rem minmax(0, 5fr) minmax(0, 5fr) 10rem 2rem;
       align-items: center;
       grid-template-areas: 'num name what facts arrow';
       padding-block: var(--space-6);
       padding-inline: var(--space-2);
     }
     .what, .facts { margin-top: 0; }
+    /* One line per name: the longest, "Ensino Fundamental", sets the size. */
+    .name { font-size: min(var(--fs-h2), 2.5rem); white-space: nowrap; }
     .facts { text-align: right; white-space: nowrap; color: var(--muted); }
     a:hover { background: var(--surface); }
   }
