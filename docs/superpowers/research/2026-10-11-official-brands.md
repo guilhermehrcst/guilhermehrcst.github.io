@@ -50,3 +50,15 @@ None of them is the provider's own page.
 4. Add the provider name to the Home's list in `src/components/OfficialSources.astro`.
 
 `institutions()` drops any name with no published resource, so step 2 is what makes it appear.
+
+## Re-check for V0.3 (2026-10-11)
+
+Before V0.3, every candidate was tried again from the build environment, and it was still
+unreachable. Both methods failed with `000` / `ENOTFOUND`:
+
+- `curl`: academy.openai.com, anthropic.skilljar.com,
+  developers.google.com/machine-learning/crash-course, ocw.mit.edu, cs50.harvard.edu and others;
+- `WebFetch`.
+
+The status above is unchanged. Six brands are still pending and none is shown on the Home. The
+section shows the institutions already verified in the catalogue.
