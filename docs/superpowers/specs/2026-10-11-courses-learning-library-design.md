@@ -114,7 +114,8 @@ Accepted formats:
 - complete course;
 - study track;
 - playlist;
-- lesson series.
+- lesson series;
+- practice set / simulator / official past-exam collection.
 
 A resource may require account registration or may open directly.
 
@@ -196,7 +197,8 @@ type LearningFormatId =
   | 'course'
   | 'track'
   | 'playlist'
-  | 'lessons';
+  | 'lessons'
+  | 'practice';
 ```
 
 A published resource should carry, at minimum:
@@ -261,6 +263,7 @@ And by format:
 - Trilha
 - Playlist
 - Aulas
+- Prática / Simulados
 
 Filters must be progressive enhancement where practical. Core content must remain meaningful in server-rendered HTML.
 
@@ -345,6 +348,7 @@ The general library should allow:
 - Trilha
 - Playlist
 - Aulas
+- Prática / Simulados
 
 ### Subject navigation
 
@@ -620,7 +624,7 @@ These decisions are fixed for V0.1 unless explicitly revisited:
 - Nature and Humanities remain grouped at the primary-navigation level;
 - include English and Spanish;
 - target Ensino Médio and vestibular preparation, not Ensino Fundamental;
-- accept complete courses, tracks, playlists, and lesson series;
+- accept complete courses, tracks, playlists, lesson series, and free practice/simulation resources;
 - accept universities, platforms, cursinhos, independent teachers, YouTube, and public projects;
 - publish only 100% free learning resources;
 - both direct-access and account-required free resources are allowed;
