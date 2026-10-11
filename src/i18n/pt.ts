@@ -95,7 +95,19 @@ export const pt: Dict = {
       demoLink: 'Abrir Matemática',
       demo: { subjects: 'Matérias', objectives: 'Objetivos', areas: 'Áreas', study: 'Para estudar', practice: 'Para praticar', byObjective: 'Por objetivo' },
     },
-    areas: { heading: 'Explore por área' },
+    areas: {
+      heading: 'Explore por área',
+      lead: 'As matérias, agrupadas como na escola. Cada uma reúne o que estudar e onde praticar.',
+      subjects: (n) => (n === 1 ? '1 matéria' : `${n} matérias`),
+    },
+    tracks: {
+      heading: 'Comece por um caminho pronto.',
+      lead: 'Três pontos de partida, cada um com as etapas em ordem.',
+      kinds: { guide: 'Guia', track: 'Trilha' },
+      titles: { enem: 'Preparação para o ENEM', uerj: 'Preparação para a UERJ' },
+      steps: (n) => `${n} etapas`,
+      links: { enem: 'Abrir o guia do ENEM', uerj: 'Abrir o guia da UERJ', track: 'Abrir a trilha' },
+    },
     curation: {
       heading: 'Como escolhemos os recursos',
       rules: [

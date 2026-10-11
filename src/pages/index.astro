@@ -6,6 +6,7 @@ import ObjectiveList from '../components/ObjectiveList.astro';
 import AreaList from '../components/AreaList.astro';
 import LearningPath from '../components/LearningPath.astro';
 import OfficialSources from '../components/OfficialSources.astro';
+import FeaturedPaths from '../components/FeaturedPaths.astro';
 import { routes } from '../lib/routes';
 import { pt as t } from '../i18n/pt';
 
@@ -39,8 +40,19 @@ const c = t.pages.home;
   </section>
 
   <section class="wrap block" id="areas" aria-labelledby="areas-title">
-    <h2 id="areas-title">{t.home.areas.heading}</h2>
+    <div class="head">
+      <h2 id="areas-title">{t.home.areas.heading}</h2>
+      <p>{t.home.areas.lead}</p>
+    </div>
     <AreaList />
+  </section>
+
+  <section class="wrap block" id="trilhas" aria-labelledby="trilhas-title">
+    <div class="head">
+      <h2 id="trilhas-title">{t.home.tracks.heading}</h2>
+      <p>{t.home.tracks.lead}</p>
+    </div>
+    <FeaturedPaths />
   </section>
 
   <section class="wrap block" id="curadoria" aria-labelledby="curadoria-title">

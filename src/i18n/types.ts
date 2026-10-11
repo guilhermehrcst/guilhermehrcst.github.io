@@ -73,7 +73,15 @@ export interface Dict {
       official: string;
       links: { objective: string; subject: string; content: string; practice: string };
     };
-    areas: { heading: string };
+    areas: { heading: string; lead: string; subjects: (n: number) => string };
+    tracks: {
+      heading: string;
+      lead: string;
+      kinds: { guide: string; track: string };
+      titles: { enem: string; uerj: string };
+      steps: (n: number) => string;
+      links: { enem: string; uerj: string; track: string };
+    };
     curation: { heading: string; rules: { title: string; body: string }[]; more: string };
   };
   about: {

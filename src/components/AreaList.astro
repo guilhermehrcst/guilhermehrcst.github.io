@@ -1,8 +1,11 @@
 ---
-// The six areas, each with its subjects as direct links (spec §5.2, item 3). An area with a single
-// subject links from its own name, so the same word is not said twice. Used on the Home and /materias/.
+// The six areas, each with its subjects as direct links (spec §5.2, item 3). An editorial grid: a number,
+// the area in the serif, how many subjects it holds, and the subjects as full-width rows (touch targets of
+// 44px). An area with a single subject links from its own name, so the same word is not said twice.
+// Used on the Home and /materias/. verify-dist reads each [data-area] element: no nested div inside it.
 import { routes } from '../lib/routes';
 import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf } from '../lib/taxonomy';
+import { pt as t } from '../i18n/pt';
 
 interface Props { headingLevel?: 2 | 3 }
 const { headingLevel = 3 } = Astro.props;
@@ -10,16 +13,20 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
 const areas = AREA_ORDER.map((id) => ({ id, label: AREAS[id].label, subjects: subjectsOf(id) }));
 ---
 <ul class="areas" role="list">
-  {areas.map((area) => (
+  {areas.map((area, i) => (
     <li>
       <div class="area" id={`area-${area.id}`} data-area={area.id}>
+        <p class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
         {area.subjects.length === 1 ? (
           <Heading class="name"><a href={routes.subject(area.subjects[0]!)}>{area.label} <span aria-hidden="true">→</span></a></Heading>
         ) : (
           <>
             <Heading class="name">{area.label}</Heading>
+            <p class="meta">{t.home.areas.subjects(area.subjects.length)}</p>
             <ul class="subjects" role="list">
-              {area.subjects.map((id) => <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a></li>)}
+              {area.subjects.map((id) => (
+                <li><a href={routes.subject(id)}>{SUBJECTS[id].label}<span aria-hidden="true">→</span></a></li>
+              ))}
             </ul>
           </>
         )}
@@ -29,16 +36,38 @@ const areas = AREA_ORDER.map((id) => ({ id, label: AREAS[id].label, subjects: su
 </ul>
 
 <style>
-  .areas { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--space-7); }
+  .areas { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 var(--space-6); }
   @media (min-width: 640px) { .areas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 1024px) { .areas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-  .area { padding-block: var(--space-5) var(--space-6); border-top: 1px solid var(--rule); }
-  .name { font-size: var(--fs-h3); font-weight: 560; margin-bottom: var(--space-3); }
-  .name a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; text-decoration: none; }
-  .name a span { color: var(--muted); }
-  .name a:hover span { color: var(--action); }
-  .subjects { display: flex; flex-wrap: wrap; gap: 0 var(--space-4); }
-  .subjects a { display: inline-flex; align-items: center; min-height: 40px; color: var(--muted); text-decoration: underline; text-decoration-color: var(--rule); }
-  .subjects a:hover { color: var(--action); text-decoration-color: currentColor; }
+  .area { padding-block: var(--space-5) var(--space-6); border-top: 1px solid var(--rule-strong); }
+  .num { font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--muted); }
+  .name {
+    margin-top: var(--space-2);
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 1.3rem + 0.6vw, 1.875rem);
+    font-weight: 460;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+  .name a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; text-decoration: none; color: var(--ink); }
+  .name a span { font-family: var(--sans); font-size: 0.75em; color: var(--muted); transition: transform var(--t-ui) var(--ease), color var(--t-ui); }
+  .name a:hover span { color: var(--action); transform: translateX(3px); }
+  .meta { margin-top: var(--space-1); font-size: var(--fs-small); color: var(--muted); }
+
+  .subjects { margin-top: var(--space-4); border-top: 1px solid var(--rule); }
+  .subjects li { border-bottom: 1px solid var(--rule); }
+  .subjects a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: 44px;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .subjects a span { color: var(--rule-strong); transition: transform var(--t-ui) var(--ease), color var(--t-ui); }
+  .subjects a:hover { color: var(--action); }
+  .subjects a:hover span { color: var(--action); transform: translateX(3px); }
 </style>

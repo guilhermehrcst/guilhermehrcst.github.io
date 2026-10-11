@@ -323,6 +323,18 @@ function checkHome(path, html, resources) {
       if (links.length !== 1 || !/^\/[^#]*#[\w-]+$/.test(links[0])) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
     }
   }
+  // Featured paths: at most three, each a real guide or track with its steps, opened by one internal link.
+  const featured = sectionOf(html, /<section\b[^>]*\sid="trilhas"/);
+  if (!featured) fail(path, 'section#trilhas missing');
+  else {
+    const cards = [...featured.matchAll(/<article\b[^>]*\sdata-featured="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
+    if (cards.length < 1 || cards.length > 3) fail(path, `#trilhas shows ${cards.length} paths (1 to 3)`);
+    for (const [, id, body] of cards) {
+      const links = hrefsIn(body);
+      if (links.length !== 1 || !links[0].startsWith('/')) fail(path, `#trilhas ${id} links ${links.join(',') || 'nowhere'}`);
+      if ((body.match(/<li\b/g) ?? []).length < 2) fail(path, `#trilhas ${id} lists fewer than two steps`);
+    }
+  }
   const plain = main.replace(/<[^>]+>/g, ' ');
   const claim = /parceir|patrocin|apoiad|endoss|oficial da pexis/i.exec(plain);
   if (claim) fail(path, `the Home claims an association ("${claim[0]}")`);
@@ -333,7 +345,7 @@ function checkHome(path, html, resources) {
 
   // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
-  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'fontes', 'areas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'fontes', 'areas', 'trilhas', 'curadoria'])) fail(path, `Home sections ${sections.join(',')}`);
   if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
   if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
   const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/);

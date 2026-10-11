@@ -1,0 +1,100 @@
+---
+// "Comece por um caminho pronto.": at most three ready paths, each real and complete. The ENEM and UERJ
+// guides, with their own sections as steps (resolveGuide, the same data as their pages), and the first
+// technology track, with its courses in order (resourcesByIds fails the build on an unknown id).
+// Nothing is filled in for the design: a step is a section or a course that exists today.
+import { resolveGuide } from '../lib/exam-guides';
+import { resourcesByIds } from '../lib/learning-library';
+import { publishedResources } from '../lib/learning-resources';
+import { routes } from '../lib/routes';
+import { publishedTracks } from '../lib/tech-tracks';
+import { pt as t } from '../i18n/pt';
+
+const f = t.home.tracks;
+const g = t.guides;
+const [track] = publishedTracks();
+if (!track) throw new Error('FeaturedPaths: no published technology track');
+
+const paths = [
+  {
+    id: 'enem',
+    kind: f.kinds.guide,
+    title: f.titles.enem,
+    why: t.home.objectives.items.enem,
+    steps: resolveGuide('enem').map((section) => g.enem[section.id as keyof typeof g.enem].title),
+    href: routes.objective('enem'),
+    link: f.links.enem,
+    tone: 'blue',
+  },
+  {
+    id: 'uerj',
+    kind: f.kinds.guide,
+    title: f.titles.uerj,
+    why: t.home.objectives.items.uerj,
+    steps: resolveGuide('uerj').map((section) => g.uerj[section.id as keyof typeof g.uerj].title),
+    href: routes.objective('uerj'),
+    link: f.links.uerj,
+    tone: 'sand',
+  },
+  {
+    id: track.id,
+    kind: f.kinds.track,
+    title: track.label,
+    why: track.why,
+    steps: resourcesByIds(publishedResources, track.resourceIds).map((r) => r.title),
+    href: `${routes.objective('tecnologia')}#${track.id}`,
+    link: f.links.track,
+    tone: 'ink',
+    noTranslate: true,
+  },
+];
+---
+<div class="paths">
+  {paths.map((path) => (
+    <article class:list={['path', `tone-${path.tone}`]} data-featured={path.id} aria-labelledby={`trilha-${path.id}`}>
+      <div class="top">
+        <p class="kind">{path.kind} · {f.steps(path.steps.length)}</p>
+        <h3 id={`trilha-${path.id}`}>{path.title}</h3>
+      </div>
+      <div class="bottom">
+        <p class="why">{path.why}</p>
+        <ol class="steps" role="list">
+          {path.steps.map((step, i) => (
+            <li><span class="n" aria-hidden="true">{i + 1}</span><span translate={path.noTranslate ? 'no' : undefined}>{step}</span></li>
+          ))}
+        </ol>
+        <a href={path.href}>{path.link}{' '}<span aria-hidden="true">→</span></a>
+      </div>
+    </article>
+  ))}
+</div>
+
+<style>
+  .paths { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  @media (min-width: 900px) { .paths { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  .path {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+  }
+  /* A coloured head names the path; the body says what is inside, in order. */
+  .top { padding: var(--space-5) var(--space-5) var(--space-6); }
+  .tone-blue .top { background: var(--tint-blue); }
+  .tone-sand .top { background: var(--tint-sand); }
+  .tone-ink .top { background: var(--surface); }
+  .kind { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  h3 { margin-top: var(--space-3); font-family: var(--serif); font-size: clamp(1.5rem, 1.3rem + 0.6vw, 1.875rem); font-weight: 460; line-height: 1.1; letter-spacing: -0.015em; }
+
+  .bottom { display: grid; grid-template-rows: auto 1fr auto; gap: var(--space-4); padding: var(--space-5); }
+  .why { font-size: var(--fs-small); color: var(--muted); }
+  .steps { border-top: 1px solid var(--rule); }
+  .steps li { display: flex; gap: var(--space-3); padding-block: var(--space-2); border-bottom: 1px solid var(--rule); font-size: 0.9375rem; }
+  .n { flex: none; width: 1.25rem; font-size: 0.8125rem; font-variant-numeric: tabular-nums; color: var(--muted); line-height: 1.6; }
+  .bottom > a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+  .bottom > a span { transition: transform var(--t-ui) var(--ease); }
+  .bottom > a:hover span { transform: translateX(3px); }
+</style>
