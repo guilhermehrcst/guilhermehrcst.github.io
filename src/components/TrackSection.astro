@@ -1,0 +1,20 @@
+---
+// One section of a guide or a learning track: its title, why it matters, then its content (spec §6.5).
+interface Props { id: string; title: string; why?: string | undefined; track?: string | undefined }
+const { id, title, why, track } = Astro.props;
+---
+<section class="track wrap" id={id} aria-labelledby={`${id}-title`} data-track={track}>
+  <div class="head">
+    <h2 id={`${id}-title`}>{title}</h2>
+    {why && <p class="why">{why}</p>}
+  </div>
+  <div class="body"><slot /></div>
+</section>
+
+<style>
+  .track { padding-block: var(--space-7); }
+  .track + .track > .head { padding-top: var(--space-6); border-top: 1px solid var(--rule); }
+  .head { max-width: var(--measure); margin-bottom: var(--space-5); }
+  h2 { font-size: var(--fs-h2); }
+  .why { margin-top: var(--space-3); color: var(--muted); }
+</style>

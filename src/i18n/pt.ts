@@ -134,6 +134,21 @@ export const pt: Dict = {
       ],
     },
   },
+  guides: {
+    count: (n) => (n === 1 ? '1 recurso' : `${n} recursos`),
+    enem: {
+      entenda: {
+        title: 'Entenda a prova',
+        body: [
+          'O Enem avalia quatro áreas do conhecimento (Linguagens, Códigos e suas Tecnologias; Ciências Humanas e suas Tecnologias; Ciências da Natureza e suas Tecnologias; Matemática e suas Tecnologias) e uma redação.',
+          'As matrizes de referência do INEP descrevem o que cada área avalia. São o ponto de partida mais seguro para decidir o que estudar.',
+        ],
+      },
+      areas: { title: 'Estude por área', why: 'As matérias de cada área, como o INEP organiza a prova. Comece pela que mais precisa da sua atenção.' },
+      pratique: { title: 'Pratique', why: 'Resolver provas anteriores é a forma mais direta de conhecer o exame. O INEP publica as provas e os gabaritos das edições anteriores.' },
+      aprofunde: { title: 'Aprofunde por área', why: 'Cursos gratuitos para revisar o conteúdo de cada área do Enem.' },
+    },
+  },
   source: { label: 'Fonte oficial:', verified: (date) => `verificada em ${date}` },
   subject: {
     map: 'Mapa de estudo',

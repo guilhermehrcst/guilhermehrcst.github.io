@@ -270,10 +270,45 @@ function checkSubject(path, html, resources) {
   else for (const href of hrefsIn(objectives)) if (!OBJECTIVE_PATHS.includes(href)) fail(path, `#objetivos links ${href}`);
 }
 
+const sectionIds = (html) => attrs(/<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '', /<section\b[^>]*\sid="([^"]+)"/g);
+
+/** An official source cited on the page: a note with a link to an official host and the verification date. */
+function checkSourceNote(path, fragment, where) {
+  const note = /<[a-z]+\b[^>]*\sdata-source-note[\s\S]*?<\/(p|div)>/.exec(fragment)?.[0];
+  if (!note) { fail(path, `${where}: official source note missing`); return; }
+  const hosts = hrefsIn(note).map((h) => { try { return new URL(h).hostname; } catch { return ''; } });
+  if (!hosts.some((h) => OFFICIAL_HOSTS.includes(h))) fail(path, `${where}: source note must link an official page`);
+  if (!/<time datetime="\d{4}-\d{2}-\d{2}"/.test(note)) fail(path, `${where}: source note must date its verification`);
+}
+
+/** The ENEM as INEP organises it: four areas and the essay, each linking its subjects. */
+const ENEM_GROUPS = [
+  ['linguagens', ['/materias/portugues/', '/materias/ingles/', '/materias/espanhol/']],
+  ['humanas', ['/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/']],
+  ['natureza', ['/materias/fisica/', '/materias/quimica/', '/materias/biologia/']],
+  ['matematica', ['/materias/matematica/']],
+  ['redacao', ['/materias/redacao/']],
+];
+
+/** /enem/: a preparation hub, not a list of courses (spec §6.3). */
+function checkEnem(path, html) {
+  const ids = sectionIds(html);
+  if (JSON.stringify(ids) !== JSON.stringify(['entenda', 'areas', 'pratique', 'aprofunde'])) fail(path, `ENEM sections ${ids.join(',')}`);
+  checkSourceNote(path, sectionOf(html, /<section\b[^>]*\sid="entenda"/) ?? '', '#entenda');
+  checkSourceNote(path, sectionOf(html, /<section\b[^>]*\sid="pratique"/) ?? '', '#pratique');
+  const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/) ?? '';
+  const groups = [...areas.matchAll(/<(\w+)\b[^>]*\sdata-exam-area="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => [m[2], hrefsIn(m[3])]);
+  if (JSON.stringify(groups) !== JSON.stringify(ENEM_GROUPS)) fail(path, `ENEM area groups ${JSON.stringify(groups)}`);
+  const deepen = sectionOf(html, /<section\b[^>]*\sid="aprofunde"/) ?? '';
+  if (!/\sdata-resource-id="/.test(deepen)) fail(path, '#aprofunde shows at least one resource');
+  if (/data-format="practice"/.test(deepen)) fail(path, '#aprofunde holds no practice');
+}
+
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
+  if (path === '/enem/') checkEnem(path, html);
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
 }

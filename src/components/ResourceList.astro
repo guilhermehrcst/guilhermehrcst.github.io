@@ -4,11 +4,11 @@
 import ResourceItem from './ResourceItem.astro';
 import type { PublishedLearningResource } from '../lib/learning-resources';
 
-interface Props { resources: readonly PublishedLearningResource[]; headingLevel?: 2 | 3 | 4 }
-const { resources, headingLevel = 3 } = Astro.props;
+interface Props { resources: readonly PublishedLearningResource[]; headingLevel?: 2 | 3 | 4; compact?: boolean }
+const { resources, headingLevel = 3, compact = false } = Astro.props;
 ---
 <ul class="resources" role="list" data-resource-list>
-  {resources.map((resource) => <ResourceItem resource={resource} headingLevel={headingLevel} />)}
+  {resources.map((resource) => <ResourceItem resource={resource} headingLevel={headingLevel} compact={compact} />)}
 </ul>
 
 <style>

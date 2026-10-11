@@ -54,6 +54,15 @@ export interface Dict {
     independence: { heading: string; body: string[] };
   };
   subjectPage: (subject: string, area: string) => PageCopy;
+  guides: {
+    count: (n: number) => string;
+    enem: {
+      entenda: { title: string; body: string[] };
+      areas: { title: string; why: string };
+      pratique: { title: string; why: string };
+      aprofunde: { title: string; why: string };
+    };
+  };
   source: { label: string; verified: (date: string) => string };
   subject: { map: string; eyebrow: string; content: string; practice: string; objectives: string; objectivesLead: (subject: string) => string };
   notFound: { home: string; subjects: string; search: string };
