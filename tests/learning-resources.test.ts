@@ -1,26 +1,75 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { AREA_ORDER, AREA_SUBJECTS, catalogue, publishedResources } from '../src/lib/learning-resources.ts';
+import { areaOf, catalogue, COURSE_HOSTS, publishedResources } from '../src/lib/learning-resources.ts';
+import { ACADEMIC_SUBJECTS, SUBJECTS } from '../src/lib/taxonomy.ts';
 
-const legacyPublished = new Map([
-  ['cs50x', 'https://cs50.harvard.edu/x/'],
-  ['cs50p', 'https://cs50.harvard.edu/python/'],
-  ['mit-6100l', 'https://ocw.mit.edu/courses/6-100l-introduction-to-cs-and-programming-using-python-fall-2022/'],
-  ['fb-python', 'https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico'],
-  ['fb-web', 'https://www.ev.org.br/cursos/crie-um-site-simples-usando-html-css-e-javascript'],
-  ['cs50w', 'https://cs50.harvard.edu/web/'],
-  ['cs50ai', 'https://cs50.harvard.edu/ai/'],
-  ['fluencia', 'https://www.ev.org.br/cursos/fluencia'],
-  ['fgv-datasci', 'https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/introducao-ciencia-de-dados'],
-  ['mit-60002', 'https://ocw.mit.edu/courses/6-0002-introduction-to-computational-thinking-and-data-science-fall-2016/'],
-  ['cs50sql', 'https://cs50.harvard.edu/sql/'],
-  ['mit-6006', 'https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/'],
-  ['mit-6042j', 'https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/'],
-  ['mit-1806', 'https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/'],
-  ['cisco-cyber', 'https://www.netacad.com/courses/introduction-to-cybersecurity'],
-  ['fgv-security', 'https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/seguranca-digital'],
-  ['fgv-privacy', 'https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/protecao-de-dados'],
+// Characterisation snapshot, written before the migration to the Pexis Academy taxonomy (plan T1.2).
+// Every record keeps its id, title, provider, URL, format and verification date; only the subject and
+// goal ids move to Portuguese (math → matematica, high-school → ensino-medio, vestibular → vestibulares).
+// Nothing here may change without re-verifying the resource at its source.
+const SNAPSHOT = new Map<string, {
+  title: string; provider: string; url: string | null; format: string; subject: string; goals: string[]; verifiedOn: string | null;
+}>([
+  ["cs50x", { title: "CS50x: Introduction to Computer Science", provider: "Harvard University", url: "https://cs50.harvard.edu/x/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["cs50p", { title: "CS50’s Introduction to Programming with Python", provider: "Harvard University", url: "https://cs50.harvard.edu/python/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["mit-6100l", { title: "Introduction to Computer Science and Programming Using Python", provider: "MIT OpenCourseWare", url: "https://ocw.mit.edu/courses/6-100l-introduction-to-cs-and-programming-using-python-fall-2022/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["fb-python", { title: "Linguagem de Programação Python - Básico", provider: "Fundação Bradesco", url: "https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["fb-web", { title: "Crie um site simples usando HTML, CSS e JavaScript", provider: "Fundação Bradesco", url: "https://www.ev.org.br/cursos/crie-um-site-simples-usando-html-css-e-javascript", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["cs50w", { title: "CS50’s Web Programming with Python and JavaScript", provider: "Harvard University", url: "https://cs50.harvard.edu/web/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["cs50ai", { title: "CS50’s Introduction to Artificial Intelligence with Python", provider: "Harvard University", url: "https://cs50.harvard.edu/ai/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["fluencia", { title: "FluêncIA em Inteligência Artificial", provider: "Fundação Bradesco + Microsoft", url: "https://www.ev.org.br/cursos/fluencia", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["ms-explore-genai", { title: "Explorar IA Generativa", provider: "Microsoft Learn", url: null, format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: null }],
+  ["ibm-genai", { title: "Introdução à IA Generativa", provider: "IBM SkillsBuild", url: null, format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: null }],
+  ["fgv-datasci", { title: "Introdução à Ciência de Dados", provider: "FGV", url: "https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/introducao-ciencia-de-dados", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["mit-60002", { title: "Introduction to Computational Thinking and Data Science", provider: "MIT OpenCourseWare", url: "https://ocw.mit.edu/courses/6-0002-introduction-to-computational-thinking-and-data-science-fall-2016/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["cs50sql", { title: "CS50’s Introduction to Databases with SQL", provider: "Harvard University", url: "https://cs50.harvard.edu/sql/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["mit-6006", { title: "Introduction to Algorithms", provider: "MIT OpenCourseWare", url: "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["mit-6042j", { title: "Mathematics for Computer Science", provider: "MIT OpenCourseWare", url: "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["mit-1806", { title: "Linear Algebra", provider: "MIT OpenCourseWare", url: "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["cisco-cyber", { title: "Introduction to Cybersecurity", provider: "Cisco Networking Academy", url: "https://www.netacad.com/courses/introduction-to-cybersecurity", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["fgv-security", { title: "Segurança Digital", provider: "FGV", url: "https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/seguranca-digital", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["fgv-privacy", { title: "Proteção de Dados", provider: "FGV", url: "https://educacao-executiva.fgv.br/cursos/online/curta-media-duracao-online/protecao-de-dados", format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: "2026-10-11" }],
+  ["ms-azure-ai", { title: "Fundamentos de Inteligência Artificial no Azure", provider: "Microsoft Learn", url: null, format: "course", subject: "tecnologia", goals: ["ensino-medio"], verifiedOn: null }],
+  ["kultivi-math-enem", { title: "Matemática para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/matematica", format: "course", subject: "matematica", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-portuguese-enem", { title: "Português para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/portugues", format: "course", subject: "portugues", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-writing-enem", { title: "Redação para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/redacao-para-enem", format: "course", subject: "redacao", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-physics-enem", { title: "Física para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/fisica", format: "course", subject: "fisica", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-chemistry-enem", { title: "Química para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/quimica", format: "course", subject: "quimica", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-biology-enem", { title: "Biologia para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/biologia", format: "course", subject: "biologia", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-history-enem", { title: "História para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/historia-2", format: "course", subject: "historia", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-geography-enem", { title: "Geografia para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/geografia", format: "course", subject: "geografia", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-philosophy-enem", { title: "Filosofia para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/filosofia", format: "course", subject: "filosofia", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-sociology-enem", { title: "Sociologia para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/sociologia", format: "course", subject: "sociologia", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-english-enem", { title: "Inglês para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/ingles-para-enem", format: "course", subject: "ingles", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["kultivi-spanish-enem", { title: "Espanhol para ENEM", provider: "Kultivi", url: "https://kultivi.com/curso/espanhol-para-enem", format: "course", subject: "espanhol", goals: ["ensino-medio","enem","vestibulares"], verifiedOn: "2026-10-11" }],
+  ["inep-writing-2026", { title: "A Redação do Enem 2026 — Cartilha do Participante", provider: "INEP", url: "https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante", format: "practice", subject: "redacao", goals: ["enem"], verifiedOn: "2026-10-11" }],
+  ["uerj-portuguese-practice", { title: "Questões de Língua Portuguesa e Literatura", provider: "Revista do Vestibular UERJ", url: "https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=1", format: "practice", subject: "portugues", goals: ["uerj"], verifiedOn: "2026-10-11" }],
+  ["uerj-writing-practice", { title: "Questões de Língua Portuguesa Instrumental com Redação", provider: "Revista do Vestibular UERJ", url: "https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=11", format: "practice", subject: "redacao", goals: ["uerj"], verifiedOn: "2026-10-11" }],
+  ["uerj-math-practice", { title: "Questões de Matemática", provider: "Revista do Vestibular UERJ", url: "https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=9", format: "practice", subject: "matematica", goals: ["uerj"], verifiedOn: "2026-10-11" }],
+  ["uerj-history-practice", { title: "Questões de História", provider: "Revista do Vestibular UERJ", url: "https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=5", format: "practice", subject: "historia", goals: ["uerj"], verifiedOn: "2026-10-11" }],
+  ["uerj-geography-practice", { title: "Questões de Geografia", provider: "Revista do Vestibular UERJ", url: "https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=6", format: "practice", subject: "geografia", goals: ["uerj"], verifiedOn: "2026-10-11" }],
+  ["uerj-spanish-practice", { title: "Questões de Espanhol", provider: "Revista do Vestibular UERJ", url: "https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=2", format: "practice", subject: "espanhol", goals: ["uerj"], verifiedOn: "2026-10-11" }],
+  ["uerj-physics-practice", { title: "Questões de Física", provider: "Revista do Vestibular UERJ", url: "https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aano=&anivel=dificil&aseq_area=&aseq_disciplina=8&aseq_etapa=&sb=Buscar", format: "practice", subject: "fisica", goals: ["uerj"], verifiedOn: "2026-10-11" }],
 ]);
+
+test('the catalogue is exactly the 40 records of the snapshot, field by field', () => {
+  assert.deepEqual(catalogue.map((r) => r.id), [...SNAPSHOT.keys()]);
+  for (const r of catalogue) {
+    const s = SNAPSHOT.get(r.id)!;
+    assert.deepEqual(
+      { title: r.title, provider: r.provider, url: r.url, format: r.format, subject: r.subject, goals: [...r.goals], verifiedOn: r.verified?.on ?? null },
+      s,
+      r.id,
+    );
+  }
+});
+
+test('37 published, 3 held back with a review note', () => {
+  assert.equal(publishedResources.length, 37);
+  const held = catalogue.filter((r) => r.url === null);
+  assert.equal(held.length, 3);
+  for (const r of held) assert.ok(r.review?.trim(), `${r.id}: missing review note`);
+});
 
 test('resource ids are unique', () => {
   assert.equal(new Set(catalogue.map((r) => r.id)).size, catalogue.length);
@@ -28,56 +77,38 @@ test('resource ids are unique', () => {
 
 test('published resources are HTTPS and explicitly verified free', () => {
   for (const r of publishedResources) {
-    assert.ok(/^https:\/\//.test(r.url));
-    assert.equal(r.verified.freeAccess, true);
-    assert.ok(r.verified.on.length > 0);
-    assert.ok(r.verified.by.length > 0);
+    assert.ok(/^https:\/\//.test(r.url), r.id);
+    assert.equal(r.verified.freeAccess, true, r.id);
+    assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(r.verified.on), r.id);
   }
 });
 
-test('every resource subject belongs to its declared area', () => {
-  for (const r of catalogue) assert.ok(AREA_SUBJECTS[r.area].includes(r.subject), `${r.id}: invalid ${r.area}/${r.subject}`);
-});
-
-test('held-back resources explain why they are not published', () => {
-  for (const r of catalogue.filter((r) => r.url === null)) assert.ok(r.review?.trim(), `${r.id}: missing review note`);
-});
-
-test('the legacy technology catalogue keeps every previously published id and URL', () => {
-  for (const [id, url] of legacyPublished) {
-    const r = catalogue.find((item) => item.id === id);
-    assert.ok(r, `missing ${id}`);
-    if (!r) throw new Error(`missing ${id}`);
-    assert.equal(r.url, url, `${id}: URL drifted`);
-    assert.equal(r.area, 'technology');
-    assert.equal(r.subject, 'technology');
+test('the subject is the only source of the area', () => {
+  for (const r of catalogue) {
+    assert.ok(r.subject in SUBJECTS, `${r.id}: unknown subject ${r.subject}`);
+    assert.ok(!('area' in r), `${r.id}: carries its own area`);
+    assert.equal(areaOf(r), SUBJECTS[r.subject].area, r.id);
   }
 });
 
-
-test('V0.1 seed covers every academic area and school subject', () => {
-  for (const area of ['math', 'portuguese', 'writing', 'english', 'spanish'] as const) {
-    assert.ok(publishedResources.some((r) => r.area === area), `missing area ${area}`);
-  }
-  for (const subject of ['physics', 'chemistry', 'biology', 'history', 'geography', 'philosophy', 'sociology'] as const) {
-    assert.ok(publishedResources.some((r) => r.subject === subject), `missing subject ${subject}`);
+test('goals are the objective ids, never technology', () => {
+  for (const r of catalogue) {
+    for (const goal of r.goals) assert.ok(['ensino-medio', 'enem', 'uerj', 'vestibulares'].includes(goal), `${r.id}: ${goal}`);
   }
 });
 
-test('V0.1 seed includes free practice for ENEM and UERJ', () => {
+test('every school subject has at least one published resource', () => {
+  for (const subject of ACADEMIC_SUBJECTS) {
+    assert.ok(publishedResources.some((r) => r.subject === subject), `missing ${subject}`);
+  }
+});
+
+test('free practice exists for ENEM and UERJ', () => {
   for (const goal of ['enem', 'uerj'] as const) {
-    assert.ok(publishedResources.some((r) => r.format === 'practice' && r.goals.includes(goal)), `missing practice for ${goal}`);
+    assert.ok(publishedResources.some((r) => r.format === 'practice' && r.goals.includes(goal)), goal);
   }
 });
 
-test('every published technology resource has fresh free-access verification', () => {
-  for (const r of publishedResources.filter((item) => item.area === 'technology')) {
-    assert.equal(r.verified.on, '2026-10-11', `${r.id}: stale verification`);
-    assert.equal(r.verified.freeAccess, true, `${r.id}: not free-verified`);
-  }
-});
-
-
-test('the eight primary areas have one canonical reading order', () => {
-  assert.deepEqual(AREA_ORDER, ['technology', 'math', 'portuguese', 'writing', 'nature', 'humanities', 'english', 'spanish']);
+test('COURSE_HOSTS is exactly the set of hosts of published resources', () => {
+  assert.deepEqual([...COURSE_HOSTS].sort(), [...new Set(publishedResources.map((r) => new URL(r.url).hostname))].sort());
 });

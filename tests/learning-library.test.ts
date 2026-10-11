@@ -5,9 +5,9 @@ import type { PublishedLearningResource } from '../src/lib/learning-resources.ts
 
 const verified = { on: '2026-10-11', by: 'official-page' as const, freeAccess: true as const };
 const items: PublishedLearningResource[] = [
-  { id: 'a', title: 'A', provider: 'P', area: 'math', subject: 'math', format: 'course', goals: ['high-school', 'enem'], language: 'pt', level: 'high-school', url: 'https://example.com/a', verified },
-  { id: 'b', title: 'B', provider: 'P', area: 'math', subject: 'math', format: 'playlist', goals: ['uerj', 'vestibular'], language: 'pt', level: 'vestibular', url: 'https://example.com/b', verified },
-  { id: 'c', title: 'C', provider: 'P', area: 'nature', subject: 'physics', format: 'lessons', goals: ['enem', 'uerj'], language: 'pt', level: 'vestibular', url: 'https://example.com/c', verified },
+  { id: 'a', title: 'A', provider: 'P', subject: 'matematica', format: 'course', goals: ['ensino-medio', 'enem'], language: 'pt', level: 'high-school', url: 'https://example.com/a', verified },
+  { id: 'b', title: 'B', provider: 'P', subject: 'matematica', format: 'playlist', goals: ['uerj', 'vestibulares'], language: 'pt', level: 'vestibular', url: 'https://example.com/b', verified },
+  { id: 'c', title: 'C', provider: 'P', subject: 'fisica', format: 'lessons', goals: ['enem', 'uerj'], language: 'pt', level: 'vestibular', url: 'https://example.com/c', verified },
 ];
 
 test('one selected goal matches a multi-goal resource', () => {
@@ -15,7 +15,7 @@ test('one selected goal matches a multi-goal resource', () => {
 });
 
 test('multiple selected goals use OR semantics', () => {
-  assert.deepEqual(filterResources(items, { goals: ['high-school', 'uerj'] }).map((r) => r.id), ['a', 'b', 'c']);
+  assert.deepEqual(filterResources(items, { goals: ['ensino-medio', 'uerj'] }).map((r) => r.id), ['a', 'b', 'c']);
 });
 
 test('multiple selected formats use OR semantics', () => {
@@ -23,11 +23,12 @@ test('multiple selected formats use OR semantics', () => {
 });
 
 test('dimensions combine with AND semantics', () => {
-  assert.deepEqual(filterResources(items, { area: 'math', goals: ['uerj'], formats: ['playlist'] }).map((r) => r.id), ['b']);
+  assert.deepEqual(filterResources(items, { area: 'matematica', goals: ['uerj'], formats: ['playlist'] }).map((r) => r.id), ['b']);
 });
 
-test('subject narrows within an area', () => {
-  assert.deepEqual(filterResources(items, { area: 'nature', subject: 'physics' }).map((r) => r.id), ['c']);
+test('the area is derived from the subject', () => {
+  assert.deepEqual(filterResources(items, { area: 'natureza' }).map((r) => r.id), ['c']);
+  assert.deepEqual(filterResources(items, { subject: 'fisica' }).map((r) => r.id), ['c']);
 });
 
 test('empty filter restores the full ordered list', () => {
@@ -35,9 +36,13 @@ test('empty filter restores the full ordered list', () => {
 });
 
 test('resourcesByArea preserves source order', () => {
-  assert.deepEqual(resourcesByArea(items, 'math').map((r) => r.id), ['a', 'b']);
+  assert.deepEqual(resourcesByArea(items, 'matematica').map((r) => r.id), ['a', 'b']);
 });
 
-test('resourcesByIds follows requested order and omits unknown ids', () => {
-  assert.deepEqual(resourcesByIds(items, ['c', 'missing', 'a']).map((r) => r.id), ['c', 'a']);
+test('resourcesByIds follows the requested order', () => {
+  assert.deepEqual(resourcesByIds(items, ['c', 'a']).map((r) => r.id), ['c', 'a']);
+});
+
+test('resourcesByIds fails closed on an unknown id', () => {
+  assert.throws(() => resourcesByIds(items, ['c', 'missing']));
 });
