@@ -19,6 +19,7 @@ const l = t.resource;
 const facts = [
   compact && r.provider,
   l.formats[r.format],
+  r.schoolYears && l.schoolYears(r.schoolYears),
   l.languages[r.language],
   r.duration && `${r.duration.value} ${l.units[r.duration.unit]}`,
   r.registration && l.registration[r.registration],
@@ -31,6 +32,7 @@ const facts = [
   data-resource-id={r.id}
   data-subject={r.subject}
   data-format={r.format}
+  data-school-years={r.schoolYears?.join(' ')}
   data-paths={r.paths.join(' ')}
   data-exams={r.exams?.join(' ')}
 >

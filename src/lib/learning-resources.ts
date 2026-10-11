@@ -39,11 +39,30 @@ export interface CourseImageDescriptor {
   priority?: boolean;
 }
 
+/** What a verification checked at the source (V0.4 Gate B, P3/P4): `grade` backs a school year. */
+export type EvidenceCheck = 'free' | 'scope' | 'language' | 'format' | 'path' | 'registration' | 'certificate' | 'grade';
+export interface VerificationEvidence {
+  /** The official page opened for this resource (HTTPS). */
+  url: string;
+  checked: readonly EvidenceCheck[];
+  /** What was seen, in a sentence an editor can audit. */
+  note: string;
+}
+
 export interface ResourceVerification {
   on: string;
   by: VerificationMethod;
   freeAccess: true;
+  evidence?: VerificationEvidence;
 }
+
+/** The nine years of Ensino Fundamental (V0.4 Gate B, P3). The stage is derived, never typed. */
+export type SchoolYear = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type SchoolStage = 'anos-iniciais' | 'anos-finais';
+export const stagesOf = (years: readonly number[]): SchoolStage[] => [
+  ...(years.some((year) => year <= 5) ? ['anos-iniciais' as const] : []),
+  ...(years.some((year) => year >= 6) ? ['anos-finais' as const] : []),
+];
 
 export interface LearningResource {
   id: string;
@@ -64,6 +83,9 @@ export interface LearningResource {
   registration?: LearningRegistrationId;
   duration?: { value: number; unit: LearningDurationUnit };
   certificate?: LearningCertificateId;
+  /** The school years (1–9) the source states, only on Ensino Fundamental, only with evidence (`grade`).
+   *  Never inferred from a title; a multidisciplinary or reference resource may have none. */
+  schoolYears?: readonly [SchoolYear, ...SchoolYear[]];
   technology?: { section: TechnologySectionId; topic: TechnologyTopicId };
   curated?: { plate: string; image?: CourseImageDescriptor };
 }
@@ -149,7 +171,23 @@ export const areaOf = (resource: Pick<LearningResource, 'subject'>): AreaId | nu
  *  scripts/verify-dist.mjs keeps a hand-written copy; tests/verify-dist-hosts.test.ts keeps them equal. */
 export const COURSE_HOSTS: ReadonlySet<string> = new Set(publishedResources.map((resource) => new URL(resource.url).hostname));
 
+/** Everything wrong with a resource's school years, one line each; empty when it holds or has none. */
+export const schoolYearProblems = (r: Pick<LearningResource, 'id' | 'paths'> & { schoolYears?: readonly unknown[] | undefined; verified?: { evidence?: { checked?: readonly string[] } | undefined } | undefined }): string[] => {
+  const years = r.schoolYears;
+  if (years === undefined) return [];
+  const problems: string[] = [];
+  if (!years.length) problems.push(`${r.id}: schoolYears is empty`);
+  for (const year of years) if (!Number.isInteger(year) || (year as number) < 1 || (year as number) > 9) problems.push(`${r.id}: school year ${String(year)} is not 1–9`);
+  if (new Set(years).size !== years.length) problems.push(`${r.id}: schoolYears repeats a year`);
+  if (years.some((year, i) => i > 0 && (year as number) < (years[i - 1] as number))) problems.push(`${r.id}: schoolYears must be ascending`);
+  if (!r.paths.includes('ensino-fundamental')) problems.push(`${r.id}: school years only on Ensino Fundamental`);
+  if (!r.verified?.evidence?.checked?.includes('grade')) problems.push(`${r.id}: school years without evidence of the school year`);
+  return problems;
+};
+
 for (const resource of catalogue) {
+  const years = schoolYearProblems(resource);
+  if (years.length) throw new Error(`learning-resources: ${years.join('; ')}`);
   if (resource.subject !== null && !(resource.subject in SUBJECTS)) throw new Error(`learning-resources: ${resource.id} has an unknown subject`);
   if (!resource.paths.length || new Set(resource.paths).size !== resource.paths.length) throw new Error(`learning-resources: ${resource.id} needs distinct paths`);
   if (resource.paths.some((path) => !PATH_ORDER.includes(path))) throw new Error(`learning-resources: ${resource.id} has an unknown path`);

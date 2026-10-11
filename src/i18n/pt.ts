@@ -287,6 +287,7 @@ export const pt: Dict = {
   pathResources: {
     other: { title: 'Outras provas e materiais', why: 'Provas anteriores e materiais de outros vestibulares, publicados pelas próprias instituições e conferidos na fonte.' },
     general: { title: 'Recursos', why: 'Materiais gratuitos para este caminho, conferidos na página de quem os publica.' },
+    stages: { 'anos-iniciais': 'Anos iniciais (1º ao 5º ano)', 'anos-finais': 'Anos finais (6º ao 9º ano)', none: 'Outros materiais' },
   },
   featured: {
     title: 'Destaques',
@@ -383,6 +384,13 @@ export const pt: Dict = {
     registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
     certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', available: 'Certificado disponível' },
     units: { hours: 'h', weeks: 'semanas' },
+    schoolYears: (years) => {
+      const ord = years.map((y) => `${y}º`);
+      const consecutive = years.length > 2 && years.every((y, i) => i === 0 || y === years[i - 1]! + 1);
+      if (years.length === 1) return `${ord[0]} ano`;
+      if (consecutive) return `${ord[0]} ao ${ord[ord.length - 1]} ano`;
+      return `${ord.slice(0, -1).join(', ')} e ${ord[ord.length - 1]} ano`;
+    },
     newTab: 'abre o site do provedor em nova aba',
   },
 };

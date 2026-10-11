@@ -126,3 +126,11 @@ test('the search index never sends a resource without a subject to a page that d
   assert.equal(resourceHome(byId('cs50x')), '/tecnologia/#comecar-a-programar');
   assert.throws(() => resourceHome({ id: 'x', subject: null, format: 'past-exam', paths: ['ensino-medio'] }), /no page shows/);
 });
+
+test('P3: school years read as the source states them', async () => {
+  const { pt } = await import('../src/i18n/pt.ts');
+  assert.equal(pt.resource.schoolYears([2]), '2º ano');
+  assert.equal(pt.resource.schoolYears([6, 7, 8, 9]), '6º ao 9º ano');
+  assert.equal(pt.resource.schoolYears([1, 2]), '1º e 2º ano');
+  assert.equal(pt.resource.schoolYears([2, 4, 5]), '2º, 4º e 5º ano');
+});

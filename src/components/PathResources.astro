@@ -2,19 +2,49 @@
 // The general section of a path page (V0.4 Gate B, P1): the resources no subject, exam or field page shows
 // that this path holds, such as a Fuvest or a military past exam, or a Fundamental lesson. It renders
 // exactly the resources placement puts on this page (placedOnPath), each with its canonical anchor, and
-// nothing while the path is in preparation. An empty section is never rendered.
+// nothing while the path is in preparation. An empty section or group is never rendered.
+// On Ensino Fundamental (P3), resources are grouped by the stage derived from the school years their
+// source states; one spanning both stages is listed in both (anchored once), one without years apart.
 import TrackSection from './TrackSection.astro';
 import ResourceGroups from './ResourceGroups.astro';
+import ResourceList from './ResourceList.astro';
+import { stagesOf } from '../lib/learning-resources';
 import { placedOnPath } from '../lib/placement';
+import { anchorPlan } from '../lib/search-index';
 import { routes } from '../lib/routes';
 import type { PathId } from '../lib/taxonomy';
+import { pt as t } from '../i18n/pt';
 
 interface Props { path: PathId; id: string; title: string; why?: string | undefined }
 const { path, id, title, why } = Astro.props;
 const resources = placedOnPath(path);
+const page = routes.objective(path);
+const byStage = path === 'ensino-fundamental';
+const stages = byStage
+  ? (['anos-iniciais', 'anos-finais', 'none'] as const)
+      .map((stage) => ({
+        stage,
+        label: t.pathResources.stages[stage],
+        resources: resources.filter((r) => (stage === 'none' ? !r.schoolYears : stagesOf(r.schoolYears ?? []).includes(stage))),
+      }))
+      .filter((group) => group.resources.length > 0)
+  : [];
+const plan = anchorPlan(page, stages.map((group) => group.resources));
 ---
 {resources.length > 0 && (
   <TrackSection id={id} title={title} why={why}>
-    <ResourceGroups resources={resources} headingLevel={3} page={routes.objective(path)} />
+    {byStage
+      ? stages.map((group, i) => (
+          <div class="stage" data-stage={group.stage}>
+            <h3>{group.label}</h3>
+            <ResourceList resources={group.resources} headingLevel={4} anchored={plan[i]} />
+          </div>
+        ))
+      : <ResourceGroups resources={resources} headingLevel={3} page={page} />}
   </TrackSection>
 )}
+
+<style>
+  .stage + .stage { margin-top: var(--space-7); }
+  h3 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-2); }
+</style>
