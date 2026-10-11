@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Monument from './Monument.astro';
 import LearningResourceCard from './LearningResourceCard.astro';
+import CourseFilters from './CourseFilters.astro';
 import { dicts } from '../i18n/routes';
 import { AREA_ORDER, AREA_SUBJECTS, publishedResources } from '../lib/learning-resources';
 import type { CourseImageLayout, LearningAreaId, LearningSubjectId, PublishedLearningResource, TechnologySectionId } from '../lib/learning-resources';
@@ -67,6 +68,8 @@ const sections = AREA_ORDER.map((area) => ({
         </ul>
       </nav>
 
+      <CourseFilters t={t} />
+
       <div id="library-start">
         {sections.map((section, sectionIndex) => (
           <section class="area" id={`area-${section.area}`} aria-labelledby={`area-${section.area}-title`} data-learning-area-section>
@@ -107,6 +110,9 @@ const sections = AREA_ORDER.map((area) => ({
     </div>
   </main>
   <Monument lang={lang} page="courses" />
+  <script>
+    import '../scripts/course-filters';
+  </script>
 </Base>
 
 <style>
