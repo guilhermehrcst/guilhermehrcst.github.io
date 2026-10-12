@@ -587,7 +587,10 @@ function checkProduct(path, html) {
   if (path === '/vestibulares/') {
     checkObjectiveMap(path, html, resources, 'vestibulares');
     // Vestibular is the hub of its exams (V0.3): it opens with them, ENEM then UERJ, then the editorial note.
-    const ids = sectionIds(html);
+    // Released highlights (#destaques, checked on their own) may come first, and only first (V0.4 QA P2-RC3).
+    const all = sectionIds(html);
+    if (all.indexOf('destaques') > 0) fail(path, `#destaques must lead the page (${all.join(',')})`);
+    const ids = all.filter((id) => id !== 'destaques');
     if (ids[0] !== 'provas' || ids[1] !== 'nota-editorial') fail(path, `Vestibular opens with its exams, then the editorial note (${ids.join(',')})`);
     const exams = hrefsIn(sectionOf(html, /<section\b[^>]*\sid="provas"/) ?? '');
     if (JSON.stringify(exams) !== JSON.stringify(['/enem/', '/uerj/'])) fail(path, `#provas links ${exams.join(',')}`);
