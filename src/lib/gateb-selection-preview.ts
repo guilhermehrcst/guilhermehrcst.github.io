@@ -100,15 +100,15 @@ export interface GateBPlacementRequirement {
  *  These plans define potential page anchors, not actual publication or activation.
  *  Their nine default-production destinations stay absent until a separate release. */
 export const GATEB_PLACEMENT_REQUIREMENTS: Readonly<Record<string, GateBPlacementRequirement>> = {
-  'mit-1801sc': { target: '/ensino-superior/', next: "Acrescentar ao grupo existente de Matemática, sem duplicar MIT 18.06." },
-  'mit-801sc': { target: '/ensino-superior/', next: "Criar grupo de Física quando o curso for publicado." },
-  'mit-7012': { target: '/ensino-superior/', next: "Criar grupo de Biologia quando o curso for publicado." },
-  'yale-psyc-110': { target: '/ensino-superior/', next: "Criar grupo de Psicologia sem prometer créditos acadêmicos." },
-  'yale-econ-252': { target: '/ensino-superior/', next: "Criar grupo de Economia sem prometer matrícula universitária." },
-  'ou-environment-treading-lightly': { target: '/ensino-superior/', next: "Criar grupo de Meio Ambiente, mantendo a classificação de participação correta." },
-  'odin-foundations': { target: '/tecnologia/', next: "Adicionar à trilha existente Desenvolvimento Web, preservando sua ordem." },
-  'google-mlcc': { target: '/tecnologia/', next: "Adicionar à trilha existente Inteligência Artificial." },
-  'ms-learn-cloud-concepts': { target: '/tecnologia/', next: "Adicionar seção de recursos de Nuvem à página Tecnologia, ou trilha real verificada; não classificar Nuvem como Segurança apenas para passar o validador." },
+  'mit-1801sc': { target: '/ensino-superior/', next: "Grupo Matemática configurado condicionalmente; exigir publicação homologada antes de exibir." },
+  'mit-801sc': { target: '/ensino-superior/', next: "Grupo Física configurado condicionalmente; não exibir enquanto o curso não for publicado." },
+  'mit-7012': { target: '/ensino-superior/', next: "Grupo Biologia configurado condicionalmente; não exibir enquanto o curso não for publicado." },
+  'yale-psyc-110': { target: '/ensino-superior/', next: "Grupo Psicologia configurado condicionalmente, sem créditos acadêmicos; requer publicação autorizada." },
+  'yale-econ-252': { target: '/ensino-superior/', next: "Grupo Economia configurado condicionalmente, sem promessa de matrícula; requer publicação autorizada." },
+  'ou-environment-treading-lightly': { target: '/ensino-superior/', next: "Grupo Meio Ambiente configurado condicionalmente; preservar declaração de participação sem atribuir diploma." },
+  'odin-foundations': { target: '/tecnologia/', next: "Destino futuro na trilha Desenvolvimento Web; preservar ordem e exigir publicação do curso." },
+  'google-mlcc': { target: '/tecnologia/', next: "Destino futuro na trilha Inteligência Artificial; exigir publicação antes de exibir." },
+  'ms-learn-cloud-concepts': { target: '/tecnologia/', next: "Trilha Computação em Nuvem preparada condicionalmente; Segurança permanece intacta até a autorização de release." },
 };
 
 const isVerified = (resource: LearningResource): resource is PublishedLearningResource =>
