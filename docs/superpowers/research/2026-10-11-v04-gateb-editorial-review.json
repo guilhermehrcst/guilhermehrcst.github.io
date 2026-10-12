@@ -1,7 +1,7 @@
 {
   "project": "Pexis Academy",
   "gate": "B",
-  "review_version": "2026-10-12-editorial-04",
+  "review_version": "2026-10-12-editorial-05",
   "review_local_date": "2026-10-12",
   "basis_commit": "40bf3e4d920720e066d4026f08aa7a0b16bca61c",
   "authority": "Inspecao direta de paginas e PDFs institucionais em 2026-10-11 e 2026-10-12 (evidencias individualizadas por registro); staging Lotes 02/03 e textos oficiais abertos. Resultados anteriores de busca sem conteudo nao constituem verificacao.",
@@ -619,10 +619,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "Provas e gabaritos do ENEM, acervo oficial do INEP",
       "format": "past-exam",
@@ -636,9 +637,10 @@
         "mime": "application/pdf",
         "total_pages": 32,
         "pages_inspected": 3,
-        "what_was_read": "ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente."
+        "what_was_read": "ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Destino público é o acervo oficial de provas e gabaritos do INEP; o caderno azul 2024 e seu gabarito foram verificados individualmente como evidência. Nenhuma prova 2025 foi validada nesta revisão.",
+      "validation_note": "Destino público é o acervo oficial de provas e gabaritos do INEP; o caderno azul 2024 e seu gabarito foram verificados individualmente como evidência. Nenhuma prova 2025 foi validada nesta revisão. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "verified_answer_key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D1_CD1.pdf",
       "source_index_url": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos"
     },
@@ -896,10 +898,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "CPACN 2025: Matemática e Inglês, 1º dia",
       "format": "past-exam",
@@ -913,9 +916,10 @@
         "mime": "application/pdf",
         "total_pages": 19,
         "pages_inspected": 5,
-        "what_was_read": "CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice."
+        "what_was_read": "CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo.",
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "source_index_url": "https://www.marinha.mil.br/sspm/colegionaval/colegio_princ"
     },
     {
@@ -937,10 +941,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "CPAEN 2025: Matemática e Inglês, 1º dia",
       "format": "past-exam",
@@ -954,9 +959,10 @@
         "mime": "application/pdf",
         "total_pages": 19,
         "pages_inspected": 4,
-        "what_was_read": "CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto."
+        "what_was_read": "CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo.",
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "source_index_url": "https://www.marinha.mil.br/sspm/node/95"
     },
     {
@@ -978,10 +984,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "EEAR CFS 1/2024: prova, código 02",
       "format": "past-exam",
@@ -995,9 +1002,10 @@
         "mime": "application/pdf",
         "total_pages": 17,
         "pages_inspected": 3,
-        "what_was_read": "EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas."
+        "what_was_read": "EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo.",
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "source_index_url": "https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25"
     },
     {
@@ -1019,10 +1027,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "CPAEAM 2023: prova amarela",
       "format": "past-exam",
@@ -1036,9 +1045,10 @@
         "mime": "application/pdf",
         "total_pages": 15,
         "pages_inspected": 5,
-        "what_was_read": "CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados."
+        "what_was_read": "CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo.",
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "source_index_url": "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag"
     },
     {
@@ -1060,10 +1070,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "AFA 2025: prova versão A",
       "format": "past-exam",
@@ -1077,9 +1088,10 @@
         "mime": "application/pdf",
         "total_pages": 24,
         "pages_inspected": 3,
-        "what_was_read": "AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído."
+        "what_was_read": "AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo.",
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "source_index_url": "https://www.fab.mil.br/ingresso/provas.html"
     },
     {
@@ -1101,10 +1113,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "EPCAR 2026: prova versão A",
       "format": "past-exam",
@@ -1118,9 +1131,10 @@
         "mime": "application/pdf",
         "total_pages": 17,
         "pages_inspected": 3,
-        "what_was_read": "EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado."
+        "what_was_read": "EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo.",
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "source_index_url": "https://www.fab.mil.br/ingresso/provas.html"
     },
     {
@@ -1174,10 +1188,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "ESA, concurso 2026: prova Geral, tipo A",
       "format": "past-exam",
@@ -1193,9 +1208,10 @@
         "pages_inspected": 3,
         "what_was_read": "ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ.",
         "extraction_method": "direct-official-pdf-text-via-provider",
-        "observation_caveat": "Paginas iniciais do texto extraido conferidas; total de 24 paginas declarado no proprio documento. Nao foi demonstrada leitura manual de todas as paginas, nem status HTTP observado."
+        "observation_caveat": "Paginas iniciais do texto extraido conferidas; total de 24 paginas declarado no proprio documento. Nao foi demonstrada leitura manual de todas as paginas, nem status HTTP observado.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Substituto distinto do recurso EsPCEx retido; PDF ESA 2026 acessado em dominio institucional e conteudo textual inspecionado. O servidor EsPCEx permaneceu bloqueado. Nenhuma homologacao final ou publicacao. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo.",
+      "validation_note": "Substituto distinto do recurso EsPCEx retido; PDF ESA 2026 acessado em dominio institucional e conteudo textual inspecionado. O servidor EsPCEx permaneceu bloqueado. Nenhuma homologacao final ou publicacao. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "replaced_candidate_id": "pm-espcex-provas",
       "replaced_candidate_url": "https://espcex.eb.mil.br/images/concurso/provas/provas2025/2025%20PROVA%20MODELO%20C.pdf",
       "source_index_url": "https://esa.eb.mil.br/index.php/pt/?catid=45&id=830%3Aprovas-anteriores&view=article"
@@ -1219,10 +1235,11 @@
         "scope",
         "language",
         "format",
-        "path"
+        "path",
+        "registration"
       ],
       "registration": "not-required",
-      "certificate": "none",
+      "certificate": "unconfirmed",
       "technical_destination_ready": false,
       "title": "IME CFG 2024/2025: prova objetiva",
       "format": "past-exam",
@@ -1236,9 +1253,10 @@
         "mime": "application/pdf",
         "total_pages": 24,
         "pages_inspected": 5,
-        "what_was_read": "IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice."
+        "what_was_read": "IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice.",
+        "registration_access_observed": "O PDF foi acessado diretamente sem login ou pagamento durante a verificação; nenhum certificado foi comprovado na fonte."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo.",
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação. Titulo da oferta restringido ao caderno oficial observado, sem prometer acervo completo. O acesso ao arquivo não exigiu cadastro; certificado permanece não confirmado.",
       "source_index_url": "https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg"
     },
     {
@@ -1972,5 +1990,6 @@
     "release_guard": "FEATURED_RELEASE remains staging; PATH_STATUS for ensino-fundamental and pre-militar remains preparing; no public catalogue changes permitted in this editorial PR.",
     "static_checks_only": true,
     "code_tests_not_run_in_this_editorial_review": true
-  }
+  },
+  "review_05_summary": "Codex segundo parecer P2: registro do CS50 SQL continua pertencente ao legado publicado, portanto nao exige tipagem ou nova fonte; nove PDFs de prova apresentam checagem de cadastro conforme acesso direto e certificado unconfirmed, sem afirmar certificado inexistente."
 }
