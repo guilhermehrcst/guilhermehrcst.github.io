@@ -1,13 +1,36 @@
-# Applies a release's deliberate steps to a discardable worktree (V0.4 QA). No workaround for any finding.
+# SIMULATION ONLY. This file prepares a discardable release-candidate worktree.
+# The editorial selection is NOT a publication authorization; blocked sources,
+# including ESA 2026, must be homologated before any actual release.
+# Crucially, never promote a staged record that is absent from the selected IDs.
 import json, re, sys
-RC = sys.argv[1]; sel = json.load(open(sys.argv[2]))
+RC = sys.argv[1]
+with open(sys.argv[2], encoding='utf-8') as selection_file:
+    sel = json.load(selection_file)
+PATHS = {'ensino-fundamental', 'ensino-medio', 'vestibulares', 'pre-militar', 'ensino-superior', 'tecnologia'}
+assert isinstance(sel, dict) and set(sel) == PATHS, 'expected exactly the six paths'
+assert all(isinstance(ids, list) and len(ids) == 10 and
+           all(isinstance(id, str) and id for id in ids) for ids in sel.values()), \
+    'each path needs exactly 10 nonempty selected IDs'
+selected_ids = [id for ids in sel.values() for id in ids]
+assert len(selected_ids) == 60 and len(set(selected_ids)) == 60, \
+    'selection must contain 60 unique IDs'
 def edit(path, fn):
     p = f'{RC}/{path}'; s = open(p).read(); t = fn(s)
     assert t != s, f'no change in {path}'; open(p, 'w').write(t)
 def lr(s):
     s = s.replace("import { EXAM_ORDER", "import { STAGED_RESOURCES } from './staging.ts';\nimport { GATEB_NEW_RESOURCES } from './staging-gateb.ts';\nimport { EXAM_ORDER", 1)
+    marker = 'export const catalogue: LearningResource[] = ['
+    assert s.count(marker) == 1, 'catalogue marker unexpectedly missing'
+    assert 'RELEASE_CANDIDATE_SELECTED_IDS' not in s, 'already simulated'
+    selection = ("// RC SIMULATION ONLY: staging entries not in this exact editorial selection stay unpublished.\n"
+                 "const RELEASE_CANDIDATE_SELECTED_IDS: ReadonlySet<string> = new Set("
+                 + json.dumps(selected_ids, ensure_ascii=False) + ");\n")
+    s = s.replace(marker, selection + marker, 1)
     i = s.index('export const isPublishedResource'); j = s.rindex('];', 0, i)
-    return s[:j] + "  // RC SIMULATION: every Gate B candidate promoted.\n  ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES,\n" + s[j:]
+    promoted = ("  // Only actually selected IDs may enter the simulated catalogue.\n"
+                "  ...STAGED_RESOURCES.filter((r) => RELEASE_CANDIDATE_SELECTED_IDS.has(r.id)),\n"
+                "  ...GATEB_NEW_RESOURCES.filter((r) => RELEASE_CANDIDATE_SELECTED_IDS.has(r.id)),\n")
+    return s[:j] + promoted + s[j:]
 edit('src/lib/learning-resources.ts', lr)
 def fe(s):
     s = re.sub(r"export const FEATURED_RELEASE: Readonly<Record<PathId, FeaturedRelease>> = \{.*?\};", "export const FEATURED_RELEASE: Readonly<Record<PathId, FeaturedRelease>> = {\n" + "".join(f"  '{k}': 'released',\n" for k in sel) + "};", s, flags=re.S)
