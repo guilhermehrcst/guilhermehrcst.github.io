@@ -24,6 +24,7 @@ medido em cópias descartáveis com lotes marcados `SIMULAÇÃO`.
 | `astro check`, build, `verify-dist` | passam (22 páginas, 2 em preparação) | passam (24 páginas, 0 em preparação) |
 | QA de navegador, 360 e 1280 px (`qa-plan-*.json`) | 246 verificações, 0 falhas | 295 verificações, 0 falhas |
 | Rollback (patch revertido + `rollback`) | `dist/` idêntico byte a byte ao de produção | idem |
+| Acessibilidade (axe-core 4.10.2, regras WCAG 2.1 A/AA, todas as páginas, 360 e 1280 px, após a animação e com movimento reduzido) | 0 violações | 0 violações |
 | Negativos | Plano B com `ita-provas-anteriores` a mais: recusado (`placement: … has no page`), nada escrito. QA do Plano A contra o build do Plano B: 9 falhas, saída 1. | |
 
 Efeitos visíveis medidos (Plano B): Vestibular 20 → 22, ENEM 13 → 14, Ensino Superior 6 → 8 com o grupo
@@ -62,5 +63,7 @@ docs/academy/launch/rehearse.sh plan-a /tmp/ensaio-a
 PLAYWRIGHT=/caminho/para/playwright/index.mjs node docs/academy/launch/qa.mjs http://127.0.0.1:4702 /tmp/ensaio-a plan-a .
 ```
 
-Limites: os hosts externos não abrem neste ambiente; a QA verifica o `dist/` (destinos, âncoras, links,
+Medido antes da animação de entrada terminar, o axe acusa contraste baixo em `.eyebrow`/`.lead` também na
+produção atual; com a página assentada (1,5 s) ou com movimento reduzido, 0 violações: é a opacidade da
+transição, não a cor. Limites: os hosts externos não abrem neste ambiente; a QA verifica o `dist/` (destinos, âncoras, links,
 busca, largura), não as fontes. Chromium apenas.
