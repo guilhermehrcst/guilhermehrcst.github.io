@@ -59,6 +59,12 @@ ferramenta operando com build vermelho): os três cenários foram reconstruídos
 devolve o novo digest, `status` relata o problema do build e o build falha
 (`cs50x: changed since it was published`).
 
+Terceira revisão Codex (`82ae951`: `ledger` de lotes já aplicados em `release.json`, decisões `verified` e
+`held` só por pessoas, data de retirada limpa só por aprovação, QA com código de saída): os três cenários
+reconstruídos passam (o cenário A-pending-B agora registra B no `ledger`, como um rollback real), A segue
+idêntico a A-pending-B, e a QA Playwright passou de novo (A: 236, AB: 252 verificações, 0 falhas, saída 0).
+A mesma QA com uma expectativa deliberadamente errada sai com código 1.
+
 ## Guardas de estado (AB)
 
 As 32 falhas em `guards-AB.txt` são testes que fixam o estado atual (nenhum lote aplicado, 37 publicados,
