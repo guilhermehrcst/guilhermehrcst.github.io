@@ -29,3 +29,10 @@ export const superiorCopyFor = (
   // from the same active groups rather than leaving stale claims about only two areas.
   return t.superior.byAreas(names);
 };
+
+/** The one-line summary of a path, wherever it is shown (Home objectives, the "Explorar" menu). Superior
+ *  follows its published groups; the other paths keep their fixed text. */
+export const objectiveSummaryFor = (
+  id: keyof typeof t.home.objectives.items,
+  groups: readonly Pick<HigherEducationGroup, 'id' | 'label'>[] = HIGHER_EDUCATION_GROUPS,
+): string => (id === 'ensino-superior' ? superiorCopyFor(groups).objective : t.home.objectives.items[id]);
