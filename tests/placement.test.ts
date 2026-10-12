@@ -1,5 +1,6 @@
 // V0.4 Gate B, P1: a resource's one canonical destination, derived from the rules the pages render by.
 // Converted from the RED tests of tests/gateb/gate-b.red.ts once the contract was implemented.
+import { PATH_STATUS } from '../src/lib/taxonomy.ts';
 import baseline from '../src/data/academy-release/baseline.json' with { type: 'json' };
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -54,7 +55,10 @@ test('P1: no destination on a page in preparation; a published resource without 
   const esa = resource({ id: 'esa-provas', paths: ['pre-militar'] });
   assert.equal(placementOf(esa, TODAY), null, 'never a link to a page that shows nothing');
   assert.match(problems([esa], TODAY).join('\n'), /esa-provas has no page that shows it/);
-  assert.deepEqual(problems(publishedResources, TODAY), [], 'the 37 all have a destination');
+  // The 37 of V0.4 have a destination even with both paths in preparation; every published resource has
+  // one under the real path states (a lot that publishes a Fundamental resource activates its path).
+  assert.deepEqual(problems(publishedResources.filter((r) => r.id in baseline.records), TODAY), [], 'the 37 all have a destination');
+  assert.deepEqual(problems(publishedResources, PATH_STATUS), [], 'every published resource has a destination');
 });
 
 test('P1: a destination is always a built, indexable page of the site', async () => {
