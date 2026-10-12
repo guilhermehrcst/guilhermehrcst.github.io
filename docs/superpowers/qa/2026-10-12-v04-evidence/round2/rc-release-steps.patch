@@ -181,7 +181,7 @@ index 3571b9b..3c18094 100644
  
  /** Everything wrong with a selection, one line each; empty when it holds. Staging accepts fewer than ten
 diff --git a/src/lib/learning-resources.ts b/src/lib/learning-resources.ts
-index 1632d25..ed7cbf5 100644
+index 1632d25..46f7c41 100644
 --- a/src/lib/learning-resources.ts
 +++ b/src/lib/learning-resources.ts
 @@ -4,6 +4,8 @@
@@ -193,12 +193,22 @@ index 1632d25..ed7cbf5 100644
  import { EXAM_ORDER, EXAM_PARENT, PATH_ORDER, SUBJECTS, type AreaId, type ExamId, type PathId, type SubjectId } from './taxonomy.ts';
  
  export type LearningSubjectId = SubjectId;
-@@ -214,6 +216,8 @@ export const catalogue: LearningResource[] = [
+@@ -168,6 +170,8 @@ const tech = (
+   ...(resource.url && !resource.verified ? { verified: legacyVerified(resource.id) } : {}),
+ });
+ 
++// RC SIMULATION ONLY: staging entries not in this exact editorial selection stay unpublished.
++const RELEASE_CANDIDATE_SELECTED_IDS: ReadonlySet<string> = new Set(["ef-sme-alfabeto-1", "sme-goiania-letras-e-palavras", "ef-sme-vegetacao-3", "ef-sme-municipio-4", "ef-sme-vestigios-5", "sme-goiania-leitura-em-foco", "ef-obmep-fracoes-6", "ef-sme-tecnologia-vida-7", "ef-obmep-potenciacao-8", "ef-sme-funcoes-9", "kultivi-math-enem", "kultivi-portuguese-enem", "kultivi-physics-enem", "kultivi-chemistry-enem", "kultivi-biology-enem", "kultivi-history-enem", "kultivi-geography-enem", "kultivi-philosophy-enem", "kultivi-sociology-enem", "kultivi-english-enem", "kultivi-enem-completo", "kultivi-writing-enem", "inep-enem-provas-gabaritos", "fuvest-acervo-2026", "inep-writing-2026", "cecierj-pvs-portugues-v1", "cecierj-pvs-matematica-mod1", "cecierj-pvs-historia-mod2", "cecierj-pvs-geografia-mod1", "cecierj-pvs-fisica-v1", "ita-provas-anteriores", "pm-cn-provas", "pm-en-provas", "pm-eear-provas", "pm-eam-provas", "pm-afa-provas", "pm-epcar-provas", "cecierj-aprovarj", "pm-esa-provas-2026", "pm-ime-provas", "mit-1801sc", "mit-801sc", "mit-7012", "yale-psyc-110", "yale-econ-252", "ou-environment-treading-lightly", "mit-6100l", "mit-60002", "mit-6006", "mit-6042j", "cs50x", "cs50p", "odin-foundations", "google-mlcc", "ms-learn-cloud-concepts", "fb-python", "fb-web", "cs50w", "cs50ai", "cs50sql"]);
+ export const catalogue: LearningResource[] = [
+   tech({ id: 'cs50x', paths: ['tecnologia', 'ensino-superior'], title: 'CS50x: Introduction to Computer Science', provider: 'Harvard University', level: 'beginner', language: 'en', url: 'https://cs50.harvard.edu/x/', duration: { value: 11, unit: 'weeks' }, technology: { section: 'build', topic: 'cs' }, curated: { plate: 'CS50x', image: { id: 'cs50x', alt: 'cs50x', layout: 'opening', kind: 'photo', position: '50% 39%', priority: true } } }),
+   tech({ id: 'cs50p', paths: ['tecnologia'], title: 'CS50’s Introduction to Programming with Python', provider: 'Harvard University', level: 'beginner', language: 'en', url: 'https://cs50.harvard.edu/python/', duration: { value: 10, unit: 'weeks' }, technology: { section: 'build', topic: 'python' }, curated: { plate: 'CS50P', image: { id: 'cs50p', alt: 'cs50p', layout: 'media-right', kind: 'photo', position: '82% 50%' } } }),
+@@ -214,6 +218,9 @@ export const catalogue: LearningResource[] = [
    { id: 'uerj-geography-practice', title: 'Questões de Geografia', provider: 'Revista do Vestibular UERJ', subject: 'geografia', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=6', verified: legacyVerified('uerj-geography-practice'), registration: 'not-required', certificate: 'none' },
    { id: 'uerj-spanish-practice', title: 'Questões de Espanhol', provider: 'Revista do Vestibular UERJ', subject: 'espanhol', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=2', verified: legacyVerified('uerj-spanish-practice'), registration: 'not-required', certificate: 'none' },
    { id: 'uerj-physics-practice', title: 'Questões de Física', provider: 'Revista do Vestibular UERJ', subject: 'fisica', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aano=&anivel=dificil&aseq_area=&aseq_disciplina=8&aseq_etapa=&sb=Buscar', verified: legacyVerified('uerj-physics-practice'), registration: 'not-required', certificate: 'none' },
-+  // RC SIMULATION: every Gate B candidate promoted.
-+  ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES,
++  // Only actually selected IDs may enter the simulated catalogue.
++  ...STAGED_RESOURCES.filter((r) => RELEASE_CANDIDATE_SELECTED_IDS.has(r.id)),
++  ...GATEB_NEW_RESOURCES.filter((r) => RELEASE_CANDIDATE_SELECTED_IDS.has(r.id)),
  ];
  
  export const isPublishedResource = (resource: LearningResource): resource is PublishedLearningResource =>
