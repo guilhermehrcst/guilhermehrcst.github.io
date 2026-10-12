@@ -78,7 +78,7 @@ test('Gate B: all fourteen new typed resources obey the existing P4 contract', (
   const atReview = new Date('2026-10-12T23:59:59Z');
   for (const resource of GATEB_NEW_RESOURCES) {
     const audited = selected.find((item) => item.id === resource.id);
-    assert.ok(audited, resource.id);
+    if (!audited) throw new Error(`missing audit evidence: ${resource.id}`);
     assert.deepEqual(resourceProblems(resource, atReview), [], resource.id);
     // The AprovaRJ institutional page was reopened on 2026-10-12 after the 11/10 editorial audit.
     const sourceCheckDate = resource.id === 'cecierj-aprovarj' ? '2026-10-12' : audited.reviewed_on;
@@ -107,7 +107,7 @@ test('Gate B: five Cecierj apostilas are references, never courses or official U
   ]);
   for (const [id, subject] of expected) {
     const resource = additions.get(id);
-    assert.ok(resource, id);
+    if (!resource) throw new Error(`missing typed candidate: ${id}`);
     assert.equal(resource.subject, subject, id);
     assert.equal(resource.format, 'reference', id);
     assert.deepEqual(resource.paths, ['vestibulares'], id);
@@ -132,7 +132,7 @@ test('Gate B: eight institutional exam booklets and AprovaRJ are accurately clas
     assert.ok(!exam.verified?.evidence?.checked.includes('certificate'), exam.id);
   }
   const aprovarj = additions.get('cecierj-aprovarj');
-  assert.ok(aprovarj);
+  if (!aprovarj) throw new Error('missing AprovaRJ candidate');
   assert.equal(aprovarj.format, 'course');
   assert.equal(aprovarj.subject, null);
   assert.equal(aprovarj.registration, 'required');
