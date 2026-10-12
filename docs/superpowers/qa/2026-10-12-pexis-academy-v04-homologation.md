@@ -1,16 +1,108 @@
 # Pexis Academy V0.4 | Homologação técnica e QA de release
 
-**Data:** 12/10/2026. **Executor:** Claude Code (sessão remota). **Escopo:** QA completo do PR #37 e simulação isolada do release dos 60 destaques. Nada foi publicado, enviado ao remoto, mergeado ou implantado.
+**Data:** 12/10/2026. **Executor:** Claude Code (sessão remota). **Escopo:** QA completo do PR #37, simulação isolada do release dos 60 destaques e correção dos bloqueios encontrados. Nada foi publicado, enviado ao remoto, mergeado ou implantado.
 
-## Decisão
+Este documento tem duas rodadas. **A rodada 2 é o estado atual**; a rodada 1 fica abaixo como registro.
 
-**NO-GO para publicar os 60 destaques. Lançamento bloqueado.**
+## Rodada 2 — correção dos bloqueios (estado atual)
+
+**Branch:** `qa/v04-homologation`, local. **HEAD testado:** `b22d913`, sobre `0e1b150` e `28bdaa0` (preservados) e `440b48a` (PR #37).
+
+### Decisão atualizada
+
+**Lançamento bloqueado: NO-GO para publicar os 60 destaques.** Agora resta **um único bloqueio**: a homologação em navegador das 37 URLs novas.
+
+- Os dois P1, os quatro P2 e o problema de metadados da Open University foram corrigidos com TDD.
+- **A simulação de release passa sem nenhum contorno.** Ela aplica só as etapas deliberadas de um release: promoção, 60 destaques liberados, Fundamental e Pré-Militar ativos e as listas manuais do `verify-dist`.
+- A homologação em navegador continua pendente para as 37 URLs. O ambiente de QA não alcança os hosts (o proxy nega a conexão). **Isso não prova que os recursos estejam indisponíveis**: nada foi demonstrado nem refutado sobre eles nesta sessão.
+
+**Decisão técnica sobre o código:** pronto para o release, condicionado a três coisas:
+1. homologação das 37 URLs em navegador com rede liberada;
+2. a atualização deliberada dos 41 guardas de staging registrados;
+3. as listas de hosts e caminhos do `verify-dist` no commit de release.
+
+Sem a evidência das 37, a publicação continua **NO-GO**. A autorização final é humana.
+
+### Correções
+
+| ID | Problema | Correção | Commit | RED → GREEN |
+|---|---|---|---|---|
+| P1-RC1 | A Home não era gerada quando o MIT tinha cursos fora de Tecnologia | `homeSources()` (`src/lib/home-sources.ts`). Instituição com cursos numa página: mesmo link de trilha e mesmo texto de antes. Com cursos em várias páginas: `/buscar/?instituicao=<valor>`, só se o valor for um filtro que a busca oferece, e o texto lista todas as áreas ("8 cursos em Tecnologia, Matemática e Ciências da Natureza"). As validações continuam: só cursos, nenhum curso sem matéria, nenhum sem página. O `verify-dist` confere o valor do filtro na busca gerada e exige resultados em mais de uma página. | `5b47a35` | 3 testes RED; simulação sem a falha; 2 injeções rejeitadas (filtro inexistente; filtro de instituição com cursos numa página só) |
+| P1-RC2 | O `verify-dist` exigia exatamente dois grupos no Superior, com dois cursos cada | Ordem dos campos escrita à mão. Matemática e Computação sempre presentes, primeiro e com pelo menos dois cursos. Campo novo só com pelo menos um curso publicado. Nunca vazio, desconhecido, repetido ou fora de ordem. | `b04e20b` | RED na simulação ("group fisica lists 1 courses"); 4 injeções rejeitadas (grupo vazio, campo desconhecido, ordem trocada, Matemática com 1 curso) |
+| P2-RC3 | O Vestibular rejeitava `#destaques` antes de "provas" | `#destaques` é aceito só como primeira seção; a ordem do hub vale depois dele. A seção de destaques continua conferida pela regra própria (dez recursos distintos). | `b217062` | RED na simulação; injeção com destaques fora do topo rejeitada |
+| P2-RC4 | Os testes só aceitavam MIT e Harvard como universidades | Lista escrita à mão em `tests/university-publishers.ts`: MIT, Harvard, Open Yale Courses e The Open University | `b04e20b` | falha da simulação (teste 82) eliminada |
+| P2-RC5 | `/enem/` repetiria o link do INEP na nota de fonte e no recurso | A nota continua citando o INEP com data de verificação, mas aponta para o recurso na página (`#recurso-inep-enem-provas-gabaritos`). O recurso, a âncora, a seleção e a contagem de 60 se mantêm. O `verify-dist` só aceita a nota se essa âncora estiver na mesma seção e o próprio link do item for de host oficial. O teste do ENEM passa a usar `isPractice`, a regra real do domínio. | `1884110` | RED no teste do release candidate; na simulação, 1 link externo do INEP em "Pratique" (eram 2); âncora inexistente rejeitada |
+| P2-RC7 | Guardas de staging e prontidão de release misturados | `tests/release-candidate/` reúne o que precisa passar hoje e depois do release (prontidão, Home, Superior, ENEM). `STAGING-GUARDS.md` lista os 41 testes que falham por desenho na promoção, medidos sem contorno; um teste mantém essa lista exata. **Nenhum guarda foi enfraquecido.** | `b22d913` | 9/9 testes de release candidate passam na produção e na simulação |
+| Metadados | A Open University aparecia como "Declaração de conclusão" | Novo valor `certificate: 'participation'`, com o rótulo "Declaração de participação". O `statement` da FGV não muda ("Declaração de conclusão"). A planilha do Lote 02 continua dizendo `statement`; o teste documenta o refinamento a partir da própria nota da planilha. | `1f48c7b` | 1 teste RED |
+
+### Resultados
+
+| Verificação | Produção (`b22d913`) | Simulação de release (`b22d913` + etapas de release) |
+|---|---|---|
+| `npm test` | **233/233** | 192/233. As 41 falhas são exatamente os guardas registrados; **0 falhas em `tests/release-candidate/`**. |
+| `npm run check` | 0 erros, 0 avisos | 0 erros, 0 avisos |
+| Build + `verify-dist` | 22 páginas, 2 em preparação, todos os invariantes | **24 páginas, 0 em preparação, todos os invariantes, sem contorno** |
+| `dist` vs início da rodada 2 | **byte-idêntico**: as correções não mudam nenhum HTML publicado hoje | — |
+| Fase D (âncoras, busca, rotas, destinos) | 99/99 (rodada 1; `dist` idêntico) | **173/173** com 74 recursos |
+| Fase E (6 larguras, 25 páginas) | sem mudança (`dist` idêntico) | 846/872; só os padrões já triados da rodada 1, nenhum novo |
+| Filtro do MIT (Playwright) | — | O link da Home abre a busca com o MIT marcado: 8 resultados, todos do MIT, em `/tecnologia/` e `/ensino-superior/` |
+| Ativação parcial | — | 6/6 casos corretos (completa aceita; com 9, só ITA, staging, liberação em preparação e caminho sem recursos recusados) |
+| Retorno ao staging | — | `dist` byte-idêntico ao build de produção |
+| 37 legados | byte-idênticos à `main` | mesma página e âncora para os 37; registros idênticos |
+| Cada commit da série | testes e tipos verdes em todos | — |
+
+As evidências estão em `2026-10-12-v04-evidence/round2/`:
+- `rc-release-steps.patch` e `rc-apply.py`: as únicas mudanças da simulação;
+- `rc-verify.log`, `rc-test-summary.txt`, `rc-phaseD.txt`, `rc-phaseE.txt` e `rc-mit-filter.json`;
+- capturas da Home (`#fontes`, 390 e 1440 px), do ENEM ("Pratique") e do Superior.
+
+### Regressões investigadas
+
+- **Erro de tipo em `9e33ca3`.** O shim de testes não declara `notDeepEqual`. O `npm run check` acusou 3 erros que deixei passar porque a cadeia de comandos não checava o código de saída. Corrigi com `assert.ok` e juntei os dois commits locais em `b22d913`; todo commit da série foi conferido isoladamente. O gate agora checa os códigos de saída.
+- **Build quebrado durante a correção do P1-RC1.** A reescrita do componente removeu o import `routes`. Foi detectado pelo `check` e pelo build antes do commit.
+- **88/99 numa reexecução da Fase D.** O preview estava servindo o build de staging deixado pelo teste de retorno. A simulação foi reconstruída, e a execução válida deu 173/173.
+- **Teste 147 da simulação (37 vs. 74).** É uma contagem de snapshot. Conferi à parte que os 37 legados mantêm exatamente página e âncora.
+
+### Bloqueios remanescentes
+
+1. **B-37: homologação em navegador pendente das 37 URLs.**
+   - O ambiente de QA não alcança os 17 hosts (proxy 403 por política).
+   - Classificação no manifesto: `PENDING_BROWSER_HOMOLOGATION`, `qa_access: BLOCKED_BY_QA_ENVIRONMENT`, `availability_evidence: none`.
+   - Precisa ser feita em navegador comum, com rede liberada, registrando data e evidência por item. Revalidar a URL da Escola Naval (`id_file`) e os PDFs da Marinha.
+2. **Gate D (commit de release).** Tudo deve entrar junto:
+   - promoção;
+   - `FEATURED_RESOURCE_IDS_BY_PATH` e `FEATURED_RELEASE`;
+   - `PATH_STATUS`;
+   - os 17 hosts em `COURSE_HOSTS`;
+   - `PREPARING`, `CANONICAL`, `OBJECTIVE_PATHS`, `PATH_PAGES` e a ordem das trilhas no `verify-dist`;
+   - os 41 guardas de `STAGING-GUARDS.md`, um a um.
+
+   O modelo exato é `round2/rc-release-steps.patch`. Os hosts de produção **não foram alterados** nesta etapa.
+
+**Residual (P3):** sem JavaScript, o link do MIT abre o diretório completo, sem filtro aplicado. O conteúdo continua acessível; nada é escondido nem inventado.
+
+### Gates (rodada 2)
+
+| Gate | Resultado |
+|---|---|
+| **A — código** | **Atingido.** 233/233, 0 erros de tipo, build OK, `dist` de produção inalterado. |
+| **B — conteúdo** | **Não atingido.** Classificação e invariantes OK; homologação em navegador pendente para 37 URLs. |
+| **C — UX** | **Atingido** em produção e no release candidate, agora **sem contorno**: âncoras, busca, filtro do MIT, rotas e páginas sem 404. |
+| **D — release** | **Não iniciado.** Preparação completa e medida (acima). |
+
+---
+
+# Rodada 1 — registro original (substituído pela rodada 2)
+
+## Decisão (rodada 1)
+
+**NO-GO para publicar os 60 destaques. Lançamento bloqueado.** (P1 e P2 resolvidos na rodada 2.)
 
 Três bloqueios independentes, cada um suficiente sozinho:
 
 1. **Nenhuma das 37 URLs novas foi homologada nesta sessão.**
    - A política de rede do ambiente nega todos os 17 hosts.
-   - Classificação: 0 VERIFIED, 0 PARTIAL, 37 BLOCKED.
+   - Classificação revista na rodada 2: homologação em navegador pendente para as 37. O bloqueio do proxy não é evidência de indisponibilidade.
    - Por isso o Gate B não foi atingido.
 2. **Publicar os seis cursos do Ensino Superior quebra o build da Home (P1-RC1).**
 3. **O plano de grupos do Ensino Superior viola uma barreira do `verify-dist` (P1-RC2).** Liberar exige uma decisão editorial explícita.
@@ -129,13 +221,13 @@ Os resultados por checagem estão em `e-phaseE.json` (atual) e `f-phaseE.json` (
 
 O manifesto auditável é `2026-10-12-pexis-academy-v04-homologation-37.json`.
 
-**Resumo: 0 VERIFIED · 0 PARTIAL · 37 BLOCKED.**
+**Resumo: 0 VERIFIED · 0 PARTIAL · 37 com homologação em navegador pendente.** (A rodada 1 dizia "BLOCKED", no sentido de acesso insuficiente do ambiente; a rodada 2 troca o rótulo para não sugerir indisponibilidade.)
 
 - **Motivo comum:** acesso insuficiente. O Chromium recebeu `net::ERR_TUNNEL_CONNECTION_FAILED` nas 37 URLs, e o log do proxy registra `403` por política para cada host.
 - **Controle positivo:** o mesmo navegador abriu `github.com` (200).
 - **Evidência anterior:** a da revisão editorial 05 (ChatGPT, abertura externa) está registrada em cada item, mas **não foi reproduzida** e não conta como homologação deste QA.
 
-| Caminho | IDs (todos BLOCKED nesta sessão) |
+| Caminho | IDs (homologação em navegador pendente) |
 |---|---|
 | Fundamental (10) | `ef-sme-alfabeto-1`, `sme-goiania-letras-e-palavras`, `ef-sme-vegetacao-3`, `ef-sme-municipio-4`, `ef-sme-vestigios-5`, `sme-goiania-leitura-em-foco`, `ef-obmep-fracoes-6`, `ef-sme-tecnologia-vida-7`, `ef-obmep-potenciacao-8`, `ef-sme-funcoes-9` |
 | Vestibular (8) | `kultivi-enem-completo`, `inep-enem-provas-gabaritos`, `fuvest-acervo-2026`, `cecierj-pvs-portugues-v1`, `cecierj-pvs-matematica-mod1`, `cecierj-pvs-historia-mod2`, `cecierj-pvs-geografia-mod1`, `cecierj-pvs-fisica-v1` |
@@ -188,13 +280,13 @@ A consistência entre `COURSE_HOSTS` e a cópia no `verify-dist` é garantida po
 | ID | Gravidade | Problema | Evidência | Estado |
 |---|---|---|---|---|
 | B-37 | **Bloqueio de release** | 37 URLs sem homologação reproduzível neste ambiente | `phase-b-open37-raw.json`, log do proxy | Aberto: exige abertura em rede liberada, por pessoa ou ambiente com acesso |
-| P1-RC1 | **P1** | Publicar `mit-1801sc`, `mit-801sc` e `mit-7012` faz `OfficialSources.astro` lançar `MIT OpenCourseWare spans pages; say where` e a Home não é gerada. O componente pressupõe que todos os cursos de um provedor são de Tecnologia e ficam numa trilha. | `rc-build-p1-rc1-failure.log` (simulação sem contorno, build com exit 1) | Aberto. É decisão de produto: como a Home cita um provedor presente em várias áreas. Não corrigido por estar fora do escopo de correção segura. |
-| P1-RC2 | **P1** | `verify-dist` (linhas 629–630) exige exatamente os grupos Matemática e Computação no Superior, cada um com pelo menos 2 cursos. O plano do PR #37 cria Física, Biologia, Psicologia, Economia e Meio Ambiente, cada um com 1 curso. | `verify-dist` da simulação | Aberto. Exige decidir: aceitar grupos de 1 curso (alterando a barreira) ou reagrupar. |
-| P2-RC3 | P2 | `verify-dist` (linha 581) exige que o Vestibular abra com "provas"; com destaques liberados, a seção `destaques` vem antes | `verify-dist` da simulação | Aberto, para o commit de release |
-| P2-RC4 | P2 | `tests/higher-education.test.ts` aceita só MIT e Harvard como universidades; Open Yale Courses e The Open University reprovam | teste 82 da simulação | Aberto, para o commit de release |
-| P2-RC5 | P2 | Em `/enem/`, a seção "Pratique" mostraria "Provas e gabaritos do Enem" duas vezes, como fonte oficial e como recurso `past-exam`, com a mesma URL. O teste 41 exige `format === 'practice'`. | `dist/enem` da simulação | Aberto. Decisão editorial: mostrar só um dos dois. |
-| P2-RC7 | P2 (processo) | 41 testes de snapshot e isolamento e 8 listas manuais do `verify-dist` precisam de atualização deliberada no release. É o comportamento esperado da barreira independente, mas é trabalho obrigatório do Gate D. | `rc-test.log`, `rc-simulation.patch` | Esperado e documentado |
-| P3-RC6 | P3 | `certificate: 'statement'` aparece como "Declaração de conclusão"; a Open University oferece "statement of participation" | captura `rc-sim-superior-1440.jpg` | Aberto, editorial |
+| P1-RC1 | **P1** | Publicar `mit-1801sc`, `mit-801sc` e `mit-7012` faz `OfficialSources.astro` lançar `MIT OpenCourseWare spans pages; say where` e a Home não é gerada. O componente pressupõe que todos os cursos de um provedor são de Tecnologia e ficam numa trilha. | `rc-build-p1-rc1-failure.log` (simulação sem contorno, build com exit 1) | **Resolvido na rodada 2** (`5b47a35`). Antes: Aberto. É decisão de produto: como a Home cita um provedor presente em várias áreas. Não corrigido por estar fora do escopo de correção segura. |
+| P1-RC2 | **P1** | `verify-dist` (linhas 629–630) exige exatamente os grupos Matemática e Computação no Superior, cada um com pelo menos 2 cursos. O plano do PR #37 cria Física, Biologia, Psicologia, Economia e Meio Ambiente, cada um com 1 curso. | `verify-dist` da simulação | **Resolvido na rodada 2** (`b04e20b`). Antes: Aberto. Exige decidir: aceitar grupos de 1 curso (alterando a barreira) ou reagrupar. |
+| P2-RC3 | P2 | `verify-dist` (linha 581) exige que o Vestibular abra com "provas"; com destaques liberados, a seção `destaques` vem antes | `verify-dist` da simulação | **Resolvido na rodada 2** (`b217062`). Antes: Aberto, para o commit de release |
+| P2-RC4 | P2 | `tests/higher-education.test.ts` aceita só MIT e Harvard como universidades; Open Yale Courses e The Open University reprovam | teste 82 da simulação | **Resolvido na rodada 2** (`b04e20b`). Antes: Aberto, para o commit de release |
+| P2-RC5 | P2 | Em `/enem/`, a seção "Pratique" mostraria "Provas e gabaritos do Enem" duas vezes, como fonte oficial e como recurso `past-exam`, com a mesma URL. O teste 41 exige `format === 'practice'`. | `dist/enem` da simulação | **Resolvido na rodada 2** (`1884110`). Antes: Aberto. Decisão editorial: mostrar só um dos dois. |
+| P2-RC7 | P2 (processo, resolvido na rodada 2: `b22d913`) | 41 testes de snapshot e isolamento e 8 listas manuais do `verify-dist` precisam de atualização deliberada no release. É o comportamento esperado da barreira independente, mas é trabalho obrigatório do Gate D. | `rc-test.log`, `rc-simulation.patch` | Esperado e documentado |
+| P3-RC6 | P3 | `certificate: 'statement'` aparece como "Declaração de conclusão"; a Open University oferece "statement of participation" | captura `rc-sim-superior-1440.jpg` | **Resolvido na rodada 2** (`1f48c7b`). Antes: Aberto, editorial |
 | P3-E1 | P3 | Barras `/` do demo da Home eram texto anunciado a 1,6:1 | Fase E | **Corrigido** em `28bdaa0`: `aria-hidden="true"`, teste novo (RED → GREEN), captura idêntica à `main`, 218/218 |
 
 Nenhum P0.
@@ -221,7 +313,7 @@ Nenhum P0.
 
 ## 11. Recursos bloqueados ou retidos
 
-- **As 37 posições novas:** retidas (BLOCKED nesta sessão).
+- **As 37 posições novas:** retidas, com homologação em navegador pendente (o ambiente impediu a verificação).
 - **EsPCEx:** fora da seleção, PDF oficial recusado na pesquisa externa.
 - **Itens legados sem URL:** `ms-explore-genai`, `ibm-genai` e `ms-azure-ai` continuam retidos (inalterados).
 
