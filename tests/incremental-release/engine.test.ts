@@ -415,3 +415,22 @@ test('a recorded approval may not reuse a published or another recorded URL', ()
   const lot = lotOf('L001-dup', [entryFor('google-mlcc', { url: cs50x.url!, digest: digestOf(clone) })], { hosts: [{ host: 'cs50.harvard.edu', institution: clone.provider }] });
   assert.match(problemsOf(project({ pool, lots: [lot], release: releaseOf([], inventoryWith([])) })), /google-mlcc: same URL as cs50x/);
 });
+
+// Codex review, round 7 ---------------------------------------------------------------------------------
+
+test('the take-out date stays a lower bound for every later evidence, after a fresh return too', () => {
+  const g = record('google-mlcc');
+  const fresh = { ...g, verified: { ...g.verified!, on: '2026-10-12' } };
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const b = lotOf('L002-suspensao', [], { suspensions: [{ id: 'google-mlcc', reason: 'Página mudou', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
+  const back = lotOf('L003-retorno', [entryFor('google-mlcc', { digest: digestOf(fresh), evidence: { ...entryFor('google-mlcc').evidence, on: '2026-10-12' } })]);
+  const stale = lotOf('L004-reaprovacao', [entryFor('google-mlcc')]);
+  const all = [a, b, back, stale];
+  assert.match(problemsOf(project({ lots: all, release: releaseOf(all, inventoryWith(['google-mlcc'])) })), /L004-reaprovacao: google-mlcc returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
+});
+
+test('a lot is never authorized before it was created', () => {
+  const lot = lotOf('L001-datas', [], { createdOn: '2026-10-12', authorization: { by: SIMULATED_BY, on: '2026-10-11' },
+    suspensions: [{ id: 'cs50x', reason: 'Teste', decidedBy: SIMULATED_BY, decidedOn: '2026-10-10' }] });
+  assert.match(lotProblems(lot, NOW).join('\n'), /L001-datas: authorized before it was created/);
+});

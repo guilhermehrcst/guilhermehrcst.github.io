@@ -222,6 +222,7 @@ export const lotProblems = (lot: unknown, now: Date): string[] => {
       const decided = [...(Array.isArray(lot.entries) ? lot.entries : []), ...(Array.isArray(lot.suspensions) ? lot.suspensions : [])]
         .map((d) => (isObject(d) ? d.decidedOn : undefined)).filter(isDate);
       if (isDate(auth.on) && decided.some((on) => dayOf(on) > dayOf(auth.on as string))) problems.push(`${name}: authorized before its own decisions`);
+      if (isDate(auth.on) && isDate(lot.createdOn) && dayOf(auth.on) < dayOf(lot.createdOn)) problems.push(`${name}: authorized before it was created`);
     }
   }
   return problems;
@@ -403,8 +404,8 @@ export const projectRelease = (input: ReleaseInput): Projection => {
         problems.push(`${lot.lot}: ${entry.id} returns on evidence of ${entry.evidence.on}, older than the decision of ${outOn} that took it out`);
       }
       if (entry.decision === 'held') takeOut(takenOut, entry.id, entry.decidedOn);
-      // Only an approval clears it: its evidence is then bound to the record (approvalProblems).
-      else if (entry.decision === 'approved') takenOut.delete(entry.id);
+      // Never cleared: once taken out, every later verification or approval needs evidence at least as recent
+      // as that decision (a fresh return does not license a stale re-approval afterwards).
       latest.set(entry.id, { entry, lot });
       if (move(entry.id, entry.decision) && entry.decision === 'approved') {
         at.set(entry.id, 'published');
@@ -423,7 +424,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
       }
     }
   };
-  /** id → the date of the decision (held or suspension) that took it out, until a fresh verification. */
+  /** id → the latest date it was taken out (held or suspended): a permanent lower bound for later evidence. */
   const takenOut = new Map<string, string>();
   for (const lot of applied) replay(lot, states, takenOut, true);
   // A new lot sorts after every lot ever applied (the ledger), rolled back or not: the ledger only grows.
