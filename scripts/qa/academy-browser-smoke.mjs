@@ -1,4 +1,4 @@
-// Browser QA for the published-staging HTML. Run only against a LOCAL Astro preview.
+// Browser QA for PR #37 HTML. Run only against a LOCAL Astro preview.
 // Executed by an isolated GitHub Actions QA PR. Does not deploy or alter content.
 import { chromium } from 'playwright';
 import { mkdir, writeFile } from 'node:fs/promises';
