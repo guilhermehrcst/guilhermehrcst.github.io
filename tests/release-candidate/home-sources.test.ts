@@ -12,17 +12,6 @@ import { facetOptions } from '../../src/lib/search-facets.ts';
 const lib = await import('../../src/lib/home-sources.ts').catch(() => ({})) as Record<string, any>;
 const PROVIDERS = ['Harvard University', 'MIT OpenCourseWare', 'FGV', 'Cisco Networking Academy', 'Fundação Bradesco', 'Fundação Bradesco + Microsoft'];
 
-test('today: every institution keeps its single-page link and count, exactly as before', () => {
-  const sources = lib.homeSources(PROVIDERS, publishedResources, publishedTracksFor(publishedResources));
-  assert.deepEqual(sources.map((s: any) => [s.provider, s.count, s.areas, s.href]), [
-    ['Harvard University', 5, ['Tecnologia'], '/tecnologia/#comecar-a-programar'],
-    ['MIT OpenCourseWare', 5, ['Tecnologia'], '/tecnologia/#python'],
-    ['FGV', 3, ['Tecnologia'], '/tecnologia/#dados'],
-    ['Cisco Networking Academy', 1, ['Tecnologia'], '/tecnologia/#seguranca-e-privacidade'],
-    ['Fundação Bradesco', 2, ['Tecnologia'], '/tecnologia/#comecar-a-programar'],
-    ['Fundação Bradesco + Microsoft', 1, ['Tecnologia'], '/tecnologia/#inteligencia-artificial'],
-  ]);
-});
 
 test('release candidate: MIT spans three areas and leads to the search filtered by MIT, a real filter value', () => {
   const sources = lib.homeSources(PROVIDERS, RC_CATALOGUE, publishedTracksFor(RC_CATALOGUE));

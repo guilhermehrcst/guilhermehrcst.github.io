@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ENEM_AREAS, examGuides, resolveGuide, UERJ_SUBJECTS } from '../src/lib/exam-guides.ts';
+import { ENEM_AREAS, examGuides, resolveGuide, sourceShownAsResource, UERJ_SUBJECTS } from '../src/lib/exam-guides.ts';
 import { isPractice, publishedResources } from '../src/lib/learning-resources.ts';
 import { officialSources } from '../src/lib/official-sources.ts';
 import { ACADEMIC_SUBJECTS } from '../src/lib/taxonomy.ts';
@@ -80,4 +80,11 @@ test('ENEM areas follow INEP: four areas and the essay, covering the twelve subj
 
 test('UERJ subjects are exactly those with UERJ resources', () => {
   assert.deepEqual(UERJ_SUBJECTS, ['matematica', 'portugues', 'redacao', 'fisica', 'historia', 'geografia', 'espanhol']);
+});
+
+// Staging state (V0.4 QA P2-RC5): the INEP collection is not published, so the practice note keeps its
+// external link to INEP. A release that publishes it switches the note to the resource on the page.
+test('staging today: the INEP source is not shown as a resource, so the note keeps its external link', () => {
+  const practice = resolveGuide('enem').find((s) => s.id === 'pratique')!;
+  assert.equal(sourceShownAsResource('inep-provas-gabaritos', practice.resources), undefined);
 });

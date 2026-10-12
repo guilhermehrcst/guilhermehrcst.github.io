@@ -23,7 +23,3 @@ test('release candidate: the INEP collection is in Pratique, anchored on /enem/,
   assert.equal(Object.values(GATEB_DRAFT_SELECTION).flat().length, 60);
 });
 
-test('today: the source is not shown as a resource, so the note keeps its external link', () => {
-  const practice = guides.resolveGuide('enem').find((s: any) => s.id === 'pratique');
-  assert.equal(guides.sourceShownAsResource?.('inep-provas-gabaritos', practice.resources) ?? null, null);
-});
