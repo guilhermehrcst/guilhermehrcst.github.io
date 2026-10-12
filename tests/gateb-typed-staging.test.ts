@@ -111,7 +111,8 @@ test('Gate B: five Cecierj apostilas are references, never courses or official U
     assert.equal(resource.subject, subject, id);
     assert.equal(resource.format, 'reference', id);
     assert.deepEqual(resource.paths, ['vestibulares'], id);
-    assert.equal(resource.registration, 'unconfirmed', id);
+    assert.equal(resource.registration, 'not-required', id);
+    assert.ok(resource.verified?.evidence?.checked.includes('registration'), id);
     assert.equal(resource.certificate, 'unconfirmed', id);
     assert.equal(resource.exams, undefined, id);
   }
