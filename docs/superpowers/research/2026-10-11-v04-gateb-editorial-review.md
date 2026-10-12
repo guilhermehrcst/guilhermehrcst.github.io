@@ -1,38 +1,57 @@
-# Gate B | Auditoria editorial e de acesso das 60 posições
+# Gate B | Auditoria editorial das 60 posições, revisão 02
 
-**Data:** 11/10/2026 (hora local de Brasília). **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **Escopo:** somente pesquisa. **Não ativa recursos nem autoriza publicação.**
+**Revisão:** 11/10/2026. **Escopo:** documentação e fontes, não publicação. **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **PR #35:** pesquisa, sem alteração em `src/`.
 
 ## Resultado
 
-**45 posições** têm páginas oficiais abertas diretamente e evidência considerada suficiente para validar *fonte e escopo editorial*; **15 posições** ficam pendentes por downloads não conferidos, indisponibilidade da fonte direta ou ausência de fonte. Ao todo, **46 URLs oficiais foram abertas**, incluindo o índice do INEP que não passou na validação de anexos. A tentativa de abrir prova/gabarito ENEM 2025 no domínio de downloads do INEP retornou **502**, por isso esse item não entrou nos 45 aprovados.
+**51/60 posições com fonte e escopo verificados diretamente**, **9 pendentes**. São **60 IDs distintos**, 10 em cada um dos seis caminhos. Nenhuma destas decisões é homologação final de todo o Gate B: **`FEATURED_RELEASE` permanece em staging, 0/60 destaques liberados e nenhum recurso novo publicado**.
 
-A análise foi realizada sem depender de trechos de buscador como evidência. **Aprovar a fonte não equivale a publicar nem a homologar o pacote completo de 60 destaques.** Gate B integral 0/60 liberado; 37 recursos legados inalterados.
+A auditoria passou de 45 para 51 fontes aprovadas nesta revisão. Foram substituídos cinco links de questões da UERJ que falharam por **cinco apostilas integralmente abertas** em `canal.cecierj.edu.br`, com disciplinas diferentes. Isso **não apaga os cinco recursos legados da UERJ já publicados no catálogo**, apenas muda a proposta dos destaques. Um acervo da ESA sem fonte foi substituído pelo curso gratuito AprovaRJ. **Cecierj não é UERJ:** as novas apostilas são materiais didáticos gerais do Pré-Vestibular Social, rotulados como `reference`, nunca como questões oficiais da UERJ.
+
+Os PDFs oficiais de Português (2021, 162 páginas), Matemática (2015, 118 páginas), História (2015, 128 páginas), Geografia (2015, 126 páginas) e Física (2021, 188 páginas) foram abertos diretamente e tiveram texto e sumário inspecionados. Material PDF livre não exige cadastro para leitura; certificado não confirmado. O AprovaRJ tem página oficial confirmando gratuidade, acesso contínuo mediante cadastro, videoaulas, exercícios, simulados e ausência de certificado. **Conteúdo interno atrás do login do AprovaRJ não foi aberto**, o que deve ser informado ao publicar ou submeter o item à homologação final.
 
 ## Cobertura por caminho
 
-| Caminho | Fonte/escopo aprovados | Pendentes | Posições planejadas |
+| Caminho | Fonte/escopo aprovado | Pendente | Posições |
 |---|---:|---:|---:|
 | Ensino Fundamental | 10 | 0 | 10 |
 | Ensino Médio | 10 | 0 | 10 |
-| Vestibular | 4 | 6 | 10 |
-| Pré-Militar | 1 | 9 | 10 |
+| Vestibular | 9 | 1 | 10 |
+| Pré-Militar | 2 | 8 | 10 |
 | Ensino Superior | 10 | 0 | 10 |
 | Tecnologia | 10 | 0 | 10 |
-| **Total** | **45** | **15** | **60** |
+| **Total** | **51** | **9** | **60** |
 
-## Decisões e limites
+## Substituições desta revisão
 
-- **Fundamental:** 10 aulas/módulos diretamente conferidos (SME Goiânia e OBMEP), abrangendo do 1º ao 9º ano. Slides/downloads adicionais e testes que exigem login não foram inspecionados; isso não invalida o texto/atividade principal aberto gratuitamente na própria página.
-- **Médio:** 10 cursos da Kultivi com páginas oficiais abertas. Oferta gratuita com matrícula por conta e certificado anunciado como gratuito. Concentração em um provedor é uma decisão de curadoria a revisar após a primeira entrega, não justificativa para falsificar diversidade.
-- **Vestibular:** Kultivi ENEM e redação, Fuvest 2026 e cartilha do INEP avaliados. O arquivo ENEM do INEP lista cadernos, mas os PDFs testados retornaram 502. Cinco URLs de questões da UERJ retornaram 502 nesta sessão, embora os IDs legados continuem no site.
-- **Pré-Militar:** índice e **PDF de prova 2025** do ITA mais o gabarito diretamente verificados. Colégio Naval, Escola Naval, EEAR e EAM com anexos indisponíveis. AFA/EPCAR 403; IME CFG 502; ESA/EsPCEx sem acervo aberto. Nenhuma dessas nove posições foi aprovada.
-- **Superior:** seis cursos em staging e quatro MIT OCW legados abertos em suas fontes. MIT/Yale não emitem diploma pelo acesso livre. OpenLearn pode emitir declaração sem equiparar a diploma. Os seis cursos novos exigem agrupamentos e destinos no catálogo antes da publicação.
-- **Tecnologia:** 10 ofertas em fontes diretas com **CS50 SQL no lugar de Cisco na seleção**. Cisco continua no catálogo legado publicado, sem exclusão. Os cursos novos de Odin, Google MLCC e Microsoft Learn exigem roteamento para trilhas; nuvem não deve ser classificada como segurança por conveniência.
-- **Metadados:** o arquivo JSON anexo conserva posição, ID, URL, método, data, condições de cadastro/certificado, ressalvas, anos escolares e decisão por item. Quando não confirmado, usa `unconfirmed`; não inventa certificado. A avaliação de acesso aos anexos não testados é explicitamente parcial.
+| ID anterior, sem nova verificação | Novo recurso | Formato correto | Fonte institucional |
+|---|---|---|---|
+| `uerj-portuguese-practice` | `cecierj-pvs-portugues-v1` | reference | [Fonte](https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf) |
+| `uerj-math-practice` | `cecierj-pvs-matematica-mod1` | reference | [Fonte](https://canal.cecierj.edu.br/122016/efcafab1e59a9c49c5244cbbdc982539.pdf) |
+| `uerj-history-practice` | `cecierj-pvs-historia-mod2` | reference | [Fonte](https://canal.cecierj.edu.br/122016/d0522fa0af463530f6629b02000952d5.pdf) |
+| `uerj-geography-practice` | `cecierj-pvs-geografia-mod1` | reference | [Fonte](https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf) |
+| `uerj-physics-practice` | `cecierj-pvs-fisica-v1` | reference | [Fonte](https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf) |
+| `pm-esa-provas` | `cecierj-aprovarj` | course | [Fonte](https://extensao.cecierj.edu.br/cursos/aprovarj/) |
 
-## Inventário individual
+Os novos IDs não estão em `src/lib/staging.ts` nem em `src/lib/learning-resources.ts`; o JSON é apenas documentação. Exigem tipagem, `resourceProblems`, evidência P4, roteamento e testes antes de qualquer promoção. Não declarar `registration` ou `certificate` dos PDFs além do que é verificável.
 
-| Caminho | # | ID | Veredito | URL | O que foi visto / limite |
+## 9 pendências ainda bloqueadas
+
+- **Vestibular #3: `inep-enem-provas-gabaritos`**. Índice do INEP abre, mas em 11/10 a prova e o gabarito de 2025 (caderno azul) falharam ao abrir em download.inep.gov.br com erro 502. Necessário ao menos um PDF de prova confirmado; não homologar agora. [Página oficial](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos).
+- **Pré-Militar #2: `pm-cn-provas`**. Índice Colégio Naval abre e lista ZIPs de provas; o anexo de prova não abriu neste acesso. [Página oficial](https://www.marinha.mil.br/sspm/colegionaval/colegio_princ).
+- **Pré-Militar #3: `pm-en-provas`**. Índice Escola Naval abre e lista ZIPs de provas; o anexo de prova não abriu neste acesso. [Página oficial](https://www.marinha.mil.br/sspm/node/95).
+- **Pré-Militar #4: `pm-eear-provas`**. Índice EEAR lista provas/gabaritos, mas PDFs das provas não foram confirmados; gabarito sozinho não basta. [Página oficial](https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25).
+- **Pré-Militar #5: `pm-eam-provas`**. Página oficial das Escolas de Aprendizes-Marinheiros lista arquivos; anexo de prova não foi inspecionado. [Página oficial](https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag).
+- **Pré-Militar #6: `pm-afa-provas`**. Índice oficial da FAB foi localizado, mas acesso direto devolveu 403. É vedado usar trecho de buscador como fonte. [Página oficial](https://www.fab.mil.br/ingresso/anteriores.html).
+- **Pré-Militar #7: `pm-epcar-provas`**. Índice oficial EPCAR/FAB foi localizado, mas acesso direto devolveu 403. Não homologar. [Página oficial](https://www.fab.mil.br/ingresso/anteriores.html).
+- **Pré-Militar #9: `pm-espcex-provas`**. Nenhum acervo específico e verificável de provas da EsPCEx foi aberto em fonte oficial. Sem URL verificada.
+- **Pré-Militar #10: `pm-ime-provas`**. Página de provas anteriores do IME CFG (ensino médio) foi localizada, mas a abertura direta retornou 502. [Página oficial](https://www.ime.eb.mil.br/index.php).
+
+**Atenção:** o índice de provas ENEM do INEP está acessível, mas os anexos tentados retornaram erro 502; ainda não é prova de acesso ao caderno de questões. Na Marinha, abrir o índice não equivale a abrir o ZIP da prova. No IME, conteúdo visto em resultado de busca não equivale a conseguir abrir a página nem seus PDFs. A aprovação do AprovaRJ não habilita reclassificar os oito acervos militares ainda indisponíveis.
+
+## Inventário editorial completo
+
+| Caminho | Posição | ID | Estado | URL | Evidência e ressalva |
 |---|---:|---|---|---|---|
 | Ensino Fundamental | 1 | `ef-sme-alfabeto-1` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-nosso-alfabeto/) | Página da SME informa 1º ano e explica o alfabeto; slides vinculados não foram baixados. |
 | Ensino Fundamental | 2 | `sme-goiania-letras-e-palavras` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-letras-e-palavras/) | Página da SME indica 2º ano, texto e atividade de letras/palavras; aula isolada. |
@@ -59,11 +78,11 @@ A análise foi realizada sem depender de trechos de buscador como evidência. **
 | Vestibular | 3 | `inep-enem-provas-gabaritos` | Pendente | [Oficial](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos) | Índice do INEP abre, mas em 11/10 a prova e o gabarito de 2025 (caderno azul) falharam ao abrir em download.inep.gov.br com erro 502. Necessário ao menos um PDF de prova confirmado; não homologar agora. |
 | Vestibular | 4 | `fuvest-acervo-2026` | Fonte aprovada | [Oficial](https://www.fuvest.br/acervo-vestibular-2026/) | Índice oficial da Fuvest 2026 aberto; gabarito PDF e simulado PDF foram inspecionados. Não afirmar que todos os cadernos de prova abriram. |
 | Vestibular | 5 | `inep-writing-2026` | Fonte aprovada | [Oficial](https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante) | Cartilha oficial da Redação ENEM 2026, material de referência/prática, não curso. |
-| Vestibular | 6 | `uerj-portuguese-practice` | Pendente | [Oficial](https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=1) | Página direta do banco de questões UERJ retornou 502 neste acesso. O índice de busca não substitui a inspeção. |
-| Vestibular | 7 | `uerj-math-practice` | Pendente | [Oficial](https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=9) | Página direta de Matemática UERJ retornou 502 neste acesso. Não declarar nova data de verificação. |
-| Vestibular | 8 | `uerj-history-practice` | Pendente | [Oficial](https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=5) | Página direta de História UERJ retornou 502 neste acesso. Não declarar nova data de verificação. |
-| Vestibular | 9 | `uerj-geography-practice` | Pendente | [Oficial](https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=6) | Página direta de Geografia UERJ retornou 502 neste acesso. Não declarar nova data de verificação. |
-| Vestibular | 10 | `uerj-physics-practice` | Pendente | [Oficial](https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aano=&anivel=dificil&aseq_area=&aseq_disciplina=8&aseq_etapa=&sb=Buscar) | Página direta de Física UERJ retornou 502 neste acesso. Não declarar nova data de verificação. |
+| Vestibular | 6 | `cecierj-pvs-portugues-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf) | PDF institucional integral aberto em 11/10/2026; 162 páginas, material didático de Língua Portuguesa publicado pela Fundação Cecierj em 2021. Texto, leitura, coesão e exercícios; referência de estudo, não banco de questões da UERJ nem curso completo. |
+| Vestibular | 7 | `cecierj-pvs-matematica-mod1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/122016/efcafab1e59a9c49c5244cbbdc982539.pdf) | PDF integral de 118 páginas aberto em 11/10/2026; módulo de 2015 da Fundação Cecierj com números, funções, combinatória, probabilidade e exercícios. Material de referência, não prova da UERJ. |
+| Vestibular | 8 | `cecierj-pvs-historia-mod2` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/122016/d0522fa0af463530f6629b02000952d5.pdf) | PDF institucional de 128 páginas aberto em 11/10/2026; apostila de 2015 sobre Guerras Mundiais, Guerra Fria e Américas, com conteúdo integral. Material de referência, não questões comentadas da UERJ. |
+| Vestibular | 9 | `cecierj-pvs-geografia-mod1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf) | PDF integral de 126 páginas aberto em 11/10/2026; apostila de 2015 da Fundação Cecierj com industrialização, urbanização, globalização e exercícios do Enem. Material de referência, não banco de questões da UERJ. |
+| Vestibular | 10 | `cecierj-pvs-fisica-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf) | PDF integral de 188 páginas aberto em 11/10/2026; volume de Física de 2021 da Fundação Cecierj, com cinemática, movimentos e exercícios. Material de referência, não simulador/questões da UERJ. |
 | Pré-Militar | 1 | `ita-provas-anteriores` | Fonte aprovada | [Oficial](https://vestibular.ita.br/provas.htm) | Índice oficial do ITA reaberto; PDF da prova de 2025 e respectivo gabarito inspecionados diretamente. |
 | Pré-Militar | 2 | `pm-cn-provas` | Pendente | [Oficial](https://www.marinha.mil.br/sspm/colegionaval/colegio_princ) | Índice Colégio Naval abre e lista ZIPs de provas; o anexo de prova não abriu neste acesso. |
 | Pré-Militar | 3 | `pm-en-provas` | Pendente | [Oficial](https://www.marinha.mil.br/sspm/node/95) | Índice Escola Naval abre e lista ZIPs de provas; o anexo de prova não abriu neste acesso. |
@@ -71,8 +90,8 @@ A análise foi realizada sem depender de trechos de buscador como evidência. **
 | Pré-Militar | 5 | `pm-eam-provas` | Pendente | [Oficial](https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag) | Página oficial das Escolas de Aprendizes-Marinheiros lista arquivos; anexo de prova não foi inspecionado. |
 | Pré-Militar | 6 | `pm-afa-provas` | Pendente | [Oficial](https://www.fab.mil.br/ingresso/anteriores.html) | Índice oficial da FAB foi localizado, mas acesso direto devolveu 403. É vedado usar trecho de buscador como fonte. |
 | Pré-Militar | 7 | `pm-epcar-provas` | Pendente | [Oficial](https://www.fab.mil.br/ingresso/anteriores.html) | Índice oficial EPCAR/FAB foi localizado, mas acesso direto devolveu 403. Não homologar. |
-| Pré-Militar | 8 | `pm-esa-provas` | Pendente | Não encontrada | Nenhum acervo específico e verificável de provas da ESA foi aberto em fonte oficial. |
-| Pré-Militar | 9 | `pm-espcex-provas` | Pendente | Não encontrada | Nenhum acervo específico e verificável de provas da EsPCEx foi aberto em fonte oficial. |
+| Pré-Militar | 8 | `cecierj-aprovarj` | Fonte aprovada | [Oficial](https://extensao.cecierj.edu.br/cursos/aprovarj/) | Página oficial da Fundação Cecierj aberta em 11/10/2026: programa online gratuito, inscrições contínuas, videoaulas, exercícios e simulados; inclui ESA, EsPCEx, EPCAR, AFA, ITA, IME, Marinha e EEAR. Cadastro gratuito obrigatório; sem certificado. Área autenticada não foi acessada. É curso preparatório geral, não provas anteriores da ESA. |
+| Pré-Militar | 9 | `pm-espcex-provas` | Pendente | Não localizada | Nenhum acervo específico e verificável de provas da EsPCEx foi aberto em fonte oficial. |
 | Pré-Militar | 10 | `pm-ime-provas` | Pendente | [Oficial](https://www.ime.eb.mil.br/index.php) | Página de provas anteriores do IME CFG (ensino médio) foi localizada, mas a abertura direta retornou 502. |
 | Ensino Superior | 1 | `mit-1801sc` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/) | MIT OCW, Single Variable Calculus: vídeos, exercícios e notas de cálculo, sem diploma/certificado. |
 | Ensino Superior | 2 | `mit-801sc` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/) | MIT OCW, Classical Mechanics: aulas e exercícios oficiais de mecânica, sem diploma/certificado. |
@@ -95,8 +114,8 @@ A análise foi realizada sem depender de trechos de buscador como evidência. **
 | Tecnologia | 9 | `cs50ai` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/ai/) | Harvard CS50 AI: curso livre sobre IA com Python. |
 | Tecnologia | 10 | `cs50sql` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/sql/) | Harvard CS50 SQL: curso gratuito de banco de dados; atividades podem exigir conta edX; certificado verificado é separado. Substitui Cisco apenas na shortlist. |
 
-## Condições para liberação futura
+## Próximas condições
 
-O arquivo `2026-10-11-v04-gateb-editorial-review.json` é **documentação, não configuração de produção**. Sua incorporação em `featured.ts` está **expressamente proibida** nesta etapa. Para converter cada item de fonte aprovada em recurso homologado publicável, conferir metadados com P4, classificar corretamente formato e acesso, assegurar rota visível, validar hosts, preencher cada caminho com 10 IDs distintos e então fazer revisão independente completa e CI antes de merge/deploy. O Pré-Militar permanece bloqueado.
+Para promover um registro novo, preparar metadados e testes com o validador P4, manter formato fiel à fonte, verificar URL direta, definir destino canônico e evidenciar cadastro/certificado. A seleção só pode ser publicada com dez recursos distintos válidos por caminho, CI aprovado e revisão externa concluída **antes** de merge/deploy. Nenhuma dispensa temporária de segurança do Gate B.
 
-Nenhum conteúdo de `src/`, `FEATURED_RELEASE`, `PATH_STATUS`, GitHub Actions ou Pages é alterado por esta revisão.
+**Não alterados nesta revisão:** os 37 registros do catálogo publicado, o staging técnico, os caminhos, `FEATURED_RESOURCE_IDS_BY_PATH`, `FEATURED_RELEASE`, `PATH_STATUS` e o site.
