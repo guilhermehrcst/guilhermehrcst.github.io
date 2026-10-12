@@ -4,10 +4,12 @@
 // today (counted from the catalogue at build time, never typed).
 import { objectiveFacts } from '../lib/learning-library';
 import { routes } from '../lib/routes';
+import { superiorCopyFor } from '../lib/superior-copy';
 import { OBJECTIVES, PATH_ORDER, PREPARING_PATHS } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
 const o = t.home.objectives;
+const superior = superiorCopyFor();
 ---
 <ol class="objectives" role="list">
   {PATH_ORDER.map((id, i) => {
@@ -17,7 +19,7 @@ const o = t.home.objectives;
         <a href={routes.objective(id)} data-path-count={PREPARING_PATHS.includes(id) ? undefined : facts.resources}>
           <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
           <span class="name">{OBJECTIVES[id].label}</span>
-          <span class="what">{o.items[id]}</span>
+          <span class="what">{id === 'ensino-superior' ? superior.objective : o.items[id]}</span>
           <span class="facts">{PREPARING_PATHS.includes(id) ? t.preparing.label : o.facts(facts.resources, facts.tracks)}</span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>
