@@ -35,28 +35,32 @@ Sugeridos para futura implementação, com padrão **nega por padrão**:
 
 - `candidate`: identificado; não publicado.
 - `verified`: passou no contrato do formato, com evidências datadas.
-- `approved`: editor aprovou **ID, URL exata e versão/data da evidência** para inclusão. Toda alteração de URL, inclusive no mesmo host, exige nova autorização.
-- `published`: entrou no catálogo público, com teste de integridade, rota, link e busca.
+- `approved`: editor aprovou **ID, URL exata, versão/data da evidência e hash SHA-256 canônico do registro completo**. Qualquer mudança no conteúdo que o aluno verá (mesmo mantendo a mesma URL) exige reaprovação explícita.
+- `published`: entrou no catálogo público, com teste de integridade, rota, link e busca; a autorização individual permanece auditável e vinculada ao hash aprovado entre lotes.
 - `held`: pendência ou risco identificado; retido, sem bloquear outros IDs.
-- `suspended`: publicado anteriormente, mas removido de exposição mediante evidência de link quebrado ou problema material, com trilha de auditoria.
+- `suspended`: publicado anteriormente, mas **excluído de toda a projeção pública** mediante decisão editorial de suspensão, com trilha de auditoria. Manter dados históricos somente no registro de auditoria, não em busca, páginas, destaques, JSON público ou âncoras.
 
 Não interpretar um `verified` automaticamente como `approved`; evidência de uma ferramenta sem decisão editorial não aciona promoção. Nunca reaproveitar a aprovação de outro ID, URL ou data.
 
-Registrar em **manifesto de autorização versionado e imutável por lote** para cada ID: ID exato, URL aprovada exata (incluindo caminho/query), identificador e versão/data da evidência editorial, instituição, formato, URL original/final, data, método, conteúdos observados, exigências de conta, incertezas, revisor e decisão. O build deve comparar os valores de URL/evidência **do registro resolvido** com os aprovados no manifesto, falhando em qualquer divergência (inclusive mudança para outra página do mesmo host). Não basta validar domínio ou reaproveitar uma aprovação para o ID mutável. Não exigir teste de navegador humano para cada fase do site se um método equivalente é suficiente **para o formato e para a alegação feita**, mas nunca ocultar limitações reais.
+Registrar em **manifesto de autorização versionado e imutável por lote** para cada ID: ID e URL exatos, **hash SHA-256 canônico do registro tipado completo aprovado**, identificador e versão/data da evidência, instituição, formato, URL original/final, data, método, conteúdos observados, exigências de conta, incertezas, revisor e decisão.
+
+O build deve recalcular o hash a partir da **serialização canônica determinística de todo o registro de conteúdo que será publicado**, incluindo título, provedor, caminhos, matéria, formato, idioma, nível/série, URL, duração, requisitos de cadastro, certificado, metadados de tecnologia, curadoria e `verified` com evidências e datas (campos ausentes normalizados consistentemente; ordem de chaves determinística). Deve comparar esse digest **e** URL/evidência com o manifesto editorial aprovado, falhando em qualquer divergência, ainda que o host, o ID ou a URL não tenham mudado. Não aceitar campos adicionais omitidos do hash: uma mudança de metadado publicado exige nova evidência/decisão. O hash não substitui a verificação individual nem a assinatura/autoria da autorização.
+
+Não basta validar domínio ou reaproveitar aprovação de ID mutável. Não exigir teste de navegador humano para cada fase do site se um método equivalente é suficiente **para o formato e a alegação feita**, mas nunca ocultar limitações reais.
 
 ## 4. Como o release por lotes funcionaria
 
-1. Escolher um **manifesto explícito de entradas aprovadas (ID + URL exata + versão/data da evidência)**, com aprovação editorial do lote; não usar `STAGED_RESOURCES` ou `GATEB_NEW_RESOURCES` inteiros como origem automática de publicação.
-2. Resolver cada ID no catálogo/staging tipado, com correspondência unívoca, e **comparar a URL e a versão/data da evidência com o manifesto aprovado**, recusando qualquer alteração mesmo dentro de um host permitido. Sem duplicatas, sem aceitar URL antiga/alternativa implicitamente.
-3. Validar integridade de registros, evidências, hosts necessários, links, âncoras internas, filtros da busca, grupos e contagens.
-4. Preparar **release candidate isolado** contendo apenas os IDs aprovados, preservando todos os 37 legados.
+1. Escolher um **manifesto explícito de novas entradas aprovadas (ID + URL exata + hash canônico completo + versão/data da evidência)**, com aprovação editorial do lote; não usar `STAGED_RESOURCES` ou `GATEB_NEW_RESOURCES` inteiros como origem automática de publicação.
+2. Resolver cada ID no catálogo/staging tipado, com correspondência unívoca, e **comparar URL, hash do registro completo e versão/data da evidência** com o manifesto aprovado. Recusar mudanças em metadados publicados mesmo com mesma URL, duplicatas e URL antiga/alternativa implícita.
+3. Validar integridade de registros, evidências, hosts necessários, links, âncoras internas, filtros da busca, grupos e contagens. **Conferir também todas as aprovações acumuladas de lotes anteriores** contra seus próprios manifests imutáveis; um manifesto de lote novo não substitui os anteriores.
+4. Preparar **release candidate isolado cumulativo**: o catálogo público já publicado no release anterior **mais** os novos IDs aprovados no lote, **menos** suspensões explicitamente autorizadas. Preservar os 37 legados não suspensos e todos os recursos publicados em lotes anteriores. Manifests históricos são imutáveis; a projeção cumulativa combina seus registros aprovados, jamais reinicia dos 37 legados a cada lote. Se houver divergência inesperada de inventário entre versões, falhar o build.
 5. Decidir independentemente, por caminho:
    - **Caminho em preparação:** `noindex`, fora do sitemap e sem recursos expostos.
    - **Caminho ativo:** tem pelo menos um recurso verdadeiramente aprovado, exibido na página correta; a estrutura da página, descrição e navegação são honestas quanto à cobertura real. **Fundamental e Pré-Militar devem obrigatoriamente renderizar pelo menos um recurso na respectiva página objetivo**, não somente numa matéria, prova ou página relacionada. Preservar e testar essa proteção separada do contador geral de recursos exibidos.
    - **Destaques completos:** só mostrar a seção **Dez destaques** quando seus dez IDs exclusivos, comprovados e aprovados estiverem efetivamente publicados; não preencher vagas artificialmente.
 6. Rodar testes, segurança, QA visual/mobile, `verify-dist` independente e prova de rollback.
 7. Publicar **somente após GO técnico + autorização humana explícita para o lote exato**. `draft`, merge em staging, CI verde e relatório de pesquisa não autorizam deploy.
-8. Manter IDs `held` fora do lote sem travar os demais. Retestar os links ao longo do tempo, sem prometer disponibilidade permanente.
+8. Manter IDs `held` fora do lote sem travar os demais. Um registro `suspended` só permanece no **histórico editorial não público** e precisa ser excluído por filtro explícito fail-closed de **todas** as superfícies públicas, não apenas marcado no catálogo tipado. Se ainda constar de uma lista de destaques, impedir o release até que essa seleção seja corrigida e aprovada; não exibir destaque quebrado. Retestar links ao longo do tempo, sem prometer disponibilidade permanente.
 
 ## 5. Mudanças de código que precisariam de PR separado
 
@@ -65,9 +69,9 @@ Registrar em **manifesto de autorização versionado e imutável por lote** para
 - `src/lib/path-status.ts`: retirar **somente** a exigência de dez destaques liberados de `GATED_PATHS`. **Preservar como condição independente** a checagem de pelo menos um recurso aprovado renderizado **na própria página objetivo** de Fundamental e Pré-Militar (não basta em rota de matéria/prova), além da recusa de caminho ativo sem recurso mostrado e de destaques liberados em `preparing`. Preservar o teste adversarial de recurso apenas em outra página de `tests/path-status.test.ts`.
 - `src/lib/featured.ts`: manter dez destaques e exclusividade global ao publicar a seção; permitir que caminho ativo exista **sem destaques completos**. Não preencher seleção final com IDs não publicados.
 - `src/lib/taxonomy.ts`: atualizar `PATH_STATUS` apenas para caminhos cujo release parcial tenha comprovação de conteúdo renderizado, nunca como ação genérica para todos.
-- `src/lib/learning-resources.ts` e `staging*.ts`: usar **manifesto versionado de autorização de ID + URL exata + versão/data de evidência**, validado no build contra o registro realmente resolvido. Uma URL alterada depois da aprovação exige nova homologação e causa falha, mesmo no mesmo domínio. Não promover o staging inteiro nem deixar importação de staging em rotas do build público.
-- `src/lib/placement.ts`, páginas de Fundamental e Pré-Militar e `src/lib/search-index.ts`: verificar que cada novo ID tem destino real e `#recurso-<id>` renderizado, evitando tela vazia e copy de preparação na página ativa.
-- `scripts/verify-dist.mjs`: atualizar **espelhos independentes** de estados e hosts sob revisão, preservando fail-closed, sitemap/noindex, links, contagens e ordem de seções.
+- `src/lib/learning-resources.ts` e `staging*.ts`: usar **manifesto versionado de autorização de ID + URL exata + hash canônico de TODOS os campos do registro + versão/data de evidência**, validado no build contra o registro realmente resolvido. Qualquer alteração de URL **ou metadados publicados** após a aprovação causa falha e exige reaprovação; não promover staging inteiro. Construir projeção pública cumulativa de registros já publicados, novos aprovados e suspensões explícitas. Não deixar importação de staging em rotas do build público.
+- `src/lib/placement.ts`, páginas de Fundamental e Pré-Militar e `src/lib/search-index.ts`: verificar que cada novo ID tem destino real e `#recurso-<id>` renderizado, evitando tela vazia e copy de preparação na página ativa. Projetar **somente registros efetivamente publicados e não suspensos**; os suspensos não podem aparecer em página, busca, destaque, HTML/JSON público, anchor, rota de recurso ou dados de SEO. Preservar a ficha apenas no histórico editorial.
+- `scripts/verify-dist.mjs`: atualizar **espelhos independentes** de estados e hosts sob revisão, preservando fail-closed, sitemap/noindex, links, contagens e ordem de seções. Verificar ausência pública de IDs suspensos e preservação dos IDs publicados em lotes anteriores; se a suspensão atingir um destaque liberado, falhar até resolver a seleção.
 - `tests/`: **preservar integralmente o contrato de release completo** em `tests/release-candidate/context.ts`, `tests/release-candidate/readiness.test.ts` e `tests/release-candidate/STAGING-GUARDS.md`, incluindo 37 legados + 37 candidatos, 60 destaques e seus invariantes. Para lotes menores, **criar contexto e suíte novos, separados**, sem modificar, relaxar ou reaproveitar indevidamente as asserções da V0.4 completa. O release completo continua obrigatório quando a seleção final for promovida.
 
 ## 6. Cenários mínimos de regressão (RED antes da mudança)
@@ -81,8 +85,10 @@ Registrar em **manifesto de autorização versionado e imutável por lote** para
 | Caminho ativo sem nenhum recurso renderizado **na própria página** (mesmo que apareça em matéria ou prova) | **Build falha**, mantendo o guard de `GATED_PATHS` separado da contagem geral |
 | Destacar menos de dez ou incluir recurso não aprovado | Seção de destaque não é publicada; seleção liberada incompleta **falha** |
 | ID ou URL duplicados; host desconhecido | **Build falha** |
-| Mesmo ID aprovado, mas URL trocada por outra página do mesmo host ou evidência alterada | **Build falha** até nova aprovação explícita da entrada exata no manifesto |
+| Mesmo ID aprovado, mas URL trocada por outra página do mesmo host, título, provedor, caminho, série, cadastro, certificado ou evidência alterada | **Build falha** pelo hash canônico de todo o registro, mesmo com URL idêntica, até reaprovação explícita |
 | Lote parcial de poucos recursos + release completo com todos os destaques | Cada suíte passa em **contexto separado**; nunca substituir/relaxar os 60 destaques e 74 registros do release completo |
+| Lote A publicado e, depois, lote B aprovado | O candidato B contém **todos os recursos públicos válidos de A mais B mais os 37 legados**, sem desaparecimento de IDs antigos, salvo suspensão explícita; contagens, busca e âncoras são preservadas |
+| Recurso publicado marcado `suspended` | Some de páginas, busca, destaques, HTML/JSON público e âncoras; permanece apenas na auditoria não pública. **Build falha** se houver destaque ativo pendente |
 | Novo recurso com certificado ou cadastro desconhecido | Interface omite alegação não confirmada; QA distingue fonte e experiência |
 | Preparar lote parcialmente e voltar atrás | Build do staging e catálogo legado reproduzidos sem alterações incidentais |
 | Publicar lote sem autorização humana explícita | **Operação proibida** |
