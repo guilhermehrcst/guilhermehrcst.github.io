@@ -280,8 +280,9 @@ export interface Projection {
   published: PublishedLearningResource[];
   /** Every known id's public state: what the applied lots decided. */
   states: ReadonlyMap<string, EditorialState>;
-  /** The state a pending (recorded, not applied) lot would move an id to. Never public. */
-  pending: ReadonlyMap<string, EditorialState>;
+  /** The state the recorded, not yet applied lots would move an id to if applied next, in lot order.
+   *  Never public: nothing here is published. */
+  ifApplied: ReadonlyMap<string, EditorialState>;
   /** Suspended ids, with the applied lot that suspended them. */
   suspended: ReadonlyMap<string, string>;
   /** The host each published resource is allowed through. */
@@ -296,7 +297,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   const states = new Map<string, EditorialState>();
   const suspended = new Map<string, string>();
   const pendingDecisions = new Map<string, EditorialState>();
-  const empty = (): Projection => ({ published: [], states, pending: pendingDecisions, suspended, hosts: new Set(), problems });
+  const empty = (): Projection => ({ published: [], states, ifApplied: pendingDecisions, suspended, hosts: new Set(), problems });
 
   problems.push(...baselineProblems(input.baseline), ...releaseManifestProblems(input.release));
   const lotSchema = input.lots.flatMap((lot) => lotProblems(lot, input.now));
@@ -344,7 +345,8 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   const baselineHosts = new Set(publishedInCatalogue.map((id) => new URL(records.get(id)!.url!).hostname));
 
   // Decisions, in lot order. Applied lots move ids to published or suspended: that is the public state.
-  // Pending lots are then replayed on a copy: their decisions are checked and reported, never published.
+  // Pending lots are then replayed on a copy, as if applied next in lot order: their decisions are checked
+  // and the state they would reach is reported (ifApplied), never published.
   const approval = new Map<string, { entry: LotEntry; lot: LotManifest }>();
   const replay = (lot: LotManifest, at: Map<string, EditorialState>, live: boolean): void => {
     const move = (id: string, to: EditorialState): boolean => {
@@ -361,10 +363,12 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     for (const entry of lot.entries) {
       if (seen.has(entry.id)) problems.push(`${lot.lot}: ${entry.id} is decided twice`);
       seen.add(entry.id);
-      if (move(entry.id, entry.decision) && entry.decision === 'approved' && live) {
+      if (move(entry.id, entry.decision) && entry.decision === 'approved') {
         at.set(entry.id, 'published');
-        approval.set(entry.id, { entry, lot });
-        suspended.delete(entry.id);
+        if (live) {
+          approval.set(entry.id, { entry, lot });
+          suspended.delete(entry.id);
+        }
       }
     }
     for (const suspension of lot.suspensions) {
@@ -374,6 +378,8 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     }
   };
   for (const lot of applied) replay(lot, states, true);
+  const lastApplied = appliedNames[appliedNames.length - 1];
+  for (const lot of pending) if (lastApplied !== undefined && lot.lot < lastApplied) problems.push(`${lot.lot}: recorded after ${lastApplied} was applied, it can no longer be applied in order`);
   const pendingStates = new Map(states);
   for (const lot of pending) replay(lot, pendingStates, false);
   for (const [id, state] of pendingStates) if (states.get(id) !== state) pendingDecisions.set(id, state);
@@ -425,7 +431,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   for (const id of declared) if (!projected.has(id)) problems.push(`inventory: ${id} is declared but not published${suspended.has(id) ? ` (suspended by ${suspended.get(id)})` : ''}`);
   for (const id of projected) if (!declared.has(id)) problems.push(`inventory: ${id} is published but not declared`);
 
-  return { published, states, pending: pendingDecisions, suspended, hosts, problems };
+  return { published, states, ifApplied: pendingDecisions, suspended, hosts, problems };
 };
 
 /** The digest of a lot, as release.json pins it when the lot is applied. */

@@ -25,7 +25,7 @@ switch (command) {
   case 'status': {
     const counts: Record<string, number> = {};
     for (const state of RELEASE.states.values()) counts[state] = (counts[state] ?? 0) + 1;
-    out({ published: RELEASE.published.length, states: counts, pending: Object.fromEntries(RELEASE.pending), suspended: Object.fromEntries(RELEASE.suspended), problems: RELEASE.problems });
+    out({ published: RELEASE.published.length, states: counts, ifApplied: Object.fromEntries(RELEASE.ifApplied), suspended: Object.fromEntries(RELEASE.suspended), problems: RELEASE.problems });
     break;
   }
   case 'digest':

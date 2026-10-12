@@ -43,7 +43,7 @@ test('1. a resource that is not approved is not published, however complete its 
   assert.deepEqual(q.problems, []);
   assert.ok(!ids(q).includes('google-mlcc'), 'an approval publishes nothing until its lot is applied');
   assert.equal(q.states.get('google-mlcc'), 'candidate');
-  assert.equal(q.pending.get('google-mlcc'), 'approved');
+  assert.equal(q.ifApplied.get('google-mlcc'), 'published', 'only if its lot is applied');
 
   const unauthorized = lotOf('L001-tecnologia', [entryFor('google-mlcc')], { authorization: null });
   const r = project({ lots: [unauthorized], release: releaseOf([unauthorized], inventoryWith(['google-mlcc'])) });
@@ -227,8 +227,16 @@ test('15. rollback: removing the last lot from the release restores the earlier 
   assert.deepEqual(rolledBack.problems, []);
   assert.deepEqual(ids(rolledBack), ids(before));
   assert.deepEqual(rolledBack.published, before.published);
-  assert.equal(rolledBack.pending.get('ef-obmep-fracoes-6'), 'approved', 'the decision stays recorded, unpublished');
+  assert.equal(rolledBack.ifApplied.get('ef-obmep-fracoes-6'), 'published', 'the decision stays recorded, unpublished');
+  assert.equal(rolledBack.states.get('ef-obmep-fracoes-6'), 'candidate');
   const nothing = project({ lots: [a, b], release: releaseOf([], inventoryWith([])) });
   assert.deepEqual(ids(nothing), ids(project({ lots: [], release: releaseOf([], inventoryWith([])) })));
   assert.deepEqual(ids(nothing), publishedResources.map((r) => r.id));
 });
+
+test('a recorded lot older than an applied one can never be applied in order, and says so', () => {
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const b = lotOf('L002-fundamental', [entryFor('ef-obmep-fracoes-6')]);
+  assert.match(problemsOf(project({ lots: [a, b], release: releaseOf([b], inventoryWith(['ef-obmep-fracoes-6'])) })), /L001-tecnologia: recorded after L002-fundamental was applied/);
+});
+
