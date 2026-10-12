@@ -205,7 +205,7 @@ export const lotProblems = (lot: unknown, now: Date): string[] => {
     const suspension = s as Record<string, unknown>;
     if (typeof suspension.id !== 'string' || !ID.test(suspension.id)) problems.push(`${at}: ${String(suspension.id)} is not an id`);
     if (!isText(suspension.reason)) problems.push(`${at}: suspended without a reason`);
-    problems.push(...decidedByProblems(`${at} decidedBy`, suspension.decidedBy, false, simulation));
+    problems.push(...decidedByProblems(`${at} decidedBy`, suspension.decidedBy, true, simulation));
     problems.push(...dateProblems(`${at} decidedOn`, suspension.decidedOn, now));
   }
 
@@ -342,9 +342,10 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   for (const id of baselineIds) if (!publishedInCatalogue.includes(id)) problems.push(`${id}: in the baseline but not a published catalogue record`);
   for (const r of input.catalogue) states.set(r.id, isPublishable(r) && r.id in baseline.records ? 'published' : 'held');
   for (const r of input.pool) states.set(r.id, 'candidate');
-  // A V0.4 host is trusted for the institution published on it, never for any provider.
+  // A V0.4 host is trusted for the institution published on it, never for any provider, and only from a
+  // record still identical to what was published: a changed record never vouches for its own new host.
   const hostOf = (id: string) => `${new URL(records.get(id)!.url!).hostname} ${records.get(id)!.provider}`;
-  const baselineHosts = new Set(publishedInCatalogue.map(hostOf));
+  const baselineHosts = new Set(publishedInCatalogue.filter((id) => digestOf(records.get(id)!) === baseline.records[id]).map(hostOf));
 
   // Decisions, in lot order. Applied lots move ids to published or suspended: that is the public state.
   // Pending lots are then replayed on a copy, as if applied next in lot order: their decisions are checked
@@ -352,7 +353,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   const approval = new Map<string, { entry: LotEntry; lot: LotManifest }>();
   /** Approvals in recorded, not yet applied lots: checked like applied ones, never published. */
   const recorded: { entry: LotEntry; lot: LotManifest }[] = [];
-  const replay = (lot: LotManifest, at: Map<string, EditorialState>, live: boolean): void => {
+  const replay = (lot: LotManifest, at: Map<string, EditorialState>, takenOut: Map<string, string>, live: boolean): void => {
     const move = (id: string, to: EditorialState): boolean => {
       const from = at.get(id);
       if (from === undefined) { problems.push(`${lot.lot}: ${id} is not a known record`); return false; }
@@ -367,6 +368,13 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     for (const entry of lot.entries) {
       if (seen.has(entry.id)) problems.push(`${lot.lot}: ${entry.id} is decided twice`);
       seen.add(entry.id);
+      // A resource taken out (held or suspended) returns only on a verification made since.
+      const outOn = takenOut.get(entry.id);
+      if (outOn !== undefined && entry.decision !== 'held' && entry.evidence.on < outOn) {
+        problems.push(`${lot.lot}: ${entry.id} returns on evidence of ${entry.evidence.on}, older than the decision of ${outOn} that took it out`);
+      }
+      if (entry.decision === 'held') takenOut.set(entry.id, entry.decidedOn);
+      else if (entry.decision === 'verified' || entry.decision === 'approved') takenOut.delete(entry.id);
       if (move(entry.id, entry.decision) && entry.decision === 'approved') {
         at.set(entry.id, 'published');
         if (live) {
@@ -378,14 +386,20 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     for (const suspension of lot.suspensions) {
       if (seen.has(suspension.id)) problems.push(`${lot.lot}: ${suspension.id} is decided twice`);
       seen.add(suspension.id);
-      if (move(suspension.id, 'suspended') && live) suspended.set(suspension.id, lot.lot);
+      if (move(suspension.id, 'suspended')) {
+        takenOut.set(suspension.id, suspension.decidedOn);
+        if (live) suspended.set(suspension.id, lot.lot);
+      }
     }
   };
-  for (const lot of applied) replay(lot, states, true);
+  /** id → the date of the decision (held or suspension) that took it out, until a fresh verification. */
+  const takenOut = new Map<string, string>();
+  for (const lot of applied) replay(lot, states, takenOut, true);
   const lastApplied = appliedNames[appliedNames.length - 1];
   for (const lot of pending) if (lastApplied !== undefined && lot.lot < lastApplied) problems.push(`${lot.lot}: recorded after ${lastApplied} was applied, it can no longer be applied in order`);
   const pendingStates = new Map(states);
-  for (const lot of pending) replay(lot, pendingStates, false);
+  const pendingTakenOut = new Map(takenOut);
+  for (const lot of pending) replay(lot, pendingStates, pendingTakenOut, false);
   for (const [id, state] of pendingStates) if (states.get(id) !== state) pendingDecisions.set(id, state);
 
   /** Everything that does not match between an approval and the record it names. */

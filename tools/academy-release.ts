@@ -7,7 +7,9 @@
 //   node --experimental-strip-types tools/academy-release.ts entry <id>
 //   node --experimental-strip-types tools/academy-release.ts lot-digest <path/to/L000-name.json>
 import { readFileSync } from 'node:fs';
-import { catalogue, RELEASE } from '../src/lib/learning-resources.ts';
+// Records come from the data modules, never through learning-resources.ts: digest and entry keep working
+// while a record change keeps the build red (the digest is what its new approval needs).
+import { catalogue } from '../src/lib/catalogue-records.ts';
 import { STAGED_RESOURCES } from '../src/lib/staging.ts';
 import { GATEB_NEW_RESOURCES } from '../src/lib/staging-gateb.ts';
 import { digestOf } from '../src/lib/release/canonical.ts';
@@ -23,6 +25,8 @@ const recordOf = (id: string | undefined) => (id && records.get(id)) || die(`unk
 
 switch (command) {
   case 'status': {
+    const { RELEASE } = await import('../src/lib/learning-resources.ts').catch((error: unknown) =>
+      die(`the release does not hold, as the build will say:\n${error instanceof Error ? error.message : String(error)}`));
     const counts: Record<string, number> = {};
     for (const state of RELEASE.states.values()) counts[state] = (counts[state] ?? 0) + 1;
     out({ published: RELEASE.published.length, states: counts, ifApplied: Object.fromEntries(RELEASE.ifApplied), suspended: Object.fromEntries(RELEASE.suspended), problems: RELEASE.problems });

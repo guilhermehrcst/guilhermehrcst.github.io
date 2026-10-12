@@ -53,3 +53,12 @@ test('the operator tool prints only skeletons the schema refuses until a person 
     assert.match(problems, new RegExp(`${field.replace(/[.[\]]/g, '\\$&')} is still a placeholder`), field);
   }
 });
+
+test('the operator tool reads records without the projection, so it works while a record change is unapproved (Codex review)', () => {
+  const tool = readFileSync(new URL('../../tools/academy-release.ts', import.meta.url), 'utf8');
+  assert.doesNotMatch(tool, /^import [^;]*learning-resources/m, 'no static import of the projection');
+  const records = readFileSync(new URL('../../src/lib/catalogue-records.ts', import.meta.url), 'utf8');
+  assert.doesNotMatch(records, /^import (?!type )/m, 'the records module imports types only');
+  assert.doesNotMatch(records, /projectRelease|throw new Error\(`learning-resources: release/, 'the records module never projects');
+});
+

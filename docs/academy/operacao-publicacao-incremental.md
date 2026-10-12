@@ -140,13 +140,25 @@ No PR do lote, e só com autorização expressa para o lote exato:
    `docs/superpowers/qa/2026-10-12-incremental-release/guards-AB.txt`). Nunca pule nem apague uma guarda.
 6. CI verde no commit final, revisão, merge e deploy autorizados.
 
+### Mudar um recurso já publicado
+
+Qualquer mudança num registro publicado (título, URL, cadastro, evidência…) deixa o build vermelho até a
+reaprovação ser **aplicada no mesmo PR**: o motor não guarda a versão antiga para continuar publicando, e
+publicar a versão nova sem aprovação aplicada seria publicar metadado não aprovado. Os dados dos
+registros ficam em `src/lib/catalogue-records.ts` (e nos módulos de candidatos), lidos pela ferramenta sem
+passar pela projeção: `tools/academy-release.ts digest|entry <id>` funciona com o build vermelho e dá o
+digest que a reaprovação precisa. Um registro alterado deixa de valer como confiança de host da V0.4: o
+lote revisa o host para a instituição.
+
 ## 9. Como suspender um recurso?
 
 Num novo lote: `"suspensions": [{ "id": "…", "reason": "…", "decidedBy": "…", "decidedOn": "…" }]`,
-autorização e aplicação como em 5 e 8; o inventário deixa de declarar o ID. O recurso sai de páginas,
+autorização e aplicação como em 5 e 8; o inventário deixa de declarar o ID. A suspensão, como toda decisão,
+nomeia uma pessoa (nomes de ferramentas são recusados). O recurso sai de páginas,
 busca, âncoras, destaques e dados públicos; `verify-dist` falha se o ID sobrar em qualquer arquivo do
 `dist/`. Se ele estiver numa seleção de destaques liberada, o build falha até a seleção ser corrigida.
-O manifesto antigo **não** é editado: o histórico fica nos lotes.
+O manifesto antigo **não** é editado: o histórico fica nos lotes. Para voltar, o recurso precisa de
+verificação nova: evidência com data igual ou posterior à suspensão (o mesmo vale para um item `held`).
 
 ## 10. Como fazer rollback?
 

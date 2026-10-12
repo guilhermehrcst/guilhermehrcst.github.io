@@ -206,9 +206,14 @@ test('8. a suspended resource leaves the projection, a V0.4 one included, and re
   // Suspending what is not published, or approving a suspended record without a new verification, is refused.
   const c = lotOf('L001-suspensao', [], { suspensions: [{ id: 'odin-foundations', reason: 'Simulação', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
   assert.match(problemsOf(project({ lots: [c], release: releaseOf([c], inventoryWith([])) })), /odin-foundations cannot go from candidate to suspended/);
-  const back = lotOf('L003-retorno', [entryFor('google-mlcc')]);
-  const q = project({ lots: [a, b, back], release: releaseOf([a, b, back], inventoryWith(['google-mlcc'], ['cs50x'])) });
-  assert.deepEqual(q.problems, [], 'a new approval (with its own evidence) brings it back');
+  const stale = lotOf('L003-retorno', [entryFor('google-mlcc')]);
+  assert.match(problemsOf(project({ lots: [a, b, stale], release: releaseOf([a, b, stale], inventoryWith(['google-mlcc'], ['cs50x'])) })), /returns on evidence of 2026-10-11, older than the decision/);
+  const g = record('google-mlcc');
+  const fresh = { ...g, verified: { ...g.verified!, on: '2026-10-12' } };
+  const pool = POOL.map((r) => (r.id === 'google-mlcc' ? fresh : r));
+  const back = lotOf('L003-retorno', [entryFor('google-mlcc', { digest: digestOf(fresh), evidence: { ...entryFor('google-mlcc').evidence, on: '2026-10-12' } })]);
+  const q = project({ pool, lots: [a, b, back], release: releaseOf([a, b, back], inventoryWith(['google-mlcc'], ['cs50x'])) });
+  assert.deepEqual(q.problems, [], 'a new approval on a fresh verification brings it back');
   assert.ok(ids(q).includes('google-mlcc'));
 });
 
@@ -268,3 +273,46 @@ test('a recorded approval that does not match its record fails the build before 
   assert.match(problemsOf(p), /L001-pendente google-mlcc: the record changed after its approval/);
   assert.ok(!ids(p).includes('google-mlcc'), 'still not published');
 });
+
+test('a suspension is a person\'s decision: a tool named as its author is refused (Codex review)', () => {
+  const real = (decidedBy: string) => lotProblems({ ...lotOf('L001-suspensao', []), simulation: false, authorization: null,
+    suspensions: [{ id: 'cs50x', reason: 'Página oficial fora do ar', decidedBy, decidedOn: '2026-10-12' }] }, NOW).join('\n');
+  assert.match(real('Codex'), /not a person/);
+  assert.match(real('Claude'), /not a person/);
+  assert.doesNotMatch(real('Responsável editorial'), /not a person/);
+});
+
+test('a changed V0.4 record does not vouch for its own new host (Codex review)', () => {
+  const old = record('cs50x');
+  const url = 'https://unreviewed.example/course';
+  const changed = { ...old, url, provider: 'Unreviewed Provider', verified: { on: '2026-10-12', by: 'official-page' as const, freeAccess: true as const,
+    evidence: { url, checked: ['free', 'scope', 'language', 'format', 'path', 'registration', 'certificate'] as const, note: 'Observação simulada da página nova.' } }, registration: 'not-required' as const, certificate: 'none' as const };
+  const cat = catalogue.map((r) => (r.id === 'cs50x' ? changed : r));
+  const entry = { ...entryFor('google-mlcc'), id: 'cs50x', url, digest: digestOf(changed), institution: 'Unreviewed Provider', format: changed.format,
+    evidence: { on: '2026-10-12', version: 'fixture', method: 'official-page', url, observed: 'Observação simulada da página nova.' } };
+  const lot = lotOf('L001-reaprovacao', [entry], { hosts: [] });
+  assert.match(problemsOf(project({ catalogue: cat, lots: [lot], release: releaseOf([lot], inventoryWith([])) })),
+    /unreviewed\.example is not a host this lot reviewed for Unreviewed Provider/);
+});
+
+test('a held or suspended resource returns only on evidence dated on or after that decision (Codex review)', () => {
+  const g = record('google-mlcc');
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const b = lotOf('L002-suspensao', [], { suspensions: [{ id: 'google-mlcc', reason: 'Página mudou', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
+  // Same record, same (older) evidence: refused.
+  const stale = lotOf('L003-retorno', [entryFor('google-mlcc')]);
+  const old = project({ lots: [a, b, stale], release: releaseOf([a, b, stale], inventoryWith(['google-mlcc'])) });
+  assert.match(problemsOf(old), /L003-retorno: google-mlcc returns on evidence of 2026-10-11, older than the decision of 2026-10-12 that took it out/);
+  // A fresh verification (the record now carries evidence of the suspension day or later): accepted.
+  const fresh = { ...g, verified: { ...g.verified!, on: '2026-10-12' } };
+  const pool = POOL.map((r) => (r.id === 'google-mlcc' ? fresh : r));
+  const back = lotOf('L003-retorno', [entryFor('google-mlcc', { digest: digestOf(fresh), evidence: { ...entryFor('google-mlcc').evidence, on: '2026-10-12' } })]);
+  // a and b were approved against the old record: a re-approval history is checked only for the lots that publish it.
+  const q = project({ pool, lots: [a, b, back], release: releaseOf([a, b, back], inventoryWith(['google-mlcc'])) });
+  assert.doesNotMatch(problemsOf(q), /returns on evidence/);
+  // Held, then approved on the same old evidence: refused too.
+  const held = lotOf('L001-retido', [entryFor('google-mlcc', { decision: 'held', reason: 'Pendência', decidedOn: '2026-10-12' })]);
+  const again = lotOf('L002-aprovado', [entryFor('google-mlcc')]);
+  assert.match(problemsOf(project({ lots: [held, again], release: releaseOf([held, again], inventoryWith(['google-mlcc'])) })), /returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
+});
+

@@ -29,3 +29,12 @@ test('digest: sha256 of the canonical text, prefixed, independent of key order',
   assert.match(digestOf({}), /^sha256:[0-9a-f]{64}$/);
   assert.notEqual(digestOf({ title: 'Á' }), digestOf({ title: 'A' }));
 });
+
+test('canonical JSON: an array with holes is refused, never read as a shorter array (Codex review)', () => {
+  // eslint-disable-next-line no-sparse-arrays
+  for (const sparse of [new Array(1), [1, , 2], (() => { const a: unknown[] = []; a[2] = 'x'; return a; })()]) {
+    assert.throws(() => canonicalJson({ v: sparse }), /canonical/, String(sparse.length));
+  }
+  assert.equal(canonicalJson([]), '[]');
+});
+

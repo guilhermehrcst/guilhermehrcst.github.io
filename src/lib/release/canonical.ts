@@ -27,7 +27,14 @@ const write = (value: unknown, seen: Set<object>): string => {
   seen.add(object);
   let text: string;
   if (Array.isArray(object)) {
-    text = `[${object.map((item) => (item === undefined ? refuse('undefined inside an array') : write(item, seen))).join(',')}]`;
+    // Every index, holes included: map() would skip a hole and read [ , ] as a shorter array.
+    const items: string[] = [];
+    for (let i = 0; i < object.length; i++) {
+      if (!(i in object)) refuse(`hole at index ${i}`);
+      const item: unknown = object[i];
+      items.push(item === undefined ? refuse('undefined inside an array') : write(item, seen));
+    }
+    text = `[${items.join(',')}]`;
   } else {
     const proto = Object.getPrototypeOf(object);
     if (proto !== Object.prototype && proto !== null) refuse(`a ${proto?.constructor?.name ?? 'non-plain'} object has no JSON form`);
