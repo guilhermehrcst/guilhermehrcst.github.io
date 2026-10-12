@@ -5,6 +5,8 @@ import { catalogue, LEGACY_VERIFIED, publishedResources, resourceProblems } from
 import { FEATURED_RELEASE, FEATURED_RESOURCE_IDS_BY_PATH } from '../src/lib/featured.ts';
 import { placementOf } from '../src/lib/placement.ts';
 import { PATH_ORDER, PATH_STATUS } from '../src/lib/taxonomy.ts';
+import release from '../src/data/academy-release/release.json' with { type: 'json' };
+import { LOT_MANIFESTS } from '../src/lib/release/lots.ts';
 
 // V0.4 Gate B, Lote 02: the 18 sources opened directly (outside this environment) become typed records
 // in staging. They pass every rule a published resource must pass (P1–P4), but they are not in the
@@ -96,8 +98,13 @@ test('no lesson, past exam or reference becomes a course; the formats are the ob
 });
 
 test('staged records are not published: not in the catalogue, not imported by any page or component', () => {
+  // A staged record is published only through an approval in a lot that release.json applies.
+  const applied = new Set((release.applied as readonly { lot: string }[]).map((pin) => pin.lot));
+  const approved = new Set((LOT_MANIFESTS as { lot: string; entries: { id: string; decision: string }[] }[])
+    .filter((lot) => applied.has(lot.lot)).flatMap((lot) => lot.entries.filter((e) => e.decision === 'approved').map((e) => e.id)));
   const published = new Set(publishedResources.map((r) => r.id));
-  for (const r of staged) assert.ok(!published.has(r.id), r.id);
+  for (const r of staged) if (published.has(r.id)) assert.ok(approved.has(r.id), `${r.id} is published without an applied approval`);
+  assert.ok(!catalogue.some((r) => staged.some((s) => s.id === r.id)), 'a staged record never moves into the catalogue');
   const walk = (dir: string): string[] => readdirSync(new URL(`../${dir}`, import.meta.url)).flatMap((n) => statSync(new URL(`../${dir}/${n}`, import.meta.url)).isDirectory() ? walk(`${dir}/${n}`) : [`${dir}/${n}`]);
   for (const file of [...walk('src/pages'), ...walk('src/components'), ...walk('src/layouts'), ...walk('scripts')]) {
     assert.ok(!/staging/.test(readFileSync(new URL(`../${file}`, import.meta.url), 'utf8')), `${file} imports staging`);

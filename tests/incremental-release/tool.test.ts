@@ -25,6 +25,9 @@ const run = (dir: string, ...args: string[]): { ok: boolean; out: string } => {
     return { ok: false, out: String((error as { stderr?: string }).stderr ?? error) };
   }
 };
+/** Candidates the tests may enter, in order of preference: the first two not yet published in the copy. */
+const PREFERRED = ['odin-foundations', 'inep-enem-provas-gabaritos', 'ms-learn-cloud-concepts', 'google-mlcc', 'kultivi-enem-completo', 'yale-econ-252', 'mit-7012'];
+const pick = (dir: string): string[] => PREFERRED.filter((id) => !releaseOf(dir).inventory.includes(id)).slice(0, 2);
 const releaseOf = (dir: string) => JSON.parse(readFileSync(`${dir}src/data/academy-release/release.json`, 'utf8'));
 const snapshot = (dir: string) => [readFileSync(`${dir}src/data/academy-release/release.json`, 'utf8'), readFileSync(`${dir}src/lib/release/lots.ts`, 'utf8'), readdirSync(`${dir}src/data/academy-release/lots/`).join(',')];
 const simulationMode = (dir: string) => {
@@ -59,7 +62,9 @@ test('draft prints a manifest the schema refuses until people decide, and apply 
 
 test('a simulated lot is refused in a production release, and every file is restored', () => {
   const dir = scratch();
-  const path = filled(dir, 'L001-ensaio', ['odin-foundations']);
+  const release = releaseOf(dir);
+  writeFileSync(`${dir}src/data/academy-release/release.json`, `${JSON.stringify({ ...release, mode: 'production' }, null, 2)}\n`);
+  const path = filled(dir, 'L999-ensaio', pick(dir).slice(0, 1));
   const before = snapshot(dir);
   const applied = run(dir, 'apply', path);
   assert.equal(applied.ok, false);
@@ -71,41 +76,55 @@ test('a simulated lot is refused in a production release, and every file is rest
 test('apply publishes exactly the projection, check names new hosts, rollback keeps the ledger, the same text rolls forward', () => {
   const dir = scratch();
   simulationMode(dir);
-  const path = filled(dir, 'L001-ensaio', ['inep-enem-provas-gabaritos', 'odin-foundations']);
+  const before = releaseOf(dir);
+  const ids = pick(dir);
+  assert.equal(ids.length, 2, 'two unpublished candidates to enter');
+  const path = filled(dir, 'L999-ensaio', ids);
   const report = JSON.parse(run(dir, 'check', path).out);
   assert.deepEqual(report.problems, []);
-  assert.deepEqual(report.newHosts, ['www.theodinproject.com'], 'www.gov.br is already a published host');
-  assert.equal(report.inventoryAfter, 39);
+  assert.equal(report.inventoryAfter, before.inventory.length + 2);
+  // New hosts are the lot's hosts that no published resource has yet (verify-dist must list them).
+  const lotHosts = JSON.parse(readFileSync(path, 'utf8')).hosts.map((h: { host: string }) => h.host);
+  for (const host of report.newHosts) assert.ok(lotHosts.includes(host), host);
   const applied = run(dir, 'apply', path);
   assert.ok(applied.ok, applied.out);
   const release = releaseOf(dir);
-  assert.equal(release.inventory.length, 39);
-  assert.ok(release.inventory.includes('odin-foundations') && release.inventory.includes('inep-enem-provas-gabaritos'));
-  assert.deepEqual(release.applied, release.ledger);
-  assert.match(readFileSync(`${dir}src/lib/release/lots.ts`, 'utf8'), /L001-ensaio\.json/);
-  assert.match(run(dir, 'status').out, /"published": 39/);
+  assert.equal(release.inventory.length, before.inventory.length + 2);
+  for (const id of ids) assert.ok(release.inventory.includes(id), id);
+  assert.deepEqual(release.applied, [...before.applied, { lot: 'L999-ensaio', digest: release.ledger.at(-1).digest }]);
+  assert.deepEqual(release.ledger.slice(0, -1), before.ledger, 'the ledger only grows');
+  assert.match(readFileSync(`${dir}src/lib/release/lots.ts`, 'utf8'), /L999-ensaio\.json/);
+  assert.match(run(dir, 'status').out, new RegExp(`"published": ${before.inventory.length + 2}`));
 
   assert.equal(run(dir, 'rollback', 'L000-outro').ok, false, 'only the last applied lot');
-  const back = run(dir, 'rollback', 'L001-ensaio');
+  const back = run(dir, 'rollback', 'L999-ensaio');
   assert.ok(back.ok, back.out);
-  assert.equal(releaseOf(dir).inventory.length, 37);
-  assert.deepEqual(releaseOf(dir).applied, []);
-  assert.equal(releaseOf(dir).ledger.length, 1, 'the ledger keeps the rolled-back lot');
+  assert.deepEqual(releaseOf(dir).inventory, before.inventory);
+  assert.deepEqual(releaseOf(dir).applied, before.applied);
+  assert.equal(releaseOf(dir).ledger.length, before.ledger.length + 1, 'the ledger keeps the rolled-back lot');
 
   const changed = JSON.parse(readFileSync(path, 'utf8'));
   execFileSync('mkdir', ['-p', `${dir}outro/`], { encoding: 'utf8' });
-  writeFileSync(`${dir}outro/L001-ensaio.json`, JSON.stringify({ ...changed, title: 'Outro texto' }));
-  assert.match(run(dir, 'apply', `${dir}outro/L001-ensaio.json`).out, /registered with another text/);
+  writeFileSync(`${dir}outro/L999-ensaio.json`, JSON.stringify({ ...changed, title: 'Outro texto' }));
+  assert.match(run(dir, 'apply', `${dir}outro/L999-ensaio.json`).out, /registered with another text/);
   const forward = run(dir, 'apply', path);
   assert.ok(forward.ok, forward.out);
-  assert.equal(releaseOf(dir).inventory.length, 39);
+  assert.equal(releaseOf(dir).inventory.length, before.inventory.length + 2);
   cleanup(dir);
 });
 
 test('a resource whose path is in preparation is refused: placement fails and nothing is written', () => {
   const dir = scratch();
   simulationMode(dir);
-  const path = filled(dir, 'L001-ensaio', ['ef-sme-alfabeto-1']);
+  // Exercised while Fundamental is in preparation; once it is active, the check must find no gap.
+  const preparing = readFileSync(`${dir}src/lib/taxonomy.ts`, 'utf8').includes("'ensino-fundamental': 'preparing'");
+  if (!preparing) {
+    const path = filled(dir, 'L999-ensaio', ['ef-sme-vegetacao-3']);
+    assert.deepEqual(JSON.parse(run(dir, 'check', path).out).unplaced, []);
+    cleanup(dir);
+    return;
+  }
+  const path = filled(dir, 'L999-ensaio', ['ef-sme-alfabeto-1']);
   assert.deepEqual(JSON.parse(run(dir, 'check', path).out).unplaced, ['ef-sme-alfabeto-1 (ensino-fundamental)']);
   const before = snapshot(dir);
   const applied = run(dir, 'apply', path);

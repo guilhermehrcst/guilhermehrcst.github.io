@@ -114,8 +114,12 @@ export const GATEB_PLACEMENT_REQUIREMENTS: Readonly<Record<string, GateBPlacemen
 const isVerified = (resource: LearningResource): resource is PublishedLearningResource =>
   resource.url !== null && resource.verified !== undefined;
 
-const available = (): readonly LearningResource[] =>
-  [...publishedResources, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES];
+// The published resources, then the candidates not yet published: a candidate a lot has published is in
+// both the projection and its pool, and counts once, in its published version.
+const available = (): readonly LearningResource[] => {
+  const published = new Set(publishedResources.map((resource) => resource.id));
+  return [...publishedResources, ...[...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES].filter((resource) => !published.has(resource.id))];
+};
 
 /** Resolves IDs only against records already present in the typed catalogue/staging.
  *  Throws rather than dropping missing or duplicated IDs. */

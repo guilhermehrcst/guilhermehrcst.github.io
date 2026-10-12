@@ -1,5 +1,6 @@
 // V0.4 Gate B, P1: a resource's one canonical destination, derived from the rules the pages render by.
 // Converted from the RED tests of tests/gateb/gate-b.red.ts once the contract was implemented.
+import baseline from '../src/data/academy-release/baseline.json' with { type: 'json' };
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { publishedResources } from '../src/lib/learning-resources.ts';
@@ -26,8 +27,10 @@ test('P1: the 37 published resources keep exactly the page they live on at 5bc12
   const placementOf = need(placement, 'placementOf');
   // The rule of 5bc12a6, written out: technology on /tecnologia/, every other resource on its subject's page.
   const before = (r: (typeof publishedResources)[number]) => (r.subject === 'tecnologia' ? '/tecnologia/' : routes.subject(r.subject!));
-  assert.equal(publishedResources.length, 37);
-  for (const r of publishedResources) {
+  // The 37 of the V0.4 baseline: what later lots publish lives where its own rules put it.
+  const legacy = publishedResources.filter((r) => r.id in baseline.records);
+  assert.equal(legacy.length, 37);
+  for (const r of legacy) {
     assert.equal(placementOf(r, TODAY)?.page, before(r), r.id);
     assert.equal(placementOf(r, TODAY)?.anchor, `recurso-${r.id}`, r.id);
   }

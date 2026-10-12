@@ -27,7 +27,8 @@ const audit = JSON.parse(readFileSync(
   'utf8',
 )) as Audit;
 
-const legacy = new Map(publishedResources.map((r) => [r.id, r]));
+// The V0.4 baseline, never the whole projection: a candidate a lot publishes stays a staged record.
+const legacy = new Map(publishedResources.filter((r) => LEGACY_VERIFIED_IDS.includes(r.id)).map((r) => [r.id, r]));
 const staged = new Map(STAGED_RESOURCES.map((r) => [r.id, r]));
 const additions = new Map(GATEB_NEW_RESOURCES.map((r) => [r.id, r]));
 const all = new Map([...legacy, ...staged, ...additions]);
@@ -50,7 +51,7 @@ test('Gate B: exactly 60 independently audited slots, ten consecutive positions 
 });
 
 test('Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates', () => {
-  assert.equal(publishedResources.length, 37, 'legacy published count stays unchanged');
+  assert.equal(legacy.size, 37, 'every legacy resource stays published');
   assert.equal(LEGACY_VERIFIED_IDS.length, 37, 'legacy baseline remains closed');
   assert.equal(STAGED_RESOURCES.length, 23, 'typed staging from Lotes 02/03 is preserved');
   assert.equal(GATEB_NEW_RESOURCES.length, 14);
@@ -69,7 +70,7 @@ test('Gate B: reuse 23 published and 23 typed staging records, add exactly 14 wi
     assert.ok(all.get(item.id)?.paths.includes(item.path), `${item.id}: must declare its path`);
   }
   assert.deepEqual(count, { legacy: 23, staged: 23, additions: 14 });
-  const urls = [...publishedResources, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES]
+  const urls = [...legacy.values(), ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES]
     .map((r) => r.url).filter((url): url is string => url !== null);
   assert.equal(new Set(urls).size, urls.length, 'source URLs must not be duplicated across catalogues');
 });
