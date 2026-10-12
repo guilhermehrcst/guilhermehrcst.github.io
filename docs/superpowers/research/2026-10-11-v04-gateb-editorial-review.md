@@ -1,0 +1,182 @@
+# Gate B | Auditoria editorial das 60 posições, revisão 05
+
+**Revisão:** 12/10/2026 (verificações em 11 e 12/10; ajuste de metadados em 12/10). **Escopo:** documentação e fontes, não publicação. **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **PR #35:** pesquisa, sem alteração em `src/`.
+
+## Resultado
+
+**60/60 posições com fonte e escopo conferidos diretamente, 0 pendentes na shortlist.** São 60 IDs únicos, dez por caminho. Em relação às 51/60 da revisão 02, oito provas oficiais foram verificadas e a nona posição foi resolvida por substituição editorial documentada: prova oficial ESA 2026 no lugar da EsPCEx cujo servidor negou o PDF. **A prova da EsPCEx não foi validada** e permanece em backlog fora das 60 posições.
+
+Isto conclui a **triagem de fonte e escopo**, não a homologação nem a publicação. `FEATURED_RELEASE` continua em `staging`, **0/60 destaques liberados e 0 recursos novos publicados**. Os 37 recursos legados permanecem preservados. Gate B ainda depende de registros tipados, validação P4, QA, revisão independente e decisão humana sobre o release.
+
+Permanecem as seis substituições da revisão 02, além da substituição Cisco por CS50 SQL na posição 10 de Tecnologia, incluindo cinco apostilas gerais da Fundação Cecierj (não são questões oficiais da UERJ) e o curso gratuito AprovaRJ. A prova ESA 2026 é um recurso de prática distinto do AprovaRJ.
+
+## Cobertura por caminho
+
+| Caminho | Fonte/escopo aprovado | Pendente | Posições |
+|---|---:|---:|---:|
+| Ensino Fundamental | 10 | 0 | 10 |
+| Ensino Médio | 10 | 0 | 10 |
+| Vestibular | 10 | 0 | 10 |
+| Pré-Militar | 10 | 0 | 10 |
+| Ensino Superior | 10 | 0 | 10 |
+| Tecnologia | 10 | 0 | 10 |
+| **Total** | **60** | **0** | **60** |
+
+## Substituições editoriais acumuladas
+
+| ID anterior, sem nova verificação | Novo recurso | Formato correto | Fonte institucional |
+|---|---|---|---|
+| `uerj-portuguese-practice` | `cecierj-pvs-portugues-v1` | reference | [Fonte](https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf) |
+| `uerj-math-practice` | `cecierj-pvs-matematica-mod1` | reference | [Fonte](https://canal.cecierj.edu.br/122016/efcafab1e59a9c49c5244cbbdc982539.pdf) |
+| `uerj-history-practice` | `cecierj-pvs-historia-mod2` | reference | [Fonte](https://canal.cecierj.edu.br/122016/d0522fa0af463530f6629b02000952d5.pdf) |
+| `uerj-geography-practice` | `cecierj-pvs-geografia-mod1` | reference | [Fonte](https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf) |
+| `uerj-physics-practice` | `cecierj-pvs-fisica-v1` | reference | [Fonte](https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf) |
+| `pm-esa-provas` | `cecierj-aprovarj` | course | [Fonte](https://extensao.cecierj.edu.br/cursos/aprovarj/) |
+| `pm-espcex-provas` | `pm-esa-provas-2026` | past-exam | [PDF ESA 2026](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) |
+| `cisco-cyber` | `cs50sql` (curso já existente no legado) | course | [CS50 SQL](https://cs50.harvard.edu/sql/) |
+
+**Sete substituições editoriais geram IDs novos**: cinco apostilas Cecierj, o curso AprovaRJ e a prova ESA 2026. Esses IDs ainda não constam de `src/lib/staging.ts` nem de `src/lib/learning-resources.ts`; quando forem promovidos, precisarão de tipagem, `resourceProblems`, evidência P4, roteamento e testes. **A oitava substituição (`cisco-cyber` → `cs50sql`) reutiliza o recurso `cs50sql`, já publicado em `src/lib/learning-resources.ts`**, sem criar um segundo cadastro. O JSON desta revisão é apenas documentação, não integra o catálogo. Acesso aos PDFs foi verificado sem login; **certificados não foram confirmados** e devem permanecer `unconfirmed` para as nove provas da revisão 05.
+
+## Evidências diretas adicionadas em 12/10/2026
+
+**Contrato P4 (revisão 05):** para as nove provas em PDF, `registration: not-required` é sustentado pela abertura do arquivo sem login e agora corresponde a `checked: registration`; `certificate: unconfirmed` evita inferir que a instituição oferece ou não certificado. Um eventual registro `ResourceVerification` deve apontar o domínio da URL canônica do recurso, como exige `verificationProblems()`, preservando o PDF e o gabarito como anexos de evidência.
+
+Cada posição foi validada por abertura de PDF em host institucional HTTPS, com enunciados e escopo realmente inspecionados. Não se contou índice de links nem trecho de busca como prova. O conteúdo dos PDFs foi acessado sem cadastro ou pagamento e é predominantemente em português, com algumas questões em Inglês. **Não foi comprovada a oferta ou ausência de certificados; por isso `certificate: unconfirmed` nos nove registros, e `registration` aparece nos itens verificados da lista `checked`.** As páginas examinadas descrevem o recorte visto, não leitura integral de todo o caderno. **Correção preservada da revisão 04:** ESA 2026 passa a registrar apenas as 3 páginas iniciais efetivamente amostradas; o total 24 é informado pelo próprio arquivo, não corresponde a páginas lidas individualmente.
+
+| ID | Páginas totais | Páginas examinadas | Anexo oficial | Escopo visto |
+|---|---:|---:|---|---|
+| `inep-enem-provas-gabaritos` | 32 | 3 | [PDF](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf) | ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente. |
+| `pm-cn-provas` | 19 | 5 | [PDF](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf) | CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice. |
+| `pm-en-provas` | 19 | 4 | [PDF](https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961) | CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto. |
+| `pm-eear-provas` | 17 | 3 | [PDF](https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf) | EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas. |
+| `pm-eam-provas` | 15 | 5 | [PDF](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf) | CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados. |
+| `pm-afa-provas` | 24 | 3 | [PDF](https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf) | AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído. |
+| `pm-epcar-provas` | 17 | 3 | [PDF](https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf) | EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado. |
+| `pm-esa-provas-2026` | 24 | 3 | [PDF](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) | ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ. |
+| `pm-ime-provas` | 24 | 5 | [PDF](https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf) | IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice. |
+
+**ENEM 2024:** o destino principal continua sendo [o acervo oficial do INEP](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos), coerente com o título coletivo. Como prova documental, [gabarito oficial do 1º dia, caderno azul](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D1_CD1.pdf) também foi aberto, com as respostas identificadas. Não se afirma ter reaberto o caderno 2025 que falhou na revisão anterior.
+
+**EEAR:** PDF da prova CFS 1/2024 inclui o gabarito e, após ele, enunciados reais. A existência da capa de gabarito não pode levar à conclusão equivocada de que o material contém apenas respostas.
+
+**Escola Naval:** caderno CPAEN/2025 em PDF independente aberto no sistema oficial de inscrição da Marinha; ZIPs do índice não foram inspecionados e não são usados como prova nesta revisão.
+
+**EsPCEx, restrição preservada:** o [PDF oficial de 2025](https://espcex.eb.mil.br/images/concurso/provas/provas2025/2025%20PROVA%20MODELO%20C.pdf) devolveu `Request Rejected` em múltiplos acessos. Está fora da shortlist e **não foi validado**. Foi substituído na posição editorial pelo caderno oficial da **ESA 2026**, não confundido com o curso AprovaRJ. Recomenda-se retomar EsPCEx separadamente quando a instituição permitir acesso.
+
+**Transparência sobre a ESA:** a extração de texto de um PDF oficial confirmou a capa e questões iniciais; **não se dispõe de evidência de leitura humana integral das 24 páginas nem do status HTTP bruto dessa extração**. O documento indica 24 páginas. O bloqueio da EsPCEx permanece registrado à parte.
+
+**Acessibilidade externa:** alguns servidores bloquearam leitores automatizados; os anexos acima foram de fato recebidos ou processados como `application/pdf` pela rota alternativa. Revalidar abertura em navegador comum no Gate D. Nenhum recurso novo está em produção.
+
+## Inventário editorial completo
+
+| Caminho | Posição | ID | Estado | URL | Evidência e ressalva |
+|---|---:|---|---|---|---|
+| Ensino Fundamental | 1 | `ef-sme-alfabeto-1` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-nosso-alfabeto/) | Página da SME informa 1º ano e explica o alfabeto; slides vinculados não foram baixados. |
+| Ensino Fundamental | 2 | `sme-goiania-letras-e-palavras` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-letras-e-palavras/) | Página da SME indica 2º ano, texto e atividade de letras/palavras; aula isolada. |
+| Ensino Fundamental | 3 | `ef-sme-vegetacao-3` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/ciencias-da-natureza-vegetacao-e-a-preservacao-do-solo/) | Página da SME indica 3º ano e contém texto e questões sobre vegetação/solo; Ciências não deve ser rotulada Tecnologia. |
+| Ensino Fundamental | 4 | `ef-sme-municipio-4` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/geografia-municipio-estado-e-pais/) | Página da SME indica 4º ano, texto sobre município, estado e país e atividades visíveis. |
+| Ensino Fundamental | 5 | `ef-sme-vestigios-5` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/historia-vestigios-do-passado/) | Página da SME indica 5º ano, conteúdo e questões de fontes históricas. |
+| Ensino Fundamental | 6 | `sme-goiania-leitura-em-foco` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-leitura-em-foco/) | Página da SME indica 5º ano e apresenta atividade de leitura; aula isolada. |
+| Ensino Fundamental | 7 | `ef-obmep-fracoes-6` | Fonte aprovada | [Oficial](https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=28) | Módulo Frações listado para 6º ano e vídeos/textos/exercícios no Portal OBMEP; testes com login não inspecionados. |
+| Ensino Fundamental | 8 | `ef-sme-tecnologia-vida-7` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/ciencias-da-natureza-tecnologia-e-vida-humana/) | Página da SME indica 7º ano; aula de Ciências sobre tecnologia na vida humana, não trilha de TI. |
+| Ensino Fundamental | 9 | `ef-obmep-potenciacao-8` | Fonte aprovada | [Oficial](https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=1059) | Módulo Potenciação enquadrado no 8º ano pelo índice oficial; material livre visível, testes com login não inspecionados. |
+| Ensino Fundamental | 10 | `ef-sme-funcoes-9` | Fonte aprovada | [Oficial](https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/matematica-funcao-de-1o-e-de-2o-grau/) | Página da SME indica 9º ano e contém explicações e atividades sobre funções de 1º/2º grau. |
+| Ensino Médio | 1 | `kultivi-math-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/matematica) | Página oficial da Kultivi, curso de Matemática voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 2 | `kultivi-portuguese-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/portugues) | Página oficial da Kultivi, curso de Português voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 3 | `kultivi-physics-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/fisica) | Página oficial da Kultivi, curso de Física voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 4 | `kultivi-chemistry-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/quimica) | Página oficial da Kultivi, curso de Química voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 5 | `kultivi-biology-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/biologia) | Página oficial da Kultivi, curso de Biologia voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 6 | `kultivi-history-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/historia-2) | Página oficial da Kultivi, curso de História voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 7 | `kultivi-geography-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/geografia) | Página oficial da Kultivi, curso de Geografia voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 8 | `kultivi-philosophy-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/filosofia) | Página oficial da Kultivi, curso de Filosofia voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 9 | `kultivi-sociology-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/sociologia) | Página oficial da Kultivi, curso de Sociologia voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Ensino Médio | 10 | `kultivi-english-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/ingles-para-enem) | Página oficial da Kultivi, curso de Inglês voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
+| Vestibular | 1 | `kultivi-enem-completo` | Fonte aprovada | [Oficial](https://kultivi.com/curso/enem-completo) | Página própria de ENEM Completo confirma curso multidisciplinar gratuito, matrícula com conta e certificado gratuito. |
+| Vestibular | 2 | `kultivi-writing-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/redacao-para-enem) | Página própria de Redação para ENEM confirma curso gratuito e certificado; ID legado preservado. |
+| Vestibular | 3 | `inep-enem-provas-gabaritos` | Fonte aprovada | [Acervo INEP](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos) | **Provas e gabaritos do ENEM, acervo oficial do INEP**. ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente. |
+| Vestibular | 4 | `fuvest-acervo-2026` | Fonte aprovada | [Oficial](https://www.fuvest.br/acervo-vestibular-2026/) | Índice oficial da Fuvest 2026 aberto; gabarito PDF e simulado PDF foram inspecionados. Não afirmar que todos os cadernos de prova abriram. |
+| Vestibular | 5 | `inep-writing-2026` | Fonte aprovada | [Oficial](https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante) | Cartilha oficial da Redação ENEM 2026, material de referência/prática, não curso. |
+| Vestibular | 6 | `cecierj-pvs-portugues-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf) | PDF institucional integral aberto em 11/10/2026; 162 páginas, material didático de Língua Portuguesa publicado pela Fundação Cecierj em 2021. Texto, leitura, coesão e exercícios; referência de estudo, não banco de questões da UERJ nem curso completo. |
+| Vestibular | 7 | `cecierj-pvs-matematica-mod1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/122016/efcafab1e59a9c49c5244cbbdc982539.pdf) | PDF integral de 118 páginas aberto em 11/10/2026; módulo de 2015 da Fundação Cecierj com números, funções, combinatória, probabilidade e exercícios. Material de referência, não prova da UERJ. |
+| Vestibular | 8 | `cecierj-pvs-historia-mod2` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/122016/d0522fa0af463530f6629b02000952d5.pdf) | PDF institucional de 128 páginas aberto em 11/10/2026; apostila de 2015 sobre Guerras Mundiais, Guerra Fria e Américas, com conteúdo integral. Material de referência, não questões comentadas da UERJ. |
+| Vestibular | 9 | `cecierj-pvs-geografia-mod1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf) | PDF integral de 126 páginas aberto em 11/10/2026; apostila de 2015 da Fundação Cecierj com industrialização, urbanização, globalização e exercícios do Enem. Material de referência, não banco de questões da UERJ. |
+| Vestibular | 10 | `cecierj-pvs-fisica-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf) | PDF integral de 188 páginas aberto em 11/10/2026; volume de Física de 2021 da Fundação Cecierj, com cinemática, movimentos e exercícios. Material de referência, não simulador/questões da UERJ. |
+| Pré-Militar | 1 | `ita-provas-anteriores` | Fonte aprovada | [Oficial](https://vestibular.ita.br/provas.htm) | Índice oficial do ITA reaberto; PDF da prova de 2025 e respectivo gabarito inspecionados diretamente. |
+| Pré-Militar | 2 | `pm-cn-provas` | Fonte aprovada | [PDF oficial](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf) | **CPACN 2025: Matemática e Inglês, 1º dia**. CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice. |
+| Pré-Militar | 3 | `pm-en-provas` | Fonte aprovada | [PDF oficial](https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961) | **CPAEN 2025: Matemática e Inglês, 1º dia**. CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto. |
+| Pré-Militar | 4 | `pm-eear-provas` | Fonte aprovada | [PDF oficial](https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf) | **EEAR CFS 1/2024: prova, código 02**. EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas. |
+| Pré-Militar | 5 | `pm-eam-provas` | Fonte aprovada | [PDF oficial](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf) | **CPAEAM 2023: prova amarela**. CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados. |
+| Pré-Militar | 6 | `pm-afa-provas` | Fonte aprovada | [PDF oficial](https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf) | **AFA 2025: prova versão A**. AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído. |
+| Pré-Militar | 7 | `pm-epcar-provas` | Fonte aprovada | [PDF oficial](https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf) | **EPCAR 2026: prova versão A**. EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado. |
+| Pré-Militar | 8 | `cecierj-aprovarj` | Fonte aprovada | [Oficial](https://extensao.cecierj.edu.br/cursos/aprovarj/) | Página oficial da Fundação Cecierj aberta em 11/10/2026: programa online gratuito, inscrições contínuas, videoaulas, exercícios e simulados; inclui ESA, EsPCEx, EPCAR, AFA, ITA, IME, Marinha e EEAR. Cadastro gratuito obrigatório; sem certificado. Área autenticada não foi acessada. É curso preparatório geral, não provas anteriores da ESA. |
+| Pré-Militar | 9 | `pm-esa-provas-2026` | Fonte aprovada | [PDF oficial](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) | **ESA, concurso 2026: prova Geral, tipo A**. ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ. |
+| Pré-Militar | 10 | `pm-ime-provas` | Fonte aprovada | [PDF oficial](https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf) | **IME CFG 2024/2025: prova objetiva**. IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice. |
+| Ensino Superior | 1 | `mit-1801sc` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/) | MIT OCW, Single Variable Calculus: vídeos, exercícios e notas de cálculo, sem diploma/certificado. |
+| Ensino Superior | 2 | `mit-801sc` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/) | MIT OCW, Classical Mechanics: aulas e exercícios oficiais de mecânica, sem diploma/certificado. |
+| Ensino Superior | 3 | `mit-7012` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/7-012-introduction-to-biology-fall-2004/) | MIT OCW, Introduction to Biology: aulas e atividades gratuitas de biologia. |
+| Ensino Superior | 4 | `yale-psyc-110` | Fonte aprovada | [Oficial](https://oyc.yale.edu/introduction-psychology/psyc-110) | Open Yale Courses, Introduction to Psychology: aulas gravadas oficiais acessíveis; sem créditos/certificado. |
+| Ensino Superior | 5 | `yale-econ-252` | Fonte aprovada | [Oficial](https://oyc.yale.edu/economics/econ-252) | Open Yale Courses, Financial Markets (2011): aulas oficiais gratuitas; leituras suplementares pagas não fazem parte do item. |
+| Ensino Superior | 6 | `ou-environment-treading-lightly` | Fonte aprovada | [Oficial](https://www.open.edu/openlearn/nature-environment/environmental-studies/environment-treading-lightly-on-the-earth/content-section-0) | OpenLearn da Open University: curso ambiental gratuito, conta opcional para progresso e statement. |
+| Ensino Superior | 7 | `mit-6100l` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/6-100l-introduction-to-cs-and-programming-using-python-fall-2022/) | MIT OCW, Introduction to CS and Programming Using Python, edição Fall 2022, conteúdo gratuito. |
+| Ensino Superior | 8 | `mit-60002` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/6-0002-introduction-to-computational-thinking-and-data-science-fall-2016/) | MIT OCW, Introduction to Computational Thinking and Data Science, conteúdo gratuito. |
+| Ensino Superior | 9 | `mit-6006` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/) | MIT OCW, Introduction to Algorithms, conteúdo gratuito. |
+| Ensino Superior | 10 | `mit-6042j` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-spring-2015/) | MIT OCW, Mathematics for Computer Science, conteúdo gratuito. |
+| Tecnologia | 1 | `cs50x` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/x/) | Harvard CS50x: acesso gratuito às aulas; certificado verificado da edX é modalidade separada. |
+| Tecnologia | 2 | `cs50p` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/python/) | Harvard CS50 Python: aulas gratuitas; conta pode ser necessária para envio de problemas; certificado edX separado. |
+| Tecnologia | 3 | `odin-foundations` | Fonte aprovada | [Oficial](https://www.theodinproject.com/paths/foundations/courses/foundations) | The Odin Project Foundations: trilha gratuita de HTML, CSS, JavaScript e projetos. |
+| Tecnologia | 4 | `google-mlcc` | Fonte aprovada | [Oficial](https://developers.google.com/machine-learning/crash-course/) | Google Machine Learning Crash Course: aulas, vídeos e exercícios públicos gratuitos. |
+| Tecnologia | 5 | `ms-learn-cloud-concepts` | Fonte aprovada | [Oficial](https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/) | Microsoft Learn cloud concepts em pt-BR: unidades gratuitas; certificação AZ-900 separada; exige posição de trilha de nuvem correta. |
+| Tecnologia | 6 | `fb-python` | Fonte aprovada | [Oficial](https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico) | Escola Virtual Fundação Bradesco: curso Python Básico em página oficial gratuita. |
+| Tecnologia | 7 | `fb-web` | Fonte aprovada | [Oficial](https://www.ev.org.br/cursos/crie-um-site-simples-usando-html-css-e-javascript) | Escola Virtual Fundação Bradesco: curso de HTML/CSS/JavaScript em página oficial gratuita. |
+| Tecnologia | 8 | `cs50w` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/web/) | Harvard CS50 Web: curso livre sobre desenvolvimento web com Python e JavaScript. |
+| Tecnologia | 9 | `cs50ai` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/ai/) | Harvard CS50 AI: curso livre sobre IA com Python. |
+| Tecnologia | 10 | `cs50sql` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/sql/) | Harvard CS50 SQL: curso gratuito de banco de dados; atividades podem exigir conta edX; certificado verificado é separado. Substitui Cisco apenas na shortlist. |
+
+## Preparação técnica para homologação (snapshot sem promoção)
+
+**Fonte de verdade:** `main` observado no commit `40bf3e4d920720e066d4026f08aa7a0b16bca61c` e o inventário editorial desta revisão 05. Esta seção é um plano executável de **preparação**; não confirma execução de testes ou alteração em `src/`.
+
+### Reutilização do que existe
+
+| Caminho | Legado publicado | Staging tipado | Verificação parcial | Novo a tipar |
+|---|---:|---:|---:|---:|
+| Ensino Fundamental | 0 | 10 | 0 | 0 |
+| Ensino Médio | 10 | 0 | 0 | 0 |
+| Vestibular | 2 | 3 | 0 | 5 |
+| Pré-Militar | 0 | 1 | 3 | 6 |
+| Ensino Superior | 4 | 6 | 0 | 0 |
+| Tecnologia | 7 | 3 | 0 | 0 |
+| **Total** | **23** | **23** | **3** | **11** |
+
+**Interpretação:** dos 60 destaques candidatos, 23 já pertencem aos 37 registros publicados; 23 têm `LearningResource` tipado em `src/lib/staging.ts`; 3 constam somente em `PARTIAL_VERIFICATIONS` (Colégio Naval, Escola Naval e EEAR); 11 precisam de modelagem. Portanto, **37 posições ainda não integram o catálogo público**. Não criar outro catálogo nem reescrever os 23 legados.
+
+**Já publicados (reaproveitar)** (23): `kultivi-math-enem`, `kultivi-portuguese-enem`, `kultivi-physics-enem`, `kultivi-chemistry-enem`, `kultivi-biology-enem`, `kultivi-history-enem`, `kultivi-geography-enem`, `kultivi-philosophy-enem`, `kultivi-sociology-enem`, `kultivi-english-enem`, `kultivi-writing-enem`, `inep-writing-2026`, `mit-6100l`, `mit-60002`, `mit-6006`, `mit-6042j`, `cs50x`, `cs50p`, `fb-python`, `fb-web`, `cs50w`, `cs50ai`, `cs50sql`.
+
+**Staging tipado (não importar)** (23): `ef-sme-alfabeto-1`, `sme-goiania-letras-e-palavras`, `ef-sme-vegetacao-3`, `ef-sme-municipio-4`, `ef-sme-vestigios-5`, `sme-goiania-leitura-em-foco`, `ef-obmep-fracoes-6`, `ef-sme-tecnologia-vida-7`, `ef-obmep-potenciacao-8`, `ef-sme-funcoes-9`, `kultivi-enem-completo`, `inep-enem-provas-gabaritos`, `fuvest-acervo-2026`, `ita-provas-anteriores`, `mit-1801sc`, `mit-801sc`, `mit-7012`, `yale-psyc-110`, `yale-econ-252`, `ou-environment-treading-lightly`, `odin-foundations`, `google-mlcc`, `ms-learn-cloud-concepts`.
+
+**Parciais (tipar com nova evidência)** (3): `pm-cn-provas`, `pm-en-provas`, `pm-eear-provas`.
+
+**Ainda sem tipo (criar registros)** (11): `cecierj-pvs-portugues-v1`, `cecierj-pvs-matematica-mod1`, `cecierj-pvs-historia-mod2`, `cecierj-pvs-geografia-mod1`, `cecierj-pvs-fisica-v1`, `pm-eam-provas`, `pm-afa-provas`, `pm-epcar-provas`, `cecierj-aprovarj`, `pm-esa-provas-2026`, `pm-ime-provas`.
+
+### Gates técnicos recomendados
+
+1. **T0 | Baseline imutável.** Conferir HEAD de `main` e evidências da revisão 04; rodar `npm test`, `npm run check`, `npm run build`. Os 37 recursos legados devem permanecer idênticos em ID, URL e estado de publicação. Nenhuma alteração em `FEATURED_RELEASE` ou `PATH_STATUS` antes da autorização final.
+2. **T1 | Registros isolados.** Converter as três entradas `PARTIAL_VERIFICATIONS` em registros tipados com as evidências diretas do PDF; adicionar os onze registros faltantes e preservar os 23 candidatos tipados. Declarar `subject: null` para provas multidisciplinares e `format: 'past-exam'` quando cabível. Cada novo registro precisa de `ResourceVerification` individual e `resourceProblems() === []`. Não inferir certificado, matrícula, duração ou nível além da fonte. Não importar staging em páginas e scripts de produção.
+3. **T2 | Contrato de destino.** Para cada um dos 37 ainda não publicados, garantir `placementOf()` resolvível **quando sua página estiver ativa**. Ensino Superior exige grupos coerentes em `higher-education.ts`; Tecnologia exige posicionamento honesto de `ms-learn-cloud-concepts` sem fingir que é curso de segurança; Fundamental e Pré-Militar dependem da ativação futura, de modo que devem permanecer em staging até o gate de release. `COURSE_HOSTS` e seu espelho em `verify-dist.mjs` só são ampliados quando houver promoção de fonte real.
+4. **T3 | Invariantes da seleção.** Preparar os IDs 10/10 por caminho sem preencher `FEATURED_RESOURCE_IDS_BY_PATH` na produção antes de estarem publicados e válidos; testar duplicações, ausência de fonte, datas futuras, divergência de host entre `url` e `verified.evidence.url`, questões da UERJ falsamente atribuídas às apostilas Cecierj e ausência de âncora/destino. ENEM deve abrir o acervo completo do INEP, com caderno 2024 e gabarito como evidências auxiliares. EsPCEx segue retida; a posição da shortlist utiliza ESA 2026.
+5. **T4 | Gate de release separado.** Só considerar publicação com nova revisão independente, testes `npm test`/`npm run check`/`npm run build`/`verify-dist`, `noindex` coerente, rotas e busca sem 404, preservação dos 37 recursos e sete trilhas, verificação em navegador e autorização explícita. Provar que staging não aparece no `dist` antes disso.
+
+### Decisões ainda necessárias antes da implementação
+
+- **Nuvem no caminho Tecnologia:** não colocar o recurso Microsoft Learn em Segurança apenas para passar o validador; preferir uma seção geral de recursos adequadamente rotulada, caso não exista trilha de nuvem suficiente, ou justificar nova trilha real.
+- **Ensino Superior:** criar grupos por campo para as seis novas ofertas sem duplicar recursos já exibidos.
+- **Ensino Fundamental:** a interface deve refletir anos comprovados (1º–9º) e não derivar os anos do `level`, que permanece um indicador genérico na versão atual.
+- **Coerência da liberação:** decidir o corte de entrega e a ordem de ativação sem publicar caminhos vazios; o gate de publicação jamais é satisfeito só pelo número editorial 60/60.
+
+**Resultado desta etapa:** prontidão documental para T0–T4, sem alteração de código, sem execução de teste, sem homologação final e sem publicação.
+
+## Próximas condições
+
+Para promover um registro novo, preparar metadados e testes com o validador P4, manter formato fiel à fonte, verificar URL direta, definir destino canônico e evidenciar cadastro/certificado. A seleção só pode ser publicada com dez recursos distintos válidos por caminho, CI aprovado e revisão externa concluída **antes** de merge/deploy. Nenhuma dispensa temporária de segurança do Gate B.
+
+**Não alterados nesta revisão:** os 37 registros do catálogo publicado, o staging técnico, os caminhos, `FEATURED_RESOURCE_IDS_BY_PATH`, `FEATURED_RELEASE`, `PATH_STATUS` e o site.
