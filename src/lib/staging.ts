@@ -112,7 +112,7 @@ export const STAGED_RESOURCES: readonly LearningResource[] = [
     verified: opened(ODIN, ['registration'], 'Módulos de HTML, CSS, JavaScript, Git e projetos; currículo declarado gratuito e aberto. Não é certificado.') },
   { id: 'google-mlcc', title: 'Machine Learning Crash Course', provider: 'Google', subject: 'tecnologia', format: 'course', paths: ['tecnologia'], language: 'en', level: 'beginner-intermediate', url: MLCC, registration: 'not-required', certificate: 'unconfirmed', technology: { section: 'data', topic: 'ai' },
     verified: opened(MLCC, ['registration'], 'Módulos, vídeos, visualizações e exercícios públicos (módulo de regressão linear também aberto). Não prometer certificado.') },
-  { id: 'ms-learn-cloud-concepts', title: 'Introdução à infraestrutura de nuvem: descrever conceitos de nuvem', provider: 'Microsoft Learn', subject: 'tecnologia', format: 'track', paths: ['tecnologia'], language: 'pt', level: 'beginner', url: MS_CLOUD, registration: 'not-required', certificate: 'unconfirmed', technology: { section: 'security', topic: 'cloud-ai' },
+  { id: 'ms-learn-cloud-concepts', title: 'Introdução à infraestrutura de nuvem: descrever conceitos de nuvem', provider: 'Microsoft Learn', subject: 'tecnologia', format: 'track', paths: ['tecnologia'], language: 'pt', level: 'beginner', url: MS_CLOUD, registration: 'not-required', certificate: 'unconfirmed', technology: { section: 'cloud', topic: 'cloud-fundamentals' },
     verified: opened(MS_CLOUD, ['registration'], 'Roteiro oficial em pt-BR com três módulos. FAQ oficial (https://learn.microsoft.com/en-us/training/support/faq): treinamento gratuito, conteúdo sem conta; a certificação AZ-900 é separada.') },
 ];
 
