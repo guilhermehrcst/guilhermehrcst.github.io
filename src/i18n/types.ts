@@ -73,7 +73,12 @@ export interface Dict {
     medio: string;
   };
   explore: { paths: string; areas: string };
-  superior: { note: string; groupsTitle: string };
+  superior: {
+    note: string;
+    groupsTitle: string;
+    /** Copy for the fields that have actually published resources, never staging candidates. */
+    byAreas: (labels: readonly string[]) => { description: string; note: string; objective: string };
+  };
   home: {
     hero: {
       eyebrow: string;
