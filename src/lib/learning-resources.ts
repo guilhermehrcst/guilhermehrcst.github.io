@@ -29,8 +29,8 @@ export type LearningDurationUnit = 'hours' | 'weeks';
 
 export type TechnologyTopicId =
   | 'cs' | 'python' | 'web' | 'webdev' | 'ai' | 'genai' | 'datasci' | 'data-computing'
-  | 'databases' | 'algorithms' | 'math-cs' | 'math' | 'cybersecurity' | 'security' | 'privacy' | 'cloud-ai';
-export type TechnologySectionId = 'build' | 'data' | 'systems' | 'security';
+  | 'databases' | 'algorithms' | 'math-cs' | 'math' | 'cybersecurity' | 'security' | 'privacy' | 'cloud-ai' | 'cloud-fundamentals';
+export type TechnologySectionId = 'build' | 'data' | 'systems' | 'security' | 'cloud';
 
 export type CourseImageLayout = 'opening' | 'media-right' | 'tile' | 'half' | 'tall' | 'band';
 export type CourseImageId = 'cs50x' | 'cs50p' | 'mit-6100l' | 'cs50ai' | 'fluencia' | 'fgv-datasci';
