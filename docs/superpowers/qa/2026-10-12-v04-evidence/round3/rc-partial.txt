@@ -1,0 +1,6 @@
+OK  RC full activation (expected: accepted) | no problems
+OK  Pré-Militar active with 9 highlights | pre-militar: released without ten valid highlights ; pre-militar: active without its ten homologated highlights released
+OK  Pré-Militar active with only ITA published | ensino-fundamental: released without ten valid highlights ; ensino-fundamental: active without its ten homologated highlights released
+OK  Fundamental active, highlights still in staging | ensino-fundamental: active without its ten homologated highlights released
+OK  Fundamental released while preparing | ensino-fundamental: released but still in preparation
+OK  Fundamental active with no published resource | ensino-fundamental: active without its ten homologated highlights released ; ensino-fundamental: active without a page that shows its resources

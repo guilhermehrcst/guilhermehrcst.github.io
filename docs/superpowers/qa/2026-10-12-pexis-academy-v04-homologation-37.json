@@ -9,10 +9,11 @@
  "main_sha": "5e4b086c9b34be40f069cbc85148b093d0439230",
  "summary": {
   "total": 37,
-  "VERIFIED": 0,
+  "VERIFIED": 1,
   "PARTIAL": 0,
   "BLOCKED": 0,
-  "PENDING_BROWSER_HOMOLOGATION": 37
+  "PENDING_BROWSER_HOMOLOGATION": 36,
+  "note": "PENDING_BROWSER_HOMOLOGATION equivale a BLOCKED no sentido de acesso insuficiente do ambiente de QA; não é evidência de indisponibilidade."
  },
  "publication_authorized": false,
  "items": [
@@ -62,7 +63,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:49.948Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-nosso-alfabeto/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "sme-goiania-letras-e-palavras",
@@ -112,7 +120,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:50.377Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-letras-e-palavras/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ef-sme-vegetacao-3",
@@ -160,7 +175,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:50.721Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/ciencias-da-natureza-vegetacao-e-a-preservacao-do-solo/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ef-sme-municipio-4",
@@ -208,7 +230,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:51.058Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/geografia-municipio-estado-e-pais/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ef-sme-vestigios-5",
@@ -256,7 +285,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:51.403Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/historia-vestigios-do-passado/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "sme-goiania-leitura-em-foco",
@@ -306,7 +342,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:51.726Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-leitura-em-foco/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ef-obmep-fracoes-6",
@@ -354,7 +397,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:52.132Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=28",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ef-sme-tecnologia-vida-7",
@@ -402,7 +452,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:52.454Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/ciencias-da-natureza-tecnologia-e-vida-humana/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ef-obmep-potenciacao-8",
@@ -450,7 +507,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:52.839Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=1059",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ef-sme-funcoes-9",
@@ -498,7 +562,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:53.160Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/matematica-funcao-de-1o-e-de-2o-grau/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "kultivi-enem-completo",
@@ -545,7 +616,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:53.479Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://kultivi.com/curso/enem-completo",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "inep-enem-provas-gabaritos",
@@ -592,7 +670,14 @@
    },
    "note": "Mesma URL da fonte oficial inep-provas-gabaritos já exibida em /enem/: duplicidade visível ao publicar (P2-RC5, resolvido em 1884110).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:53.776Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "fuvest-acervo-2026",
@@ -639,7 +724,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:54.257Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.fuvest.br/acervo-vestibular-2026/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "cecierj-pvs-portugues-v1",
@@ -685,7 +777,14 @@
    },
    "note": "Apostila de referência do Pré-Vestibular Social (format reference); não é prova oficial da UERJ (auditoria C13).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:54.624Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "cecierj-pvs-matematica-mod1",
@@ -731,7 +830,14 @@
    },
    "note": "Apostila de referência do Pré-Vestibular Social (format reference); não é prova oficial da UERJ (auditoria C13).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:54.919Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/122016/efcafab1e59a9c49c5244cbbdc982539.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "cecierj-pvs-historia-mod2",
@@ -777,7 +883,14 @@
    },
    "note": "Apostila de referência do Pré-Vestibular Social (format reference); não é prova oficial da UERJ (auditoria C13).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:55.269Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/122016/d0522fa0af463530f6629b02000952d5.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "cecierj-pvs-geografia-mod1",
@@ -823,7 +936,14 @@
    },
    "note": "Apostila de referência do Pré-Vestibular Social (format reference); não é prova oficial da UERJ (auditoria C13).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:55.708Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "cecierj-pvs-fisica-v1",
@@ -869,7 +989,14 @@
    },
    "note": "Apostila de referência do Pré-Vestibular Social (format reference); não é prova oficial da UERJ (auditoria C13).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:56.076Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ita-provas-anteriores",
@@ -916,7 +1043,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:56.392Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://vestibular.ita.br/provas.htm",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "pm-cn-provas",
@@ -962,7 +1096,14 @@
    },
    "note": "Marinha: PDF direto (CPACN 2025, 1º dia). Na pesquisa externa exigiu rota alternativa; revalidar em navegador comum.",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:56.695Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Exa sem a URL exata; Firecrawl (maxAge 0) devolveu HTTP 200, application/pdf e texto do caderno (registro do proprietário no PR #37, comentário 6123674831). Extração não equivale a homologação em navegador."
   },
   {
    "id": "pm-en-provas",
@@ -1008,7 +1149,14 @@
    },
    "note": "Marinha: PDF no sistema de inscrição (id_file=8961), URL com parâmetro; estabilidade do link não comprovada.",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:57.071Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Exa sem a URL exata; Firecrawl (maxAge 0) devolveu HTTP 200, application/pdf e texto do caderno (registro do proprietário no PR #37, comentário 6123674831). Extração não equivale a homologação em navegador."
   },
   {
    "id": "pm-eear-provas",
@@ -1054,7 +1202,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:57.357Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "pm-eam-provas",
@@ -1100,7 +1255,14 @@
    },
    "note": "Marinha (Aprendizes-Marinheiros): PDF direto; exigiu rota alternativa na pesquisa externa.",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:57.676Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Exa sem a URL exata; Firecrawl (maxAge 0) devolveu HTTP 200, application/pdf e texto do caderno (registro do proprietário no PR #37, comentário 6123674831). Extração não equivale a homologação em navegador."
   },
   {
    "id": "pm-afa-provas",
@@ -1146,7 +1308,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:58.008Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "pm-epcar-provas",
@@ -1192,7 +1361,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:58.350Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "cecierj-aprovarj",
@@ -1239,7 +1415,14 @@
    },
    "note": "Curso preparatório (format course, cadastro obrigatório, certificate none). Não é prova da ESA; área autenticada não aberta.",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:58.607Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://extensao.cecierj.edu.br/cursos/aprovarj/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "pm-esa-provas-2026",
@@ -1285,7 +1468,14 @@
    },
    "note": "Substituto editorial distinto da EsPCEx (bloqueada, fora da seleção). Título e ID dizem ESA; nenhum registro alega EsPCEx (auditoria C15).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:58.982Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "pm-ime-provas",
@@ -1331,7 +1521,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:59.357Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "mit-1801sc",
@@ -1378,7 +1575,14 @@
    },
    "note": "Destino Superior/Matemática. Publicar o MIT fora de Tecnologia quebra o build da Home (P1-RC1, resolvido em 5b47a35).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:59.560Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "mit-801sc",
@@ -1425,7 +1629,14 @@
    },
    "note": "Destino Superior/Física: grupo de 1 curso viola verify-dist n>=2 (P1-RC2, resolvido em b04e20b); quebra Home (P1-RC1, resolvido em 5b47a35).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:35:59.887Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "mit-7012",
@@ -1472,7 +1683,14 @@
    },
    "note": "Destino Superior/Biologia: grupo de 1 curso (P1-RC2, resolvido em b04e20b); quebra Home (P1-RC1, resolvido em 5b47a35).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:36:00.245Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ocw.mit.edu/courses/7-012-introduction-to-biology-fall-2004/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "yale-psyc-110",
@@ -1519,7 +1737,14 @@
    },
    "note": "Destino Superior/Psicologia: grupo de 1 curso (P1-RC2, resolvido em b04e20b); provedor fora da lista de universidades dos testes (P2-RC4, resolvido em b04e20b).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:36:00.610Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://oyc.yale.edu/introduction-psychology/psyc-110",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "yale-econ-252",
@@ -1566,7 +1791,14 @@
    },
    "note": "Destino Superior/Economia: grupo de 1 curso (P1-RC2, resolvido em b04e20b); provedor fora da lista de universidades (P2-RC4, resolvido em b04e20b).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:36:00.900Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://oyc.yale.edu/economics/econ-252",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ou-environment-treading-lightly",
@@ -1613,7 +1845,14 @@
    },
    "note": "Destino Superior/Meio Ambiente: grupo de 1 curso (P1-RC2, resolvido em b04e20b); provedor fora da lista (P2-RC4, resolvido em b04e20b); agora tipado certificate: participation, rótulo \"Declaração de participação\" (P3-RC6, resolvido em 1f48c7b).",
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:36:01.251Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.open.edu/openlearn/nature-environment/environmental-studies/environment-treading-lightly-on-the-earth/content-section-0",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "odin-foundations",
@@ -1659,7 +1898,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:36:01.531Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.theodinproject.com/paths/foundations/courses/foundations",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "google-mlcc",
@@ -1705,7 +1951,14 @@
    },
    "note": null,
    "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "availability_evidence": "none",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:36:01.973Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://developers.google.com/machine-learning/crash-course/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador."
   },
   {
    "id": "ms-learn-cloud-concepts",
@@ -1741,8 +1994,8 @@
     "http_status": null,
     "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/"
    },
-   "classification": "PENDING_BROWSER_HOMOLOGATION",
-   "classification_reason": "Homologação em navegador pendente. O ambiente de QA não alcançou o host: a política de rede do proxy negou a conexão (403 / net::ERR_TUNNEL_CONNECTION_FAILED). Isso não é evidência de que o recurso esteja indisponível; nada sobre a fonte foi demonstrado nem refutado nesta sessão. A evidência anterior é externa (revisão editorial 05) e não foi reproduzida.",
+   "classification": "VERIFIED",
+   "classification_reason": "Verificado em navegador real externo em 12/10/2026 (sessão https://agent.tinyfish.ai/runs/f1ce30e4-f26b-47cb-b5a2-e0a5e78abc0f, registrada pelo proprietário no PR #37, comentário 6125137719). Não reproduzido neste ambiente (proxy).",
    "technical": {
     "resourceProblems": [],
     "host_in_COURSE_HOSTS": false,
@@ -1750,13 +2003,50 @@
     "anchor_verified_in_rc_simulation": true
    },
    "note": "Trilha Computação em Nuvem: aparece só com o recurso publicado (verificado na simulação).",
-   "qa_access": "BLOCKED_BY_QA_ENVIRONMENT",
-   "availability_evidence": "none"
+   "qa_access": "BLOCKED_BY_QA_ENVIRONMENT (verificado externamente)",
+   "availability_evidence": "external browser 2026-10-12",
+   "round_3_session_browser_check": {
+    "browser": "Chromium (Playwright 1.56.1)",
+    "at": "2026-10-12T13:36:02.305Z",
+    "result": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/",
+    "webfetch": "ENOTFOUND (testado em ocw.mit.edu)"
+   },
+   "external_extraction": "Extração de texto por Exa da URL exata (registro do proprietário no PR #37, comentário 6123674831, 12/10/2026). Extração não equivale a homologação em navegador.",
+   "external_browser_check": {
+    "on": "2026-10-12",
+    "method": "external-browser",
+    "session": "https://agent.tinyfish.ai/runs/f1ce30e4-f26b-47cb-b5a2-e0a5e78abc0f",
+    "source": "PR #37 comment 6125137719 (OWNER)",
+    "final_url": "https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/",
+    "demonstrated": {
+     "free": "conteúdo legível sem cobrança",
+     "registration": "sem login para ler (not-required)",
+     "language": "pt-BR, com aviso de tradução automática/IA",
+     "format": "track: roteiro com 3 módulos e unidades",
+     "scope": "conceitos de nuvem, benefícios, IaaS/PaaS/SaaS; primeira unidade aberta",
+     "path": "Tecnologia / Computação em Nuvem"
+    },
+    "not_demonstrated": {
+     "certificate": "não confirmado; o registro mantém certificate: unconfirmed (nunca exibido). Preparação AZ-900 não é certificação."
+    },
+    "http_status": "não observado",
+    "caveats": [
+     "aviso de tradução automática/IA na interface",
+     "nenhuma conta criada, nenhuma avaliação feita"
+    ]
+   }
   }
  ],
  "round_2": {
   "date": "2026-10-12",
   "tested_sha": "b22d913",
   "change": "Classificação revista: o bloqueio do proxy do ambiente de QA é registrado como verificação pendente, não como indisponibilidade. P1/P2/P3 de release resolvidos (ver relatório)."
+ },
+ "round_3": {
+  "date": "2026-10-12",
+  "tested_sha": "06031d7",
+  "local_browser": "Chromium: 37/37 net::ERR_TUNNEL_CONNECTION_FAILED (proxy 403 por política)",
+  "webfetch": "ENOTFOUND",
+  "external_browser": "nenhum navegador externo autorizado disponível nesta sessão; aproveitada a evidência externa de ms-learn-cloud-concepts registrada pelo proprietário"
  }
 }

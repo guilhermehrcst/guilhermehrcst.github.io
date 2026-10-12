@@ -1,0 +1,6 @@
+/ensino-fundamental/ {"has":true,"n":10,"distinct":10,"prep":false,"robots":null,"resources":10}
+/ensino-medio/ {"has":true,"n":10,"distinct":10,"prep":false,"robots":null,"resources":0}
+/vestibulares/ {"has":true,"n":10,"distinct":10,"prep":false,"robots":null,"resources":2}
+/pre-militar/ {"has":true,"n":10,"distinct":10,"prep":false,"robots":null,"resources":10}
+/ensino-superior/ {"has":true,"n":10,"distinct":10,"prep":false,"robots":null,"resources":6}
+/tecnologia/ {"has":true,"n":10,"distinct":10,"prep":false,"robots":null,"resources":20}

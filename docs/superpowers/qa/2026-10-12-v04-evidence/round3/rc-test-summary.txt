@@ -1,0 +1,474 @@
+# Subtest: every brand file is exactly what the script generated from the official sources
+ok 1 - every brand file is exactly what the script generated from the official sources
+# Subtest: the official sources are kept as supplied
+ok 2 - the official sources are kept as supplied
+# Subtest: the --brand token is the red measured from the official artwork
+ok 3 - the --brand token is the red measured from the official artwork
+# Subtest: the lockup keeps the artwork whole: its proportions are the original box
+ok 4 - the lockup keeps the artwork whole: its proportions are the original box
+# Subtest: the page shell links the generated icons, and nothing else stands for the brand
+ok 5 - the page shell links the generated icons, and nothing else stands for the brand
+# Subtest: The Open University: a statement of participation, labelled as such
+ok 6 - The Open University: a statement of participation, labelled as such
+# Subtest: FGV statements keep their meaning and label
+ok 7 - FGV statements keep their meaning and label
+# Subtest: the contrast function matches a known reference
+ok 8 - the contrast function matches a known reference
+# Subtest: --ink on --paper is at least 7:1
+ok 9 - --ink on --paper is at least 7:1
+# Subtest: --ink on --surface is at least 7:1
+ok 10 - --ink on --surface is at least 7:1
+# Subtest: --muted on --paper is at least 4.5:1
+ok 11 - --muted on --paper is at least 4.5:1
+# Subtest: --muted on --surface is at least 4.5:1
+ok 12 - --muted on --surface is at least 4.5:1
+# Subtest: --action on --paper is at least 4.5:1
+ok 13 - --action on --paper is at least 4.5:1
+# Subtest: --action on --surface is at least 4.5:1
+ok 14 - --action on --surface is at least 4.5:1
+# Subtest: --action-hover on --paper is at least 4.5:1
+ok 15 - --action-hover on --paper is at least 4.5:1
+# Subtest: --on-action on --action is at least 4.5:1
+ok 16 - --on-action on --action is at least 4.5:1
+# Subtest: --on-action on --action-hover is at least 4.5:1
+ok 17 - --on-action on --action-hover is at least 4.5:1
+# Subtest: --ink on --raised is at least 7:1
+ok 18 - --ink on --raised is at least 7:1
+# Subtest: --muted on --raised is at least 4.5:1
+ok 19 - --muted on --raised is at least 4.5:1
+# Subtest: --action on --raised is at least 4.5:1
+ok 20 - --action on --raised is at least 4.5:1
+# Subtest: --ink on --tint-brand is at least 7:1
+ok 21 - --ink on --tint-brand is at least 7:1
+# Subtest: --muted on --tint-brand is at least 4.5:1
+ok 22 - --muted on --tint-brand is at least 4.5:1
+# Subtest: --action on --tint-brand is at least 4.5:1
+ok 23 - --action on --tint-brand is at least 4.5:1
+# Subtest: --on-action on --brand is at least 7:1
+ok 24 - --on-action on --brand is at least 7:1
+# Subtest: --on-brand on --brand is at least 7:1
+ok 25 - --on-brand on --brand is at least 7:1
+# Subtest: --on-brand-muted on --brand is at least 4.5:1
+ok 26 - --on-brand-muted on --brand is at least 4.5:1
+# Subtest: --on-brand on --brand-deep is at least 7:1
+ok 27 - --on-brand on --brand-deep is at least 7:1
+# Subtest: --on-brand-muted on --brand-deep is at least 4.5:1
+ok 28 - --on-brand-muted on --brand-deep is at least 4.5:1
+# Subtest: --ink on --raised is at least 7:1
+ok 29 - --ink on --raised is at least 7:1
+# Subtest: --action on --raised is at least 4.5:1
+ok 30 - --action on --raised is at least 4.5:1
+# Subtest: --ink on --tint-sand is at least 7:1
+ok 31 - --ink on --tint-sand is at least 7:1
+# Subtest: --muted on --tint-sand is at least 4.5:1
+ok 32 - --muted on --tint-sand is at least 4.5:1
+# Subtest: no hex colour outside :root, but the theme-color meta, which equals --paper
+ok 33 - no hex colour outside :root, but the theme-color meta, which equals --paper
+# Subtest: one action colour, and it is the brand red (the official mark leads; no blue competes)
+ok 34 - one action colour, and it is the brand red (the official mark leads; no blue competes)
+# Subtest: ISO dates read as a Brazilian reader writes them, whatever the time zone
+ok 35 - ISO dates read as a Brazilian reader writes them, whatever the time zone
+# Subtest: each guide has its own closed sections, in order
+ok 36 - each guide has its own closed sections, in order
+# Subtest: enem: no resource of the former study track is lost
+ok 37 - enem: no resource of the former study track is lost
+# Subtest: enem: only published resources tagged for the exam, each listed once
+ok 38 - enem: only published resources tagged for the exam, each listed once
+# Subtest: enem: editorial sections cite official sources; no section is empty
+ok 39 - enem: editorial sections cite official sources; no section is empty
+# Subtest: uerj: no resource of the former study track is lost
+ok 40 - uerj: no resource of the former study track is lost
+# Subtest: uerj: only published resources tagged for the exam, each listed once
+ok 41 - uerj: only published resources tagged for the exam, each listed once
+# Subtest: uerj: editorial sections cite official sources; no section is empty
+ok 42 - uerj: editorial sections cite official sources; no section is empty
+# Subtest: ENEM: practice holds practice only, deepening holds none; the mandatory sections are there
+ok 43 - ENEM: practice holds practice only, deepening holds none; the mandatory sections are there
+# Subtest: UERJ: past exams are the spine; the mandatory sections are there
+ok 44 - UERJ: past exams are the spine; the mandatory sections are there
+# Subtest: ENEM areas follow INEP: four areas and the essay, covering the twelve subjects once
+ok 45 - ENEM areas follow INEP: four areas and the essay, covering the twelve subjects once
+# Subtest: UERJ subjects are exactly those with UERJ resources
+ok 46 - UERJ subjects are exactly those with UERJ resources
+# Subtest: staging today: the INEP source is not shown as a resource, so the note keeps its external link
+not ok 47 - staging today: the INEP source is not shown as a resource, so the note keeps its external link
+# Subtest: the selection has one list per path and holds ten per path
+ok 48 - the selection has one list per path and holds ten per path
+# Subtest: staging today: no highlight is homologated, so every list is empty and the selection is incomplete
+not ok 49 - staging today: no highlight is homologated, so every list is empty and the selection is incomplete
+# Subtest: sixty distinct, ten per path, is a valid final selection
+ok 50 - sixty distinct, ten per path, is a valid final selection
+# Subtest: final requires exactly ten in every path; staging accepts fewer but never more
+ok 51 - final requires exactly ten in every path; staging accepts fewer but never more
+# Subtest: an unknown or unpublished id is refused
+ok 52 - an unknown or unpublished id is refused
+# Subtest: a highlight must declare the path it is featured in
+ok 53 - a highlight must declare the path it is featured in
+# Subtest: an id repeated in one list, or featured in two paths, is refused: sixty must be distinct
+ok 54 - an id repeated in one list, or featured in two paths, is refused: sixty must be distinct
+# Subtest: featuredFor resolves a path to its published resources in order
+not ok 55 - featuredFor resolves a path to its published resources in order
+# Subtest: featuredReady: a path is ready only with ten valid highlights
+not ok 56 - featuredReady: a path is ready only with ten valid highlights
+# Subtest: T2 higher education: six new offerings have conditional field destinations without premature groups
+not ok 57 - T2 higher education: six new offerings have conditional field destinations without premature groups
+# Subtest: T2 technology: seven existing published tracks stay unchanged until future candidates enter catalogue
+not ok 58 - T2 technology: seven existing published tracks stay unchanged until future candidates enter catalogue
+# Subtest: T2 cloud is a distinct genuine topic; no false Security attribution or certification
+ok 59 - T2 cloud is a distinct genuine topic; no false Security attribution or certification
+# Subtest: T2 placement context refuses to route a tech resource with a forged non-tech subject or path
+ok 60 - T2 placement context refuses to route a tech resource with a forged non-tech subject or path
+# Subtest: T2 all verified candidates have future placement; real publication flags remain unchanged
+not ok 61 - T2 all verified candidates have future placement; real publication flags remain unchanged
+# Subtest: T2 higher education: the existing two-group copy remains unchanged until a new resource is published
+not ok 62 - T2 higher education: the existing two-group copy remains unchanged until a new resource is published
+# Subtest: T2 higher education: page description, note and Home adapt to all actually available fields
+ok 63 - T2 higher education: page description, note and Home adapt to all actually available fields
+# Subtest: T2 higher education: every public resource has an actual first-occurrence anchor on its canonical university page
+ok 64 - T2 higher education: every public resource has an actual first-occurrence anchor on its canonical university page
+# Subtest: T2 higher education: every future university course has an anchor when its group is published
+not ok 65 - T2 higher education: every future university course has an anchor when its group is published
+# Subtest: T2 higher education: no staged group is rendered or described before the release
+not ok 66 - T2 higher education: no staged group is rendered or described before the release
+# Subtest: T2 higher education: university page and Home wire copy and first-occurrence anchors to production groups
+ok 67 - T2 higher education: university page and Home wire copy and first-occurrence anchors to production groups
+# Subtest: T2: draft matches the audited manifest exactly, slot by slot and in editorial order
+not ok 68 - T2: draft matches the audited manifest exactly, slot by slot and in editorial order
+# Subtest: T2: draft uses the original catalogue and two staging sets, never duplicates data
+not ok 69 - T2: draft uses the original catalogue and two staging sets, never duplicates data
+# Subtest: T2: all sixty provisional candidates obey P4 and the existing featured gate
+not ok 70 - T2: all sixty provisional candidates obey P4 and the existing featured gate
+# Subtest: T2: all nine previously missing destinations have conditional routes without public activation
+not ok 71 - T2: all nine previously missing destinations have conditional routes without public activation
+# Subtest: T2: Fundamental and Pré-Militar remain preparing until a separately approved release
+not ok 72 - T2: Fundamental and Pré-Militar remain preparing until a separately approved release
+# Subtest: T2: preview is unreferenced by user-facing code, static scripts and the public build
+ok 73 - T2: preview is unreferenced by user-facing code, static scripts and the public build
+# Subtest: Gate B: exactly 60 independently audited slots, ten consecutive positions per path
+ok 74 - Gate B: exactly 60 independently audited slots, ten consecutive positions per path
+# Subtest: Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates
+not ok 75 - Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates
+# Subtest: Gate B: all fourteen new typed resources obey the existing P4 contract
+ok 76 - Gate B: all fourteen new typed resources obey the existing P4 contract
+# Subtest: Gate B: five Cecierj apostilas are references, never courses or official UERJ exams
+ok 77 - Gate B: five Cecierj apostilas are references, never courses or official UERJ exams
+# Subtest: Gate B: eight institutional exam booklets and AprovaRJ are accurately classified
+ok 78 - Gate B: eight institutional exam booklets and AprovaRJ are accurately classified
+# Subtest: Gate B: placement of new resources resolves when the corresponding paths are active
+ok 79 - Gate B: placement of new resources resolves when the corresponding paths are active
+# Subtest: Gate B: incomplete or misleading source evidence fails closed
+ok 80 - Gate B: incomplete or misleading source evidence fails closed
+# Subtest: Gate B: publication remains disabled and all earlier partial attempts remain historical
+not ok 81 - Gate B: publication remains disabled and all earlier partial attempts remain historical
+# Subtest: the hero demo separators are decorative: hidden from assistive technology
+ok 82 - the hero demo separators are decorative: hidden from assistive technology
+# Subtest: hidden always wins over component display rules
+ok 83 - hidden always wins over component display rules
+# Subtest: the groups follow the plan order; none is empty; the two V0.3 groups keep at least two courses
+ok 84 - the groups follow the plan order; none is empty; the two V0.3 groups keep at least two courses
+# Subtest: staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet)
+not ok 85 - staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet)
+# Subtest: every course is published, unique, and published by a university
+ok 86 - every course is published, unique, and published by a university
+# Subtest: an unknown id fails the build instead of leaving a gap
+ok 87 - an unknown id fails the build instead of leaving a gap
+# Subtest: staging today: every institution keeps its single-page link and count, exactly as before
+not ok 88 - staging today: every institution keeps its single-page link and count, exactly as before
+# Subtest: every resource declares the paths it serves: at least one, each known, none repeated
+ok 89 - every resource declares the paths it serves: at least one, each known, none repeated
+# Subtest: the legacy goals field is gone: path and exam are separate axes
+ok 90 - the legacy goals field is gone: path and exam are separate axes
+# Subtest: an exam is never a path, and an exam resource sits in its parent path
+ok 91 - an exam is never a path, and an exam resource sits in its parent path
+# Subtest: a technology resource serves Tecnologia and never Ensino Médio by inheritance
+not ok 92 - a technology resource serves Tecnologia and never Ensino Médio by inheritance
+# Subtest: Ensino Médio holds school subjects only, so its count is what /ensino-medio/ renders
+ok 93 - Ensino Médio holds school subjects only, so its count is what /ensino-medio/ renders
+# Subtest: Ensino Superior is declared on each resource and agrees with the university groups
+ok 94 - Ensino Superior is declared on each resource and agrees with the university groups
+# Subtest: every count is the number of distinct published resources of that path or exam
+not ok 95 - every count is the number of distinct published resources of that path or exam
+# Subtest: the format axis names what a resource really is, and knows which formats are practice
+ok 96 - the format axis names what a resource really is, and knows which formats are practice
+# Subtest: every format has a label, and no label calls a past exam, a lesson or a reference a course
+ok 97 - every format has a label, and no label calls a past exam, a lesson or a reference a course
+# Subtest: verify-dist keeps an independent, equal list of the practice formats
+ok 98 - verify-dist keeps an independent, equal list of the practice formats
+# Subtest: a resource without a subject is reached by path and exam, never by area or subject
+ok 99 - a resource without a subject is reached by path and exam, never by area or subject
+# Subtest: the search index never sends a resource without a subject to a page that does not show it
+ok 100 - the search index never sends a resource without a subject to a page that does not show it
+# Subtest: P3: school years read as the source states them
+ok 101 - P3: school years read as the source states them
+# Subtest: one selected goal matches a multi-goal resource
+ok 102 - one selected goal matches a multi-goal resource
+# Subtest: values inside one dimension use OR semantics
+ok 103 - values inside one dimension use OR semantics
+# Subtest: path and exam are separate dimensions and combine with AND
+ok 104 - path and exam are separate dimensions and combine with AND
+# Subtest: multiple selected formats use OR semantics
+ok 105 - multiple selected formats use OR semantics
+# Subtest: dimensions combine with AND semantics
+ok 106 - dimensions combine with AND semantics
+# Subtest: the area is derived from the subject
+ok 107 - the area is derived from the subject
+# Subtest: empty filter restores the full ordered list
+ok 108 - empty filter restores the full ordered list
+# Subtest: resourcesByArea preserves source order
+ok 109 - resourcesByArea preserves source order
+# Subtest: resourcesByIds follows the requested order
+ok 110 - resourcesByIds follows the requested order
+# Subtest: resourcesByIds fails closed on an unknown id
+ok 111 - resourcesByIds fails closed on an unknown id
+# Subtest: objectivesFor derives, in the Home order, the objectives a subject has resources for
+not ok 112 - objectivesFor derives, in the Home order, the objectives a subject has resources for
+# Subtest: objectiveFacts counts what each path really holds
+not ok 113 - objectiveFacts counts what each path really holds
+# Subtest: institutions lists only providers that publish, with their resources in catalogue order
+not ok 114 - institutions lists only providers that publish, with their resources in catalogue order
+# Subtest: mapNavItems: one row per area of the map; an area named like its only subject gives its count
+ok 115 - mapNavItems: one row per area of the map; an area named like its only subject gives its count
+# Subtest: the catalogue is exactly the 40 records of the snapshot, field by field
+not ok 116 - the catalogue is exactly the 40 records of the snapshot, field by field
+# Subtest: 37 published, 3 held back with a review note
+not ok 117 - 37 published, 3 held back with a review note
+# Subtest: resource ids are unique
+ok 118 - resource ids are unique
+# Subtest: published resources are HTTPS and explicitly verified free
+ok 119 - published resources are HTTPS and explicitly verified free
+# Subtest: the subject is the only source of the area
+ok 120 - the subject is the only source of the area
+# Subtest: exams are the exam ids, never a path
+ok 121 - exams are the exam ids, never a path
+# Subtest: every school subject has at least one published resource
+ok 122 - every school subject has at least one published resource
+# Subtest: free practice exists for ENEM and UERJ
+ok 123 - free practice exists for ENEM and UERJ
+# Subtest: COURSE_HOSTS is exactly the set of hosts of published resources
+ok 124 - COURSE_HOSTS is exactly the set of hosts of published resources
+# Subtest: the V0.1 official sources are exactly the ones recorded in the source audit
+ok 125 - the V0.1 official sources are exactly the ones recorded in the source audit
+# Subtest: official hosts are a closed list
+ok 126 - official hosts are a closed list
+# Subtest: every source is HTTPS, on an official host, issued by INEP or UERJ, and verified
+ok 127 - every source is HTTPS, on an official host, issued by INEP or UERJ, and verified
+# Subtest: every component is used
+ok 128 - every component is used
+# Subtest: every module in src/lib is used, but for the declared exceptions
+ok 129 - every module in src/lib is used, but for the declared exceptions
+# Subtest: every global token is read somewhere
+ok 130 - every global token is read somewhere
+# Subtest: every repository path the README cites exists
+ok 131 - every repository path the README cites exists
+# Subtest: ensino-fundamental: one copy per state, with the SEO description and the lead
+ok 132 - ensino-fundamental: one copy per state, with the SEO description and the lead
+# Subtest: ensino-fundamental: in preparation the copy says so; active, it never speaks of preparation or the future
+ok 133 - ensino-fundamental: in preparation the copy says so; active, it never speaks of preparation or the future
+# Subtest: ensino-fundamental: the description and the lead live only in the state copy (one source)
+ok 134 - ensino-fundamental: the description and the lead live only in the state copy (one source)
+# Subtest: pre-militar: one copy per state, with the SEO description and the lead
+ok 135 - pre-militar: one copy per state, with the SEO description and the lead
+# Subtest: pre-militar: in preparation the copy says so; active, it never speaks of preparation or the future
+ok 136 - pre-militar: in preparation the copy says so; active, it never speaks of preparation or the future
+# Subtest: pre-militar: the description and the lead live only in the state copy (one source)
+ok 137 - pre-militar: the description and the lead live only in the state copy (one source)
+# Subtest: the state-independent copy of both pages never speaks of the future
+ok 138 - the state-independent copy of both pages never speaks of the future
+# Subtest: P2: one status per path; PREPARING_PATHS is derived from it
+not ok 139 - P2: one status per path; PREPARING_PATHS is derived from it
+# Subtest: P2: the path pages read noindex and the preparing note from the status, not from literals
+ok 140 - P2: the path pages read noindex and the preparing note from the status, not from literals
+# Subtest: P2: activating Pré-Militar with 0 resources, or 9 of 10 highlights, is refused
+ok 141 - P2: activating Pré-Militar with 0 resources, or 9 of 10 highlights, is refused
+# Subtest: P2: ten ids filled in staging authorise nothing: activation needs the explicit release
+ok 142 - P2: ten ids filled in staging authorise nothing: activation needs the explicit release
+# Subtest: P2: a gated path is active only with a page that shows its resources
+ok 143 - P2: a gated path is active only with a page that shows its resources
+# Subtest: P2: an unhomologated (unpublished) highlight never activates a path
+ok 144 - P2: an unhomologated (unpublished) highlight never activates a path
+# Subtest: P2: highlights released while still in preparation (noindex, invisible highlights) are refused
+ok 145 - P2: highlights released while still in preparation (noindex, invisible highlights) are refused
+# Subtest: P2: a release without ten valid highlights is refused on any path
+ok 146 - P2: a release without ten valid highlights is refused on any path
+# Subtest: P2: the real state today is consistent
+ok 147 - P2: the real state today is consistent
+# Subtest: Pré-Militar names Escola Naval under Marinha, as structure only: edital in verification, no link
+ok 148 - Pré-Militar names Escola Naval under Marinha, as structure only: edital in verification, no link
+# Subtest: P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged)
+not ok 149 - P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged)
+# Subtest: P1: a military past exam (no subject, no ENEM/UERJ) lives on Pré-Militar once that page is active
+ok 150 - P1: a military past exam (no subject, no ENEM/UERJ) lives on Pré-Militar once that page is active
+# Subtest: P1: a Fuvest past exam (no subject, no ExamId) lives on the Vestibular hub
+ok 151 - P1: a Fuvest past exam (no subject, no ExamId) lives on the Vestibular hub
+# Subtest: P1: no destination on a page in preparation; a published resource without a destination fails
+not ok 152 - P1: no destination on a page in preparation; a published resource without a destination fails
+# Subtest: P1: a destination is always a built, indexable page of the site
+ok 153 - P1: a destination is always a built, indexable page of the site
+# Subtest: P1: a Fundamental resource with a school subject lives on Fundamental, never among the Médio subject pages
+ok 154 - P1: a Fundamental resource with a school subject lives on Fundamental, never among the Médio subject pages
+# Subtest: release candidate: the INEP collection is in Pratique, anchored on /enem/, and it is the cited source
+ok 155 - release candidate: the INEP collection is in Pratique, anchored on /enem/, and it is the cited source
+# Subtest: release candidate: seven fields in plan order, the V0.3 groups intact and first
+ok 156 - release candidate: seven fields in plan order, the V0.3 groups intact and first
+# Subtest: release candidate: every course is published once, verified, and by a university
+ok 157 - release candidate: every course is published once, verified, and by a university
+# Subtest: release candidate: MIT spans three areas and leads to the search filtered by MIT, a real filter value
+ok 158 - release candidate: MIT spans three areas and leads to the search filtered by MIT, a real filter value
+# Subtest: the guards stay: a non-course or a resource without a subject still fails, never a fictitious link
+ok 159 - the guards stay: a non-course or a resource without a subject still fails, never a fictitious link
+# Subtest: the count names every area an institution covers, and reads as before for one area
+ok 160 - the count names every area an institution covers, and reads as before for one area
+# Subtest: release candidate: 74 published, the 60 highlights valid, every path active without a problem
+ok 161 - release candidate: 74 published, the 60 highlights valid, every path active without a problem
+# Subtest: release candidate: every resource has a page, and the 37 published keep exactly theirs
+ok 162 - release candidate: every resource has a page, and the 37 published keep exactly theirs
+# Subtest: release candidate: a partial release is still refused
+ok 163 - release candidate: a partial release is still refused
+# Subtest: every staging guard listed in STAGING-GUARDS.md is a test that exists
+ok 164 - every staging guard listed in STAGING-GUARDS.md is a test that exists
+# Subtest: the 22 canonical routes, exactly and in a stable order
+not ok 165 - the 22 canonical routes, exactly and in a stable order
+# Subtest: the paths in preparation have pages but are not canonical (noindex, out of the sitemap)
+not ok 166 - the paths in preparation have pages but are not canonical (noindex, out of the sitemap)
+# Subtest: every route is lowercase, unaccented, slash-terminated and unique
+ok 167 - every route is lowercase, unaccented, slash-terminated and unique
+# Subtest: technology lives at /tecnologia/ only
+ok 168 - technology lives at /tecnologia/ only
+# Subtest: an unpublished topic has no route
+ok 169 - an unpublished topic has no route
+# Subtest: legacy routes redirect to existing canonical pages; the résumé is gone
+ok 170 - legacy routes redirect to existing canonical pages; the résumé is gone
+# Subtest: the header navigation, in order: the Explorar menu, then four direct links (V0.3)
+ok 171 - the header navigation, in order: the Explorar menu, then four direct links (V0.3)
+# Subtest: a section of the header is current on its own page and on the pages inside it
+ok 172 - a section of the header is current on its own page and on the pages inside it
+# Subtest: P3: schoolYears accepts 1..9, distinct, ascending, only on Fundamental, only with individual evidence
+ok 173 - P3: schoolYears accepts 1..9, distinct, ascending, only on Fundamental, only with individual evidence
+# Subtest: P3: a multidisciplinary Fundamental resource needs no subject; no resource is forced to have a year
+ok 174 - P3: a multidisciplinary Fundamental resource needs no subject; no resource is forced to have a year
+# Subtest: P3: the stage is derived from the years, never typed
+ok 175 - P3: the stage is derived from the years, never typed
+# Subtest: a resource result leads to its home page, at the resource itself (\#recurso-<id>)
+ok 176 - a resource result leads to its home page, at the resource itself (\#recurso-<id>)
+# Subtest: anchorPlan anchors a resource once, on its home page only, at its first occurrence
+ok 177 - anchorPlan anchors a resource once, on its home page only, at its first occurrence
+# Subtest: a resource without a subject lives on the exam page that shows it; with no such page it has no destination
+ok 178 - a resource without a subject lives on the exam page that shows it; with no such page it has no destination
+# Subtest: resource entries carry their facets; other entries carry none
+ok 179 - resource entries carry their facets; other entries carry none
+# Subtest: facet options: only values some resource has, in the taxonomy order, each with its label
+not ok 180 - facet options: only values some resource has, in the taxonomy order, each with its label
+# Subtest: entryMatches: AND across facets, OR inside one; no selection matches everything
+ok 181 - entryMatches: AND across facets, OR inside one; no selection matches everything
+# Subtest: a resource without a subject is left out by a subject filter and kept by the others
+ok 182 - a resource without a subject is left out by a subject filter and kept by the others
+# Subtest: an entry without facets (a path, an area, a subject page) is shown only when no filter is set
+ok 183 - an entry without facets (a path, an area, a subject page) is shown only when no filter is set
+# Subtest: the selection lives in the URL; unknown facets and values are dropped, never trusted
+ok 184 - the selection lives in the URL; unknown facets and values are dropped, never trusted
+# Subtest: filtering the real index: Tecnologia in Portuguese is exactly the Portuguese technology resources
+ok 185 - filtering the real index: Tecnologia in Portuguese is exactly the Portuguese technology resources
+# Subtest: normalize: lowercase, no accents, single spaces
+ok 186 - normalize: lowercase, no accents, single spaces
+# Subtest: matches: every word of the query, in any order; an empty query matches everything
+ok 187 - matches: every word of the query, in any order; an empty query matches everything
+# Subtest: filterEntries returns the visible ids and their count
+ok 188 - filterEntries returns the visible ids and their count
+# Subtest: one entry per objective, area, subject, published track and published resource
+not ok 189 - one entry per objective, area, subject, published track and published resource
+# Subtest: every entry leads to a page of the site, never outside
+ok 190 - every entry leads to a page of the site, never outside
+# Subtest: no duplicate entry; the index is deterministic
+ok 191 - no duplicate entry; the index is deterministic
+# Subtest: terms are normalized and find what a student types
+ok 192 - terms are normalized and find what a student types
+# Subtest: Lote 03: the eight Fundamental lessons are staged once each, with the year, subject and format of the source
+ok 193 - Lote 03: the eight Fundamental lessons are staged once each, with the year, subject and format of the source
+# Subtest: Lote 03: neither the source nor the evidence states registration or certificate: both stay unconfirmed
+ok 194 - Lote 03: neither the source nor the evidence states registration or certificate: both stay unconfirmed
+# Subtest: Lote 03: Ciências da Natureza is never filed under Tecnologia nor given a false subject
+ok 195 - Lote 03: Ciências da Natureza is never filed under Tecnologia nor given a false subject
+# Subtest: Fundamental: ten distinct staged lessons, each shown on the Fundamental page once it is active
+ok 196 - Fundamental: ten distinct staged lessons, each shown on the Fundamental page once it is active
+# Subtest: Lote 03: the three military collections stay partial: recorded, never staged as ready, never in the draft
+not ok 197 - Lote 03: the three military collections stay partial: recorded, never staged as ready, never in the draft
+# Subtest: the Lote 02 sheet: 60 candidates, 18 opened directly, none authorised for publication
+ok 198 - the Lote 02 sheet: 60 candidates, 18 opened directly, none authorised for publication
+# Subtest: staging: every one of the 18 direct sources is a staged record or a re-verified published id, never both
+ok 199 - staging: every one of the 18 direct sources is a staged record or a re-verified published id, never both
+# Subtest: reuse: the published ids are re-verified, never duplicated
+not ok 200 - reuse: the published ids are re-verified, never duplicated
+# Subtest: every staged record passes every rule of a catalogue record (paths, exams, P3, P4) with its individual evidence
+ok 201 - every staged record passes every rule of a catalogue record (paths, exams, P3, P4) with its individual evidence
+# Subtest: no lesson, past exam or reference becomes a course; the formats are the observed ones
+ok 202 - no lesson, past exam or reference becomes a course; the formats are the observed ones
+# Subtest: staged records are not published: not in the catalogue, not imported by any page or component
+not ok 203 - staged records are not published: not in the catalogue, not imported by any page or component
+# Subtest: nothing is released or activated by this lot
+not ok 204 - nothing is released or activated by this lot
+# Subtest: each staged record has a destination once its page is active, or a declared placement step (P1)
+ok 205 - each staged record has a destination once its page is active, or a declared placement step (P1)
+# Subtest: the selection draft: at most ten per path, distinct across paths, each declaring its path, staged or published
+ok 206 - the selection draft: at most ten per path, distinct across paths, each declaring its path, staged or published
+# Subtest: the six paths, in the approved order (V0.3)
+ok 207 - the six paths, in the approved order (V0.3)
+# Subtest: ENEM and UERJ are exams inside Vestibular, not paths
+ok 208 - ENEM and UERJ are exams inside Vestibular, not paths
+# Subtest: the paths in preparation are named, and are paths
+not ok 209 - the paths in preparation are named, and are paths
+# Subtest: the six areas keep the Home order
+ok 210 - the six areas keep the Home order
+# Subtest: twelve academic subjects plus technology, each in exactly one area
+ok 211 - twelve academic subjects plus technology, each in exactly one area
+# Subtest: slugs are unique, lowercase and unaccented
+ok 212 - slugs are unique, lowercase and unaccented
+# Subtest: every objective, area and subject has a human label
+ok 213 - every objective, area and subject has a human label
+# Subtest: every topic names its source and none is published in V0.1
+ok 214 - every topic names its source and none is published in V0.1
+# Subtest: no subject has a learning map until each topic is checked against its source
+ok 215 - no subject has a learning map until each topic is checked against its source
+# Subtest: the tracks and their resources are exactly the spec
+not ok 216 - the tracks and their resources are exactly the spec
+# Subtest: every referenced resource exists, is published and is technology
+ok 217 - every referenced resource exists, is published and is technology
+# Subtest: a published track is never empty; a planned one is never shown
+not ok 218 - a published track is never empty; a planned one is never shown
+# Subtest: no published technology resource is left out of every track
+ok 219 - no published technology resource is left out of every track
+# Subtest: every track says what it is and why
+ok 220 - every track says what it is and why
+# Subtest: P4: the legacy set is exactly the 37 published today, and they need nothing new
+not ok 221 - P4: the legacy set is exactly the 37 published today, and they need nothing new
+# Subtest: P4: a new resource needs individual evidence: HTTPS source, what was checked, a note
+ok 222 - P4: a new resource needs individual evidence: HTTPS source, what was checked, a note
+# Subtest: P4: a new resource states its registration and certificate (never left unknown by omission)
+ok 223 - P4: a new resource states its registration and certificate (never left unknown by omission)
+# Subtest: P4: the legacy exemption covers the baseline data only: a changed URL or date loses it
+ok 224 - P4: the legacy exemption covers the baseline data only: a changed URL or date loses it
+# Subtest: P4: nothing stamps a verification on a new resource: the legacy helper refuses ids outside the baseline
+ok 225 - P4: nothing stamps a verification on a new resource: the legacy helper refuses ids outside the baseline
+# Subtest: P4: a verification date is a real date, never in the future
+ok 226 - P4: a verification date is a real date, never in the future
+# Subtest: P4: evidence comes from the resource's own official host
+ok 227 - P4: evidence comes from the resource's own official host
+# Subtest: P4: an unconfirmed detail is stated as unconfirmed and never shown as a fact
+ok 228 - P4: an unconfirmed detail is stated as unconfirmed and never shown as a fact
+# Subtest: P4: the verification methods are direct only: official page, or the author's official channel
+ok 229 - P4: the verification methods are direct only: official page, or the author's official channel
+# Subtest: P4: a new resource verified through a search index, or with a missing or unknown method, is refused
+ok 230 - P4: a new resource verified through a search index, or with a missing or unknown method, is refused
+# Subtest: P4: the legacy exemption also requires the baseline method
+ok 231 - P4: the legacy exemption also requires the baseline method
+# Subtest: verify-dist COURSE_HOSTS equals the hosts of published resources
+ok 232 - verify-dist COURSE_HOSTS equals the hosts of published resources
+# Subtest: verify-dist OFFICIAL_HOSTS equals the official-source hosts
+ok 233 - verify-dist OFFICIAL_HOSTS equals the official-source hosts
+# tests 233
+# suites 0
+# pass 192
+# fail 41
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2801.825905

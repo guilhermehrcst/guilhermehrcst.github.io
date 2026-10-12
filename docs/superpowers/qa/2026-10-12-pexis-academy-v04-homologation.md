@@ -1,10 +1,217 @@
 # Pexis Academy V0.4 | Homologação técnica e QA de release
 
-**Data:** 12/10/2026. **Executor:** Claude Code (sessão remota). **Escopo:** QA completo do PR #37, simulação isolada do release dos 60 destaques e correção dos bloqueios encontrados. Nada foi publicado, enviado ao remoto, mergeado ou implantado.
+**Data:** 12/10/2026. **Executor:** Claude Code (sessão remota). **Escopo:**
+- QA completo do PR #37;
+- correção dos bloqueios;
+- simulação isolada do release dos 60 destaques;
+- integração no GitHub (Draft PR #38).
 
-Este documento tem duas rodadas. **A rodada 2 é o estado atual**; a rodada 1 fica abaixo como registro.
+Nada foi publicado, mergeado ou implantado.
 
-## Rodada 2 — correção dos bloqueios (estado atual)
+Este documento tem três rodadas. **A rodada 3 é o estado atual**; as rodadas 2 e 1 ficam abaixo como registro.
+
+## Rodada 3 — operação final (estado atual)
+
+### Parecer
+
+**NO-GO: lançamento bloqueado.** Falta exatamente um requisito:
+
+> **Homologação em navegador de 36 das 37 URLs novas**, e portanto dos 16 hosts novos que só elas usam.
+
+O ambiente de QA não alcança esses hosts e não há navegador externo autorizado nesta sessão. Só `ms-learn-cloud-concepts` tem verificação em navegador real, externa, registrada pelo proprietário no PR #37.
+
+Todos os outros critérios de GO estão atendidos e foram reproduzidos nesta execução:
+- seis caminhos;
+- 60 destaques válidos;
+- nenhum P0, P1 ou P2 aberto;
+- validadores e testes;
+- QA do release candidate;
+- 37 recursos legados intactos;
+- rollback.
+
+**Um GO técnico não seria autorização de deploy.**
+
+### 1. Estado do GitHub e das branches (verificado no início da execução)
+
+| Item | Estado |
+|---|---|
+| `main` | `5e4b086` (inalterada) |
+| PR #37 `feat/academy-gateb-typed-staging-v01` | `440b48a`, draft; CI `build` verde, `deploy` skipped; Codex sem apontamentos |
+| Branch de QA | `qa/v04-homologation`: descende de `440b48a`; enviada nesta execução, push normal, sem force |
+| **PR de QA** | **#38 (draft)**: https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/38, base `feat/academy-gateb-typed-staging-v01`, só as mudanças adicionais |
+| Auditoria antes do push | nenhum segredo, token, endereço de proxy ou credencial; maior arquivo: JPEG de 0,5 MB; evidências ≈ 4 MB |
+
+### 2. Commits
+
+| Rodada | Commits |
+|---|---|
+| Rodada 1 | `28bdaa0` (acessibilidade), `0e1b150` (relatório) |
+| Rodada 2 | `5b47a35` (P1-RC1), `b04e20b` (P1-RC2, P2-RC4), `b217062` (P2-RC3), `1884110` (P2-RC5), `1f48c7b` (Open University), `b22d913` (staging × release candidate), `06031d7` (relatório) |
+| Rodada 3 | o commit deste relatório, com o manifesto atualizado e as evidências em `round3/` |
+
+Nenhum commit existente foi reescrito.
+
+### 3. Resultado dos 37 recursos (`…-homologation-37.json`)
+
+| Classificação | Qtd. | Base |
+|---|---:|---|
+| **VERIFIED** | **1** | `ms-learn-cloud-concepts`: navegador real externo, sessão TinyFish `f1ce30e4-…`, registrada pelo proprietário no PR #37 (comentário 6125137719) e **não reproduzida aqui**. |
+| PARTIAL | 0 | — |
+| BLOCKED (indisponível) | 0 | Nenhuma fonte foi mostrada indisponível. |
+| **Homologação em navegador pendente** | **36** | Acesso bloqueado pelo ambiente de QA (Chromium local 37/37 `ERR_TUNNEL_CONNECTION_FAILED`; WebFetch `ENOTFOUND`). **Não é evidência de indisponibilidade.** |
+
+**Microsoft Learn: o que foi demonstrado**
+- gratuidade, sem cobrança;
+- leitura sem login;
+- pt-BR, com aviso de tradução automática ou IA;
+- trilha com 3 módulos, primeira unidade aberta;
+- escopo de conceitos de nuvem.
+
+**Não demonstrado:** certificado. O registro mantém `certificate: unconfirmed`, que nunca é exibido. **Não observado:** status HTTP.
+
+**Para as 36 pendentes**, o manifesto também registra a extração de texto feita pelo proprietário no PR #37 (comentário 6123674831):
+- Exa para 34 URLs;
+- Firecrawl para 3 PDFs da Marinha, com HTTP 200 e `application/pdf`.
+
+Extração **não** equivale a homologação em navegador.
+
+**Hosts novos:** 17. Verificados: `learn.microsoft.com`. Pendentes:
+
+| Grupo | Hosts |
+|---|---|
+| Marinha | `assets.marinha.mil.br`, `www.inscricao.marinha.mil.br` |
+| Cecierj | `canal.cecierj.edu.br`, `extensao.cecierj.edu.br` |
+| Exército | `esa.eb.mil.br`, `www.ime.eb.mil.br` |
+| Força Aérea | `ingresso.eear.fab.mil.br`, `www.fab.mil.br` |
+| Ensino Fundamental | `sme.goiania.go.gov.br`, `portaldaobmep.impa.br` |
+| Vestibular e ITA | `www.fuvest.br`, `vestibular.ita.br` |
+| Superior | `oyc.yale.edu`, `www.open.edu` |
+| Tecnologia | `developers.google.com`, `www.theodinproject.com` |
+
+As 4 URLs pendentes em hosts já permitidos (3 do MIT e a do INEP) continuam igualmente pendentes. As allowlists de produção **não foram alteradas**; os 17 hosts entram só no release candidate isolado.
+
+### 4. Os 60 destaques
+
+**Tudo reproduzido nesta execução.** A auditoria independente passa em 28/28:
+- 60 IDs distintos, dez por caminho;
+- nenhuma URL duplicada nem conflito com o legado;
+- `resourceProblems` vazio para os 60;
+- datas válidas e `featuredProblems('final')` vazio;
+- ordem igual à revisão 05;
+- Cecierj como `reference`, AprovaRJ como `course`, ESA nunca EsPCEx;
+- os 37 publicados byte-idênticos à `main`.
+
+No release candidate, cada caminho exibe **10 destaques distintos**, sem aviso de preparação e sem `noindex`.
+
+### 5. Testes
+
+| Verificação | Produção (`06031d7`) | Release candidate (`06031d7` + `rc-release-steps.patch`) |
+|---|---|---|
+| `npm ci` | 0 vulnerabilidades | — |
+| `npm test` | **233/233** | 192/233: as 41 falhas são **exatamente** os guardas de `STAGING-GUARDS.md`; `tests/release-candidate/` **10/10** |
+| `npm run check` | 0 erros, 0 avisos | 0 erros, 0 avisos |
+| Build + `verify-dist` | 22 páginas, 2 em preparação, OK | **24 páginas, 0 em preparação, OK** |
+| Auditoria dos 60 / adversarial | 28/28; 22/23 + A21b. O A21 é o erro de formulação do teste, documentado na rodada 1; o A21b é rejeitado. | 8/8 injeções no `dist` rejeitadas: host não revisado, HTTP, filtro inexistente, área vazia, 9 destaques, nota do ENEM sem âncora, âncora duplicada, `_blank` sem `noopener` |
+| Ativação parcial | — | 6/6 casos corretos |
+
+**Separação dos testes:**
+- **Passam em staging:** os 233.
+- **Passam no release candidate:** 192, incluindo os 10 de `tests/release-candidate/`.
+- **Exigem adaptação por mudança legítima de estado:** os 41 guardas registrados (27 do tipo A, de publicação e ativação; 14 do tipo B, snapshots). Nenhum foi alterado.
+- **Regressões reais:** nenhuma.
+
+O patch de release foi inspecionado antes da aplicação: 4 arquivos, só as etapas de release, nenhum contorno, aplicação limpa no HEAD.
+
+### 6. QA visual e funcional (Playwright, Chromium)
+
+| Verificação | Produção | Release candidate |
+|---|---|---|
+| Fase D: âncoras, busca, filtros, rotas, destinos, Nuvem, áreas, Home | **99/99** | **173/173** (74 recursos, a 390 e 1440 px) |
+| Fase E: 25 páginas × 320, 360, 390, 768, 1024 e 1440 px | 844/872 | 846/872 |
+
+As falhas da Fase E são os mesmos padrões triados na rodada 1, todos falsos positivos ou previstos por desenho:
+- setas `→` decorativas e `aria-hidden`;
+- barras `/` agora `aria-hidden`;
+- links "Tudo sobre…" de 22–23 px, dentro da exceção de espaçamento da WCAG 2.5.8;
+- checkboxes dentro de rótulos de 44 px;
+- páginas `noindex` sem canonical (só em produção).
+
+Nenhum padrão novo. Também passam:
+- sem overflow em nenhuma largura;
+- foco visível e skip link;
+- busca funcionando sem JavaScript;
+- movimento reduzido;
+- 7 rotas antigas e 404;
+- canonical, sitemap e `noindex`;
+- nenhuma requisição externa;
+- links externos só HTTPS e com `noopener`.
+
+**Filtro do MIT na Home (release candidate):** abre `/buscar/?instituicao=mit-opencourseware` com a instituição marcada e mostra 8 resultados, todos do MIT, em `/tecnologia/` e `/ensino-superior/`.
+
+**Comparação com a `main`:** a Home de produção é idêntica em captura (hash) a 320, 390, 768 e 1440 px. A diferença acusada pela captura rápida era o momento de carregamento das fontes. No `dist`, mudam só o `aria-hidden` das barras e a ordem de uma regra CSS igual.
+
+### 7. Falhas e correções nesta rodada
+
+Nenhum defeito novo de produto. Falhas de execução tratadas:
+- o servidor de prévia de produção demorou a subir;
+- um script meu de leitura de JSON tinha erro de parse, sem efeito nos resultados.
+
+### 8. Riscos residuais
+
+- **As 36 URLs pendentes.** A disponibilidade e a estabilidade só serão conhecidas na homologação em navegador. Atenção aos PDFs militares e ao parâmetro `id_file` da Escola Naval.
+- **Microsoft Learn** exibe aviso de tradução automática.
+- **Sem JavaScript**, o link do MIT abre a busca sem filtro aplicado (P3).
+- **Não há CSP.** É mitigado pela ausência de scripts de terceiros.
+- **`level` provisório** no Fundamental (não exibido).
+
+### 9. Estado do release candidate
+
+Reprodutível com `round2/rc-release-steps.patch`. **Passa** em build, `verify-dist`, tipos, testes de release candidate, Fases D e E, adversarial e ativação parcial.
+
+**Não é publicável** enquanto as 36 URLs estiverem pendentes.
+
+### 10. Legados
+
+Os 37 registros são byte-idênticos à `main`. Mantêm a mesma página e âncora no release candidate, e as 7 trilhas atuais são preservadas; a de Nuvem só aparece no release candidate.
+
+### 11. Segurança
+
+- 0 vulnerabilidades;
+- nenhum segredo no `dist`;
+- nenhum analytics, cookie, armazenamento local ou fingerprint;
+- um único script, inline, só na busca;
+- um formulário GET local;
+- todos os links externos em HTTPS, com `noopener`, e só nos hosts revisados.
+
+Revisão proporcional; **não é teste de intrusão**.
+
+### 12. Cobertura por navegador
+
+| Navegador | Situação |
+|---|---|
+| Chromium | Playwright 1.56.1 |
+| Firefox e WebKit | **não disponíveis** no ambiente; não testados |
+| Navegador externo | só a evidência da Microsoft, do proprietário |
+| Leitor de tela real | não usado |
+
+### 13. Rollback
+
+Desfeitas só as mudanças da simulação, o `dist` volta **byte-idêntico** ao build de produção (`round3/rc-rollback.txt`).
+
+### 14. Como chegar ao GO
+
+1. Homologar as 36 URLs em navegador real com acesso permitido, registrando por item URL final, data, idioma, gratuidade, cadastro, certificado, conteúdo inspecionado e evidência consultável.
+2. Atualizar o manifesto. Se alguma falhar, o release completo continua bloqueado e a substituição é decisão editorial.
+3. Fazer o commit de release seguindo `rc-release-steps.patch` e revisando os 41 guardas, um a um.
+4. Revisão final e autorização humana.
+
+Evidências desta rodada: `2026-10-12-v04-evidence/round3/`.
+
+---
+
+# Rodada 2 — registro (substituída pela rodada 3)
+
+## Rodada 2 — correção dos bloqueios
 
 **Branch:** `qa/v04-homologation`, local. **HEAD testado:** `b22d913`, sobre `0e1b150` e `28bdaa0` (preservados) e `440b48a` (PR #37).
 
@@ -92,7 +299,7 @@ As evidências estão em `2026-10-12-v04-evidence/round2/`:
 
 ---
 
-# Rodada 1 — registro original (substituído pela rodada 2)
+# Rodada 1 — registro original (substituído pelas rodadas 2 e 3)
 
 ## Decisão (rodada 1)
 
