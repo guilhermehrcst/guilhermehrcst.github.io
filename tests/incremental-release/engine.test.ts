@@ -188,9 +188,9 @@ test('7. a second lot keeps the first: the projection is cumulative, never rebui
 });
 
 test('8. a suspended resource leaves the projection, a V0.4 one included, and returns only by a fresh decision', () => {
-  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc', { decidedOn: '2026-10-11' })]);
   const b = lotOf('L002-suspensao', [], { suspensions: [
-    { id: 'google-mlcc', reason: 'Página oficial mudou de conteúdo (simulado)', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' },
+    { id: 'google-mlcc', reason: 'Página oficial mudou de conteúdo (simulado)', decidedBy: SIMULATED_BY, decidedOn: '2026-10-11' },
     { id: 'cs50x', reason: 'Suspensão simulada de um recurso da V0.4', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' },
   ] });
   const p = project({ lots: [a, b], release: releaseOf([a, b], inventoryWith([], ['cs50x'])) });
@@ -207,7 +207,7 @@ test('8. a suspended resource leaves the projection, a V0.4 one included, and re
   const c = lotOf('L001-suspensao', [], { suspensions: [{ id: 'odin-foundations', reason: 'Simulação', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
   assert.match(problemsOf(project({ lots: [c], release: releaseOf([c], inventoryWith([])) })), /odin-foundations cannot go from candidate to suspended/);
   const stale = lotOf('L003-retorno', [entryFor('google-mlcc')]);
-  assert.match(problemsOf(project({ lots: [a, b, stale], release: releaseOf([a, b, stale], inventoryWith(['google-mlcc'], ['cs50x'])) })), /returns on evidence of 2026-10-11, older than the decision/);
+  assert.match(problemsOf(project({ lots: [a, b, stale], release: releaseOf([a, b, stale], inventoryWith(['google-mlcc'], ['cs50x'])) })), /returns on evidence of 2026-10-11, not after the decision/);
   const g = record('google-mlcc');
   const fresh = { ...g, verified: { ...g.verified!, on: '2026-10-12' } };
   const pool = POOL.map((r) => (r.id === 'google-mlcc' ? fresh : r));
@@ -296,15 +296,15 @@ test('a changed V0.4 record does not vouch for its own new host (Codex review)',
     /unreviewed\.example is not a host this lot reviewed for Unreviewed Provider/);
 });
 
-test('a held or suspended resource returns only on evidence dated on or after that decision (Codex review)', () => {
+test('a held or suspended resource returns only on evidence dated strictly after that decision (Codex review)', () => {
   const g = record('google-mlcc');
-  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
-  const b = lotOf('L002-suspensao', [], { suspensions: [{ id: 'google-mlcc', reason: 'Página mudou', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc', { decidedOn: '2026-10-11' })]);
+  const b = lotOf('L002-suspensao', [], { suspensions: [{ id: 'google-mlcc', reason: 'Página mudou', decidedBy: SIMULATED_BY, decidedOn: '2026-10-11' }] });
   // Same record, same (older) evidence: refused.
   const stale = lotOf('L003-retorno', [entryFor('google-mlcc')]);
   const old = project({ lots: [a, b, stale], release: releaseOf([a, b, stale], inventoryWith(['google-mlcc'])) });
-  assert.match(problemsOf(old), /L003-retorno: google-mlcc returns on evidence of 2026-10-11, older than the decision of 2026-10-12 that took it out/);
-  // A fresh verification (the record now carries evidence of the suspension day or later): accepted.
+  assert.match(problemsOf(old), /L003-retorno: google-mlcc returns on evidence of 2026-10-11, not after the decision of 2026-10-11 that took it out/);
+  // A fresh verification (the record now carries evidence dated after the suspension): accepted.
   const fresh = { ...g, verified: { ...g.verified!, on: '2026-10-12' } };
   const pool = POOL.map((r) => (r.id === 'google-mlcc' ? fresh : r));
   const back = lotOf('L003-retorno', [entryFor('google-mlcc', { digest: digestOf(fresh), evidence: { ...entryFor('google-mlcc').evidence, on: '2026-10-12' } })]);
@@ -314,7 +314,7 @@ test('a held or suspended resource returns only on evidence dated on or after th
   // Held, then approved on the same old evidence: refused too.
   const held = lotOf('L001-retido', [entryFor('google-mlcc', { decision: 'held', reason: 'Pendência', decidedOn: '2026-10-12' })]);
   const again = lotOf('L002-aprovado', [entryFor('google-mlcc')]);
-  assert.match(problemsOf(project({ lots: [held, again], release: releaseOf([held, again], inventoryWith(['google-mlcc'])) })), /returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
+  assert.match(problemsOf(project({ lots: [held, again], release: releaseOf([held, again], inventoryWith(['google-mlcc'])) })), /returns on evidence of 2026-10-11, not after the decision of 2026-10-12/);
 });
 
 
@@ -327,7 +327,7 @@ test('a verified entry does not clear a suspension: only a checked approval on f
   const fake = lotOf('L003-verificado', [entryFor('google-mlcc', { decision: 'verified', digest: `sha256:${'1'.repeat(64)}`, evidence: { ...entryFor('google-mlcc').evidence, on: '2026-10-12' } })]);
   const again = lotOf('L004-retorno', [entryFor('google-mlcc')]);
   const p = project({ lots: [a, b, fake, again], release: releaseOf([a, b, fake, again], inventoryWith(['google-mlcc'])) });
-  assert.match(problemsOf(p), /L004-retorno: google-mlcc returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
+  assert.match(problemsOf(p), /L004-retorno: google-mlcc returns on evidence of 2026-10-11, not after the decision of 2026-10-12/);
 });
 
 test('verified and held decisions are a person\'s too: a tool named as author is refused', () => {
@@ -396,7 +396,7 @@ test('a backdated hold never moves the take-out date earlier than a suspension',
   const hold = lotOf('L004-retido', [entryFor('google-mlcc', { decision: 'held', reason: 'Retido', decidedOn: '2026-10-11' })]);
   const again = lotOf('L005-retorno', [entryFor('google-mlcc')]);
   const all = [a, b, v, hold, again];
-  assert.match(problemsOf(project({ lots: all, release: releaseOf(all, inventoryWith(['google-mlcc'])) })), /L005-retorno: google-mlcc returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
+  assert.match(problemsOf(project({ lots: all, release: releaseOf(all, inventoryWith(['google-mlcc'])) })), /L005-retorno: google-mlcc returns on evidence of 2026-10-11, not after the decision of 2026-10-12/);
   void g;
 });
 
@@ -426,7 +426,7 @@ test('the take-out date stays a lower bound for every later evidence, after a fr
   const back = lotOf('L003-retorno', [entryFor('google-mlcc', { digest: digestOf(fresh), evidence: { ...entryFor('google-mlcc').evidence, on: '2026-10-12' } })]);
   const stale = lotOf('L004-reaprovacao', [entryFor('google-mlcc')]);
   const all = [a, b, back, stale];
-  assert.match(problemsOf(project({ lots: all, release: releaseOf(all, inventoryWith(['google-mlcc'])) })), /L004-reaprovacao: google-mlcc returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
+  assert.match(problemsOf(project({ lots: all, release: releaseOf(all, inventoryWith(['google-mlcc'])) })), /L004-reaprovacao: google-mlcc returns on evidence of 2026-10-11, not after the decision of 2026-10-12/);
 });
 
 test('a lot is never authorized before it was created', () => {
@@ -476,4 +476,19 @@ test('recorded URLs are checked against the state the recorded lots would reach'
   assert.doesNotMatch(problemsOf(p), /same URL/);
   // Without the suspension, the clash is reported before application.
   assert.match(problemsOf(project({ pool, lots: [l1, l3], release: releaseOf([], inventoryWith([])) })), /same URL/);
+});
+
+// Owner review on PR #43 (2026-10-12) ---------------------------------------------------------------------
+
+test('a return needs evidence strictly after the take-out: same-day evidence proves no later verification', () => {
+  const g = record('google-mlcc');
+  const sameDay = { ...g, verified: { ...g.verified!, on: '2026-10-12' } };
+  const pool = POOL.map((r) => (r.id === 'google-mlcc' ? sameDay : r));
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc', { decidedOn: '2026-10-11' })]);
+  const b = lotOf('L002-suspensao', [], { suspensions: [{ id: 'google-mlcc', reason: 'Página mudou', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
+  const back = lotOf('L003-retorno', [entryFor('google-mlcc', { digest: digestOf(sameDay), evidence: { ...entryFor('google-mlcc').evidence, on: '2026-10-12' } })]);
+  const all = [a, b, back];
+  for (const release of [releaseOf(all, inventoryWith(['google-mlcc'])), releaseOf([a, b], inventoryWith([]))]) {
+    assert.match(problemsOf(project({ pool, lots: all, release })), /L003-retorno: google-mlcc returns on evidence of 2026-10-12, not after the decision of 2026-10-12 that took it out/);
+  }
 });

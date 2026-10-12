@@ -408,8 +408,9 @@ export const projectRelease = (input: ReleaseInput): Projection => {
       inOrder(entry.id, entry.decidedOn);
       // A resource taken out (held or suspended) returns only on a verification made since.
       const outOn = takenOut.get(entry.id);
-      if (outOn !== undefined && entry.decision !== 'held' && entry.evidence.on < outOn) {
-        problems.push(`${lot.lot}: ${entry.id} returns on evidence of ${entry.evidence.on}, older than the decision of ${outOn} that took it out`);
+      // Strictly after: evidence of the same day does not prove a verification made after the decision.
+      if (outOn !== undefined && entry.decision !== 'held' && entry.evidence.on <= outOn) {
+        problems.push(`${lot.lot}: ${entry.id} returns on evidence of ${entry.evidence.on}, not after the decision of ${outOn} that took it out`);
       }
       if (entry.decision === 'held') takeOut(takenOut, entry.id, entry.decidedOn);
       // Never cleared: once taken out, every later verification or approval needs evidence at least as recent
@@ -433,7 +434,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
       }
     }
   };
-  /** id → the latest date it was taken out (held or suspended): a permanent lower bound for later evidence. */
+  /** id → the latest date it was taken out (held or suspended): later evidence must be strictly after it. */
   const takenOut = new Map<string, string>();
   /** id → its latest decision date, so no later lot can decide it earlier. */
   const lastDecided = new Map<string, string>();
