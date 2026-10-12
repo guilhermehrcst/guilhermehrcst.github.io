@@ -1,6 +1,6 @@
-# Gate B | Auditoria editorial das 60 posições, revisão 03
+# Gate B | Auditoria editorial das 60 posições, revisão 04
 
-**Revisão:** 12/10/2026. **Escopo:** documentação e fontes, não publicação. **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **PR #35:** pesquisa, sem alteração em `src/`.
+**Revisão:** 12/10/2026 (verificações em 11 e 12/10). **Escopo:** documentação e fontes, não publicação. **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **PR #35:** pesquisa, sem alteração em `src/`.
 
 ## Resultado
 
@@ -8,7 +8,7 @@
 
 Isto conclui a **triagem de fonte e escopo**, não a homologação nem a publicação. `FEATURED_RELEASE` continua em `staging`, **0/60 destaques liberados e 0 recursos novos publicados**. Os 37 recursos legados permanecem preservados. Gate B ainda depende de registros tipados, validação P4, QA, revisão independente e decisão humana sobre o release.
 
-Permanecem as seis substituições da revisão 02, incluindo cinco apostilas gerais da Fundação Cecierj (não são questões oficiais da UERJ) e o curso gratuito AprovaRJ. A prova ESA 2026 é um recurso de prática distinto do AprovaRJ.
+Permanecem as seis substituições da revisão 02, além da substituição Cisco por CS50 SQL na posição 10 de Tecnologia, incluindo cinco apostilas gerais da Fundação Cecierj (não são questões oficiais da UERJ) e o curso gratuito AprovaRJ. A prova ESA 2026 é um recurso de prática distinto do AprovaRJ.
 
 ## Cobertura por caminho
 
@@ -33,12 +33,13 @@ Permanecem as seis substituições da revisão 02, incluindo cinco apostilas ger
 | `uerj-physics-practice` | `cecierj-pvs-fisica-v1` | reference | [Fonte](https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf) |
 | `pm-esa-provas` | `cecierj-aprovarj` | course | [Fonte](https://extensao.cecierj.edu.br/cursos/aprovarj/) |
 | `pm-espcex-provas` | `pm-esa-provas-2026` | past-exam | [PDF ESA 2026](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) |
+| `cisco-cyber` | `cs50sql` (curso já existente no legado) | course | [CS50 SQL](https://cs50.harvard.edu/sql/) |
 
 Os IDs substitutos ainda são exclusivamente editoriais, não estão em `src/lib/staging.ts` nem em `src/lib/learning-resources.ts`; o JSON é apenas documentação. Exigem tipagem, `resourceProblems`, evidência P4, roteamento e testes antes de qualquer promoção. Não declarar `registration` ou `certificate` dos PDFs além do que é verificável.
 
 ## Evidências diretas adicionadas em 12/10/2026
 
-Cada posição foi validada por abertura de PDF em host institucional HTTPS, com enunciados e escopo realmente inspecionados. Não se contou índice de links nem trecho de busca como prova. Os PDFs abriram sem cadastro ou pagamento, não conferem certificado e são predominantemente em português, com provas que também incluem Inglês. As páginas examinadas descrevem o recorte visto, não leitura integral de todo o caderno.
+Cada posição foi validada por abertura de PDF em host institucional HTTPS, com enunciados e escopo realmente inspecionados. Não se contou índice de links nem trecho de busca como prova. Os PDFs abriram sem cadastro ou pagamento, não conferem certificado e são predominantemente em português, com provas que também incluem Inglês. As páginas examinadas descrevem o recorte visto, não leitura integral de todo o caderno. **Correção da revisão 04:** ESA 2026 passa a registrar apenas as 3 páginas iniciais efetivamente amostradas; o total 24 é informado pelo próprio arquivo, não corresponde a páginas lidas individualmente.
 
 | ID | Páginas totais | Páginas examinadas | Anexo oficial | Escopo visto |
 |---|---:|---:|---|---|
@@ -49,16 +50,18 @@ Cada posição foi validada por abertura de PDF em host institucional HTTPS, com
 | `pm-eam-provas` | 15 | 5 | [PDF](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf) | CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados. |
 | `pm-afa-provas` | 24 | 3 | [PDF](https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf) | AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído. |
 | `pm-epcar-provas` | 17 | 3 | [PDF](https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf) | EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado. |
-| `pm-esa-provas-2026` | 24 | 24 | [PDF](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) | ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ. |
+| `pm-esa-provas-2026` | 24 | 3 | [PDF](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) | ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ. |
 | `pm-ime-provas` | 24 | 5 | [PDF](https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf) | IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice. |
 
-**ENEM 2024:** [gabarito oficial do 1º dia, caderno azul](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D1_CD1.pdf) também foi aberto, com as respostas identificadas. Não se afirma ter reaberto o caderno 2025 que falhou na revisão anterior.
+**ENEM 2024:** o destino principal continua sendo [o acervo oficial do INEP](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos), coerente com o título coletivo. Como prova documental, [gabarito oficial do 1º dia, caderno azul](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D1_CD1.pdf) também foi aberto, com as respostas identificadas. Não se afirma ter reaberto o caderno 2025 que falhou na revisão anterior.
 
 **EEAR:** PDF da prova CFS 1/2024 inclui o gabarito e, após ele, enunciados reais. A existência da capa de gabarito não pode levar à conclusão equivocada de que o material contém apenas respostas.
 
 **Escola Naval:** caderno CPAEN/2025 em PDF independente aberto no sistema oficial de inscrição da Marinha; ZIPs do índice não foram inspecionados e não são usados como prova nesta revisão.
 
 **EsPCEx, restrição preservada:** o [PDF oficial de 2025](https://espcex.eb.mil.br/images/concurso/provas/provas2025/2025%20PROVA%20MODELO%20C.pdf) devolveu `Request Rejected` em múltiplos acessos. Está fora da shortlist e **não foi validado**. Foi substituído na posição editorial pelo caderno oficial da **ESA 2026**, não confundido com o curso AprovaRJ. Recomenda-se retomar EsPCEx separadamente quando a instituição permitir acesso.
+
+**Transparência sobre a ESA:** a extração de texto de um PDF oficial confirmou a capa e questões iniciais; **não se dispõe de evidência de leitura humana integral das 24 páginas nem do status HTTP bruto dessa extração**. O documento indica 24 páginas. O bloqueio da EsPCEx permanece registrado à parte.
 
 **Acessibilidade externa:** alguns servidores bloquearam leitores automatizados; os anexos acima foram de fato recebidos ou processados como `application/pdf` pela rota alternativa. Revalidar abertura em navegador comum no Gate D. Nenhum recurso novo está em produção.
 
@@ -88,7 +91,7 @@ Cada posição foi validada por abertura de PDF em host institucional HTTPS, com
 | Ensino Médio | 10 | `kultivi-english-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/ingles-para-enem) | Página oficial da Kultivi, curso de Inglês voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
 | Vestibular | 1 | `kultivi-enem-completo` | Fonte aprovada | [Oficial](https://kultivi.com/curso/enem-completo) | Página própria de ENEM Completo confirma curso multidisciplinar gratuito, matrícula com conta e certificado gratuito. |
 | Vestibular | 2 | `kultivi-writing-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/redacao-para-enem) | Página própria de Redação para ENEM confirma curso gratuito e certificado; ID legado preservado. |
-| Vestibular | 3 | `inep-enem-provas-gabaritos` | Fonte aprovada | [PDF oficial](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf) | ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente. |
+| Vestibular | 3 | `inep-enem-provas-gabaritos` | Fonte aprovada | [PDF oficial](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf) | **Provas e gabaritos do ENEM, acervo oficial do INEP**. ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente. |
 | Vestibular | 4 | `fuvest-acervo-2026` | Fonte aprovada | [Oficial](https://www.fuvest.br/acervo-vestibular-2026/) | Índice oficial da Fuvest 2026 aberto; gabarito PDF e simulado PDF foram inspecionados. Não afirmar que todos os cadernos de prova abriram. |
 | Vestibular | 5 | `inep-writing-2026` | Fonte aprovada | [Oficial](https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante) | Cartilha oficial da Redação ENEM 2026, material de referência/prática, não curso. |
 | Vestibular | 6 | `cecierj-pvs-portugues-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf) | PDF institucional integral aberto em 11/10/2026; 162 páginas, material didático de Língua Portuguesa publicado pela Fundação Cecierj em 2021. Texto, leitura, coesão e exercícios; referência de estudo, não banco de questões da UERJ nem curso completo. |
@@ -97,15 +100,15 @@ Cada posição foi validada por abertura de PDF em host institucional HTTPS, com
 | Vestibular | 9 | `cecierj-pvs-geografia-mod1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf) | PDF integral de 126 páginas aberto em 11/10/2026; apostila de 2015 da Fundação Cecierj com industrialização, urbanização, globalização e exercícios do Enem. Material de referência, não banco de questões da UERJ. |
 | Vestibular | 10 | `cecierj-pvs-fisica-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf) | PDF integral de 188 páginas aberto em 11/10/2026; volume de Física de 2021 da Fundação Cecierj, com cinemática, movimentos e exercícios. Material de referência, não simulador/questões da UERJ. |
 | Pré-Militar | 1 | `ita-provas-anteriores` | Fonte aprovada | [Oficial](https://vestibular.ita.br/provas.htm) | Índice oficial do ITA reaberto; PDF da prova de 2025 e respectivo gabarito inspecionados diretamente. |
-| Pré-Militar | 2 | `pm-cn-provas` | Fonte aprovada | [PDF oficial](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf) | CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice. |
-| Pré-Militar | 3 | `pm-en-provas` | Fonte aprovada | [PDF oficial](https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961) | CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto. |
-| Pré-Militar | 4 | `pm-eear-provas` | Fonte aprovada | [PDF oficial](https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf) | EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas. |
-| Pré-Militar | 5 | `pm-eam-provas` | Fonte aprovada | [PDF oficial](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf) | CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados. |
-| Pré-Militar | 6 | `pm-afa-provas` | Fonte aprovada | [PDF oficial](https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf) | AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído. |
-| Pré-Militar | 7 | `pm-epcar-provas` | Fonte aprovada | [PDF oficial](https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf) | EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado. |
+| Pré-Militar | 2 | `pm-cn-provas` | Fonte aprovada | [PDF oficial](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf) | **CPACN 2025: Matemática e Inglês, 1º dia**. CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice. |
+| Pré-Militar | 3 | `pm-en-provas` | Fonte aprovada | [PDF oficial](https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961) | **CPAEN 2025: Matemática e Inglês, 1º dia**. CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto. |
+| Pré-Militar | 4 | `pm-eear-provas` | Fonte aprovada | [PDF oficial](https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf) | **EEAR CFS 1/2024: prova, código 02**. EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas. |
+| Pré-Militar | 5 | `pm-eam-provas` | Fonte aprovada | [PDF oficial](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf) | **CPAEAM 2023: prova amarela**. CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados. |
+| Pré-Militar | 6 | `pm-afa-provas` | Fonte aprovada | [PDF oficial](https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf) | **AFA 2025: prova versão A**. AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído. |
+| Pré-Militar | 7 | `pm-epcar-provas` | Fonte aprovada | [PDF oficial](https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf) | **EPCAR 2026: prova versão A**. EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado. |
 | Pré-Militar | 8 | `cecierj-aprovarj` | Fonte aprovada | [Oficial](https://extensao.cecierj.edu.br/cursos/aprovarj/) | Página oficial da Fundação Cecierj aberta em 11/10/2026: programa online gratuito, inscrições contínuas, videoaulas, exercícios e simulados; inclui ESA, EsPCEx, EPCAR, AFA, ITA, IME, Marinha e EEAR. Cadastro gratuito obrigatório; sem certificado. Área autenticada não foi acessada. É curso preparatório geral, não provas anteriores da ESA. |
-| Pré-Militar | 9 | `pm-esa-provas-2026` | Fonte aprovada | [PDF oficial](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) | ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ. |
-| Pré-Militar | 10 | `pm-ime-provas` | Fonte aprovada | [PDF oficial](https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf) | IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice. |
+| Pré-Militar | 9 | `pm-esa-provas-2026` | Fonte aprovada | [PDF oficial](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) | **ESA, concurso 2026: prova Geral, tipo A**. ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ. |
+| Pré-Militar | 10 | `pm-ime-provas` | Fonte aprovada | [PDF oficial](https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf) | **IME CFG 2024/2025: prova objetiva**. IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice. |
 | Ensino Superior | 1 | `mit-1801sc` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/) | MIT OCW, Single Variable Calculus: vídeos, exercícios e notas de cálculo, sem diploma/certificado. |
 | Ensino Superior | 2 | `mit-801sc` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/) | MIT OCW, Classical Mechanics: aulas e exercícios oficiais de mecânica, sem diploma/certificado. |
 | Ensino Superior | 3 | `mit-7012` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/7-012-introduction-to-biology-fall-2004/) | MIT OCW, Introduction to Biology: aulas e atividades gratuitas de biologia. |
