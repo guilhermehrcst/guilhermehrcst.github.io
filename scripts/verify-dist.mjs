@@ -24,6 +24,10 @@ const CANONICAL = [
 const PATHS = ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/pre-militar/', '/ensino-superior/', '/tecnologia/'];
 const PREPARING = ['/ensino-fundamental/', '/pre-militar/'];
 
+/** The fields of Ensino Superior, in page order (V0.4 QA P1-RC2): Matemática and Computação since V0.3, then
+ *  the fields planned for the Gate B university courses. A field is shown only with a published course. */
+const SUPERIOR_FIELDS = ['matematica', 'computacao', 'fisica', 'biologia', 'psicologia', 'economia', 'meio-ambiente'];
+
 /** Routes of the former personal site that keep a destination (spec §8.4). */
 const REDIRECTS = {
   '/pt/': '/',
@@ -630,10 +634,15 @@ function checkProduct(path, html) {
     if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="tecnologia"/) ?? '').includes('/tecnologia/')) fail(path, '#tecnologia leads to /tecnologia/');
   }
   if (path === '/ensino-superior/') {
-    // University courses only, by field: the two fields of V0.3, each with courses.
+    // University courses only, by field (V0.4 QA P1-RC2). The fields, in order, written out by hand: the two of
+    // V0.3 always, first, each with at least two courses; a later field only when it holds a published course.
+    // A field never appears empty, out of order, twice, or under a name not listed here.
     const groups = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].filter((m) => m[1] !== 'destaques').map((m) => [m[1], (m[2].match(/\sdata-resource-id="/g) ?? []).length]);
-    if (JSON.stringify(groups.map((g) => g[0])) !== JSON.stringify(['matematica', 'computacao'])) fail(path, `Ensino Superior groups ${groups.map((g) => g[0]).join(',')}`);
-    for (const [id, n] of groups) if (n < 2) fail(path, `group ${id} lists ${n} courses`);
+    const ids = groups.map((g) => g[0]);
+    const known = ids.filter((id) => SUPERIOR_FIELDS.includes(id));
+    const inOrder = known.length === ids.length && new Set(ids).size === ids.length && ids.every((id, i) => i === 0 || SUPERIOR_FIELDS.indexOf(id) > SUPERIOR_FIELDS.indexOf(ids[i - 1]));
+    if (!inOrder || ids[0] !== 'matematica' || ids[1] !== 'computacao') fail(path, `Ensino Superior groups ${ids.join(',')}`);
+    for (const [id, n] of groups) if (n < (['matematica', 'computacao'].includes(id) ? 2 : 1)) fail(path, `group ${id} lists ${n} courses`);
   }
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');

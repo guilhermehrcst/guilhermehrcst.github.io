@@ -1,13 +1,22 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { higherEducation, HIGHER_EDUCATION_GROUPS } from '../src/lib/higher-education.ts';
+import { higherEducation, HIGHER_EDUCATION_GROUP_PLAN, HIGHER_EDUCATION_GROUPS } from '../src/lib/higher-education.ts';
 import { publishedResources } from '../src/lib/learning-resources.ts';
+import { UNIVERSITY_PUBLISHERS } from './university-publishers.ts';
 
 // Ensino Superior shows university courses already verified in the catalogue, grouped by field. It
 // never invents a programme: every id must be published, and every provider is a university.
-test('the groups, in order, each with courses', () => {
+
+test('the groups follow the plan order; none is empty; the two V0.3 groups keep at least two courses', () => {
+  const plan = HIGHER_EDUCATION_GROUP_PLAN.map((g) => g.id);
+  const shown = higherEducation();
+  assert.deepEqual(shown.map((g) => g.id), plan.filter((id) => shown.some((g) => g.id === id)), 'plan order');
+  for (const group of shown) assert.ok(group.resources.length >= 1, `${group.id} is empty`);
+  for (const id of ['matematica', 'computacao']) assert.ok(shown.find((g) => g.id === id)!.resources.length >= 2, id);
+});
+
+test('staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet)', () => {
   assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao']);
-  for (const group of higherEducation()) assert.ok(group.resources.length >= 2, group.id);
 });
 
 test('every course is published, unique, and published by a university', () => {
@@ -15,9 +24,7 @@ test('every course is published, unique, and published by a university', () => {
   assert.equal(new Set(ids).size, ids.length);
   const published = new Set(publishedResources.map((r) => r.id));
   for (const id of ids) assert.ok(published.has(id), id);
-  for (const r of higherEducation().flatMap((g) => g.resources)) {
-    assert.ok(['MIT OpenCourseWare', 'Harvard University'].includes(r.provider), `${r.id}: ${r.provider}`);
-  }
+  for (const r of higherEducation().flatMap((g) => g.resources)) assert.ok(UNIVERSITY_PUBLISHERS.includes(r.provider), `${r.id}: ${r.provider}`);
 });
 
 test('an unknown id fails the build instead of leaving a gap', async () => {
