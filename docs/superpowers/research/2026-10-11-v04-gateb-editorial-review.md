@@ -1,6 +1,6 @@
-# Gate B | Auditoria editorial das 60 posições, revisão 04
+# Gate B | Auditoria editorial das 60 posições, revisão 05
 
-**Revisão:** 12/10/2026 (verificações em 11 e 12/10). **Escopo:** documentação e fontes, não publicação. **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **PR #35:** pesquisa, sem alteração em `src/`.
+**Revisão:** 12/10/2026 (verificações em 11 e 12/10; ajuste de metadados em 12/10). **Escopo:** documentação e fontes, não publicação. **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **PR #35:** pesquisa, sem alteração em `src/`.
 
 ## Resultado
 
@@ -35,11 +35,13 @@ Permanecem as seis substituições da revisão 02, além da substituição Cisco
 | `pm-espcex-provas` | `pm-esa-provas-2026` | past-exam | [PDF ESA 2026](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) |
 | `cisco-cyber` | `cs50sql` (curso já existente no legado) | course | [CS50 SQL](https://cs50.harvard.edu/sql/) |
 
-Os IDs substitutos ainda são exclusivamente editoriais, não estão em `src/lib/staging.ts` nem em `src/lib/learning-resources.ts`; o JSON é apenas documentação. Exigem tipagem, `resourceProblems`, evidência P4, roteamento e testes antes de qualquer promoção. Não declarar `registration` ou `certificate` dos PDFs além do que é verificável.
+**Sete substituições editoriais geram IDs novos**: cinco apostilas Cecierj, o curso AprovaRJ e a prova ESA 2026. Esses IDs ainda não constam de `src/lib/staging.ts` nem de `src/lib/learning-resources.ts`; quando forem promovidos, precisarão de tipagem, `resourceProblems`, evidência P4, roteamento e testes. **A oitava substituição (`cisco-cyber` → `cs50sql`) reutiliza o recurso `cs50sql`, já publicado em `src/lib/learning-resources.ts`**, sem criar um segundo cadastro. O JSON desta revisão é apenas documentação, não integra o catálogo. Acesso aos PDFs foi verificado sem login; **certificados não foram confirmados** e devem permanecer `unconfirmed` para as nove provas da revisão 05.
 
 ## Evidências diretas adicionadas em 12/10/2026
 
-Cada posição foi validada por abertura de PDF em host institucional HTTPS, com enunciados e escopo realmente inspecionados. Não se contou índice de links nem trecho de busca como prova. Os PDFs abriram sem cadastro ou pagamento, não conferem certificado e são predominantemente em português, com provas que também incluem Inglês. As páginas examinadas descrevem o recorte visto, não leitura integral de todo o caderno. **Correção da revisão 04:** ESA 2026 passa a registrar apenas as 3 páginas iniciais efetivamente amostradas; o total 24 é informado pelo próprio arquivo, não corresponde a páginas lidas individualmente.
+**Contrato P4 (revisão 05):** para as nove provas em PDF, `registration: not-required` é sustentado pela abertura do arquivo sem login e agora corresponde a `checked: registration`; `certificate: unconfirmed` evita inferir que a instituição oferece ou não certificado. Um eventual registro `ResourceVerification` deve apontar o domínio da URL canônica do recurso, como exige `verificationProblems()`, preservando o PDF e o gabarito como anexos de evidência.
+
+Cada posição foi validada por abertura de PDF em host institucional HTTPS, com enunciados e escopo realmente inspecionados. Não se contou índice de links nem trecho de busca como prova. O conteúdo dos PDFs foi acessado sem cadastro ou pagamento e é predominantemente em português, com algumas questões em Inglês. **Não foi comprovada a oferta ou ausência de certificados; por isso `certificate: unconfirmed` nos nove registros, e `registration` aparece nos itens verificados da lista `checked`.** As páginas examinadas descrevem o recorte visto, não leitura integral de todo o caderno. **Correção preservada da revisão 04:** ESA 2026 passa a registrar apenas as 3 páginas iniciais efetivamente amostradas; o total 24 é informado pelo próprio arquivo, não corresponde a páginas lidas individualmente.
 
 | ID | Páginas totais | Páginas examinadas | Anexo oficial | Escopo visto |
 |---|---:|---:|---|---|
@@ -132,7 +134,7 @@ Cada posição foi validada por abertura de PDF em host institucional HTTPS, com
 
 ## Preparação técnica para homologação (snapshot sem promoção)
 
-**Fonte de verdade:** `main` observado no commit `40bf3e4d920720e066d4026f08aa7a0b16bca61c` e o inventário editorial desta revisão 04. Esta seção é um plano executável de **preparação**; não confirma execução de testes ou alteração em `src/`.
+**Fonte de verdade:** `main` observado no commit `40bf3e4d920720e066d4026f08aa7a0b16bca61c` e o inventário editorial desta revisão 05. Esta seção é um plano executável de **preparação**; não confirma execução de testes ou alteração em `src/`.
 
 ### Reutilização do que existe
 
