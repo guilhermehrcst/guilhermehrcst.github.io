@@ -8,19 +8,24 @@ import TrackSection from '../../components/TrackSection.astro';
 import ResourceList from '../../components/ResourceList.astro';
 import FeaturedResources from '../../components/FeaturedResources.astro';
 import { higherEducation } from '../../lib/higher-education';
+import { anchorPlan } from '../../lib/search-index';
+import { routes } from '../../lib/routes';
 import { pt as t } from '../../i18n/pt';
 
 const c = t.pages['ensino-superior'];
 const groups = higherEducation();
+// A resource-home anchor is attached at its first occurrence, exactly as on Tecnologia and ENEM.
+// New conditional fields stay absent until a verified course is actually published.
+const anchors = anchorPlan(routes.objective('ensino-superior'), groups.map((group) => group.resources));
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
   <p class="wrap note">{t.superior.note}</p>
   <FeaturedResources path="ensino-superior" />
 
-  {groups.map((group) => (
+  {groups.map((group, i) => (
     <TrackSection id={group.id} title={group.label} why={group.why}>
-      <ResourceList resources={group.resources} />
+      <ResourceList resources={group.resources} anchored={anchors[i]} />
     </TrackSection>
   ))}
 </Base>
