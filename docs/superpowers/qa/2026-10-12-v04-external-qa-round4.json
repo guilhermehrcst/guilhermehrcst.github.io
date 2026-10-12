@@ -41,10 +41,11 @@
       "observed": "Conteúdo da proposta de Língua Portuguesa e atividade do 1º ano visíveis publicamente no HTML.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "sme-goiania-letras-e-palavras",
@@ -60,10 +61,11 @@
       "observed": "Atividade de letras e palavras do 2º ano legível sem login.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "ef-sme-vegetacao-3",
@@ -79,10 +81,11 @@
       "observed": "Material de vegetação e solo do 3º ano identificado e legível.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "ef-sme-municipio-4",
@@ -98,10 +101,11 @@
       "observed": "Aula de Geografia do 4º ano com município, estado e país.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "ef-sme-vestigios-5",
@@ -117,10 +121,11 @@
       "observed": "Conteúdo de História do 5º ano com questões e contexto.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "sme-goiania-leitura-em-foco",
@@ -136,10 +141,11 @@
       "observed": "Atividade do 5º ano, questões de leitura e videoaula opcional indicada; vídeo não reproduzido.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "ef-obmep-fracoes-6",
@@ -155,10 +161,12 @@
       "observed": "Módulo Frações com tópicos, descrições de videoaulas e links; reprodução dos vídeos não testada.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified."
+      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true,
+      "language_validation": "Extractor page language reported en, but educational topics and lesson descriptions observed in Portuguese. Page metadata should not override content language."
     },
     {
       "id": "ef-sme-tecnologia-vida-7",
@@ -174,10 +182,11 @@
       "observed": "Texto de Ciências do 7º ano sobre tecnologia e vida humana.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "ef-obmep-potenciacao-8",
@@ -193,10 +202,12 @@
       "observed": "Módulo Potenciação com descrições e links de videoaulas; reprodução não testada.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified."
+      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true,
+      "language_validation": "Extractor page language reported en, but educational topics and lesson descriptions observed in Portuguese. Page metadata should not override content language."
     },
     {
       "id": "ef-sme-funcoes-9",
@@ -212,10 +223,11 @@
       "observed": "Aula de funções de 1º e 2º grau para o 9º ano com atividade.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "kultivi-enem-completo",
@@ -231,10 +243,11 @@
       "observed": "Curso publicamente descrito como gratuito. Navegador exibiu módulos; clique na primeira aula acionou modal 'Crie sua conta'. Conteúdo da aula inacessível anonimamente; cadastro obrigatório.",
       "supporting_url": null,
       "interactive_browser_run": "https://agent.tinyfish.ai/runs/003b4617-d755-4be7-9ccf-404630574c29",
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified."
+      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified.",
+      "interactive_browser_confirmed": true,
+      "source_content_extracted": true
     },
     {
       "id": "inep-enem-provas-gabaritos",
@@ -250,10 +263,11 @@
       "observed": "Acervo oficial lista anos de ENEM; PDF azul ENEM 2024 do 1º dia abriu HTTP 200 com questões e prova de redação. Extração do índice pode exibir abas carregando.",
       "supporting_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "fuvest-acervo-2026",
@@ -269,10 +283,11 @@
       "observed": "Acervo oficial da Fuvest com provas e gabaritos. PDF oficial da 1ª fase 2026 V1 abriu HTTP 200 e apresentou instruções e questões.",
       "supporting_url": "https://www.fuvest.br/wp-content/uploads/fuvest2026-fase1-prova-V1.pdf",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "cecierj-pvs-portugues-v1",
@@ -288,10 +303,11 @@
       "observed": "Apostila Pré-Vestibular Cecierj, Língua Portuguesa vol. 1, PDF 162 páginas, HTTP 200; NÃO é prova oficial UERJ.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "cecierj-pvs-matematica-mod1",
@@ -307,10 +323,11 @@
       "observed": "Apostila Cecierj Matemática Módulo 1, PDF 118 páginas, HTTP 200; material preparatório.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "cecierj-pvs-historia-mod2",
@@ -326,10 +343,11 @@
       "observed": "Apostila Cecierj História Módulo 2, PDF 128 páginas, HTTP 200.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "cecierj-pvs-geografia-mod1",
@@ -345,10 +363,11 @@
       "observed": "Apostila Cecierj Geografia Módulo 1, PDF 126 páginas, HTTP 200.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "cecierj-pvs-fisica-v1",
@@ -364,10 +383,11 @@
       "observed": "Apostila Cecierj Física vol. 1, PDF 188 páginas, HTTP 200.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "ita-provas-anteriores",
@@ -383,10 +403,11 @@
       "observed": "Índice oficial ITA lista provas 2026 e anos anteriores; PDF da 1ª fase 2026 abriu HTTP 200, 32 páginas.",
       "supporting_url": "https://vestibular.ita.br/provas/2026_fase1.pdf",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "pm-cn-provas",
@@ -402,10 +423,12 @@
       "observed": "PDF institucional Colégio Naval CPACN 2025, 19 páginas, HTTP 200, questões de Matemática e Inglês extraídas; navegador abriu visualizador. Documento escaneado limita seleção/busca por texto.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": true,
+      "source_content_extracted": true,
+      "accessibility_note": "19-page scanned/image-backed document: PDF viewer opens publicly but extracted page text in that viewer was empty; alternate PDF parse recovers some content. Screen-reader/search accessibility likely limited and must be reviewed."
     },
     {
       "id": "pm-en-provas",
@@ -421,10 +444,11 @@
       "observed": "PDF institucional Escola Naval CPAEN 2025, 19 páginas, HTTP 200; enunciados e alternativas de Matemática e Inglês extraídos.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "pm-eear-provas",
@@ -440,10 +464,11 @@
       "observed": "PDF institucional EEAR CFS 1/2024, 17 páginas, HTTP 200; gabarito e questões.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "pm-eam-provas",
@@ -459,10 +484,12 @@
       "observed": "PDF institucional CPAEAM 2023, 15 páginas, HTTP 200; extração reconheceu capa e questões, mas corpo de enunciados ficou incompleto por digitalização. Conferência visual detalhada pendente.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified."
+      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true,
+      "accessibility_note": "15-page partly image-backed/scanned document: live parser extracted limited questions and cover; manual visual inspection of questions still required."
     },
     {
       "id": "pm-afa-provas",
@@ -478,10 +505,11 @@
       "observed": "PDF oficial AFA 2025 versão A, 24 páginas, HTTP 200; 64 questões, disciplinas e redação.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "pm-epcar-provas",
@@ -497,10 +525,11 @@
       "observed": "PDF oficial EPCAR 2026 versão A, 17 páginas, HTTP 200; 48 questões e redação.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "cecierj-aprovarj",
@@ -516,10 +545,11 @@
       "observed": "Página oficial confirma curso gratuito, online, inscrição/cadastro obrigatório e ausência de certificado. Aulas atrás da conta não foram inspecionadas.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified."
+      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "pm-esa-provas-2026",
@@ -535,10 +565,11 @@
       "observed": "PDF oficial ESA Área Geral 2026 teve texto extraído via Exa com questões, mas os navegadores Firecrawl e TinyFish falharam com ERR_CONNECTION_CLOSED. Não comprovado acesso público pelo navegador nesta rodada.",
       "supporting_url": null,
       "interactive_browser_run": "https://agent.tinyfish.ai/runs/9dd66d95-99a6-4e7b-ac17-d9c241fbf73a",
-      "browser_public_url_opened": false,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Source text via independent extractor does not replace unsuccessful browser opening."
+      "evidence_limit": "Source text via independent extractor does not replace unsuccessful browser opening.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "pm-ime-provas",
@@ -554,10 +585,11 @@
       "observed": "PDF oficial IME CFG 2024/2025, 24 páginas, HTTP 200, 40 questões objetivas.",
       "supporting_url": null,
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "mit-1801sc",
@@ -573,10 +605,11 @@
       "observed": "Página MIT 18.01SC e Sessão 23 Linear Approximation abertas; texto didático e material de problemas visíveis, vídeos não reproduzidos.",
       "supporting_url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/pages/unit-2-applications-of-differentiation/part-a-approximation-and-curve-sketching/session-23-linear-approximation/",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "mit-801sc",
@@ -592,10 +625,11 @@
       "observed": "Página MIT 8.01SC e introdução Semana 1 abertas, mas vídeo indicou incompatibilidade com leitor automatizado; reprodução não comprovada.",
       "supporting_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/pages/week-1-kinematics/week-1-introduction/",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified."
+      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "mit-7012",
@@ -611,10 +645,11 @@
       "observed": "Página MIT 7.012 e Lecture 1 abertas, mas player de vídeo indicou incompatibilidade com leitor; link de download disponível, reprodução não comprovada.",
       "supporting_url": "https://ocw.mit.edu/courses/7-012-introduction-to-biology-fall-2004/resources/lecture-1-introduction/",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified."
+      "evidence_limit": "Additional media playback, visual inspection or authenticated lesson access remains to be verified.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "yale-psyc-110",
@@ -630,10 +665,11 @@
       "observed": "Curso Yale PSYC 110 e Lecture 1 abertos; transcrição de Psicologia pública e legível.",
       "supporting_url": "https://oyc.yale.edu/psychology/psyc-110/lecture-1",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "yale-econ-252",
@@ -649,10 +685,11 @@
       "observed": "Curso Yale ECON 252 e Lecture 1 abertos; texto/transcrição de Financial Markets pública e legível.",
       "supporting_url": "https://oyc.yale.edu/economics/econ-252-11/lecture-1",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "ou-environment-treading-lightly",
@@ -668,10 +705,12 @@
       "observed": "Open University, curso gratuito; Introduction, Learning Outcomes e seção 1 publicamente legíveis via Firecrawl. Declaração de PARTICIPAÇÃO exige conta/inscrição; não é certificado de conclusão.",
       "supporting_url": "https://www.open.edu/openlearn/nature-environment/environmental-studies/environment-treading-lightly-on-the-earth/content-section-3",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true,
+      "registration_distinction": "Course text opens publicly without sign-in; creating an account is necessary for tracked enrollment/statement of participation. Do not conflate reading with certificate eligibility."
     },
     {
       "id": "odin-foundations",
@@ -687,10 +726,11 @@
       "observed": "Odin Foundations e aula How Does the Web Work? legíveis sem login; conta opcional para acompanhamento.",
       "supporting_url": "https://www.theodinproject.com/lessons/foundations-how-does-the-web-work",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "google-mlcc",
@@ -706,10 +746,11 @@
       "observed": "Google ML Crash Course e unidade Linear Regression abertas; conteúdo técnico gratuito legível.",
       "supporting_url": "https://developers.google.com/machine-learning/crash-course/linear-regression",
       "interactive_browser_run": null,
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": false,
+      "source_content_extracted": true
     },
     {
       "id": "ms-learn-cloud-concepts",
@@ -725,10 +766,14 @@
       "observed": "Evidência anterior no navegador TinyFish: rota pt-BR, três módulos e primeira unidade legível sem login; aviso de tradução por IA. Certificado não comprovado.",
       "supporting_url": "https://learn.microsoft.com/pt-br/training/modules/describe-cloud-compute/1-introduction-microsoft-azure-fundamentals/",
       "interactive_browser_run": "https://agent.tinyfish.ai/runs/f1ce30e4-f26b-47cb-b5a2-e0a5e78abc0f",
-      "browser_public_url_opened": true,
       "full_course_authenticated_content_inspected": false,
       "release_homologation_authorized": false,
-      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA."
+      "evidence_limit": "Confirms publicly available source content/access in this check, not payment/certification proof, universal browser compatibility or complete release QA.",
+      "interactive_browser_confirmed": true,
+      "source_content_extracted": true
     }
-  ]
+  ],
+  "measurement_note": "INTERACTIVE_BROWSER_CONFIRMED is a distinct control, not implied by browser-backed extraction. Public page/text/PDF extraction confirms the source and some educational content, but does not automatically verify video playback, account-only lessons, compatibility, accessibility, certificate or ongoing availability.",
+  "counts_interactive_browser_confirmed": 3,
+  "counts_interactive_browser_not_confirmed": 34
 }
