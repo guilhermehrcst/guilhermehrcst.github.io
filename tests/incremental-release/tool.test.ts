@@ -73,7 +73,7 @@ test('a simulated lot is refused in a production release, and every file is rest
   cleanup(dir);
 });
 
-test('apply publishes exactly the projection, check names new hosts, rollback keeps the ledger, the same text rolls forward', () => {
+test('apply publishes exactly the projection, check names new hosts, rollback keeps the ledger, a rolled-back lot is not applied again', () => {
   const dir = scratch();
   simulationMode(dir);
   const before = releaseOf(dir);
@@ -103,13 +103,13 @@ test('apply publishes exactly the projection, check names new hosts, rollback ke
   assert.deepEqual(releaseOf(dir).applied, before.applied);
   assert.equal(releaseOf(dir).ledger.length, before.ledger.length + 1, 'the ledger keeps the rolled-back lot');
 
+  // A rolled-back lot is not applied again, with the same text or another: its decisions go to a new lot.
+  assert.match(run(dir, 'apply', path).out, /never rewritten nor applied again/);
   const changed = JSON.parse(readFileSync(path, 'utf8'));
   execFileSync('mkdir', ['-p', `${dir}outro/`], { encoding: 'utf8' });
   writeFileSync(`${dir}outro/L999-ensaio.json`, JSON.stringify({ ...changed, title: 'Outro texto' }));
-  assert.match(run(dir, 'apply', `${dir}outro/L999-ensaio.json`).out, /registered with another text/);
-  const forward = run(dir, 'apply', path);
-  assert.ok(forward.ok, forward.out);
-  assert.equal(releaseOf(dir).inventory.length, before.inventory.length + 2);
+  assert.match(run(dir, 'apply', `${dir}outro/L999-ensaio.json`).out, /never rewritten nor applied again/);
+  assert.deepEqual(releaseOf(dir).inventory, before.inventory);
   cleanup(dir);
 });
 

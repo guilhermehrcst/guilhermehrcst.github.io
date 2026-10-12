@@ -16,7 +16,8 @@
 // would publish and what the build would refuse. `apply` and `rollback` write the three release files
 // (the manifest in lots/, its registration in lots.ts, release.json) and then verify them in a fresh
 // process that loads the catalogue, the placement and the path states exactly as the build does; if
-// anything fails, every file is restored and nothing changes. Neither decides anything: `apply` refuses
+// anything fails, every file is restored and nothing changes. A rolled-back lot is never applied again.
+// Neither decides anything: `apply` refuses
 // a manifest whose decisions or authorization are missing, simulated or automated (the engine's rules).
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
@@ -177,20 +178,9 @@ switch (command) {
     const file = `${lot.lot}.json`;
     if (arg!.split('/').pop() !== file) die(`the file must be named ${file}`);
     const release = readJson(RELEASE_JSON);
-    if (report.registeredAlready) {
-      // Rolling a rolled-back lot forward again: only the very manifest the ledger pinned, never a new text.
-      const registered = readJson(new URL(file, LOTS_DIR));
-      const pinned = release.ledger.find((p: any) => p.lot === lot.lot);
-      if (digestOf(registered) !== digestOf(lot) || pinned?.digest !== digestOf(lot)) die(`${lot.lot} is already registered with another text; an applied or recorded lot is never rewritten`);
-      if (release.applied.some((p: any) => p.lot === lot.lot)) die(`${lot.lot} is already applied`);
-      transact(() => {
-        const manifests = lotFiles().map((f) => readJson(new URL(f, LOTS_DIR)));
-        const next = { ...release, applied: [...release.applied, pinned] };
-        writeJson(RELEASE_JSON, { ...next, inventory: projectedInventory(manifests, { ...next, inventory: [] }) });
-      });
-      out({ reapplied: lot.lot, published: readJson(RELEASE_JSON).inventory.length });
-      break;
-    }
+    // A registered lot is never rewritten, and a rolled-back one is not applied again: its decisions go to a
+    // new lot (docs/academy/operacao-publicacao-incremental.md, section 10).
+    if (report.registeredAlready) die(`${lot.lot} is already registered; an applied or rolled-back lot is never rewritten nor applied again — record its decisions in a new lot`);
     transact(() => {
       copyFileSync(arg!, new URL(file, LOTS_DIR));
       const files = lotFiles();
