@@ -59,8 +59,8 @@ Todos os URLs abaixo retornaram `HTTP 200` e `application/pdf` em acesso de extr
 
 ## Evidências e contexto complementar
 
-- [Proposta Lote 01](../../plans/2026-10-12-academy-lote-01-proposal.md)
-- [Guia operacional de publicação incremental](../../../academy/operacao-publicacao-incremental.md)
+- [Proposta Lote 01](../plans/2026-10-12-academy-lote-01-proposal.md)
+- [Guia operacional de publicação incremental](../../academy/operacao-publicacao-incremental.md)
 - [Comentário de QA do primeiro recurso no PR #37](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/37#issuecomment-6132661275)
 - [Preflight dos nove candidatos no PR #37](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/37#issuecomment-6132697169)
 
