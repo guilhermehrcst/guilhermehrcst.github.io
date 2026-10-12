@@ -2,6 +2,8 @@
 // resources by id (one resource may serve two tracks; it is defined once). A track with no verified
 // resource is `planned` and never shown. No asset imports: this module runs under Node's test runner.
 
+import { publishedResources, type LearningResource } from './learning-resources.ts';
+
 export type TechTrackId =
   | 'comecar-a-programar' | 'ciencia-da-computacao' | 'desenvolvimento-web' | 'python'
   | 'inteligencia-artificial' | 'dados' | 'seguranca-e-privacidade' | 'git-e-github' | 'computacao-em-nuvem';
