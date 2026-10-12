@@ -20,7 +20,7 @@ medido em cópias descartáveis com lotes marcados `SIMULAÇÃO`.
 | Verificação | Plano B | Plano A |
 |---|---|---|
 | Publicados | 43 | 46 |
-| Testes | 312 passam; só os 3 pinos de identidade divergem | idem |
+| Testes | 313 passam; só os 3 pinos de identidade divergem | idem |
 | `astro check`, build, `verify-dist` | passam (22 páginas, 2 em preparação) | passam (24 páginas, 0 em preparação) |
 | QA de navegador, 360 e 1280 px (`qa-plan-*.json`) | 246 verificações, 0 falhas | 295 verificações, 0 falhas |
 | Rollback (patch revertido + `rollback`) | `dist/` idêntico byte a byte ao de produção | idem |
