@@ -492,3 +492,47 @@ test('a return needs evidence strictly after the take-out: same-day evidence pro
     assert.match(problemsOf(project({ pool, lots: all, release })), /L003-retorno: google-mlcc returns on evidence of 2026-10-12, not after the decision of 2026-10-12 that took it out/);
   }
 });
+
+// A published record changes through a revision: the live record stays as published until its re-approval
+// is applied (owner review on PR #43).
+const cs50xRevision = () => {
+  const live = record('cs50x');
+  const evidence = { url: live.url!, checked: ['free', 'scope', 'language', 'format', 'path', 'registration'] as const, note: 'Revisão simulada: página oficial conferida com o novo título.' };
+  return { ...live, title: 'CS50x: Introduction to Computer Science (revisado)', registration: 'not-required' as const, certificate: 'unconfirmed' as const,
+    verified: { on: '2026-10-12', by: 'official-page' as const, freeAccess: true as const, evidence } };
+};
+const reapproval = (rev: ReturnType<typeof cs50xRevision>) => ({ ...entryFor('google-mlcc'), id: 'cs50x', url: rev.url!, digest: digestOf(rev), institution: rev.provider, format: rev.format,
+  evidence: { on: rev.verified.on, version: 'fixture-revisao-v1', method: rev.verified.by, url: rev.verified.evidence.url, observed: rev.verified.evidence.note } });
+
+test('a pending re-approval of a published record keeps the live record public and the build green', () => {
+  const rev = cs50xRevision();
+  const lot = lotOf('L001-revisao', [reapproval(rev)], { hosts: [] });
+  const p = project({ revisions: [rev], lots: [lot], release: releaseOf([], inventoryWith([])) });
+  assert.deepEqual(p.problems, []);
+  assert.equal(p.published.find((r) => r.id === 'cs50x')?.title, record('cs50x').title, 'still the published version');
+});
+
+test('applying the re-approval publishes the revision; rolling it back restores the live record', () => {
+  const rev = cs50xRevision();
+  const lot = lotOf('L001-revisao', [reapproval(rev)], { hosts: [] });
+  const applied = project({ revisions: [rev], lots: [lot], release: releaseOf([lot], inventoryWith([])) });
+  assert.deepEqual(applied.problems, []);
+  assert.equal(applied.published.find((r) => r.id === 'cs50x')?.title, rev.title);
+  const rolledBack = project({ revisions: [rev], lots: [lot], release: releaseOf([], inventoryWith([]), { ledger: releaseOf([lot], []).ledger }) });
+  assert.deepEqual(rolledBack.problems, []);
+  assert.equal(rolledBack.published.find((r) => r.id === 'cs50x')?.title, record('cs50x').title);
+});
+
+test('a revision is bound like any record: unknown or repeated ids, and an unapproved digest, are refused', () => {
+  const rev = cs50xRevision();
+  assert.match(problemsOf(project({ revisions: [{ ...rev, id: 'curso-inventado' }], lots: [], release: releaseOf([], inventoryWith([])) })), /revision curso-inventado: not a known record/);
+  assert.match(problemsOf(project({ revisions: [rev, rev], lots: [], release: releaseOf([], inventoryWith([])) })), /revision cs50x: two revisions/);
+  // An approval for another version of the revision fails before and after application.
+  const lot = lotOf('L001-revisao', [{ ...reapproval(rev), digest: `sha256:${'2'.repeat(64)}` }], { hosts: [] });
+  for (const release of [releaseOf([], inventoryWith([])), releaseOf([lot], inventoryWith([]))]) {
+    assert.match(problemsOf(project({ revisions: [rev], lots: [lot], release })), /cs50x: the record changed after its approval|cs50x: changed since it was published/);
+  }
+  // Editing the live record itself still fails, revision or not.
+  const edited = catalogue.map((r) => (r.id === 'cs50x' ? { ...r, title: 'editado no lugar' } : r));
+  assert.match(problemsOf(project({ catalogue: edited, revisions: [rev], lots: [], release: releaseOf([], inventoryWith([])) })), /cs50x: changed since it was published/);
+});

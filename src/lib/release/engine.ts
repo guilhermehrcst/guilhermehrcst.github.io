@@ -273,6 +273,9 @@ export interface ReleaseInput {
   catalogue: readonly LearningResource[];
   /** Typed candidates outside the catalogue: the only other records a lot may resolve an id to. */
   pool: readonly LearningResource[];
+  /** Revised versions of known records (src/lib/release/revisions.ts). A revision is what a re-approval
+   *  binds to; the live record stays public, unchanged, until that approval is applied. */
+  revisions?: readonly LearningResource[];
   baseline: unknown;
   /** Every lot manifest in the repository, applied or not. */
   lots: readonly unknown[];
@@ -359,6 +362,14 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     records.set(r.id, r);
   }
   const catalogueIds = new Set(input.catalogue.map((r) => r.id));
+  const revisions = new Map<string, LearningResource>();
+  for (const r of input.revisions ?? []) {
+    if (!records.has(r.id)) problems.push(`revision ${r.id}: not a known record`);
+    else if (revisions.has(r.id)) problems.push(`revision ${r.id}: two revisions of one record`);
+    else revisions.set(r.id, r);
+  }
+  /** The version a decision binds to: the revision when there is one, else the record itself. */
+  const candidateOf = (id: string): LearningResource => revisions.get(id) ?? records.get(id)!;
   const baselineIds = Object.keys(baseline.records);
   const publishedInCatalogue = input.catalogue.filter(isPublishable).map((r) => r.id);
   for (const id of publishedInCatalogue) if (!(id in baseline.records)) problems.push(`${id}: published in the catalogue without a baseline digest or an approval`);
@@ -473,9 +484,9 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     return found;
   };
   // A recorded approval must already match its record: an authorized lot never drifts from its candidate.
-  for (const { entry, lot } of recorded) problems.push(...approvalProblems(entry, lot, records.get(entry.id)!));
+  for (const { entry, lot } of recorded) problems.push(...approvalProblems(entry, lot, candidateOf(entry.id)));
   for (const { entry, lot } of latest.values()) {
-    if (entry.decision !== 'approved' && records.has(entry.id)) problems.push(...approvalProblems(entry, lot, records.get(entry.id)!, entry.decision === 'verified'));
+    if (entry.decision !== 'approved' && records.has(entry.id)) problems.push(...approvalProblems(entry, lot, candidateOf(entry.id), entry.decision === 'verified'));
   }
 
   // The projection, and each published record checked against the decision that published it.
@@ -484,8 +495,11 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   const order = [...input.catalogue.map((r) => r.id).filter((id) => id in baseline.records), ...[...approval.keys()].filter((id) => !(id in baseline.records))];
   for (const id of order) {
     if (states.get(id) !== 'published') continue;
-    const r = records.get(id)!;
     const decision = approval.get(id);
+    // The applied approval decides which version is public: its revision once approved, the live record
+    // until then (a pending re-approval never changes what is published).
+    const revision = revisions.get(id);
+    const r = decision && revision && digestOf(revision) === decision.entry.digest ? revision : records.get(id)!;
     if (decision) problems.push(...approvalProblems(decision.entry, decision.lot, r));
     else {
       const digest = digestOf(r);
@@ -506,7 +520,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   // The recorded lots would reach pendingStates: the ids they would add must not repeat a URL of that state.
   for (const [id, state] of pendingStates) {
     if (state !== 'published' || states.get(id) === 'published') continue;
-    const r = records.get(id)!;
+    const r = candidateOf(id);
     if (!r.url) continue;
     const other = urls.get(r.url);
     if (other && other !== id && pendingStates.get(other) === 'published') problems.push(`${id}: same URL as ${other} (${r.url})`);

@@ -6,12 +6,16 @@
 #   python3 simulate.py <worktree> A          # lot A applied
 #   python3 simulate.py <worktree> AB         # lots A and B applied (B suspends one of A's resources)
 #   python3 simulate.py <worktree> A-pending-B   # rollback of B: both recorded, only A applied
+#   python3 simulate.py <worktree> ABC        # C readmits the suspended resource through a revision with
+#                                             # evidence strictly after the suspension
+#   python3 simulate.py <worktree> AB-pending-C  # C recorded, not applied: the resource stays out
 import json, subprocess, sys
 
 WT, SCENARIO = sys.argv[1], sys.argv[2]
-assert SCENARIO in ('A', 'AB', 'A-pending-B'), SCENARIO
+assert SCENARIO in ('A', 'AB', 'A-pending-B', 'ABC', 'AB-pending-C'), SCENARIO
 BY = 'SIMULAÇÃO — ensaio do motor de publicação, não é decisão editorial'
 ON = '2026-10-12'
+SUSPENDED_ON = '2026-10-11'  # the readmission's fresh evidence (2026-10-12) is strictly after it
 
 def tool(*args):
     return subprocess.run(['node', '--experimental-strip-types', '--no-warnings', 'tools/academy-release.ts', *args],
@@ -20,7 +24,7 @@ def tool(*args):
 def entry(id, decision='approved', reason=None):
     e = json.loads(tool('entry', id))
     e['evidence']['version'] = 'simulacao-2026-10-12'
-    e.update(decision=decision, decidedBy=BY, decidedOn=ON)
+    e.update(decision=decision, decidedBy=BY, decidedOn=e['evidence']['on'])
     if reason: e['reason'] = reason
     return e
 
@@ -28,8 +32,19 @@ def lot(name, title, entries, suspensions=()):
     hosts = sorted({(e['url'].split('/')[2], e['institution']) for e in entries if e['decision'] == 'approved'})
     return {'schema': 'pexis-academy-lot/1', 'lot': name, 'title': title, 'createdOn': ON, 'simulation': True,
             'hosts': [{'host': h, 'institution': i} for h, i in hosts], 'entries': entries,
-            'suspensions': [{'id': s, 'reason': r, 'decidedBy': BY, 'decidedOn': ON} for s, r in suspensions],
+            'suspensions': [{'id': s, 'reason': r, 'decidedBy': BY, 'decidedOn': SUSPENDED_ON} for s, r in suspensions],
             'authorization': {'by': BY, 'on': ON}}
+
+REVISION = '''// SIMULATION: a revision of google-mlcc with a verification after its suspension.
+import type { LearningResource } from '../learning-resources.ts';
+import { STAGED_RESOURCES } from '../staging.ts';
+
+const base = STAGED_RESOURCES.find((r) => r.id === 'google-mlcc')!;
+export const RECORD_REVISIONS: readonly LearningResource[] = [{
+  ...base,
+  verified: { ...base.verified!, on: '2026-10-12', evidence: { ...base.verified!.evidence!, note: 'SIMULAÇÃO: nova verificação depois da suspensão.' } },
+}];
+'''
 
 A = lot('L001-simulacao-a', 'Simulação A: um recurso por caminho novo e ESA retida', [
     entry('google-mlcc'), entry('mit-1801sc'), entry('ef-obmep-fracoes-6'), entry('ita-provas-anteriores'),
@@ -38,8 +53,14 @@ A = lot('L001-simulacao-a', 'Simulação A: um recurso por caminho novo e ESA re
 B = lot('L002-simulacao-b', 'Simulação B: acréscimos e uma suspensão', [
     entry('odin-foundations'), entry('ef-sme-alfabeto-1'), entry('pm-afa-provas'),
 ], suspensions=[('google-mlcc', 'Suspensão simulada para provar a remoção de todas as superfícies')])
-lots = [A] if SCENARIO == 'A' else [A, B]
-applied = [A] if SCENARIO in ('A', 'A-pending-B') else [A, B]
+lots = {'A': [A], 'AB': [A, B], 'A-pending-B': [A, B]}.get(SCENARIO)
+if lots is None:
+    # The readmission binds to a revision of the record, never to an in-place edit of it. A and B were
+    # drafted above against the live record, before the revision existed.
+    open(f'{WT}/src/lib/release/revisions.ts', 'w').write(REVISION)
+    C = lot('L003-simulacao-c', 'Simulação C: readmissão com evidência posterior à suspensão', [entry('google-mlcc')])
+    lots = [A, B, C]
+applied = {'A': [A], 'AB': [A, B], 'A-pending-B': [A], 'ABC': lots, 'AB-pending-C': [A, B]}[SCENARIO]
 
 for l in lots:
     with open(f"{WT}/src/data/academy-release/lots/{l['lot']}.json", 'w', encoding='utf-8') as f:
@@ -71,7 +92,7 @@ def edit(path, fn):
     assert t != s, f'no change in {path}'; open(p, 'w').write(t)
 # Activating the two paths is its own decision, simulated here alongside the lots.
 edit('src/lib/taxonomy.ts', lambda s: s.replace("'ensino-fundamental': 'preparing'", "'ensino-fundamental': 'active'").replace("'pre-militar': 'preparing'", "'pre-militar': 'active'"))
-hosts = sorted({h['host'] for l in applied for h in l['hosts']} - {'developers.google.com'} if SCENARIO == 'AB' else {h['host'] for l in applied for h in l['hosts']})
+hosts = sorted({h['host'] for l in applied for h in l['hosts']} - {'developers.google.com'} if SCENARIO in ('AB', 'AB-pending-C') else {h['host'] for l in applied for h in l['hosts']})
 def vd(s):
     s = s.replace("  'www.revista.vestibular.uerj.br',\n];", "  'www.revista.vestibular.uerj.br',\n  // SIMULATION: hosts of the applied simulated lots\n" + ''.join(f"  '{h}',\n" for h in hosts if f"'{h}'" not in s) + "];", 1)
     s = s.replace("const PREPARING = ['/ensino-fundamental/', '/pre-militar/'];", "const PREPARING = []; // SIMULATION")
