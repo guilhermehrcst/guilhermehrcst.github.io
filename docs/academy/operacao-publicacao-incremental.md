@@ -90,7 +90,8 @@ Um lote registrado e não aplicado não publica nada (o build o valida e reporta
 ## 5. Como autorizar um lote?
 
 A pessoa responsável preenche, por entrada, `decision: "approved"`, `decidedBy` (nome de uma pessoa;
-nomes de ferramentas como Claude, Codex, GPT ou "bot" são recusados) e `decidedOn`. Itens com pendência
+nomes de ferramentas como Claude, Codex, GPT, "bot", "AI" ou "fixture" são recusados, em qualquer
+caixa, acento ou largura de caractere, em toda decisão e na autorização) e `decidedOn`. Itens com pendência
 ficam `decision: "held"` com `reason` — não travam os demais. Depois, a autorização de publicação do lote
 exato: `"authorization": { "by": "…", "on": "AAAA-MM-DD" }`, com data não anterior às decisões. Cada host
 novo entra em `hosts` com a instituição revisada.
@@ -105,7 +106,8 @@ python3 docs/superpowers/qa/2026-10-12-incremental-release/simulate.py /tmp/sim 
 cd /tmp/sim && ACADEMY_RELEASE_SIMULATION=1 npm run build
 ```
 
-Lotes simulados têm `simulation: true` e `decidedBy` começando por `SIMULAÇÃO`; o motor os recusa num
+Lotes simulados têm `simulation: true` e `decidedBy` começando por `SIMULAÇÃO` (lido sem caixa nem acento: `Simulação`, `simulacao`… também
+marcam simulação, e por isso são recusados num lote real); o motor os recusa num
 `release.json` em modo `production`, e o `verify-dist` recusa qualquer `release.json` em modo `simulation`
 sem a variável `ACADEMY_RELEASE_SIMULATION=1`. Resultado da simulação desta branch:
 `docs/superpowers/qa/2026-10-12-incremental-release/README.md`.
@@ -148,7 +150,8 @@ publicar a versão nova sem aprovação aplicada seria publicar metadado não ap
 registros ficam em `src/lib/catalogue-records.ts` (e nos módulos de candidatos), lidos pela ferramenta sem
 passar pela projeção: `tools/academy-release.ts digest|entry <id>` funciona com o build vermelho e dá o
 digest que a reaprovação precisa. Um registro alterado deixa de valer como confiança de host da V0.4: o
-lote revisa o host para a instituição.
+lote revisa o host para a instituição. Manter a versão antiga publicada enquanto a nova aguarda aprovação
+(snapshots versionados por digest) é deliberadamente fora deste motor e fica para um PR próprio.
 
 ## 9. Como suspender um recurso?
 
@@ -158,7 +161,7 @@ nomeia uma pessoa (nomes de ferramentas são recusados). O recurso sai de págin
 busca, âncoras, destaques e dados públicos; `verify-dist` falha se o ID sobrar em qualquer arquivo do
 `dist/`. Se ele estiver numa seleção de destaques liberada, o build falha até a seleção ser corrigida.
 O manifesto antigo **não** é editado: o histórico fica nos lotes. Para voltar, o recurso precisa de
-verificação nova: evidência com data igual ou posterior à suspensão (o mesmo vale para um item `held`).
+verificação nova: evidência com data **estritamente posterior** à suspensão; a do mesmo dia não prova verificação nova (o mesmo vale para um item `held`).
 
 ## 10. Como fazer rollback?
 
