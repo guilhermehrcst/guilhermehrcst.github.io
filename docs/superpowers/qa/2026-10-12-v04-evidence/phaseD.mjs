@@ -64,12 +64,21 @@ for (const width of [390, 1440]) {
   await p.goto(`${BASE}/ensino-superior/`); const sup = await p.innerText('main');
   const groups = ['Física', 'Biologia', 'Psicologia', 'Economia', 'Meio ambiente'].filter((g) => new RegExp(`\\b${g}\\b`, 'i').test(sup));
   ok(`D11 Superior shows ${expectNine ? 'all new' : 'no unreleased'} groups`, expectNine ? groups.length === 5 : groups.length === 0, groups.join(','));
-  await p.goto(`${BASE}/`); const home = await p.innerText('main');
-  const homeG = ['Física', 'Biologia', 'Psicologia', 'Economia'].filter((g) => new RegExp(`Superior[^\\n]*${g}|${g}[^\\n]*Superior`, 'i').test(home));
-  ok(`D12 Home Superior summary ${expectNine ? 'lists' : 'omits'} unreleased areas`, expectNine ? true : homeG.length === 0, homeG.join(','));
+  await p.goto(`${BASE}/`);
+  // The Home intentionally summarizes seven subjects as "Matemática, Computação e mais 5 áreas".
+  // Test the actual `Ensino Superior` objective copy in both staging and RC,
+  // instead of incorrectly looking for all seven full labels in condensed text.
+  const homeSummary = (await p.locator('.objectives a[href="/ensino-superior/"] .what').innerText())
+    .replace(/\\s+/g, ' ').trim();
+  const mentionsFiveNewAreas = /Matemática,\\s*Computação\\s+e\\s+mais\\s+5\\s+áreas/i.test(homeSummary);
+  const staleCopy = /Por enquanto|somente Matemática e Computação/i.test(homeSummary);
+  ok(`D12 Home Superior summary ${expectNine ? 'reflects 5 published new fields' : 'does not advertise unreleased fields'}`,
+    expectNine ? mentionsFiveNewAreas && !staleCopy : !mentionsFiveNewAreas,
+    homeSummary);
   console.log('SUPERIOR_TEXT', sup.replace(/\s+/g, ' ').slice(0, 700));
   await p.close();
 }
 await b.close();
 for (const r of rows.filter((r) => !r.ok)) console.log('FAIL', r.n, r.d);
 console.log(`${rows.filter((r) => r.ok).length}/${rows.length} pass`);
+if (rows.some((r) => !r.ok)) process.exitCode = 1; // A QA gate must fail its process on a regression.
