@@ -536,3 +536,11 @@ test('a revision is bound like any record: unknown or repeated ids, and an unapp
   const edited = catalogue.map((r) => (r.id === 'cs50x' ? { ...r, title: 'editado no lugar' } : r));
   assert.match(problemsOf(project({ catalogue: edited, revisions: [rev], lots: [], release: releaseOf([], inventoryWith([])) })), /cs50x: changed since it was published/);
 });
+
+test('a real lot may not carry a simulation label in any casing or accent form', () => {
+  for (const label of ['Simulação — fixture de teste', 'simulacao: ensaio', 'SIMULACAO ensaio', 'SiMuLaÇãO ensaio']) {
+    const lot = { ...lotOf('L001-real', [entryFor('google-mlcc', { decidedBy: label })]), simulation: false, authorization: { by: label, on: '2026-10-12' } };
+    const found = lotProblems(lot, NOW).join('\n');
+    assert.match(found, /a simulated decision in a real lot/, label);
+  }
+});

@@ -102,7 +102,8 @@ const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const LOT_ID = /^L\d{3}-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** A person's decision is not an automated one: approvals and authorizations naming a tool are refused. */
 const AUTOMATED = /\b(claude|codex|chatgpt|gpt|copilot|openai|anthropic|bot|ia|ai|automa\w*)\b/i;
-const SIMULATED = /^SIMULAÇÃO\b/;
+/** A rehearsal's mark, in any casing or accent form (SIMULAÇÃO, Simulação, simulacao…). */
+const SIMULATED = /^simula[cç][aã]o\b/iu;
 
 const isObject = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const isText = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0 && v === v.trim();
