@@ -65,12 +65,12 @@ index 64471d9..f3d0d90 100644
      '/tecnologia/': ['/tecnologia/'],
    };
 diff --git a/src/lib/taxonomy.ts b/src/lib/taxonomy.ts
-index f91883e..35a0299 100644
+index 4c83a20..d01b4c8 100644
 --- a/src/lib/taxonomy.ts
 +++ b/src/lib/taxonomy.ts
-@@ -47,10 +47,10 @@ export type PathState = 'preparing' | 'active';
-  *  their ten homologated highlights released and a page that shows their resources (src/lib/path-status.ts
-  *  fails the build otherwise); scripts/verify-dist.mjs keeps its own, independent list. */
+@@ -49,10 +49,10 @@ export type PathState = 'preparing' | 'active';
+  *  build otherwise). Activating a path is a person's decision; scripts/verify-dist.mjs keeps its own,
+  *  independent list. */
  export const PATH_STATUS: Readonly<Record<PathId, PathState>> = {
 -  'ensino-fundamental': 'preparing',
 +  'ensino-fundamental': 'active',

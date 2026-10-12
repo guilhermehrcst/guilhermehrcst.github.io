@@ -63,3 +63,11 @@ test('the operator tool reads records without the projection, so it works while 
   assert.doesNotMatch(records, /projectRelease|throw new Error\(`learning-resources: release/, 'the records module never projects');
 });
 
+
+test('the prepared launch change sets still apply to this tree (docs/academy/launch), while no lot is applied', () => {
+  if (release.applied.length > 0) return; // after the first lot the kit has done its job
+  for (const plan of ['plan-a', 'plan-b']) {
+    const out = execFileSync('git', ['apply', '--check', '--verbose', `docs/academy/launch/${plan}.patch`], { encoding: 'utf8', cwd: new URL('../../', import.meta.url).pathname });
+    assert.doesNotMatch(out, /error/i, plan);
+  }
+});
