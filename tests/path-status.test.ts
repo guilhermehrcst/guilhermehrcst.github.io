@@ -52,11 +52,12 @@ const RELEASED_PM = { ...STAGING, 'pre-militar': 'released' };
 test('P2: activating Pré-Militar with no resource is refused; one resource on its own page is enough', () => {
   const problems = need(pathStatus, 'activationProblems');
   const on = { ...TODAY, 'pre-militar': 'active' };
-  const nothing = problems(on, emptySel, publishedResources, STAGING).join('\n');
+  const others = publishedResources.filter((r) => !r.paths.includes('pre-militar'));
+  const nothing = problems(on, emptySel, others, STAGING).join('\n');
   assert.match(nothing, /pre-militar: active without a page that shows its resources/);
   assert.match(nothing, /pre-militar: active with no published resource/);
-  assert.deepEqual(problems(on, emptySel, [...publishedResources, pool[0]!], STAGING), [], 'one resource on /pre-militar/, no highlights: activation allowed');
-  assert.doesNotMatch(problems(on, emptySel, [...publishedResources, pool[0]!], STAGING).join('\n'), /highlight/);
+  assert.deepEqual(problems(on, emptySel, [...others, pool[0]!], STAGING), [], 'one resource on /pre-militar/, no highlights: activation allowed');
+  assert.doesNotMatch(problems(on, emptySel, [...others, pool[0]!], STAGING).join('\n'), /highlight/);
 });
 
 test('P2: highlights are released only complete: 9 of 10, or ten filled in staging, never show', () => {

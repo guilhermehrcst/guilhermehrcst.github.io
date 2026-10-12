@@ -79,7 +79,7 @@ test('12. every approved resource has a destination page and its own anchor', ()
   // With the gated paths still in preparation, their resources have no page: they cannot be published
   // without activating the path (the build's placement guard refuses it).
   const ef = partial.published.find((x) => x.id === 'ef-obmep-fracoes-6')!;
-  assert.equal(placementOf(ef, PATH_STATUS, partial.published), null);
+  assert.equal(placementOf(ef, { ...PATH_STATUS, 'ensino-fundamental': 'preparing' }, partial.published), null);
 });
 
 test('4. an unknown certificate or registration is never displayed as a claim', () => {

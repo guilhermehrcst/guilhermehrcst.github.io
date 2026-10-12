@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 
 import { canTransition, EDITORIAL_STATES, EDITORIAL_TRANSITIONS, lotProblems } from '../../src/lib/release/engine.ts';
 import { digestOf } from '../../src/lib/release/canonical.ts';
-import { catalogue, publishedResources, RELEASE } from '../../src/lib/learning-resources.ts';
+import { catalogue, isPublishedResource, publishedResources, RELEASE } from '../../src/lib/learning-resources.ts';
 import { entryFor, inventoryWith, LEGACY_IDS, lotOf, NOW, POOL, project, record, releaseOf, SIMULATED_BY } from './fixtures.ts';
 
 const ids = (p: { published: readonly { id: string }[] }) => p.published.map((r) => r.id);
@@ -231,7 +231,7 @@ test('15. rollback: removing the last lot from the release restores the earlier 
   assert.equal(rolledBack.states.get('ef-obmep-fracoes-6'), 'candidate');
   const nothing = project({ lots: [a, b], release: releaseOf([], inventoryWith([])) });
   assert.deepEqual(ids(nothing), ids(project({ lots: [], release: releaseOf([], inventoryWith([])) })));
-  assert.deepEqual(ids(nothing), publishedResources.map((r) => r.id));
+  assert.deepEqual(ids(nothing), catalogue.filter(isPublishedResource).map((r) => r.id), 'no lot: the V0.4 catalogue, in its order');
 });
 
 test('a recorded lot older than an applied one can never be applied in order, and says so', () => {

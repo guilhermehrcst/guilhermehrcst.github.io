@@ -7,6 +7,13 @@ The suite has two kinds of test.
 
 Measured on 2026-10-12 by applying a release's deliberate steps (`docs/superpowers/qa/2026-10-12-v04-evidence/rc-apply.py`: promotion, 60 highlights released, Fundamental and Pré-Militar active, verify-dist hand lists) to a discardable worktree, with **no workaround** for any finding: build and verify-dist pass (24 pages), `tests/release-candidate/` passes, and exactly these fail (41 measured on 2026-10-12, plus one added with the menu fix from the Codex review on PR #38).
 
+**Since the incremental release engine (branch `feat/academy-incremental-release-engine-v01`):** a release
+no longer promotes staging into the catalogue; it applies authorized lots (`src/data/academy-release/`,
+`docs/academy/operacao-publicacao-incremental.md`). `rc-apply.py` is kept as the record of this measurement
+and is refused by the engine if run today. The guards a partial (lot) release meets are measured separately
+in `docs/superpowers/qa/2026-10-12-incremental-release/guards-AB.txt`. This table and its 42 rows are
+unchanged.
+
 Kinds: **A** guards against publication or activation (they must flip only with an authorised release); **B** snapshots of counts and lists that grow with the catalogue.
 
 | File | Test | Kind |

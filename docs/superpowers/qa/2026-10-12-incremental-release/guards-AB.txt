@@ -1,0 +1,34 @@
+not ok 62 - T2 higher education: six new offerings have conditional field destinations without premature groups
+not ok 63 - T2 technology: seven existing published tracks stay unchanged until future candidates enter catalogue
+not ok 66 - T2 all verified candidates have future placement; real publication flags remain unchanged
+not ok 67 - T2 higher education: the existing two-group copy remains unchanged until a new resource is published
+not ok 70 - T2 higher education: every future university course has an anchor when its group is published
+not ok 71 - T2 higher education: no staged group is rendered or described before the release
+not ok 73 - T2: draft matches the audited manifest exactly, slot by slot and in editorial order
+not ok 74 - T2: draft uses the original catalogue and two staging sets, never duplicates data
+not ok 75 - T2: all sixty provisional candidates obey P4 and the existing featured gate
+not ok 76 - T2: all nine previously missing destinations have conditional routes without public activation
+not ok 77 - T2: Fundamental and Pré-Militar remain preparing until a separately approved release
+not ok 80 - Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates
+not ok 86 - Gate B: publication remains disabled and all earlier partial attempts remain historical
+not ok 95 - staging today: every institution keeps its single-page link and count, exactly as before
+not ok 101 - production today: no lot applied, the 37 of V0.4 exactly, every staged record unpublished
+not ok 112 - 14. the repository release applies nothing and the staging records stay where they were
+not ok 122 - this PR applies no lot: production mode, nothing applied, the inventory is the 37 of V0.4
+not ok 133 - every count is the number of distinct published resources of that path or exam
+not ok 150 - objectivesFor derives, in the Home order, the objectives a subject has resources for
+not ok 151 - objectiveFacts counts what each path really holds
+not ok 155 - 37 published, 3 held back with a review note
+not ok 177 - P2: one status per path; PREPARING_PATHS is derived from it
+not ok 187 - P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged)
+not ok 190 - P1: no destination on a page in preparation; a published resource without a destination fails
+not ok 210 - the 22 canonical routes, exactly and in a stable order
+not ok 211 - the paths in preparation have pages but are not canonical (noindex, out of the sitemap)
+not ok 231 - facet options: only values some resource has, in the taxonomy order, each with its label
+not ok 254 - staged records are not published: not in the catalogue, not imported by any page or component
+not ok 255 - nothing is released or activated by this lot
+not ok 260 - the paths in preparation are named, and are paths
+not ok 267 - the tracks and their resources are exactly the spec
+not ok 272 - P4: the legacy set is exactly the 37 published today, and they need nothing new
+# pass 252
+# fail 32
