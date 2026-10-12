@@ -80,7 +80,9 @@ test('Gate B: all fourteen new typed resources obey the existing P4 contract', (
     const audited = selected.find((item) => item.id === resource.id);
     assert.ok(audited, resource.id);
     assert.deepEqual(resourceProblems(resource, atReview), [], resource.id);
-    assert.equal(resource.verified?.on, audited.reviewed_on, resource.id);
+    // The AprovaRJ institutional page was reopened on 2026-10-12 after the 11/10 editorial audit.
+    const sourceCheckDate = resource.id === 'cecierj-aprovarj' ? '2026-10-12' : audited.reviewed_on;
+    assert.equal(resource.verified?.on, sourceCheckDate, resource.id);
     assert.equal(resource.verified?.by, 'official-page', resource.id);
     assert.equal(resource.verified?.freeAccess, true, resource.id);
     assert.equal(resource.verified?.evidence?.url, resource.url, resource.id);
