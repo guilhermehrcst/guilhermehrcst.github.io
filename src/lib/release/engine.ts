@@ -342,12 +342,16 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   for (const id of baselineIds) if (!publishedInCatalogue.includes(id)) problems.push(`${id}: in the baseline but not a published catalogue record`);
   for (const r of input.catalogue) states.set(r.id, isPublishable(r) && r.id in baseline.records ? 'published' : 'held');
   for (const r of input.pool) states.set(r.id, 'candidate');
-  const baselineHosts = new Set(publishedInCatalogue.map((id) => new URL(records.get(id)!.url!).hostname));
+  // A V0.4 host is trusted for the institution published on it, never for any provider.
+  const hostOf = (id: string) => `${new URL(records.get(id)!.url!).hostname} ${records.get(id)!.provider}`;
+  const baselineHosts = new Set(publishedInCatalogue.map(hostOf));
 
   // Decisions, in lot order. Applied lots move ids to published or suspended: that is the public state.
   // Pending lots are then replayed on a copy, as if applied next in lot order: their decisions are checked
   // and the state they would reach is reported (ifApplied), never published.
   const approval = new Map<string, { entry: LotEntry; lot: LotManifest }>();
+  /** Approvals in recorded, not yet applied lots: checked like applied ones, never published. */
+  const recorded: { entry: LotEntry; lot: LotManifest }[] = [];
   const replay = (lot: LotManifest, at: Map<string, EditorialState>, live: boolean): void => {
     const move = (id: string, to: EditorialState): boolean => {
       const from = at.get(id);
@@ -368,7 +372,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
         if (live) {
           approval.set(entry.id, { entry, lot });
           suspended.delete(entry.id);
-        }
+        } else recorded.push({ entry, lot });
       }
     }
     for (const suspension of lot.suspensions) {
@@ -384,6 +388,31 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   for (const lot of pending) replay(lot, pendingStates, false);
   for (const [id, state] of pendingStates) if (states.get(id) !== state) pendingDecisions.set(id, state);
 
+  /** Everything that does not match between an approval and the record it names. */
+  const approvalProblems = (entry: LotEntry, lot: LotManifest, r: LearningResource): string[] => {
+    const found: string[] = [];
+    const at = `${lot.lot} ${r.id}`;
+    const digest = digestOf(r);
+    if (r.url !== entry.url) found.push(`${at}: approved for ${entry.url}, the record points to ${String(r.url)}`);
+    if (digest !== entry.digest) found.push(`${at}: the record changed after its approval (digest ${digest}, approved ${entry.digest})`);
+    if (r.provider !== entry.institution) found.push(`${at}: approved for ${entry.institution}, the record says ${r.provider}`);
+    if (r.format !== entry.format) found.push(`${at}: approved as ${entry.format}, the record says ${r.format}`);
+    if (r.verified?.on !== entry.evidence.on) found.push(`${at}: approved evidence of ${entry.evidence.on}, the record's is of ${String(r.verified?.on)}`);
+    if (r.verified?.by !== entry.evidence.method) found.push(`${at}: approved method ${entry.evidence.method}, the record's is ${String(r.verified?.by)}`);
+    if (r.verified?.evidence?.url !== entry.evidence.url) found.push(`${at}: approved evidence at ${entry.evidence.url}, the record's is at ${String(r.verified?.evidence?.url)}`);
+    if (r.verified?.evidence?.note !== entry.evidence.observed) found.push(`${at}: the approved observation is not the record's evidence note`);
+    if (catalogueIds.has(r.id) && !(r.id in baseline.records)) found.push(`${at}: a held catalogue record is published only by moving it to the pool`);
+    const host = r.url ? new URL(r.url).hostname : '';
+    if (!baselineHosts.has(`${host} ${entry.institution}`) && !lot.hosts.some((h) => h.host === host && h.institution === entry.institution)) {
+      found.push(`${at}: ${host} is not a host this lot reviewed for ${entry.institution}`);
+    }
+    found.push(...urlProblems(r.id, r.url), ...input.validate(r));
+    if (!isPublishable(r)) found.push(`${r.id}: approved but not publishable (no URL or free access)`);
+    return found;
+  };
+  // A recorded approval must already match its record: an authorized lot never drifts from its candidate.
+  for (const { entry, lot } of recorded) problems.push(...approvalProblems(entry, lot, records.get(entry.id)!));
+
   // The projection, and each published record checked against the decision that published it.
   const published: PublishedLearningResource[] = [];
   const hosts = new Set<string>();
@@ -392,28 +421,13 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     if (states.get(id) !== 'published') continue;
     const r = records.get(id)!;
     const decision = approval.get(id);
-    const digest = digestOf(r);
-    if (!decision) {
+    if (decision) problems.push(...approvalProblems(decision.entry, decision.lot, r));
+    else {
+      const digest = digestOf(r);
       if (digest !== baseline.records[id]) problems.push(`${id}: changed since it was published (digest ${digest}); it needs a new approval`);
-    } else {
-      const { entry, lot } = decision;
-      const at = `${lot.lot} ${id}`;
-      if (r.url !== entry.url) problems.push(`${at}: approved for ${entry.url}, the record points to ${String(r.url)}`);
-      if (digest !== entry.digest) problems.push(`${at}: the record changed after its approval (digest ${digest}, approved ${entry.digest})`);
-      if (r.provider !== entry.institution) problems.push(`${at}: approved for ${entry.institution}, the record says ${r.provider}`);
-      if (r.format !== entry.format) problems.push(`${at}: approved as ${entry.format}, the record says ${r.format}`);
-      if (r.verified?.on !== entry.evidence.on) problems.push(`${at}: approved evidence of ${entry.evidence.on}, the record's is of ${String(r.verified?.on)}`);
-      if (r.verified?.by !== entry.evidence.method) problems.push(`${at}: approved method ${entry.evidence.method}, the record's is ${String(r.verified?.by)}`);
-      if (r.verified?.evidence?.url !== entry.evidence.url) problems.push(`${at}: approved evidence at ${entry.evidence.url}, the record's is at ${String(r.verified?.evidence?.url)}`);
-      if (catalogueIds.has(id) && !(id in baseline.records)) problems.push(`${at}: a held catalogue record is published only by moving it to the pool`);
-      const host = r.url ? new URL(r.url).hostname : '';
-      if (!baselineHosts.has(host) && !lot.hosts.some((h) => h.host === host && h.institution === entry.institution)) {
-        problems.push(`${at}: ${host} is not a host this lot reviewed for ${entry.institution}`);
-      }
+      problems.push(...input.validate(r));
     }
-    if (decision) problems.push(...urlProblems(id, r.url));
-    problems.push(...input.validate(r));
-    if (!isPublishable(r)) { problems.push(`${id}: approved but not publishable (no URL or free access)`); continue; }
+    if (!isPublishable(r)) continue; // reported by approvalProblems; a baseline record always is
     published.push(r);
     hosts.add(new URL(r.url).hostname);
   }

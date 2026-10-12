@@ -912,7 +912,9 @@ for (const f of files.filter((f) => /\.(html|css|js)$/.test(f))) {
     const name = relative(DIST, f).split(sep).join('/');
     const text = /\.(html|js|json|xml|txt|css|svg)$/.test(f) ? readFileSync(f, 'utf8') : '';
     for (const id of absent) {
-      const re = new RegExp(`(?<![\\w-])${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`);
+      // The id as a token of its own, or after the generated `recurso-` prefix (anchors and their links);
+      // never as part of a longer id.
+      const re = new RegExp(`(?:(?<![\\w-])|(?<=recurso-))${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`);
       if (re.test(text) || re.test(name)) fail('/' + name, `the suspended resource ${id} is still in dist`);
     }
   }

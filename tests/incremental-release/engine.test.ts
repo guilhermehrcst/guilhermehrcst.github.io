@@ -240,3 +240,31 @@ test('a recorded lot older than an applied one can never be applied in order, an
   assert.match(problemsOf(project({ lots: [a, b], release: releaseOf([b], inventoryWith(['ef-obmep-fracoes-6'])) })), /L001-tecnologia: recorded after L002-fundamental was applied/);
 });
 
+
+// Codex review on PR #43 -------------------------------------------------------------------------------
+
+test('a V0.4 host trusts only its own institution: another provider on it needs the lot to review it', () => {
+  const g = record('google-mlcc');
+  const url = 'https://cs50.harvard.edu/outra-pagina/';
+  const forged = { ...g, url, verified: { ...g.verified!, evidence: { ...g.verified!.evidence!, url } } };
+  const pool = POOL.map((r) => (r.id === 'google-mlcc' ? forged : r));
+  const lot = lotOf('L001-host', [entryFor('google-mlcc', { url, digest: digestOf(forged), evidence: { ...entryFor('google-mlcc').evidence, url } })], { hosts: [] });
+  assert.match(problemsOf(project({ pool, lots: [lot], release: releaseOf([lot], inventoryWith(['google-mlcc'])) })),
+    /cs50\.harvard\.edu is not a host this lot reviewed for Google/);
+  // The same institution on its V0.4 host needs no new review.
+  const mit = lotOf('L001-host', [entryFor('mit-1801sc')], { hosts: [] });
+  assert.deepEqual(project({ lots: [mit], release: releaseOf([mit], inventoryWith(['mit-1801sc'])) }).problems, []);
+});
+
+test('the approved evidence is the record\'s evidence: what was observed must match its note', () => {
+  const lot = lotOf('L001-evidencia', [entryFor('google-mlcc', { evidence: { ...entryFor('google-mlcc').evidence, observed: 'Outra observação qualquer, sem relação com o registro.' } })]);
+  assert.match(problemsOf(project({ lots: [lot], release: releaseOf([lot], inventoryWith(['google-mlcc'])) })), /google-mlcc: the approved observation is not the record's evidence note/);
+});
+
+test('a recorded approval that does not match its record fails the build before it is applied', () => {
+  const lot = lotOf('L001-pendente', [entryFor('google-mlcc', { digest: `sha256:${'0'.repeat(64)}`, url: 'https://developers.google.com/outra/' })]);
+  const p = project({ lots: [lot], release: releaseOf([], inventoryWith([])) });
+  assert.match(problemsOf(p), /L001-pendente google-mlcc: approved for https:\/\/developers\.google\.com\/outra\//);
+  assert.match(problemsOf(p), /L001-pendente google-mlcc: the record changed after its approval/);
+  assert.ok(!ids(p).includes('google-mlcc'), 'still not published');
+});
