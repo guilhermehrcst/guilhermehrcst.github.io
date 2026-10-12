@@ -385,3 +385,33 @@ test('a simulated manifest is refused in a production release even when it is no
   assert.match(problemsOf(p), /L001-ensaio: a simulated lot in a production release/);
   assert.equal(p.ifApplied.get('google-mlcc'), undefined);
 });
+
+// Codex review, round 6 ---------------------------------------------------------------------------------
+
+test('a backdated hold never moves the take-out date earlier than a suspension', () => {
+  const g = record('google-mlcc');
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const b = lotOf('L002-suspensao', [], { suspensions: [{ id: 'google-mlcc', reason: 'Página mudou', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
+  const v = lotOf('L003-verificado', [entryFor('google-mlcc', { decision: 'verified', decidedOn: '2026-10-12' })]);
+  const hold = lotOf('L004-retido', [entryFor('google-mlcc', { decision: 'held', reason: 'Retido', decidedOn: '2026-10-11' })]);
+  const again = lotOf('L005-retorno', [entryFor('google-mlcc')]);
+  const all = [a, b, v, hold, again];
+  assert.match(problemsOf(project({ lots: all, release: releaseOf(all, inventoryWith(['google-mlcc'])) })), /L005-retorno: google-mlcc returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
+  void g;
+});
+
+test('a new lot must sort after every ledgered lot, rolled back or not', () => {
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const c = lotOf('L003-fundamental', [entryFor('ef-obmep-fracoes-6')]);
+  const b = lotOf('L002-tarde', [entryFor('odin-foundations')]);
+  const release = releaseOf([a], inventoryWith(['google-mlcc']), { ledger: releaseOf([a, c], []).ledger });
+  assert.match(problemsOf(project({ lots: [a, b, c], release })), /L002-tarde: recorded after L003-fundamental was applied/);
+});
+
+test('a recorded approval may not reuse a published or another recorded URL', () => {
+  const cs50x = record('cs50x');
+  const clone = { ...record('google-mlcc'), url: cs50x.url };
+  const pool = POOL.map((r) => (r.id === 'google-mlcc' ? clone : r));
+  const lot = lotOf('L001-dup', [entryFor('google-mlcc', { url: cs50x.url!, digest: digestOf(clone) })], { hosts: [{ host: 'cs50.harvard.edu', institution: clone.provider }] });
+  assert.match(problemsOf(project({ pool, lots: [lot], release: releaseOf([], inventoryWith([])) })), /google-mlcc: same URL as cs50x/);
+});

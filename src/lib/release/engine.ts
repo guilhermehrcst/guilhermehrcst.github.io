@@ -377,6 +377,11 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   /** Each id's latest entry, applied or recorded: a verification that is still the last word on a record
    *  is bound to it like an approval (a later decision supersedes it, so history never breaks). */
   const latest = new Map<string, { entry: LotEntry; lot: LotManifest }>();
+  // The take-out date only moves later: a backdated hold never weakens an earlier suspension's boundary.
+  const takeOut = (map: Map<string, string>, id: string, on: string): void => {
+    const current = map.get(id);
+    map.set(id, current !== undefined && current > on ? current : on);
+  };
   const replay = (lot: LotManifest, at: Map<string, EditorialState>, takenOut: Map<string, string>, live: boolean): void => {
     const move = (id: string, to: EditorialState): boolean => {
       const from = at.get(id);
@@ -397,7 +402,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
       if (outOn !== undefined && entry.decision !== 'held' && entry.evidence.on < outOn) {
         problems.push(`${lot.lot}: ${entry.id} returns on evidence of ${entry.evidence.on}, older than the decision of ${outOn} that took it out`);
       }
-      if (entry.decision === 'held') takenOut.set(entry.id, entry.decidedOn);
+      if (entry.decision === 'held') takeOut(takenOut, entry.id, entry.decidedOn);
       // Only an approval clears it: its evidence is then bound to the record (approvalProblems).
       else if (entry.decision === 'approved') takenOut.delete(entry.id);
       latest.set(entry.id, { entry, lot });
@@ -413,7 +418,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
       if (seen.has(suspension.id)) problems.push(`${lot.lot}: ${suspension.id} is decided twice`);
       seen.add(suspension.id);
       if (move(suspension.id, 'suspended')) {
-        takenOut.set(suspension.id, suspension.decidedOn);
+        takeOut(takenOut, suspension.id, suspension.decidedOn);
         if (live) suspended.set(suspension.id, lot.lot);
       }
     }
@@ -421,7 +426,8 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   /** id → the date of the decision (held or suspension) that took it out, until a fresh verification. */
   const takenOut = new Map<string, string>();
   for (const lot of applied) replay(lot, states, takenOut, true);
-  const lastApplied = appliedNames[appliedNames.length - 1];
+  // A new lot sorts after every lot ever applied (the ledger), rolled back or not: the ledger only grows.
+  const lastApplied = [...appliedNames, ...ledgerNames].sort().at(-1);
   for (const lot of pending) if (lastApplied !== undefined && lot.lot < lastApplied) problems.push(`${lot.lot}: recorded after ${lastApplied} was applied, it can no longer be applied in order`);
   const pendingStates = new Map(states);
   const pendingTakenOut = new Map(takenOut);
@@ -479,6 +485,14 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   for (const r of published) {
     const other = urls.get(r.url);
     if (other) problems.push(`${r.id}: same URL as ${other} (${r.url})`);
+    urls.set(r.url, r.id);
+  }
+  // A recorded approval would join this projection: its URL may not repeat a published or another recorded one.
+  for (const { entry } of recorded) {
+    const r = records.get(entry.id)!;
+    if (!r.url || states.get(r.id) === 'published') continue;
+    const other = urls.get(r.url);
+    if (other && other !== r.id) problems.push(`${r.id}: same URL as ${other} (${r.url})`);
     urls.set(r.url, r.id);
   }
 
