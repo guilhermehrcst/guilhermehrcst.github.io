@@ -69,8 +69,8 @@ for (const width of [390, 1440]) {
   // Test the actual `Ensino Superior` objective copy in both staging and RC,
   // instead of incorrectly looking for all seven full labels in condensed text.
   const homeSummary = (await p.locator('.objectives a[href="/ensino-superior/"] .what').innerText())
-    .replace(/\\s+/g, ' ').trim();
-  const mentionsFiveNewAreas = /Matemática,\\s*Computação\\s+e\\s+mais\\s+5\\s+áreas/i.test(homeSummary);
+    .replace(/\s+/g, ' ').trim();
+  const mentionsFiveNewAreas = /Matemática,\s*Computação\s+e\s+mais\s+5\s+áreas/i.test(homeSummary);
   const staleCopy = /Por enquanto|somente Matemática e Computação/i.test(homeSummary);
   ok(`D12 Home Superior summary ${expectNine ? 'reflects 5 published new fields' : 'does not advertise unreleased fields'}`,
     expectNine ? mentionsFiveNewAreas && !staleCopy : !mentionsFiveNewAreas,
