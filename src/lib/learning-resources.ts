@@ -24,7 +24,9 @@ export type LearningRegistrationId = 'required' | 'not-required' | 'unconfirmed'
  *  channel. A search index or any indirect method never verifies a resource (V0.4, review of P4). */
 export const VERIFICATION_METHODS = ['official-page', 'youtube-page'] as const;
 export type VerificationMethod = (typeof VERIFICATION_METHODS)[number];
-export type LearningCertificateId = 'none' | 'statement' | 'available' | 'unconfirmed';
+/** 'statement': a statement of completion (FGV); 'participation': a statement of participation (The Open
+ *  University), never read as completion (V0.4 QA). */
+export type LearningCertificateId = 'none' | 'statement' | 'participation' | 'available' | 'unconfirmed';
 export type LearningDurationUnit = 'hours' | 'weeks';
 
 export type TechnologyTopicId =

@@ -83,7 +83,15 @@ test('no lesson, past exam or reference becomes a course; the formats are the ob
     assert.equal(r.format, row['official_format_observed'], r.id);
     if (row['school_years']) assert.deepEqual([...(r.schoolYears ?? [])], [Number(row['school_years'])], r.id);
     if (row['registration_status']) assert.equal(r.registration, row['registration_status'], r.id);
-    if (row['certificate_status']) assert.equal(r.certificate, row['certificate_status'], r.id);
+    // The sheet's 'statement' for The Open University is, by its own note, a statement of *participation*: the
+    // record now types it as such (V0.4 QA). Every other value is the sheet's, verbatim.
+    const REFINED: Record<string, [sheet: string, record: string]> = { 'ou-environment-treading-lightly': ['statement', 'participation'] };
+    const refined = REFINED[r.id];
+    if (refined) {
+      assert.equal(row['certificate_status'], refined[0], r.id);
+      assert.match(row['evidence_note'] ?? '', /declaração gratuita de participação/, r.id);
+      assert.equal(r.certificate, refined[1], r.id);
+    } else if (row['certificate_status']) assert.equal(r.certificate, row['certificate_status'], r.id);
   }
 });
 
