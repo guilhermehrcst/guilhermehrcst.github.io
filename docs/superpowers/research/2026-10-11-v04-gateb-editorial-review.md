@@ -1,14 +1,14 @@
-# Gate B | Auditoria editorial das 60 posições, revisão 02
+# Gate B | Auditoria editorial das 60 posições, revisão 03
 
-**Revisão:** 11/10/2026. **Escopo:** documentação e fontes, não publicação. **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **PR #35:** pesquisa, sem alteração em `src/`.
+**Revisão:** 12/10/2026. **Escopo:** documentação e fontes, não publicação. **Base:** `40bf3e4d920720e066d4026f08aa7a0b16bca61c`. **PR #35:** pesquisa, sem alteração em `src/`.
 
 ## Resultado
 
-**51/60 posições com fonte e escopo verificados diretamente**, **9 pendentes**. São **60 IDs distintos**, 10 em cada um dos seis caminhos. Nenhuma destas decisões é homologação final de todo o Gate B: **`FEATURED_RELEASE` permanece em staging, 0/60 destaques liberados e nenhum recurso novo publicado**.
+**60/60 posições com fonte e escopo conferidos diretamente, 0 pendentes na shortlist.** São 60 IDs únicos, dez por caminho. Em relação às 51/60 da revisão 02, oito provas oficiais foram verificadas e a nona posição foi resolvida por substituição editorial documentada: prova oficial ESA 2026 no lugar da EsPCEx cujo servidor negou o PDF. **A prova da EsPCEx não foi validada** e permanece em backlog fora das 60 posições.
 
-A auditoria passou de 45 para 51 fontes aprovadas nesta revisão. Foram substituídos cinco links de questões da UERJ que falharam por **cinco apostilas integralmente abertas** em `canal.cecierj.edu.br`, com disciplinas diferentes. Isso **não apaga os cinco recursos legados da UERJ já publicados no catálogo**, apenas muda a proposta dos destaques. Um acervo da ESA sem fonte foi substituído pelo curso gratuito AprovaRJ. **Cecierj não é UERJ:** as novas apostilas são materiais didáticos gerais do Pré-Vestibular Social, rotulados como `reference`, nunca como questões oficiais da UERJ.
+Isto conclui a **triagem de fonte e escopo**, não a homologação nem a publicação. `FEATURED_RELEASE` continua em `staging`, **0/60 destaques liberados e 0 recursos novos publicados**. Os 37 recursos legados permanecem preservados. Gate B ainda depende de registros tipados, validação P4, QA, revisão independente e decisão humana sobre o release.
 
-Os PDFs oficiais de Português (2021, 162 páginas), Matemática (2015, 118 páginas), História (2015, 128 páginas), Geografia (2015, 126 páginas) e Física (2021, 188 páginas) foram abertos diretamente e tiveram texto e sumário inspecionados. Material PDF livre não exige cadastro para leitura; certificado não confirmado. O AprovaRJ tem página oficial confirmando gratuidade, acesso contínuo mediante cadastro, videoaulas, exercícios, simulados e ausência de certificado. **Conteúdo interno atrás do login do AprovaRJ não foi aberto**, o que deve ser informado ao publicar ou submeter o item à homologação final.
+Permanecem as seis substituições da revisão 02, incluindo cinco apostilas gerais da Fundação Cecierj (não são questões oficiais da UERJ) e o curso gratuito AprovaRJ. A prova ESA 2026 é um recurso de prática distinto do AprovaRJ.
 
 ## Cobertura por caminho
 
@@ -16,13 +16,13 @@ Os PDFs oficiais de Português (2021, 162 páginas), Matemática (2015, 118 pág
 |---|---:|---:|---:|
 | Ensino Fundamental | 10 | 0 | 10 |
 | Ensino Médio | 10 | 0 | 10 |
-| Vestibular | 9 | 1 | 10 |
-| Pré-Militar | 2 | 8 | 10 |
+| Vestibular | 10 | 0 | 10 |
+| Pré-Militar | 10 | 0 | 10 |
 | Ensino Superior | 10 | 0 | 10 |
 | Tecnologia | 10 | 0 | 10 |
-| **Total** | **51** | **9** | **60** |
+| **Total** | **60** | **0** | **60** |
 
-## Substituições desta revisão
+## Substituições editoriais acumuladas
 
 | ID anterior, sem nova verificação | Novo recurso | Formato correto | Fonte institucional |
 |---|---|---|---|
@@ -32,22 +32,35 @@ Os PDFs oficiais de Português (2021, 162 páginas), Matemática (2015, 118 pág
 | `uerj-geography-practice` | `cecierj-pvs-geografia-mod1` | reference | [Fonte](https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf) |
 | `uerj-physics-practice` | `cecierj-pvs-fisica-v1` | reference | [Fonte](https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf) |
 | `pm-esa-provas` | `cecierj-aprovarj` | course | [Fonte](https://extensao.cecierj.edu.br/cursos/aprovarj/) |
+| `pm-espcex-provas` | `pm-esa-provas-2026` | past-exam | [PDF ESA 2026](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) |
 
-Os novos IDs não estão em `src/lib/staging.ts` nem em `src/lib/learning-resources.ts`; o JSON é apenas documentação. Exigem tipagem, `resourceProblems`, evidência P4, roteamento e testes antes de qualquer promoção. Não declarar `registration` ou `certificate` dos PDFs além do que é verificável.
+Os IDs substitutos ainda são exclusivamente editoriais, não estão em `src/lib/staging.ts` nem em `src/lib/learning-resources.ts`; o JSON é apenas documentação. Exigem tipagem, `resourceProblems`, evidência P4, roteamento e testes antes de qualquer promoção. Não declarar `registration` ou `certificate` dos PDFs além do que é verificável.
 
-## 9 pendências ainda bloqueadas
+## Evidências diretas adicionadas em 12/10/2026
 
-- **Vestibular #3: `inep-enem-provas-gabaritos`**. Índice do INEP abre, mas em 11/10 a prova e o gabarito de 2025 (caderno azul) falharam ao abrir em download.inep.gov.br com erro 502. Necessário ao menos um PDF de prova confirmado; não homologar agora. [Página oficial](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos).
-- **Pré-Militar #2: `pm-cn-provas`**. Índice Colégio Naval abre e lista ZIPs de provas; o anexo de prova não abriu neste acesso. [Página oficial](https://www.marinha.mil.br/sspm/colegionaval/colegio_princ).
-- **Pré-Militar #3: `pm-en-provas`**. Índice Escola Naval abre e lista ZIPs de provas; o anexo de prova não abriu neste acesso. [Página oficial](https://www.marinha.mil.br/sspm/node/95).
-- **Pré-Militar #4: `pm-eear-provas`**. Índice EEAR lista provas/gabaritos, mas PDFs das provas não foram confirmados; gabarito sozinho não basta. [Página oficial](https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25).
-- **Pré-Militar #5: `pm-eam-provas`**. Página oficial das Escolas de Aprendizes-Marinheiros lista arquivos; anexo de prova não foi inspecionado. [Página oficial](https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag).
-- **Pré-Militar #6: `pm-afa-provas`**. Índice oficial da FAB foi localizado, mas acesso direto devolveu 403. É vedado usar trecho de buscador como fonte. [Página oficial](https://www.fab.mil.br/ingresso/anteriores.html).
-- **Pré-Militar #7: `pm-epcar-provas`**. Índice oficial EPCAR/FAB foi localizado, mas acesso direto devolveu 403. Não homologar. [Página oficial](https://www.fab.mil.br/ingresso/anteriores.html).
-- **Pré-Militar #9: `pm-espcex-provas`**. Nenhum acervo específico e verificável de provas da EsPCEx foi aberto em fonte oficial. Sem URL verificada.
-- **Pré-Militar #10: `pm-ime-provas`**. Página de provas anteriores do IME CFG (ensino médio) foi localizada, mas a abertura direta retornou 502. [Página oficial](https://www.ime.eb.mil.br/index.php).
+Cada posição foi validada por abertura de PDF em host institucional HTTPS, com enunciados e escopo realmente inspecionados. Não se contou índice de links nem trecho de busca como prova. Os PDFs abriram sem cadastro ou pagamento, não conferem certificado e são predominantemente em português, com provas que também incluem Inglês. As páginas examinadas descrevem o recorte visto, não leitura integral de todo o caderno.
 
-**Atenção:** o índice de provas ENEM do INEP está acessível, mas os anexos tentados retornaram erro 502; ainda não é prova de acesso ao caderno de questões. Na Marinha, abrir o índice não equivale a abrir o ZIP da prova. No IME, conteúdo visto em resultado de busca não equivale a conseguir abrir a página nem seus PDFs. A aprovação do AprovaRJ não habilita reclassificar os oito acervos militares ainda indisponíveis.
+| ID | Páginas totais | Páginas examinadas | Anexo oficial | Escopo visto |
+|---|---:|---:|---|---|
+| `inep-enem-provas-gabaritos` | 32 | 3 | [PDF](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf) | ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente. |
+| `pm-cn-provas` | 19 | 5 | [PDF](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf) | CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice. |
+| `pm-en-provas` | 19 | 4 | [PDF](https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961) | CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto. |
+| `pm-eear-provas` | 17 | 3 | [PDF](https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf) | EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas. |
+| `pm-eam-provas` | 15 | 5 | [PDF](https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf) | CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados. |
+| `pm-afa-provas` | 24 | 3 | [PDF](https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf) | AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído. |
+| `pm-epcar-provas` | 17 | 3 | [PDF](https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf) | EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado. |
+| `pm-esa-provas-2026` | 24 | 24 | [PDF](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) | ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ. |
+| `pm-ime-provas` | 24 | 5 | [PDF](https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf) | IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice. |
+
+**ENEM 2024:** [gabarito oficial do 1º dia, caderno azul](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D1_CD1.pdf) também foi aberto, com as respostas identificadas. Não se afirma ter reaberto o caderno 2025 que falhou na revisão anterior.
+
+**EEAR:** PDF da prova CFS 1/2024 inclui o gabarito e, após ele, enunciados reais. A existência da capa de gabarito não pode levar à conclusão equivocada de que o material contém apenas respostas.
+
+**Escola Naval:** caderno CPAEN/2025 em PDF independente aberto no sistema oficial de inscrição da Marinha; ZIPs do índice não foram inspecionados e não são usados como prova nesta revisão.
+
+**EsPCEx, restrição preservada:** o [PDF oficial de 2025](https://espcex.eb.mil.br/images/concurso/provas/provas2025/2025%20PROVA%20MODELO%20C.pdf) devolveu `Request Rejected` em múltiplos acessos. Está fora da shortlist e **não foi validado**. Foi substituído na posição editorial pelo caderno oficial da **ESA 2026**, não confundido com o curso AprovaRJ. Recomenda-se retomar EsPCEx separadamente quando a instituição permitir acesso.
+
+**Acessibilidade externa:** alguns servidores bloquearam leitores automatizados; os anexos acima foram de fato recebidos ou processados como `application/pdf` pela rota alternativa. Revalidar abertura em navegador comum no Gate D. Nenhum recurso novo está em produção.
 
 ## Inventário editorial completo
 
@@ -75,7 +88,7 @@ Os novos IDs não estão em `src/lib/staging.ts` nem em `src/lib/learning-resour
 | Ensino Médio | 10 | `kultivi-english-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/ingles-para-enem) | Página oficial da Kultivi, curso de Inglês voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
 | Vestibular | 1 | `kultivi-enem-completo` | Fonte aprovada | [Oficial](https://kultivi.com/curso/enem-completo) | Página própria de ENEM Completo confirma curso multidisciplinar gratuito, matrícula com conta e certificado gratuito. |
 | Vestibular | 2 | `kultivi-writing-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/redacao-para-enem) | Página própria de Redação para ENEM confirma curso gratuito e certificado; ID legado preservado. |
-| Vestibular | 3 | `inep-enem-provas-gabaritos` | Pendente | [Oficial](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos) | Índice do INEP abre, mas em 11/10 a prova e o gabarito de 2025 (caderno azul) falharam ao abrir em download.inep.gov.br com erro 502. Necessário ao menos um PDF de prova confirmado; não homologar agora. |
+| Vestibular | 3 | `inep-enem-provas-gabaritos` | Fonte aprovada | [Oficial](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos) | ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente. |
 | Vestibular | 4 | `fuvest-acervo-2026` | Fonte aprovada | [Oficial](https://www.fuvest.br/acervo-vestibular-2026/) | Índice oficial da Fuvest 2026 aberto; gabarito PDF e simulado PDF foram inspecionados. Não afirmar que todos os cadernos de prova abriram. |
 | Vestibular | 5 | `inep-writing-2026` | Fonte aprovada | [Oficial](https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante) | Cartilha oficial da Redação ENEM 2026, material de referência/prática, não curso. |
 | Vestibular | 6 | `cecierj-pvs-portugues-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf) | PDF institucional integral aberto em 11/10/2026; 162 páginas, material didático de Língua Portuguesa publicado pela Fundação Cecierj em 2021. Texto, leitura, coesão e exercícios; referência de estudo, não banco de questões da UERJ nem curso completo. |
@@ -84,15 +97,15 @@ Os novos IDs não estão em `src/lib/staging.ts` nem em `src/lib/learning-resour
 | Vestibular | 9 | `cecierj-pvs-geografia-mod1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf) | PDF integral de 126 páginas aberto em 11/10/2026; apostila de 2015 da Fundação Cecierj com industrialização, urbanização, globalização e exercícios do Enem. Material de referência, não banco de questões da UERJ. |
 | Vestibular | 10 | `cecierj-pvs-fisica-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf) | PDF integral de 188 páginas aberto em 11/10/2026; volume de Física de 2021 da Fundação Cecierj, com cinemática, movimentos e exercícios. Material de referência, não simulador/questões da UERJ. |
 | Pré-Militar | 1 | `ita-provas-anteriores` | Fonte aprovada | [Oficial](https://vestibular.ita.br/provas.htm) | Índice oficial do ITA reaberto; PDF da prova de 2025 e respectivo gabarito inspecionados diretamente. |
-| Pré-Militar | 2 | `pm-cn-provas` | Pendente | [Oficial](https://www.marinha.mil.br/sspm/colegionaval/colegio_princ) | Índice Colégio Naval abre e lista ZIPs de provas; o anexo de prova não abriu neste acesso. |
-| Pré-Militar | 3 | `pm-en-provas` | Pendente | [Oficial](https://www.marinha.mil.br/sspm/node/95) | Índice Escola Naval abre e lista ZIPs de provas; o anexo de prova não abriu neste acesso. |
-| Pré-Militar | 4 | `pm-eear-provas` | Pendente | [Oficial](https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25) | Índice EEAR lista provas/gabaritos, mas PDFs das provas não foram confirmados; gabarito sozinho não basta. |
-| Pré-Militar | 5 | `pm-eam-provas` | Pendente | [Oficial](https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag) | Página oficial das Escolas de Aprendizes-Marinheiros lista arquivos; anexo de prova não foi inspecionado. |
-| Pré-Militar | 6 | `pm-afa-provas` | Pendente | [Oficial](https://www.fab.mil.br/ingresso/anteriores.html) | Índice oficial da FAB foi localizado, mas acesso direto devolveu 403. É vedado usar trecho de buscador como fonte. |
-| Pré-Militar | 7 | `pm-epcar-provas` | Pendente | [Oficial](https://www.fab.mil.br/ingresso/anteriores.html) | Índice oficial EPCAR/FAB foi localizado, mas acesso direto devolveu 403. Não homologar. |
+| Pré-Militar | 2 | `pm-cn-provas` | Fonte aprovada | [Oficial](https://www.marinha.mil.br/sspm/colegionaval/colegio_princ) | CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice. |
+| Pré-Militar | 3 | `pm-en-provas` | Fonte aprovada | [Oficial](https://www.marinha.mil.br/sspm/node/95) | CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto. |
+| Pré-Militar | 4 | `pm-eear-provas` | Fonte aprovada | [Oficial](https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25) | EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas. |
+| Pré-Militar | 5 | `pm-eam-provas` | Fonte aprovada | [Oficial](https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag) | CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados. |
+| Pré-Militar | 6 | `pm-afa-provas` | Fonte aprovada | [Oficial](https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf) | AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído. |
+| Pré-Militar | 7 | `pm-epcar-provas` | Fonte aprovada | [Oficial](https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf) | EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado. |
 | Pré-Militar | 8 | `cecierj-aprovarj` | Fonte aprovada | [Oficial](https://extensao.cecierj.edu.br/cursos/aprovarj/) | Página oficial da Fundação Cecierj aberta em 11/10/2026: programa online gratuito, inscrições contínuas, videoaulas, exercícios e simulados; inclui ESA, EsPCEx, EPCAR, AFA, ITA, IME, Marinha e EEAR. Cadastro gratuito obrigatório; sem certificado. Área autenticada não foi acessada. É curso preparatório geral, não provas anteriores da ESA. |
-| Pré-Militar | 9 | `pm-espcex-provas` | Pendente | Não localizada | Nenhum acervo específico e verificável de provas da EsPCEx foi aberto em fonte oficial. |
-| Pré-Militar | 10 | `pm-ime-provas` | Pendente | [Oficial](https://www.ime.eb.mil.br/index.php) | Página de provas anteriores do IME CFG (ensino médio) foi localizada, mas a abertura direta retornou 502. |
+| Pré-Militar | 9 | `pm-esa-provas-2026` | Fonte aprovada | [Oficial](https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf) | ESA 2026, Área Geral, tipo A: prova de 24 páginas, com enunciados de Matemática, Português e outras disciplinas. Substituição explícita da EsPCEx bloqueada, distinta do curso AprovaRJ. |
+| Pré-Militar | 10 | `pm-ime-provas` | Fonte aprovada | [Oficial](https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf) | IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice. |
 | Ensino Superior | 1 | `mit-1801sc` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/) | MIT OCW, Single Variable Calculus: vídeos, exercícios e notas de cálculo, sem diploma/certificado. |
 | Ensino Superior | 2 | `mit-801sc` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/) | MIT OCW, Classical Mechanics: aulas e exercícios oficiais de mecânica, sem diploma/certificado. |
 | Ensino Superior | 3 | `mit-7012` | Fonte aprovada | [Oficial](https://ocw.mit.edu/courses/7-012-introduction-to-biology-fall-2004/) | MIT OCW, Introduction to Biology: aulas e atividades gratuitas de biologia. |
