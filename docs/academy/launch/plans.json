@@ -1,0 +1,14 @@
+{
+  "plan-b": {
+    "lot": "L001",
+    "activate": [],
+    "ids": ["inep-enem-provas-gabaritos", "fuvest-acervo-2026", "mit-1801sc", "yale-psyc-110", "odin-foundations", "ms-learn-cloud-concepts"],
+    "published": 43
+  },
+  "plan-a": {
+    "lot": "L001",
+    "activate": ["ensino-fundamental", "pre-militar"],
+    "ids": ["inep-enem-provas-gabaritos", "fuvest-acervo-2026", "mit-1801sc", "yale-psyc-110", "odin-foundations", "ms-learn-cloud-concepts", "ef-sme-alfabeto-1", "ef-sme-funcoes-9", "ita-provas-anteriores"],
+    "published": 46
+  }
+}

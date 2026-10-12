@@ -1,0 +1,460 @@
+diff --git a/scripts/verify-dist.mjs b/scripts/verify-dist.mjs
+index 64471d9..f3d0d90 100644
+--- a/scripts/verify-dist.mjs
++++ b/scripts/verify-dist.mjs
+@@ -11,7 +11,7 @@ const SITE = 'https://guilhermehrcst.github.io';
+ 
+ /** The indexable pages (V0.3: each ready path, Vestibular's exams after it). */
+ const CANONICAL = [
+-  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
++  '/', '/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/pre-militar/', '/ensino-superior/', '/tecnologia/', '/materias/',
+   '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
+   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
+   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
+@@ -22,7 +22,8 @@ const CANONICAL = [
+ /** The six paths, in the approved order (V0.3), and the paths still in preparation: built and linked, but
+  *  noindex, out of the sitemap, and listing no resource. */
+ const PATHS = ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/pre-militar/', '/ensino-superior/', '/tecnologia/'];
+-const PREPARING = ['/ensino-fundamental/', '/pre-militar/'];
++// Fundamental and Pré-Militar active since L001, each with resources on its own page; no path in preparation.
++const PREPARING = [];
+ 
+ /** The fields of Ensino Superior, in page order (V0.4 QA P1-RC2): Matemática and Computação since V0.3, then
+  *  the fields planned for the Gate B university courses. A field is shown only with a published course. */
+@@ -72,6 +73,13 @@ const COURSE_HOSTS = [
+   'kultivi.com',
+   'www.gov.br',
+   'www.revista.vestibular.uerj.br',
++  // L001: hosts reviewed in the lot manifest, each with its institution.
++  'www.fuvest.br',
++  'oyc.yale.edu',
++  'www.theodinproject.com',
++  'learn.microsoft.com',
++  'sme.goiania.go.gov.br',
++  'vestibular.ita.br',
+ ];
+ const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
+ const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
+@@ -465,7 +473,7 @@ function checkAbout(path, html) {
+   if (!footerDate || pageDate !== footerDate) fail(path, `verification date ${pageDate} must match the footer's ${footerDate}`);
+ }
+ 
+-const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
++const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/ensino-superior/', '/tecnologia/'];
+ /** The formats a student practises with (V0.4 §4.3). Mirrors PRACTICE_FORMATS; a test keeps them equal. */
+ const PRACTICE_FORMATS = ['practice', 'past-exam', 'simulator'];
+ const PRACTICE_ATTR = new RegExp(`data-format="(?:${PRACTICE_FORMATS.join('|')})"`);
+@@ -633,7 +641,7 @@ function checkProduct(path, html) {
+   }
+   if (path === '/tecnologia/') {
+     const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
+-    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade'];
++    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade', 'computacao-em-nuvem'];
+     if (JSON.stringify(tracks.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `tracks ${tracks.map((m) => m[1]).join(',')}`);
+     for (const [, id, body] of tracks) if (!/\sdata-resource-id="/.test(body)) fail(path, `track ${id} is empty`);
+   }
+@@ -747,8 +755,10 @@ for (const path of SECTION_NAV_PAGES) {
+    Vestibular holds its exams' pages too (V0.4 §5.3). Counted from the DOM, never from the data module. */
+ {
+   const PATH_PAGES = {
++    '/ensino-fundamental/': ['/ensino-fundamental/'],
+     '/ensino-medio/': ['/ensino-medio/'],
+     '/vestibulares/': ['/vestibulares/', '/enem/', '/uerj/'],
++    '/pre-militar/': ['/pre-militar/'],
+     '/ensino-superior/': ['/ensino-superior/'],
+     '/tecnologia/': ['/tecnologia/'],
+   };
+diff --git a/src/lib/taxonomy.ts b/src/lib/taxonomy.ts
+index f91883e..35a0299 100644
+--- a/src/lib/taxonomy.ts
++++ b/src/lib/taxonomy.ts
+@@ -47,10 +47,10 @@ export type PathState = 'preparing' | 'active';
+  *  their ten homologated highlights released and a page that shows their resources (src/lib/path-status.ts
+  *  fails the build otherwise); scripts/verify-dist.mjs keeps its own, independent list. */
+ export const PATH_STATUS: Readonly<Record<PathId, PathState>> = {
+-  'ensino-fundamental': 'preparing',
++  'ensino-fundamental': 'active',
+   'ensino-medio': 'active',
+   vestibulares: 'active',
+-  'pre-militar': 'preparing',
++  'pre-militar': 'active',
+   'ensino-superior': 'active',
+   tecnologia: 'active',
+ };
+diff --git a/tests/exam-guides.test.ts b/tests/exam-guides.test.ts
+index 5e429ac..1448b65 100644
+--- a/tests/exam-guides.test.ts
++++ b/tests/exam-guides.test.ts
+@@ -82,9 +82,9 @@ test('UERJ subjects are exactly those with UERJ resources', () => {
+   assert.deepEqual(UERJ_SUBJECTS, ['matematica', 'portugues', 'redacao', 'fisica', 'historia', 'geografia', 'espanhol']);
+ });
+ 
+-// Staging state (V0.4 QA P2-RC5): the INEP collection is not published, so the practice note keeps its
+-// external link to INEP. A release that publishes it switches the note to the resource on the page.
+-test('staging today: the INEP source is not shown as a resource, so the note keeps its external link', () => {
++// Release state (V0.4 QA P2-RC5): L001 publishes the INEP collection on the practice section, so the note
++// points to that resource on the page instead of linking out to INEP a second time.
++test('L001: the INEP source is shown as a resource, so the note points to it on the page', () => {
+   const practice = resolveGuide('enem').find((s) => s.id === 'pratique')!;
+-  assert.equal(sourceShownAsResource('inep-provas-gabaritos', practice.resources), undefined);
++  assert.equal(sourceShownAsResource('inep-provas-gabaritos', practice.resources)?.id, 'inep-enem-provas-gabaritos');
+ });
+diff --git a/tests/gateb-selection-preview.test.ts b/tests/gateb-selection-preview.test.ts
+index 7df3a7c..226a23b 100644
+--- a/tests/gateb-selection-preview.test.ts
++++ b/tests/gateb-selection-preview.test.ts
+@@ -108,11 +108,12 @@ test('T2: all nine previously missing destinations have conditional routes witho
+   assert.equal(gatebSelectedResources().filter((r) => placementOf(r, states, future) !== null).length, 60);
+ });
+ 
+-test('T2: Fundamental and Pré-Militar remain preparing until a separately approved release', () => {
++test('T2: Fundamental and Pré-Militar active only by the separately approved L001 release; no highlight released', () => {
+   assert.equal(GATEB_SELECTION_AUTHORIZES_PUBLICATION, false);
+   assert.equal(manifest.featured_release_authorized, false);
+-  assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
+-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
++  // L001: Fundamental and Pré-Militar active by the owner's separate decision, atomically with their resources.
++  assert.equal(PATH_STATUS['ensino-fundamental'], 'active');
++  assert.equal(PATH_STATUS['pre-militar'], 'active');
+   for (const path of PATH_ORDER) {
+     assert.equal(FEATURED_RELEASE[path], 'staging', path);
+     assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH[path], [], path);
+diff --git a/tests/gateb-typed-staging.test.ts b/tests/gateb-typed-staging.test.ts
+index ea93ce1..5e3f668 100644
+--- a/tests/gateb-typed-staging.test.ts
++++ b/tests/gateb-typed-staging.test.ts
+@@ -181,8 +181,9 @@ test('Gate B: publication remains disabled and all earlier partial attempts rema
+     assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH[path], [], path);
+     assert.equal(FEATURED_RELEASE[path], 'staging', path);
+   }
+-  assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
+-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
++  // L001: Fundamental and Pré-Militar active by the owner's separate decision, atomically with their resources.
++  assert.equal(PATH_STATUS['ensino-fundamental'], 'active');
++  assert.equal(PATH_STATUS['pre-militar'], 'active');
+ 
+   const walk = (dir: string): string[] => readdirSync(new URL(`../${dir}`, import.meta.url))
+     .flatMap((name) => statSync(new URL(`../${dir}/${name}`, import.meta.url)).isDirectory()
+diff --git a/tests/higher-education.test.ts b/tests/higher-education.test.ts
+index 0bb9f72..091760e 100644
+--- a/tests/higher-education.test.ts
++++ b/tests/higher-education.test.ts
+@@ -15,8 +15,8 @@ test('the groups follow the plan order; none is empty; the two V0.3 groups keep
+   for (const id of ['matematica', 'computacao']) assert.ok(shown.find((g) => g.id === id)!.resources.length >= 2, id);
+ });
+ 
+-test('staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet)', () => {
+-  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao']);
++test('L001: the two V0.3 groups and Psicologia are shown (yale-psyc-110; mit-1801sc joins Matemática)', () => {
++  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao', 'psicologia']);
+ });
+ 
+ test('every course is published, unique, and published by a university', () => {
+@@ -32,10 +32,9 @@ test('an unknown id fails the build instead of leaving a gap', async () => {
+   assert.throws(() => resolveGroups([{ id: 'matematica', label: 'x', why: 'x', resourceIds: ['nope'] }]));
+ });
+ 
+-test('staging today: the Superior summary is the released V0.3 text, in the menu and on the Home', async () => {
++test('L001: the Superior summary names the three fields shown, in the menu and on the Home', async () => {
+   const copy = await import('../src/lib/superior-copy.ts') as Record<string, any>;
+-  const { pt } = await import('../src/i18n/pt.ts');
+-  assert.equal(copy.objectiveSummaryFor?.('ensino-superior'), pt.home.objectives.items['ensino-superior']);
++  assert.equal(copy.objectiveSummaryFor?.('ensino-superior'), 'Materiais gratuitos de nível superior em Matemática, Computação e Psicologia.');
+ });
+ 
+ test('the "Explorar" menu reads the path summaries from the shared source, not the fixed text', async () => {
+diff --git a/tests/home-sources.test.ts b/tests/home-sources.test.ts
+index 0f9ac19..fe3045e 100644
+--- a/tests/home-sources.test.ts
++++ b/tests/home-sources.test.ts
+@@ -10,11 +10,12 @@ import { homeSources } from '../src/lib/home-sources.ts';
+ const lib = { homeSources } as Record<string, any>;
+ const PROVIDERS = ['Harvard University', 'MIT OpenCourseWare', 'FGV', 'Cisco Networking Academy', 'Fundação Bradesco', 'Fundação Bradesco + Microsoft'];
+ 
+-test('staging today: every institution keeps its single-page link and count, exactly as before', () => {
++// L001: mit-1801sc adds Matemática (Ensino Superior) to MIT, so its line opens the search filtered by MIT.
++test('L001: every institution keeps its link and count; MIT spans two areas and opens the search', () => {
+   const sources = lib.homeSources(PROVIDERS, publishedResources, publishedTracksFor(publishedResources));
+   assert.deepEqual(sources.map((s: any) => [s.provider, s.count, s.areas, s.href]), [
+     ['Harvard University', 5, ['Tecnologia'], '/tecnologia/#comecar-a-programar'],
+-    ['MIT OpenCourseWare', 5, ['Tecnologia'], '/tecnologia/#python'],
++    ['MIT OpenCourseWare', 6, ['Tecnologia', 'Matemática'], '/buscar/?instituicao=mit-opencourseware'],
+     ['FGV', 3, ['Tecnologia'], '/tecnologia/#dados'],
+     ['Cisco Networking Academy', 1, ['Tecnologia'], '/tecnologia/#seguranca-e-privacidade'],
+     ['Fundação Bradesco', 2, ['Tecnologia'], '/tecnologia/#comecar-a-programar'],
+diff --git a/tests/learning-axes.test.ts b/tests/learning-axes.test.ts
+index a4bb177..9e339ce 100644
+--- a/tests/learning-axes.test.ts
++++ b/tests/learning-axes.test.ts
+@@ -63,13 +63,13 @@ test('Ensino Superior is declared on each resource and agrees with the universit
+ });
+ 
+ test('every count is the number of distinct published resources of that path or exam', () => {
+-  assert.deepEqual(objectiveFacts('ensino-fundamental'), { resources: 0 });
++  assert.deepEqual(objectiveFacts('ensino-fundamental'), { resources: 2 });
+   assert.deepEqual(objectiveFacts('ensino-medio'), { resources: 12 });
+-  assert.deepEqual(objectiveFacts('vestibulares'), { resources: 20 });
+-  assert.deepEqual(objectiveFacts('pre-militar'), { resources: 0 });
+-  assert.deepEqual(objectiveFacts('ensino-superior'), { resources: 6 });
+-  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 17, tracks: 7 });
+-  assert.deepEqual(objectiveFacts('enem'), { resources: 13 });
++  assert.deepEqual(objectiveFacts('vestibulares'), { resources: 22 });
++  assert.deepEqual(objectiveFacts('pre-militar'), { resources: 1 });
++  assert.deepEqual(objectiveFacts('ensino-superior'), { resources: 8 });
++  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 19, tracks: 8 });
++  assert.deepEqual(objectiveFacts('enem'), { resources: 14 });
+   assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
+ });
+ 
+diff --git a/tests/learning-library.test.ts b/tests/learning-library.test.ts
+index d45ddf3..5b9060c 100644
+--- a/tests/learning-library.test.ts
++++ b/tests/learning-library.test.ts
+@@ -55,7 +55,7 @@ test('resourcesByIds fails closed on an unknown id', () => {
+ 
+ test('objectivesFor derives, in the Home order, the objectives a subject has resources for', async () => {
+   const { objectivesFor } = await import('../src/lib/learning-library.ts');
+-  assert.deepEqual(objectivesFor('matematica'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
++  assert.deepEqual(objectivesFor('matematica'), ['enem', 'uerj', 'ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior']);
+   assert.deepEqual(objectivesFor('quimica'), ['enem', 'ensino-medio', 'vestibulares']);
+   assert.deepEqual(objectivesFor('redacao'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
+ });
+@@ -66,14 +66,14 @@ test('objectiveFacts counts what each path really holds', async () => {
+   const { higherEducation } = await import('../src/lib/higher-education.ts');
+   const onPath = (path: string) => publishedResources.filter((r) => (r.paths as readonly string[]).includes(path)).length;
+   const forExam = (exam: string) => publishedResources.filter((r) => (r.exams as readonly string[] | undefined)?.includes(exam)).length;
+-  assert.deepEqual(objectiveFacts('ensino-fundamental'), { resources: 0 });
++  assert.deepEqual(objectiveFacts('ensino-fundamental'), { resources: 2 });
+   assert.deepEqual(objectiveFacts('ensino-medio'), { resources: onPath('ensino-medio') });
+   // Vestibular holds its exams: an exam's resources declare its parent path.
+   assert.deepEqual(objectiveFacts('vestibulares'), { resources: onPath('vestibulares') });
+-  assert.equal(objectiveFacts('vestibulares').resources, 20);
+-  assert.deepEqual(objectiveFacts('pre-militar'), { resources: 0 });
++  assert.equal(objectiveFacts('vestibulares').resources, 22);
++  assert.deepEqual(objectiveFacts('pre-militar'), { resources: 1 });
+   assert.deepEqual(objectiveFacts('ensino-superior'), { resources: higherEducation().flatMap((g) => g.resources).length });
+-  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 17, tracks: 7 });
++  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 19, tracks: 8 });
+   assert.deepEqual(objectiveFacts('enem'), { resources: forExam('enem') });
+   assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
+ });
+@@ -81,8 +81,8 @@ test('objectiveFacts counts what each path really holds', async () => {
+ test('institutions lists only providers that publish, with their resources in catalogue order', async () => {
+   const { institutions } = await import('../src/lib/learning-library.ts');
+   const { publishedResources } = await import('../src/lib/learning-resources.ts');
+-  const list = institutions(['Harvard University', 'Microsoft Learn', 'FGV']);
+-  // Microsoft Learn has no published resource: it is left out, never shown empty.
++  const list = institutions(['Harvard University', 'Google', 'FGV']);
++  // Google has no published resource: it is left out, never shown empty.
+   assert.deepEqual(list.map((i) => i.provider), ['Harvard University', 'FGV']);
+   const harvard = publishedResources.filter((r) => r.provider === 'Harvard University').map((r) => r.id);
+   assert.deepEqual(list[0]?.resources.map((r) => r.id), harvard);
+diff --git a/tests/learning-resources.test.ts b/tests/learning-resources.test.ts
+index e0b5e98..216a1d5 100644
+--- a/tests/learning-resources.test.ts
++++ b/tests/learning-resources.test.ts
+@@ -64,8 +64,8 @@ test('the catalogue is exactly the 40 records of the snapshot, field by field',
+   }
+ });
+ 
+-test('37 published, 3 held back with a review note', () => {
+-  assert.equal(publishedResources.length, 37);
++test('46 published (37 of V0.4 + 9 of L001), 3 held back with a review note', () => {
++  assert.equal(publishedResources.length, 46);
+   const held = catalogue.filter((r) => r.url === null);
+   assert.equal(held.length, 3);
+   for (const r of held) assert.ok(r.review?.trim(), `${r.id}: missing review note`);
+diff --git a/tests/path-status.test.ts b/tests/path-status.test.ts
+index 6ad7bb1..2f0db12 100644
+--- a/tests/path-status.test.ts
++++ b/tests/path-status.test.ts
+@@ -26,7 +26,7 @@ test('P2: one status per path; PREPARING_PATHS is derived from it', () => {
+   const status = taxonomy.PATH_STATUS as Record<string, string> | undefined;
+   assert.ok(status, 'PATH_STATUS is not defined');
+   assert.deepEqual(Object.entries(status ?? {}).filter(([, s]) => s === 'preparing').map(([p]) => p), [...taxonomy.PREPARING_PATHS]);
+-  assert.deepEqual(status, TODAY, 'today: Fundamental and Pré-Militar in preparation');
++  assert.deepEqual(status, ACTIVE, 'L001: every path active (Fundamental and Pré-Militar with their own resources)');
+ });
+ 
+ test('P2: the path pages read noindex and the preparing note from the status, not from literals', async () => {
+diff --git a/tests/release-candidate/STAGING-GUARDS.md b/tests/release-candidate/STAGING-GUARDS.md
+index 5c3ec75..4cc548a 100644
+--- a/tests/release-candidate/STAGING-GUARDS.md
++++ b/tests/release-candidate/STAGING-GUARDS.md
+@@ -18,7 +18,7 @@ Kinds: **A** guards against publication or activation (they must flip only with
+ 
+ | File | Test | Kind |
+ |---|---|---|
+-| `exam-guides.test.ts` | staging today: the INEP source is not shown as a resource, so the note keeps its external link | A |
++| `exam-guides.test.ts` | L001: the INEP source is shown as a resource, so the note points to it on the page | A |
+ | `featured.test.ts` | staging today: no highlight is homologated, so every list is empty and the selection is incomplete | A |
+ | `featured.test.ts` | featuredFor resolves a path to its published resources in order | A |
+ | `featured.test.ts` | featuredReady: a path is ready only with ten valid highlights | A |
+@@ -32,31 +32,31 @@ Kinds: **A** guards against publication or activation (they must flip only with
+ | `gateb-selection-preview.test.ts` | T2: draft uses the original catalogue and two staging sets, never duplicates data | A |
+ | `gateb-selection-preview.test.ts` | T2: all sixty provisional candidates obey P4 and the existing featured gate | A |
+ | `gateb-selection-preview.test.ts` | T2: all nine previously missing destinations have conditional routes without public activation | A |
+-| `gateb-selection-preview.test.ts` | T2: Fundamental and Pré-Militar remain preparing until a separately approved release | A |
++| `gateb-selection-preview.test.ts` | T2: Fundamental and Pré-Militar active only by the separately approved L001 release; no highlight released | A |
+ | `gateb-typed-staging.test.ts` | Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates | A |
+ | `gateb-typed-staging.test.ts` | Gate B: publication remains disabled and all earlier partial attempts remain historical | A |
+-| `higher-education.test.ts` | staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet) | A |
+-| `home-sources.test.ts` | staging today: every institution keeps its single-page link and count, exactly as before | A |
++| `higher-education.test.ts` | L001: the two V0.3 groups and Psicologia are shown (yale-psyc-110; mit-1801sc joins Matemática) | A |
++| `home-sources.test.ts` | L001: every institution keeps its link and count; MIT spans two areas and opens the search | A |
+ | `learning-axes.test.ts` | a technology resource serves Tecnologia and never Ensino Médio by inheritance | B |
+ | `learning-axes.test.ts` | every count is the number of distinct published resources of that path or exam | B |
+ | `learning-library.test.ts` | objectivesFor derives, in the Home order, the objectives a subject has resources for | B |
+ | `learning-library.test.ts` | objectiveFacts counts what each path really holds | B |
+ | `learning-library.test.ts` | institutions lists only providers that publish, with their resources in catalogue order | B |
+ | `learning-resources.test.ts` | the catalogue is exactly the 40 records of the snapshot, field by field | B |
+-| `learning-resources.test.ts` | 37 published, 3 held back with a review note | B |
++| `learning-resources.test.ts` | 46 published (37 of V0.4 + 9 of L001), 3 held back with a review note | B |
+ | `path-status.test.ts` | P2: one status per path; PREPARING_PATHS is derived from it | A |
+ | `placement.test.ts` | P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged) | B |
+ | `placement.test.ts` | P1: no destination on a page in preparation; a published resource without a destination fails | A |
+-| `routes.test.ts` | the 22 canonical routes, exactly and in a stable order | B |
++| `routes.test.ts` | the 24 canonical routes, exactly and in a stable order | B |
+ | `routes.test.ts` | the paths in preparation have pages but are not canonical (noindex, out of the sitemap) | A |
+ | `search-filter.test.ts` | facet options: only values some resource has, in the taxonomy order, each with its label | B |
+ | `search-index.test.ts` | one entry per objective, area, subject, published track and published resource | B |
+ | `staging-lote03.test.ts` | Lote 03: the three military collections stay partial: recorded, never staged as ready, never in the draft | A |
+ | `staging.test.ts` | reuse: the published ids are re-verified, never duplicated | A |
+ | `staging.test.ts` | staged records are not published: not in the catalogue, not imported by any page or component | A |
+-| `staging.test.ts` | nothing is released or activated by this lot | A |
++| `staging.test.ts` | L001: no highlight is released; Fundamental and Pré-Militar are active with their own resources | A |
+ | `taxonomy.test.ts` | the paths in preparation are named, and are paths | A |
+ | `tech-tracks.test.ts` | the tracks and their resources are exactly the spec | B |
+ | `tech-tracks.test.ts` | a published track is never empty; a planned one is never shown | B |
+ | `verification.test.ts` | P4: the legacy set is exactly the 37 published today, and they need nothing new | B |
+-| `higher-education.test.ts` | staging today: the Superior summary is the released V0.3 text, in the menu and on the Home | B |
++| `higher-education.test.ts` | L001: the Superior summary names the three fields shown, in the menu and on the Home | B |
+diff --git a/tests/routes.test.ts b/tests/routes.test.ts
+index d58873d..90fd138 100644
+--- a/tests/routes.test.ts
++++ b/tests/routes.test.ts
+@@ -5,7 +5,7 @@ import { canonicalPaths, EXPLORE_MENU, HEADER_NAV, LEGACY_REDIRECTS, preparingPa
+ // Written out by hand on purpose: an independent barrier against an accidental change to routes.ts
+ // (spec R10). scripts/verify-dist.mjs carries its own copy.
+ const CANONICAL = [
+-  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
++  '/', '/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/pre-militar/', '/ensino-superior/', '/tecnologia/', '/materias/',
+   '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
+   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
+   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
+@@ -13,13 +13,14 @@ const CANONICAL = [
+   '/buscar/', '/sobre/',
+ ];
+ 
+-test('the 22 canonical routes, exactly and in a stable order', () => {
++test('the 24 canonical routes, exactly and in a stable order', () => {
+   assert.deepEqual(canonicalPaths(), CANONICAL);
+   assert.deepEqual(canonicalPaths(), canonicalPaths());
+ });
+ 
+ test('the paths in preparation have pages but are not canonical (noindex, out of the sitemap)', () => {
+-  assert.deepEqual(preparingPaths(), ['/ensino-fundamental/', '/pre-militar/']);
++  // L001: no path is in preparation any more.
++  assert.deepEqual(preparingPaths(), []);
+   for (const path of preparingPaths()) assert.ok(!canonicalPaths().includes(path), path);
+   assert.equal(routes.objective('pre-militar'), '/pre-militar/');
+   assert.equal(routes.objective('ensino-superior'), '/ensino-superior/');
+diff --git a/tests/search-filter.test.ts b/tests/search-filter.test.ts
+index 2f872ea..fd65741 100644
+--- a/tests/search-filter.test.ts
++++ b/tests/search-filter.test.ts
+@@ -56,10 +56,10 @@ test('resource entries carry their facets; other entries carry none', () => {
+ test('facet options: only values some resource has, in the taxonomy order, each with its label', () => {
+   const options = facetOptions(publishedResources);
+   assert.deepEqual(Object.keys(options), ['caminho', 'materia', 'instituicao', 'idioma', 'formato']);
+-  assert.deepEqual(options.caminho.map((o: { value: string }) => o.value), ['ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia']);
+-  assert.deepEqual(options.caminho.map((o: { label: string }) => o.label), ['Ensino Médio', 'Vestibular', 'Ensino Superior', 'Tecnologia']);
++  assert.deepEqual(options.caminho.map((o: { value: string }) => o.value), ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'pre-militar', 'ensino-superior', 'tecnologia']);
++  assert.deepEqual(options.caminho.map((o: { label: string }) => o.label), ['Ensino Fundamental', 'Ensino Médio', 'Vestibular', 'Pré-Militar', 'Ensino Superior', 'Tecnologia']);
+   assert.deepEqual(options.idioma.map((o: { value: string }) => o.value), ['pt', 'en']);
+-  assert.deepEqual(options.formato.map((o: { value: string }) => o.value), ['course', 'practice']);
++  assert.deepEqual(options.formato.map((o: { value: string }) => o.value), ['course', 'track', 'lesson', 'practice', 'past-exam']);
+   assert.equal(options.materia.length, 13);
+   assert.ok(options.instituicao.some((o: { value: string; label: string }) => o.label === 'Harvard University' && o.value === 'harvard-university'));
+   for (const facet of Object.values(options) as { value: string }[][]) {
+diff --git a/tests/search-index.test.ts b/tests/search-index.test.ts
+index b18546c..a539038 100644
+--- a/tests/search-index.test.ts
++++ b/tests/search-index.test.ts
+@@ -36,9 +36,9 @@ test('one entry per objective, area, subject, published track and published reso
+   assert.equal(count('objetivo'), 8);
+   assert.equal(count('area'), 6);
+   assert.equal(count('materia'), 13);
+-  assert.equal(count('trilha'), 7);
++  assert.equal(count('trilha'), 8);
+   assert.equal(count('recurso'), publishedResources.length);
+-  assert.equal(index.length, 8 + 6 + 13 + 7 + publishedResources.length);
++  assert.equal(index.length, 8 + 6 + 13 + 8 + publishedResources.length);
+ });
+ 
+ test('every entry leads to a page of the site, never outside', () => {
+diff --git a/tests/staging.test.ts b/tests/staging.test.ts
+index 4015a12..c644eaf 100644
+--- a/tests/staging.test.ts
++++ b/tests/staging.test.ts
+@@ -111,13 +111,14 @@ test('staged records are not published: not in the catalogue, not imported by an
+   }
+ });
+ 
+-test('nothing is released or activated by this lot', () => {
++test('L001: no highlight is released; Fundamental and Pré-Militar are active with their own resources', () => {
+   for (const path of PATH_ORDER) {
+     assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH[path], [], path);
+     assert.equal(FEATURED_RELEASE[path], 'staging', path);
+   }
+-  assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
+-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
++  // L001: Fundamental and Pré-Militar active by the owner's separate decision, atomically with their resources.
++  assert.equal(PATH_STATUS['ensino-fundamental'], 'active');
++  assert.equal(PATH_STATUS['pre-militar'], 'active');
+ });
+ 
+ test('each staged record has a destination once its page is active, or a declared placement step (P1)', () => {
+diff --git a/tests/taxonomy.test.ts b/tests/taxonomy.test.ts
+index cf437c1..934c727 100644
+--- a/tests/taxonomy.test.ts
++++ b/tests/taxonomy.test.ts
+@@ -16,7 +16,8 @@ test('ENEM and UERJ are exams inside Vestibular, not paths', () => {
+ });
+ 
+ test('the paths in preparation are named, and are paths', () => {
+-  assert.deepEqual(PREPARING_PATHS, ['ensino-fundamental', 'pre-militar']);
++  // L001: Fundamental and Pré-Militar active; none in preparation.
++  assert.deepEqual(PREPARING_PATHS, []);
+   for (const id of PREPARING_PATHS) assert.ok(PATH_ORDER.includes(id), id);
+ });
+ 
+diff --git a/tests/tech-tracks.test.ts b/tests/tech-tracks.test.ts
+index d7ea432..bd3ad59 100644
+--- a/tests/tech-tracks.test.ts
++++ b/tests/tech-tracks.test.ts
+@@ -7,12 +7,14 @@ import { publishedResources } from '../src/lib/learning-resources.ts';
+ const SPEC = [
+   ['comecar-a-programar', ['cs50x', 'cs50p', 'fb-python']],
+   ['ciencia-da-computacao', ['cs50x', 'mit-6006', 'mit-6042j', 'mit-1806']],
+-  ['desenvolvimento-web', ['cs50w', 'fb-web']],
++  ['desenvolvimento-web', ['cs50w', 'fb-web', 'odin-foundations']],
+   ['python', ['cs50p', 'mit-6100l', 'fb-python']],
+   ['inteligencia-artificial', ['cs50ai', 'fluencia']],
+   ['dados', ['fgv-datasci', 'mit-60002', 'cs50sql']],
+   ['seguranca-e-privacidade', ['cisco-cyber', 'fgv-security', 'fgv-privacy']],
+   ['git-e-github', []],
++  // L001: the cloud track exists once its one resource is published.
++  ['computacao-em-nuvem', ['ms-learn-cloud-concepts']],
+ ];
+ 
+ test('the tracks and their resources are exactly the spec', () => {
+@@ -35,7 +37,7 @@ test('a published track is never empty; a planned one is never shown', () => {
+   }
+   assert.equal(techTracks.find((t) => t.id === 'git-e-github')!.status, 'planned');
+   assert.ok(!publishedTracks().some((t) => t.id === 'git-e-github'));
+-  assert.equal(publishedTracks().length, 7);
++  assert.equal(publishedTracks().length, 8);
+ });
+ 
+ test('no published technology resource is left out of every track', () => {
