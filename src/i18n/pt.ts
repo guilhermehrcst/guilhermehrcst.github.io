@@ -193,7 +193,7 @@ export const pt: Dict = {
         items.length <= 1 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} e ${items[items.length - 1]}`;
       const full = join(labels);
       const short = labels.length > 3
-        ? `${join(labels.slice(0, 2))} e mais ${labels.length - 2} áreas`
+        ? `${labels.slice(0, 2).join(', ')} e mais ${labels.length - 2} áreas`
         : full;
       return {
         description: `Materiais gratuitos de nível superior em ${short}, verificados na fonte e disponibilizados pelas instituições responsáveis.`,
