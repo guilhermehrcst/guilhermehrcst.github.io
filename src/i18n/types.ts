@@ -96,6 +96,8 @@ export interface Dict {
       lead: string;
       independence: string;
       count: (resources: number, page: string) => string;
+      /** An institution whose courses span pages: every area, in catalogue order. */
+      countAreas: (resources: number, areas: readonly string[]) => string;
       exams: string;
       examLinks: { enem: string; uerj: string };
       pending: string;

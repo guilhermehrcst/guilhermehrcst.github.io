@@ -322,6 +322,8 @@ const DEMO_RESOURCE_IDS = new Set();
 const PUBLISHED_RESOURCE_IDS = new Set();
 /** Each search result for a resource, and the page#anchor it opens (V0.4 M4). */
 const SEARCH_RESOURCE_TARGETS = new Map();
+/** Institution filters the Home's #fontes leads to (V0.4 QA P1-RC1); each must work on the built search. */
+const HOME_SEARCH_FILTERS = new Set();
 /** The distinct resources each page renders, and the count the Home prints for each path (V0.4 §5.3). */
 const PAGE_RESOURCE_IDS = new Map();
 const HOME_PATH_COUNTS = new Map();
@@ -388,7 +390,11 @@ function checkHome(path, html, resources) {
     if (cells.length < 3) fail(path, `#fontes shows ${cells.length} institutions`);
     for (const [, name, body] of cells) {
       const links = hrefsIn(body);
-      if (links.length !== 1 || !/^\/[^#]*#[\w-]+$/.test(links[0])) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
+      // A track on one page, or (V0.4 QA P1-RC1) the search filtered by the institution when its courses
+      // span pages; that filter value is checked against the built search page below.
+      const filtered = /^\/buscar\/\?instituicao=([a-z0-9-]+)$/.exec(links[0] ?? '');
+      if (filtered) HOME_SEARCH_FILTERS.add(filtered[1]);
+      if (links.length !== 1 || !(/^\/[^#]*#[\w-]+$/.test(links[0]) || filtered)) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
     }
   }
   // Featured paths: at most three, each a real guide or track with its steps, opened by one internal link.
@@ -747,6 +753,18 @@ for (const path of CANONICAL) {
   const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
   for (const m of html.matchAll(/<[a-z]+\b([^>]*)\sid="recurso-([^"]+)"([^>]*)>/g)) {
     if (!`${m[1]}${m[3]}`.includes(`data-resource-id="${m[2]}"`)) fail(path, `#recurso-${m[2]} is not that resource`);
+  }
+}
+
+/* A #fontes link to the search filtered by institution must be a filter the built search page offers, and
+   that filter must list results on more than one page (the reason it is used instead of a track link). */
+{
+  const search = existsSync(fileFor('/buscar/')) ? readFileSync(fileFor('/buscar/'), 'utf8') : '';
+  for (const value of HOME_SEARCH_FILTERS) {
+    if (!new RegExp(`<input\\b[^>]*\\sname="instituicao"[^>]*\\svalue="${value}"`).test(search)) fail('/', `#fontes leads to a search filter the search page does not offer (${value})`);
+    const pages = new Set([...search.matchAll(/<li\b[^>]*\sdata-entry-id="recurso:[^"]+"[^>]*>[\s\S]*?<\/li>/g)]
+      .map((m) => m[0]).filter((li) => new RegExp(`\\sdata-facet-instituicao="${value}"`).test(li)).map((li) => (hrefsIn(li)[0] ?? '').split('#')[0]));
+    if (pages.size < 2) fail('/', `#fontes filters the search by ${value}, whose results are on ${pages.size} page(s): link the track instead`);
   }
 }
 
