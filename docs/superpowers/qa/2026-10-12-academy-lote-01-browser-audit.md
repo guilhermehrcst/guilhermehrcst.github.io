@@ -57,6 +57,43 @@ Todos os URLs abaixo retornaram `HTTP 200` e `application/pdf` em acesso de extr
 
 **Resultado editorial:** `candidate` para os 10, **zero recursos homologados por decisão humana neste documento**; `approved = 0`, `authorization = null`, `applied = []`. Não ativar Fundamental/Pré-Militar nem liberar destaques com base nestes resultados. Preferir liberar gradualmente somente recursos que atendam ao contrato verificado e assinado, sem esperar dez destaques para abrir uma trilha útil.
 
+## Anexo de decisão: piloto de até nove recursos (proposta, não aprovação)
+
+**Decisão solicitada, ainda não concedida:** considerar uma redução de escopo do Lote 01 de 10 para **até 9** candidatos, excluindo por ora o PDF `pm-cn-provas` enquanto não se confirmar legibilidade, camada de texto, leitura no celular e uma alternativa acessível. O gabarito final de 2025 existe na [fonte oficial da Marinha](https://www.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/arquivo/gabaritos/Gab_final_CPACN-2025.pdf), mas sua existência **não** resolve a acessibilidade da prova. A alternativa de [índice oficial de provas e gabaritos](https://www.marinha.mil.br/sspm/colegionaval/colegio_princ) também pode ser considerada em decisão editorial futura, com ID/URL/digest próprios. Nenhuma substituição automática do registro é permitida.
+
+**Por que reduzir:** um material em PDF com ressalvas não deve bloquear fontes mais simples. O motor admite lote parcial e permite **ativar Fundamental e Pré-Militar com ao menos um recurso publicado em sua própria página**; os dez destaques são uma liberação separada. Isso foi confirmado em `src/lib/path-status.ts` e `src/lib/placement.ts`. Há um comentário histórico em `src/lib/taxonomy.ts` que ainda sugere dez destaques para ativação; é impreciso diante do contrato atual, deve ser corrigido em mudança técnica/documental própria, sem alterar `PATH_STATUS` implicitamente.
+
+### Ordem proposta para análise humana
+
+Todos continuam no estado **AGUARDA DECISÃO**. Cada decisão válida exige **ID + URL exata + metadados finais/digest + evidência datada + pessoa identificada**; marcar um checkbox neste documento não é `approved`.
+
+| ID | Caminho / por que priorizar | Última conferência humana necessária |
+|---|---|---|
+| `ef-sme-alfabeto-1` | Fundamental, 1º ano; conteúdo inicial para abrir a seção | Abrir HTML e ao menos uma atividade em navegador comum; confirmar que o material é utilizável por criança sem conta, e como funcionam Wordwall/Drive. Não declarar conformidade de privacidade ou acessibilidade. |
+| `ef-sme-funcoes-9` | Fundamental, 9º ano; cobre anos finais | Conferir quatro exercícios na página. A reprodução do vídeo do YouTube **não foi demonstrada** pelo agente (anti-bot); não a tornar requisito oculto. |
+| `ita-provas-anteriores` | Pré-Militar; índice oficial e PDFs exemplificados | Abrir prova e gabarito de um mesmo ano em leitor comum (amostra de 2024 já verificada por extrator). Confirmar link, legibilidade e navegação móvel. |
+| `inep-enem-provas-gabaritos` | Vestibular; arquivo de provas e gabaritos | Conferir abas dinâmicas e um par prova/gabarito; há amostra do ENEM 2025 em PDFs oficiais. Não prometer todos os anos com base em amostra. |
+| `fuvest-acervo-2026` | Vestibular; provas e gabaritos oficiais 2026 | Abrir PDF da 1ª fase e gabarito em navegador comum (amostras confirmadas); conferir título e edição, mobile e leitura. |
+| `mit-1801sc` | Superior; curso de cálculo com sessão e provas | Abrir uma aula/notas e um exame, confirmar oferta gratuita sem certificado/crédito. Indicar curso de 2010. |
+| `yale-psyc-110` | Superior; aula e transcrição verificadas | Confirmar Lecture 1 e transcrição, ausência de cobrança; marcar gravação em 2007 e possíveis referências antigas. |
+| `odin-foundations` | Tecnologia; lições textuais e projetos sem cadastro | Abrir uma lição/projeto, distinguir leitura livre de salvamento de progresso. Só fazer **curadoria e link**, sem copiar materiais com restrições da licença. |
+| `ms-learn-cloud-concepts` | Tecnologia; módulos de nuvem em pt-BR | Abrir a primeira unidade, verificar versão/tradução e acesso livre. **AZ-900 é certificação separada**; não afirmar certificado de curso sem prova. |
+
+**`pm-cn-provas` (Colégio Naval):** não adicionar ao piloto por padrão. A URL oficial responde como PDF de 19 páginas em um extrator independente, mas o visualizador automatizado falhou e apontou suspeita de páginas digitalizadas não pesquisáveis. A camada de texto **não** foi comprovada em inspeção local; a tentativa de baixar diretamente em nosso ambiente falhou por resolução de DNS. A classificação adequada hoje é **pendência técnica de acessibilidade**, não indisponibilidade definitiva da origem. O recurso permanece candidato fora da proposta reduzida; `held` no manifesto depende de decisão de pessoa autorizada.
+
+### Operação proposta após decisão humana
+
+1. A pessoa responsável revisa individualmente os nove itens acima, confirma exatamente quais deseja aprovar e os metadados correspondentes. Pode aprovar menos de nove, ou não aprovar nenhum. O piloto não publica nada por si só.
+2. Se houver correções em `src/lib/staging*.ts`, realizá-las em PR próprio e rodar testes. **Somente então** gerar o digest canônico de cada registro com `node --experimental-strip-types tools/academy-release.ts entry <id>`, vinculando-o à evidência final.
+3. Criar manifesto real `L001-*.json` com apenas decisões humanas documentadas; recursos pendentes não recebem `approved` fictício. Manter `authorization: null` até uma **segunda autorização explícita e independente para publicar o lote exato**.
+4. Em etapa separada, solicitar a decisão de ativar `ensino-fundamental` e `pre-militar` em `PATH_STATUS` após haver recurso publicado em suas páginas. **Não liberar** `FEATURED_RELEASE` até dez destaques válidos serem homologados por caminho.
+5. Aplicar o lote autorizado em `release.json` (`applied`, `ledger`, `inventory`), revisar allowlist e espelho `scripts/verify-dist.mjs`, guardas dos testes e QA do `dist/` (busca, âncoras, origem/rel, mobile, indexação). Validar `npm test`, `npx astro check`, build/verify-dist, revisão final e rollback. Merge e deploy continuam atos separados e expressamente autorizados.
+
+**Impacto condicional máximo do piloto completo:** 37 recursos da produção + 9 autorizados = **46**, com zero remoções. Novos hosts possíveis: `sme.goiania.go.gov.br`, `vestibular.ita.br`, `www.fuvest.br`, `oyc.yale.edu`, `www.theodinproject.com`, `learn.microsoft.com`. Os hosts `www.gov.br` e `ocw.mit.edu` já constam na base. Não incluir `assets.marinha.mil.br` apenas por estar na proposta antiga se `pm-cn-provas` não for aprovado.
+
+**Ponto de parada obrigatório:** sem assinatura da revisão humana por recurso, não criar decisões como se estivessem aprovadas; sem autorização do lote, não aplicar `release.json`; sem autorização de merge/deploy, não alterar `main` nem publicar.
+
+
 ## Evidências e contexto complementar
 
 - [Proposta Lote 01](../plans/2026-10-12-academy-lote-01-proposal.md)
