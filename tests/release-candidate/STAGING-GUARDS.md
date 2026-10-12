@@ -3,9 +3,9 @@
 The suite has two kinds of test.
 
 - **`tests/release-candidate/`** proves the code is ready for the catalogue a release would publish (`context.ts`: the 37 published records plus the typed Gate B candidates). These tests pass **today and after the release**; a release must not touch them.
-- **Every other test** holds the current state. The ones listed below are *staging guards and snapshots*: they pass today and **fail by design** once a release promotes the candidates. A release commit updates each of them deliberately, one by one, with the reason; it never deletes or skips one.
+- **Every other test** holds the current state. The ones listed below (42) are *staging guards and snapshots*: they pass today and **fail by design** once a release promotes the candidates. A release commit updates each of them deliberately, one by one, with the reason; it never deletes or skips one.
 
-Measured on 2026-10-12 by applying a release's deliberate steps (`docs/superpowers/qa/2026-10-12-v04-evidence/rc-apply.py`: promotion, 60 highlights released, Fundamental and Pré-Militar active, verify-dist hand lists) to a discardable worktree, with **no workaround** for any finding: build and verify-dist pass (24 pages), `tests/release-candidate/` passes, and exactly these 41 fail.
+Measured on 2026-10-12 by applying a release's deliberate steps (`docs/superpowers/qa/2026-10-12-v04-evidence/rc-apply.py`: promotion, 60 highlights released, Fundamental and Pré-Militar active, verify-dist hand lists) to a discardable worktree, with **no workaround** for any finding: build and verify-dist pass (24 pages), `tests/release-candidate/` passes, and exactly these fail (41 measured on 2026-10-12, plus one added with the menu fix from the Codex review on PR #38).
 
 Kinds: **A** guards against publication or activation (they must flip only with an authorised release); **B** snapshots of counts and lists that grow with the catalogue.
 
@@ -52,3 +52,4 @@ Kinds: **A** guards against publication or activation (they must flip only with 
 | `tech-tracks.test.ts` | the tracks and their resources are exactly the spec | B |
 | `tech-tracks.test.ts` | a published track is never empty; a planned one is never shown | B |
 | `verification.test.ts` | P4: the legacy set is exactly the 37 published today, and they need nothing new | B |
+| `higher-education.test.ts` | staging today: the Superior summary is the released V0.3 text, in the menu and on the Home | B |

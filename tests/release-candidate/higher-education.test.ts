@@ -24,3 +24,15 @@ test('release candidate: every course is published once, verified, and by a univ
     assert.ok(UNIVERSITY_PUBLISHERS.includes(r.provider), `${r.id}: ${r.provider}`);
   }
 });
+
+// Codex review on PR #38 (D12) exposed it: the "Explorar" menu, on every page, read the fixed objective text
+// ("Matemática e Computação") while the Home list followed the published groups. Both now share one source.
+test('release candidate: every surface that summarises Superior names the published areas, never the stale pair', async () => {
+  const copy = await import('../../src/lib/superior-copy.ts') as Record<string, any>;
+  const { pt } = await import('../../src/i18n/pt.ts');
+  const rcGroups = higherEducationGroupsFor(RC_CATALOGUE);
+  const summary = copy.objectiveSummaryFor?.('ensino-superior', rcGroups);
+  assert.equal(summary, copy.superiorCopyFor(rcGroups).objective);
+  assert.notEqual(summary, pt.home.objectives.items['ensino-superior']);
+  assert.equal(copy.objectiveSummaryFor?.('tecnologia', rcGroups), pt.home.objectives.items.tecnologia, 'other paths keep their text');
+});
