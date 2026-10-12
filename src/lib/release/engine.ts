@@ -345,7 +345,9 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     applied.push(lot);
   }
   if (problems.length) return empty();
-  const pending = lots.filter((lot) => !appliedNames.includes(lot.lot)).sort((a, b) => (a.lot < b.lot ? -1 : 1));
+  // Recorded, never applied. A lot in the ledger but no longer applied was rolled back: it stays pinned as a
+  // record and takes no further part (to publish its decisions again, record them in a new lot).
+  const pending = lots.filter((lot) => !appliedNames.includes(lot.lot) && !ledgerNames.includes(lot.lot)).sort((a, b) => (a.lot < b.lot ? -1 : 1));
 
   // Records: the baseline is exactly the published part of the catalogue; ids never repeat.
   const records = new Map<string, LearningResource>();

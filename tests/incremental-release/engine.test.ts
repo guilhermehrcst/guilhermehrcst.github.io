@@ -233,7 +233,7 @@ test('15. rollback: removing the last lot from the release restores the earlier 
   assert.deepEqual(rolledBack.problems, []);
   assert.deepEqual(ids(rolledBack), ids(before));
   assert.deepEqual(rolledBack.published, before.published);
-  assert.equal(rolledBack.ifApplied.get('ef-obmep-fracoes-6'), 'published', 'the decision stays recorded, unpublished');
+  assert.equal(rolledBack.ifApplied.get('ef-obmep-fracoes-6'), undefined, 'the decision stays recorded and pinned, never replayed');
   assert.equal(rolledBack.states.get('ef-obmep-fracoes-6'), 'candidate');
   const nothing = project({ lots: [a, b], release: releaseOf([], inventoryWith([])) });
   assert.deepEqual(ids(nothing), ids(project({ lots: [], release: releaseOf([], inventoryWith([])) })));
@@ -350,4 +350,17 @@ test('a rolled-back lot keeps its pin: the ledger of every lot ever applied is a
   assert.match(problemsOf(project({ lots: [a], release: rolledBack })), /L002-fundamental is in the ledger but has no manifest/);
   // Every applied lot is in the ledger, with the same digest.
   assert.match(problemsOf(project({ lots: [a, b], release: releaseOf([a, b], inventoryWith(['google-mlcc', 'ef-obmep-fracoes-6']), { ledger: ledger.slice(0, 1) }) })), /L002-fundamental is applied but not in the ledger/);
+});
+
+test('a rolled-back lot stays preserved and out of the way: later lots apply normally (Codex review, round 4)', () => {
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const b = lotOf('L002-fundamental', [entryFor('ef-obmep-fracoes-6')]);
+  const c = lotOf('L003-tecnologia', [entryFor('odin-foundations')]);
+  const ledger = releaseOf([a, b, c], []).ledger;
+  const p = project({ lots: [a, b, c], release: releaseOf([a, c], inventoryWith(['google-mlcc', 'odin-foundations']), { ledger }) });
+  assert.deepEqual(p.problems, []);
+  assert.ok(!p.published.some((r) => r.id === 'ef-obmep-fracoes-6'), 'the rolled-back decision is not published');
+  assert.equal(p.ifApplied.get('ef-obmep-fracoes-6'), undefined, 'nor replayed as pending');
+  // Still pinned: editing it fails.
+  assert.match(problemsOf(project({ lots: [a, { ...b, title: 'x' }, c], release: releaseOf([a, c], inventoryWith(['google-mlcc', 'odin-foundations']), { ledger }) })), /L002-fundamental: changed after it was applied/);
 });

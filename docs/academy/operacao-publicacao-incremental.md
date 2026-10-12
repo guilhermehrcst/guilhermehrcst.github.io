@@ -164,7 +164,8 @@ verificação nova: evidência com data igual ou posterior à suspensão (o mesm
 
 - **Antes do deploy:** retire do fim de `applied` o último lote e volte o `inventory` ao anterior; o lote
   **fica no `ledger`** e o manifesto continua registrado e preso ao digest (decisão preservada, não
-  publicada; editá-lo ou apagá-lo falha o build). A simulação provou que o `dist/` volta byte a byte ao do
+  publicada; editá-lo ou apagá-lo falha o build). Um lote revertido não volta a ser aplicado nem
+  conta como pendente: para publicar de novo suas decisões, registre-as num lote novo. A simulação provou que o `dist/` volta byte a byte ao do
   lote anterior.
 - **Depois do deploy:** reverta o commit do PR do lote (`git revert`) e faça novo deploy autorizado; ou,
   para tirar um único recurso, use uma suspensão (9), que deixa trilha.
