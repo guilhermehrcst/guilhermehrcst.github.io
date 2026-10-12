@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 
 const REPO = new URL('../../', import.meta.url).pathname;
 const BY = 'SIMULAÇÃO — teste da ferramenta, não é decisão editorial';
@@ -15,6 +15,30 @@ const scratch = (): string => {
   execFileSync('mkdir', ['-p', dir], { encoding: 'utf8' });
   execFileSync('cp', ['-r', `${REPO}src`, `${REPO}tools`, `${REPO}package.json`, dir], { encoding: 'utf8' });
   execFileSync('ln', ['-s', `${REPO}node_modules`, `${dir}node_modules`], { encoding: 'utf8' });
+
+  // Command tests must start from an isolated V0.4 fixture. Real pending or applied
+  // editorial lots belong to repository.test.ts; copying them here would turn the
+  // synthetic L999 into an invalid predecessor of a genuine pending L001.
+  // Change only the brand-new scratch directory, never the working repository.
+  const lotsDir = `${dir}src/data/academy-release/lots/`;
+  for (const file of readdirSync(lotsDir)) {
+    if (file.endsWith('.json')) unlinkSync(`${lotsDir}${file}`);
+  }
+  const registryPath = `${dir}src/lib/release/lots.ts`;
+  const comments = readFileSync(registryPath, 'utf8').split('\n')
+    .filter((line) => line.startsWith('//')).join('\n');
+  writeFileSync(registryPath, `${comments}\nexport const LOT_MANIFESTS: readonly unknown[] = [];\n`);
+
+  const releasePath = `${dir}src/data/academy-release/release.json`;
+  const release = JSON.parse(readFileSync(releasePath, 'utf8'));
+  const baseline = JSON.parse(readFileSync(`${dir}src/data/academy-release/baseline.json`, 'utf8'));
+  writeFileSync(releasePath, `${JSON.stringify({
+    ...release,
+    mode: 'production',
+    applied: [],
+    ledger: [],
+    inventory: Object.keys(baseline.records).sort(),
+  }, null, 2)}\n`);
   return dir;
 };
 const cleanup = (dir: string) => execFileSync('rm', ['-rf', dir], { encoding: 'utf8' });
