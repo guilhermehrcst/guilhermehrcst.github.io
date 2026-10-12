@@ -33,7 +33,7 @@ declare module 'node:crypto' {
   };
 }
 declare module 'node:child_process' {
-  export function execFileSync(file: string, args: readonly string[], options: { encoding: 'utf8'; cwd?: URL | string; stdio?: readonly string[] }): string;
+  export function execFileSync(file: string, args: readonly string[], options: { encoding: 'utf8'; cwd?: URL | string; stdio?: readonly string[]; env?: Readonly<Record<string, string | undefined>> }): string;
 }
 declare const process: {
   readonly argv: readonly string[];

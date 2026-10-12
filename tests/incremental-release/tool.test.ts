@@ -18,9 +18,10 @@ const scratch = (): string => {
   return dir;
 };
 const cleanup = (dir: string) => execFileSync('rm', ['-rf', dir], { encoding: 'utf8' });
-const run = (dir: string, ...args: string[]): { ok: boolean; out: string } => {
+const run = (dir: string, ...args: string[]): { ok: boolean; out: string } => runWith({}, dir, ...args);
+const runWith = (env: Readonly<Record<string, string>>, dir: string, ...args: string[]): { ok: boolean; out: string } => {
   try {
-    return { ok: true, out: execFileSync(process.execPath, ['--experimental-strip-types', '--no-warnings', 'tools/academy-release.ts', ...args], { encoding: 'utf8', cwd: dir, stdio: ['ignore', 'pipe', 'pipe'] }) };
+    return { ok: true, out: execFileSync(process.execPath, ['--experimental-strip-types', '--no-warnings', 'tools/academy-release.ts', ...args], { encoding: 'utf8', cwd: dir, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, ...env } }) };
   } catch (error) {
     return { ok: false, out: String((error as { stderr?: string }).stderr ?? error) };
   }
@@ -131,5 +132,27 @@ test('a resource whose path is in preparation is refused: placement fails and no
   assert.equal(applied.ok, false);
   assert.match(applied.out, /placement: ef-sme-alfabeto-1 has no page that shows it/);
   assert.deepEqual(snapshot(dir), before);
+  cleanup(dir);
+});
+
+test('a write that fails midway restores every file: manifest, lots.ts and release.json (injected faults)', () => {
+  const dir = scratch();
+  simulationMode(dir);
+  const path = filled(dir, 'L999-ensaio', pick(dir).slice(0, 1));
+  const before = snapshot(dir);
+  // ACADEMY_RELEASE_FAULT makes the tool throw right after the named write (a test hook; unset in use).
+  for (const step of ['after-manifest', 'after-lots', 'after-release']) {
+    const applied = runWith({ ACADEMY_RELEASE_FAULT: step }, dir, 'apply', path);
+    assert.equal(applied.ok, false, step);
+    assert.match(applied.out, new RegExp(`injected fault ${step}`), step);
+    assert.match(applied.out, /nothing was changed/, step);
+    assert.deepEqual(snapshot(dir), before, `${step}: every file restored`);
+  }
+  // The same holds for rollback once a lot is applied.
+  assert.ok(run(dir, 'apply', path).ok);
+  const applied = snapshot(dir);
+  const back = runWith({ ACADEMY_RELEASE_FAULT: 'after-release' }, dir, 'rollback', 'L999-ensaio');
+  assert.equal(back.ok, false);
+  assert.deepEqual(snapshot(dir), applied, 'rollback: every file restored');
   cleanup(dir);
 });

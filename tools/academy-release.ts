@@ -75,15 +75,30 @@ const buildProblems = (): string | null => {
   }
 };
 
-/** Writes the release files, verifies them, and restores every one of them if the result does not hold. */
+/** Test hook: ACADEMY_RELEASE_FAULT=<step> throws right after that write, to prove the restore. Unset in use. */
+const fault = (step: string): void => {
+  if (process.env.ACADEMY_RELEASE_FAULT === step) throw new Error(`injected fault ${step}`);
+};
+
+/** Writes the release files and verifies them; if a write throws midway or the result does not hold,
+ *  every file is restored: lots.ts and release.json to their saved text, any manifest added removed. */
 const transact = (writes: () => void): void => {
   const saved = [LOTS_TS, RELEASE_JSON].map((url) => [url, readFileSync(url, 'utf8')] as const);
   const before = new Set(lotFiles());
-  writes();
-  const problems = buildProblems();
+  const restore = () => {
+    for (const [url, text] of saved) writeFileSync(url, text);
+    for (const f of lotFiles()) if (!before.has(f)) unlinkSync(new URL(f, LOTS_DIR));
+  };
+  let problems: string | null;
+  try {
+    writes();
+    problems = buildProblems();
+  } catch (error) {
+    restore();
+    return die(`a write failed (${error instanceof Error ? error.message : String(error)}); nothing was changed`);
+  }
   if (problems === null) return;
-  for (const [url, text] of saved) writeFileSync(url, text);
-  for (const f of lotFiles()) if (!before.has(f)) unlinkSync(new URL(f, LOTS_DIR));
+  restore();
   die(`the release would not hold; nothing was changed:\n${problems}`);
 };
 
@@ -183,12 +198,15 @@ switch (command) {
     if (report.registeredAlready) die(`${lot.lot} is already registered; an applied or rolled-back lot is never rewritten nor applied again — record its decisions in a new lot`);
     transact(() => {
       copyFileSync(arg!, new URL(file, LOTS_DIR));
+      fault('after-manifest');
       const files = lotFiles();
       writeFileSync(LOTS_TS, renderLots(files));
+      fault('after-lots');
       const manifests = files.map((f) => readJson(new URL(f, LOTS_DIR)));
       const pin = { lot: lot.lot, digest: digestOf(lot) };
       const next = { ...release, applied: [...release.applied, pin], ledger: [...release.ledger, pin] };
       writeJson(RELEASE_JSON, { ...next, inventory: projectedInventory(manifests, { ...next, inventory: [] }) });
+      fault('after-release');
     });
     const after = readJson(RELEASE_JSON);
     out({ applied: lot.lot, published: after.inventory.length, newHosts: report.newHosts, next: 'npm test (update the state guards one by one, with the reason), npm run build' });
@@ -203,6 +221,7 @@ switch (command) {
       // The manifest stays registered and the ledger keeps its pin: the history is never rewritten.
       const next = { ...release, applied: release.applied.slice(0, -1) };
       writeJson(RELEASE_JSON, { ...next, inventory: projectedInventory(manifests, { ...next, inventory: [] }) });
+      fault('after-release');
     });
     out({ rolledBack: arg, published: readJson(RELEASE_JSON).inventory.length });
     break;
