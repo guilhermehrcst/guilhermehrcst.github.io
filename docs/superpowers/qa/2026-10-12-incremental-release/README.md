@@ -42,6 +42,15 @@ Na primeira medição da âncora, 2 verificações falharam porque a medição f
 suave (`scroll-behavior: smooth`): o recurso estava a 934 px no instante 0 e assentou a 96 px do topo após
 400 ms. A QA passou a esperar a rolagem estabilizar; não houve mudança no site.
 
+## Revisão Codex (PR #43) e nova medição
+
+Após as correções da revisão (`6d3ba3e`: host preso à instituição, observação aprovada = nota do registro,
+aprovações de lotes registrados conferidas contra o registro, ID suspenso após o prefixo `recurso-`), os
+três cenários foram reconstruídos: build + `verify-dist` passam em A, AB e A-pending-B, e A continua
+idêntico byte a byte a A-pending-B. A referência obsoleta `"/tecnologia/#recurso-google-mlcc"` num arquivo
+de dados do `dist/` de AB passava no `verify-dist` anterior e agora falha
+(`the suspended resource google-mlcc is still in dist`); o `dist/` de AB limpo continua passando.
+
 ## Guardas de estado (AB)
 
 As 32 falhas em `guards-AB.txt` são testes que fixam o estado atual (nenhum lote aplicado, 37 publicados,
