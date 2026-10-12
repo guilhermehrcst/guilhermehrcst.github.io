@@ -605,7 +605,7 @@
       "position": 3,
       "id": "inep-enem-provas-gabaritos",
       "prior_state": "STAGED",
-      "official_url": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos",
+      "official_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf",
       "note": "ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente.",
       "editorial_status": "APROVADO_FONTE_E_ESCOPO",
       "publication_authorized": false,
@@ -628,7 +628,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "INEP",
-      "verified_source_index_url": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos",
       "verified_attachment_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -640,7 +639,8 @@
         "what_was_read": "ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente."
       },
       "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
-      "verified_answer_key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D1_CD1.pdf"
+      "verified_answer_key_url": "https://download.inep.gov.br/enem/provas_e_gabaritos/2024_GB_impresso_D1_CD1.pdf",
+      "source_index_url": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos"
     },
     {
       "path": "vestibulares",
@@ -882,7 +882,7 @@
       "position": 2,
       "id": "pm-cn-provas",
       "prior_state": "PARTIAL_ATTACHMENT",
-      "official_url": "https://www.marinha.mil.br/sspm/colegionaval/colegio_princ",
+      "official_url": "https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf",
       "note": "CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice.",
       "editorial_status": "APROVADO_FONTE_E_ESCOPO",
       "publication_authorized": false,
@@ -905,7 +905,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "Marinha do Brasil / SSPM",
-      "verified_source_index_url": "https://www.marinha.mil.br/sspm/colegionaval/colegio_princ",
       "verified_attachment_url": "https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -916,14 +915,15 @@
         "pages_inspected": 5,
         "what_was_read": "CPACN 2025: prova amarela do 1º dia de Matemática e Inglês; enunciados e alternativas abertos no PDF, não apenas índice."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação."
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
+      "source_index_url": "https://www.marinha.mil.br/sspm/colegionaval/colegio_princ"
     },
     {
       "path": "pre-militar",
       "position": 3,
       "id": "pm-en-provas",
       "prior_state": "PARTIAL_ATTACHMENT",
-      "official_url": "https://www.marinha.mil.br/sspm/node/95",
+      "official_url": "https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961",
       "note": "CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto.",
       "editorial_status": "APROVADO_FONTE_E_ESCOPO",
       "publication_authorized": false,
@@ -946,7 +946,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "Marinha do Brasil / SSPM",
-      "verified_source_index_url": "https://www.marinha.mil.br/sspm/node/95",
       "verified_attachment_url": "https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -957,14 +956,15 @@
         "pages_inspected": 4,
         "what_was_read": "CPAEN 2025: prova amarela do 1º dia de Matemática e Inglês; PDF independente no sistema oficial, sem afirmar que o ZIP foi aberto."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação."
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
+      "source_index_url": "https://www.marinha.mil.br/sspm/node/95"
     },
     {
       "path": "pre-militar",
       "position": 4,
       "id": "pm-eear-provas",
       "prior_state": "PARTIAL_ATTACHMENT",
-      "official_url": "https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25",
+      "official_url": "https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf",
       "note": "EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas.",
       "editorial_status": "APROVADO_FONTE_E_ESCOPO",
       "publication_authorized": false,
@@ -987,7 +987,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "Escola de Especialistas de Aeronáutica",
-      "verified_source_index_url": "https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25",
       "verified_attachment_url": "https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -998,14 +997,15 @@
         "pages_inspected": 3,
         "what_was_read": "EEAR CFS 1/2024, código 02: o PDF contém gabarito e questões de Português, Inglês, Matemática e Física, efetivamente inspecionadas."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação."
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
+      "source_index_url": "https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25"
     },
     {
       "path": "pre-militar",
       "position": 5,
       "id": "pm-eam-provas",
       "prior_state": "PARTIAL_ATTACHMENT",
-      "official_url": "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag",
+      "official_url": "https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf",
       "note": "CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados.",
       "editorial_status": "APROVADO_FONTE_E_ESCOPO",
       "publication_authorized": false,
@@ -1028,7 +1028,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "Marinha do Brasil / SSPM",
-      "verified_source_index_url": "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag",
       "verified_attachment_url": "https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -1039,7 +1038,8 @@
         "pages_inspected": 5,
         "what_was_read": "CPAEAM 2023: prova amarela em PDF com questões de Matemática, Português, Ciências e Inglês; texto e perguntas verificados."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação."
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
+      "source_index_url": "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag"
     },
     {
       "path": "pre-militar",
@@ -1069,7 +1069,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "Força Aérea Brasileira",
-      "verified_source_index_url": "https://www.fab.mil.br/ingresso/provas.html",
       "verified_attachment_url": "https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -1080,7 +1079,8 @@
         "pages_inspected": 3,
         "what_was_read": "AFA 2025: prova versão A, 64 questões de Português, Matemática, Inglês e Física, mais Redação; documento oficial extraído."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação."
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
+      "source_index_url": "https://www.fab.mil.br/ingresso/provas.html"
     },
     {
       "path": "pre-militar",
@@ -1110,7 +1110,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "Força Aérea Brasileira / EPCAR",
-      "verified_source_index_url": "https://www.fab.mil.br/ingresso/provas.html",
       "verified_attachment_url": "https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -1121,7 +1120,8 @@
         "pages_inspected": 3,
         "what_was_read": "EPCAR 2026: prova versão A, 48 questões de Inglês, Matemática e Português, mais Redação; PDF oficial inspecionado."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação."
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
+      "source_index_url": "https://www.fab.mil.br/ingresso/provas.html"
     },
     {
       "path": "pre-militar",
@@ -1183,7 +1183,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "Escola de Sargentos das Armas / Exército Brasileiro",
-      "verified_source_index_url": "https://esa.eb.mil.br/index.php/pt/?catid=45&id=830%3Aprovas-anteriores&view=article",
       "verified_attachment_url": "https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -1196,7 +1195,8 @@
       },
       "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
       "replaced_candidate_id": "pm-espcex-provas",
-      "replaced_candidate_url": "https://espcex.eb.mil.br/images/concurso/provas/provas2025/2025%20PROVA%20MODELO%20C.pdf"
+      "replaced_candidate_url": "https://espcex.eb.mil.br/images/concurso/provas/provas2025/2025%20PROVA%20MODELO%20C.pdf",
+      "source_index_url": "https://esa.eb.mil.br/index.php/pt/?catid=45&id=830%3Aprovas-anteriores&view=article"
     },
     {
       "path": "pre-militar",
@@ -1226,7 +1226,6 @@
       "format": "past-exam",
       "language": "pt",
       "source_organization": "Instituto Militar de Engenharia / Exército Brasileiro",
-      "verified_source_index_url": "https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg",
       "verified_attachment_url": "https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf",
       "pdf_evidence": {
         "verified_on": "2026-10-12",
@@ -1237,7 +1236,8 @@
         "pages_inspected": 5,
         "what_was_read": "IME CFG 2024/2025: caderno objetivo oficial de 24 páginas, 40 questões; PDF aberto apesar de falha na página HTML do índice."
       },
-      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação."
+      "validation_note": "Arquivo PDF oficial disponibilizado sem pagamento nem login; páginas inspecionadas indicadas, sem alegação de leitura integral ou autorização de publicação.",
+      "source_index_url": "https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg"
     },
     {
       "path": "ensino-superior",
