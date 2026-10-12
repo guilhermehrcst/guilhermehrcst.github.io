@@ -8,7 +8,6 @@ import { readdirSync, readFileSync } from 'node:fs';
 import baseline from '../../src/data/academy-release/baseline.json' with { type: 'json' };
 import release from '../../src/data/academy-release/release.json' with { type: 'json' };
 import { LOT_MANIFESTS } from '../../src/lib/release/lots.ts';
-import { RECORD_REVISIONS } from '../../src/lib/release/revisions.ts';
 import { lotProblems } from '../../src/lib/release/engine.ts';
 import { catalogue, isPublishedResource, publishedResources, RELEASE } from '../../src/lib/learning-resources.ts';
 import { digestOf } from '../../src/lib/release/canonical.ts';
@@ -18,7 +17,6 @@ test('this PR applies no lot: production mode, nothing applied, the inventory is
   assert.equal(release.mode, 'production');
   assert.deepEqual(release.applied, []);
   assert.deepEqual(release.ledger, [], 'no lot was ever applied');
-  assert.deepEqual(RECORD_REVISIONS, [], 'no revision is pending');
   assert.deepEqual(release.inventory, Object.keys(baseline.records).sort());
   assert.deepEqual(release.inventory, catalogue.filter(isPublishedResource).map((r) => r.id).sort());
   assert.deepEqual(RELEASE.problems, []);

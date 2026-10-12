@@ -13,12 +13,9 @@ import { catalogue } from '../src/lib/catalogue-records.ts';
 import { STAGED_RESOURCES } from '../src/lib/staging.ts';
 import { GATEB_NEW_RESOURCES } from '../src/lib/staging-gateb.ts';
 import { digestOf } from '../src/lib/release/canonical.ts';
-import { RECORD_REVISIONS } from '../src/lib/release/revisions.ts';
 
 const [command, arg] = process.argv.slice(2);
 const records = new Map([...catalogue, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES].map((r) => [r.id, r]));
-// A revision is what a re-approval binds to: digest and entry use it when there is one.
-for (const r of RECORD_REVISIONS) records.set(r.id, r);
 const out = (value: unknown) => process.stdout.write(`${typeof value === 'string' ? value : JSON.stringify(value, null, 2)}\n`);
 const die = (message: string): never => {
   process.stderr.write(`academy-release: ${message}\n`);

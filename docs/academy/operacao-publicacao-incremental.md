@@ -17,8 +17,6 @@ separadas. Merge, CI verde, relatório de pesquisa ou simulação **não** são 
 | Arquivo | Papel |
 |---|---|
 | `src/lib/learning-resources.ts` | Catálogo tipado (37 publicados + 3 retidos) e a projeção pública `publishedResources` |
-| `src/lib/catalogue-records.ts` | Dados dos registros do catálogo (sem projeção): a ferramenta os lê mesmo com o build vermelho |
-| `src/lib/release/revisions.ts` | Revisões de registros já publicados: o que uma reaprovação liga, sem tocar o registro live |
 | `src/lib/staging.ts`, `src/lib/staging-gateb.ts` | Registros candidatos tipados. Importá-los não publica nada |
 | `src/data/academy-release/baseline.json` | Digest de cada um dos 37 da V0.4, como publicados (idênticos à `main` 5e4b086). Trava de integridade |
 | `src/data/academy-release/lots/L000-nome.json` | Manifesto de lote: decisões humanas e, quando houver, autorização |
@@ -144,21 +142,13 @@ No PR do lote, e só com autorização expressa para o lote exato:
 
 ### Mudar um recurso já publicado
 
-O registro **live** (em `src/lib/catalogue-records.ts` ou no módulo de candidatos) nunca é editado no
-lugar: isso deixa o build vermelho (`changed since it was published`). A mudança vai para uma **revisão**:
-
-1. Copie o registro para `RECORD_REVISIONS` em `src/lib/release/revisions.ts` (mesmo `id`) e aplique ali a
-   mudança, com **evidência nova** (`verified.on` posterior a qualquer retenção/suspensão, `evidence` do
-   próprio host, cadastro e certificado declarados).
-2. `node --experimental-strip-types tools/academy-release.ts entry <id>` já usa a revisão: gere a entrada
-   de reaprovação num lote novo, com a decisão e a autorização de uma pessoa (seções 4 e 5). Um host ou uma
-   instituição nova precisa constar de `hosts` do lote: a confiança da V0.4 vale só para o par host +
-   instituição de um registro ainda igual ao publicado.
-3. Enquanto o lote **não for aplicado**, o catálogo público continua com o registro live, igual ao digest
-   publicado, e o build fica verde; a reaprovação já é conferida contra a revisão.
-4. Ao **aplicar** o lote (seção 8), a revisão passa a ser a versão pública. Depois, se quiser, incorpore a
-   revisão ao registro live e remova-a de `revisions.ts`: a aprovação aplicada continua batendo.
-5. Rollback (seção 10): retirar o lote de `applied` volta a publicar o registro live.
+Qualquer mudança num registro publicado (título, URL, cadastro, evidência…) deixa o build vermelho até a
+reaprovação ser **aplicada no mesmo PR**: o motor não guarda a versão antiga para continuar publicando, e
+publicar a versão nova sem aprovação aplicada seria publicar metadado não aprovado. Os dados dos
+registros ficam em `src/lib/catalogue-records.ts` (e nos módulos de candidatos), lidos pela ferramenta sem
+passar pela projeção: `tools/academy-release.ts digest|entry <id>` funciona com o build vermelho e dá o
+digest que a reaprovação precisa. Um registro alterado deixa de valer como confiança de host da V0.4: o
+lote revisa o host para a instituição.
 
 ## 9. Como suspender um recurso?
 
@@ -168,8 +158,7 @@ nomeia uma pessoa (nomes de ferramentas são recusados). O recurso sai de págin
 busca, âncoras, destaques e dados públicos; `verify-dist` falha se o ID sobrar em qualquer arquivo do
 `dist/`. Se ele estiver numa seleção de destaques liberada, o build falha até a seleção ser corrigida.
 O manifesto antigo **não** é editado: o histórico fica nos lotes. Para voltar, o recurso precisa de
-verificação nova: evidência com data **estritamente posterior** à suspensão (o mesmo vale para um item
-`held`); a data de retirada continua valendo para toda aprovação seguinte.
+verificação nova: evidência com data igual ou posterior à suspensão (o mesmo vale para um item `held`).
 
 ## 10. Como fazer rollback?
 
