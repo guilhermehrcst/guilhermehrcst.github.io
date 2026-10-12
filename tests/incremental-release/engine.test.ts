@@ -434,3 +434,46 @@ test('a lot is never authorized before it was created', () => {
     suspensions: [{ id: 'cs50x', reason: 'Teste', decidedBy: SIMULATED_BY, decidedOn: '2026-10-10' }] });
   assert.match(lotProblems(lot, NOW).join('\n'), /L001-datas: authorized before it was created/);
 });
+
+// Codex review, round 8 ---------------------------------------------------------------------------------
+
+test('a resource\'s decisions never go back in time: a backdated suspension or hold is refused', () => {
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc', { decidedOn: '2026-10-12' })]);
+  const b = lotOf('L002-suspensao', [], { createdOn: '2026-10-12', suspensions: [{ id: 'google-mlcc', reason: 'Retroativa', decidedBy: SIMULATED_BY, decidedOn: '2026-10-01' }] });
+  const c = lotOf('L003-retorno', [entryFor('google-mlcc')]);
+  const all = [a, b, c];
+  assert.match(problemsOf(project({ lots: all, release: releaseOf(all, inventoryWith(['google-mlcc'])) })), /L002-suspensao: google-mlcc decided on 2026-10-01, before its previous decision of 2026-10-12/);
+});
+
+test('a standing held decision is bound to its record too (not to publishability)', () => {
+  const fake = lotOf('L001-retido', [entryFor('google-mlcc', { decision: 'held', reason: 'Pendência', digest: `sha256:${'0'.repeat(64)}`, url: 'https://developers.google.com/outra/' })]);
+  const found = problemsOf(project({ lots: [fake], release: releaseOf([fake], inventoryWith([])) }));
+  assert.match(found, /L001-retido google-mlcc: approved for https:\/\/developers\.google\.com\/outra\//);
+  assert.match(found, /L001-retido google-mlcc: the record changed after its approval/);
+  // A truthful hold of the ESA record (not publishable as is) passes.
+  const esa = lotOf('L001-retido', [entryFor('pm-esa-provas-2026', { decision: 'held', reason: 'PDF não abre no navegador' })]);
+  assert.deepEqual(project({ lots: [esa], release: releaseOf([esa], inventoryWith([])) }).problems, []);
+});
+
+test('every ledgered lot was authorized', () => {
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const draft = lotOf('L002-rascunho', [entryFor('odin-foundations')], { authorization: null });
+  const release = releaseOf([a], inventoryWith(['google-mlcc']), { ledger: releaseOf([a, draft], []).ledger });
+  assert.match(problemsOf(project({ lots: [a, draft], release })), /L002-rascunho: in the ledger without an authorization to publish/);
+});
+
+test('recorded URLs are checked against the state the recorded lots would reach', () => {
+  const a = record('google-mlcc');
+  const bRecord = { ...record('odin-foundations'), url: a.url };
+  const bWithEvidence = { ...bRecord, verified: { ...bRecord.verified!, evidence: { ...bRecord.verified!.evidence!, url: a.url! } } };
+  const pool = POOL.map((r) => (r.id === 'odin-foundations' ? bWithEvidence : r));
+  const l1 = lotOf('L001-a', [entryFor('google-mlcc')]);
+  const l2 = lotOf('L002-suspende', [], { suspensions: [{ id: 'google-mlcc', reason: 'Saiu', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
+  const l3 = lotOf('L003-b', [{ ...entryFor('google-mlcc'), id: 'odin-foundations', url: a.url!, digest: digestOf(bWithEvidence), institution: bRecord.provider, format: bRecord.format,
+    evidence: { ...entryFor('google-mlcc').evidence, url: a.url!, observed: bRecord.verified!.evidence!.note } }],
+    { hosts: [{ host: new URL(a.url!).hostname, institution: bRecord.provider }] });
+  const p = project({ pool, lots: [l1, l2, l3], release: releaseOf([], inventoryWith([])) });
+  assert.doesNotMatch(problemsOf(p), /same URL/);
+  // Without the suspension, the clash is reported before application.
+  assert.match(problemsOf(project({ pool, lots: [l1, l3], release: releaseOf([], inventoryWith([])) })), /same URL/);
+});

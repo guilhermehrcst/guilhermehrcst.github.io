@@ -333,8 +333,9 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   if (ledgerNames.some((name, i) => i > 0 && ledgerNames[i - 1]! >= name)) problems.push('release: the ledger must be in lot order');
   for (const { lot: name, digest } of release.ledger) {
     const lot = byName.get(name);
-    if (!lot) problems.push(`release: ${name} is in the ledger but has no manifest`);
-    else if (digestOf(lot) !== digest) problems.push(`${name}: changed after it was applied (digest ${digestOf(lot)}, pinned ${digest})`);
+    if (!lot) { problems.push(`release: ${name} is in the ledger but has no manifest`); continue; }
+    if (digestOf(lot) !== digest) problems.push(`${name}: changed after it was applied (digest ${digestOf(lot)}, pinned ${digest})`);
+    if (lot.authorization === null) problems.push(`${name}: in the ledger without an authorization to publish`);
   }
   for (const { lot: name, digest } of release.applied) {
     const pinned = release.ledger.find((l) => l.lot === name);
@@ -383,7 +384,13 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     const current = map.get(id);
     map.set(id, current !== undefined && current > on ? current : on);
   };
-  const replay = (lot: LotManifest, at: Map<string, EditorialState>, takenOut: Map<string, string>, live: boolean): void => {
+  const replay = (lot: LotManifest, at: Map<string, EditorialState>, takenOut: Map<string, string>, decidedOn: Map<string, string>, live: boolean): void => {
+    // A resource's decisions never go back in time across lots: no backdated hold or suspension.
+    const inOrder = (id: string, on: string): void => {
+      const previous = decidedOn.get(id);
+      if (previous !== undefined && on < previous) problems.push(`${lot.lot}: ${id} decided on ${on}, before its previous decision of ${previous}`);
+      if (previous === undefined || on > previous) decidedOn.set(id, on);
+    };
     const move = (id: string, to: EditorialState): boolean => {
       const from = at.get(id);
       if (from === undefined) { problems.push(`${lot.lot}: ${id} is not a known record`); return false; }
@@ -398,6 +405,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     for (const entry of lot.entries) {
       if (seen.has(entry.id)) problems.push(`${lot.lot}: ${entry.id} is decided twice`);
       seen.add(entry.id);
+      inOrder(entry.id, entry.decidedOn);
       // A resource taken out (held or suspended) returns only on a verification made since.
       const outOn = takenOut.get(entry.id);
       if (outOn !== undefined && entry.decision !== 'held' && entry.evidence.on < outOn) {
@@ -418,6 +426,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     for (const suspension of lot.suspensions) {
       if (seen.has(suspension.id)) problems.push(`${lot.lot}: ${suspension.id} is decided twice`);
       seen.add(suspension.id);
+      inOrder(suspension.id, suspension.decidedOn);
       if (move(suspension.id, 'suspended')) {
         takeOut(takenOut, suspension.id, suspension.decidedOn);
         if (live) suspended.set(suspension.id, lot.lot);
@@ -426,17 +435,21 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   };
   /** id → the latest date it was taken out (held or suspended): a permanent lower bound for later evidence. */
   const takenOut = new Map<string, string>();
-  for (const lot of applied) replay(lot, states, takenOut, true);
+  /** id → its latest decision date, so no later lot can decide it earlier. */
+  const lastDecided = new Map<string, string>();
+  for (const lot of applied) replay(lot, states, takenOut, lastDecided, true);
   // A new lot sorts after every lot ever applied (the ledger), rolled back or not: the ledger only grows.
   const lastApplied = [...appliedNames, ...ledgerNames].sort().at(-1);
   for (const lot of pending) if (lastApplied !== undefined && lot.lot < lastApplied) problems.push(`${lot.lot}: recorded after ${lastApplied} was applied, it can no longer be applied in order`);
   const pendingStates = new Map(states);
   const pendingTakenOut = new Map(takenOut);
-  for (const lot of pending) replay(lot, pendingStates, pendingTakenOut, false);
+  const pendingDecided = new Map(lastDecided);
+  for (const lot of pending) replay(lot, pendingStates, pendingTakenOut, pendingDecided, false);
   for (const [id, state] of pendingStates) if (states.get(id) !== state) pendingDecisions.set(id, state);
 
   /** Everything that does not match between an approval and the record it names. */
-  const approvalProblems = (entry: LotEntry, lot: LotManifest, r: LearningResource): string[] => {
+  /** `publishes` false for a hold: the entry still names this exact record, but it need not be publishable. */
+  const approvalProblems = (entry: LotEntry, lot: LotManifest, r: LearningResource, publishes = true): string[] => {
     const found: string[] = [];
     const at = `${lot.lot} ${r.id}`;
     const digest = digestOf(r);
@@ -448,6 +461,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     if (r.verified?.by !== entry.evidence.method) found.push(`${at}: approved method ${entry.evidence.method}, the record's is ${String(r.verified?.by)}`);
     if (r.verified?.evidence?.url !== entry.evidence.url) found.push(`${at}: approved evidence at ${entry.evidence.url}, the record's is at ${String(r.verified?.evidence?.url)}`);
     if (r.verified?.evidence?.note !== entry.evidence.observed) found.push(`${at}: the approved observation is not the record's evidence note`);
+    if (!publishes) return found;
     if (catalogueIds.has(r.id) && !(r.id in baseline.records)) found.push(`${at}: a held catalogue record is published only by moving it to the pool`);
     const host = r.url ? new URL(r.url).hostname : '';
     if (!baselineHosts.has(`${host} ${entry.institution}`) && !lot.hosts.some((h) => h.host === host && h.institution === entry.institution)) {
@@ -460,7 +474,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   // A recorded approval must already match its record: an authorized lot never drifts from its candidate.
   for (const { entry, lot } of recorded) problems.push(...approvalProblems(entry, lot, records.get(entry.id)!));
   for (const { entry, lot } of latest.values()) {
-    if (entry.decision === 'verified' && records.has(entry.id)) problems.push(...approvalProblems(entry, lot, records.get(entry.id)!));
+    if (entry.decision !== 'approved' && records.has(entry.id)) problems.push(...approvalProblems(entry, lot, records.get(entry.id)!, entry.decision === 'verified'));
   }
 
   // The projection, and each published record checked against the decision that published it.
@@ -488,13 +502,14 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     if (other) problems.push(`${r.id}: same URL as ${other} (${r.url})`);
     urls.set(r.url, r.id);
   }
-  // A recorded approval would join this projection: its URL may not repeat a published or another recorded one.
-  for (const { entry } of recorded) {
-    const r = records.get(entry.id)!;
-    if (!r.url || states.get(r.id) === 'published') continue;
+  // The recorded lots would reach pendingStates: the ids they would add must not repeat a URL of that state.
+  for (const [id, state] of pendingStates) {
+    if (state !== 'published' || states.get(id) === 'published') continue;
+    const r = records.get(id)!;
+    if (!r.url) continue;
     const other = urls.get(r.url);
-    if (other && other !== r.id) problems.push(`${r.id}: same URL as ${other} (${r.url})`);
-    urls.set(r.url, r.id);
+    if (other && other !== id && pendingStates.get(other) === 'published') problems.push(`${id}: same URL as ${other} (${r.url})`);
+    urls.set(r.url, id);
   }
 
   // Inventory: what the projection publishes is exactly what the release declares.
