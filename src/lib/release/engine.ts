@@ -319,6 +319,8 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   for (const lot of lots) {
     if (byName.has(lot.lot)) problems.push(`${lot.lot}: two manifests with this name`);
     byName.set(lot.lot, lot);
+    // A rehearsal never enters the production state, applied or not.
+    if (lot.simulation && release.mode === 'production') problems.push(`${lot.lot}: a simulated lot in a production release`);
   }
   const appliedNames = release.applied.map((a) => a.lot);
   if (new Set(appliedNames).size !== appliedNames.length) problems.push('release: a lot is applied twice');
@@ -341,7 +343,6 @@ export const projectRelease = (input: ReleaseInput): Projection => {
     if (!lot) { problems.push(`release: ${name} is applied but has no manifest`); continue; }
     if (!pinned && digestOf(lot) !== digest) problems.push(`${name}: changed after it was applied (digest ${digestOf(lot)}, pinned ${digest})`);
     if (lot.authorization === null) problems.push(`${name}: applied without an authorization to publish`);
-    if (lot.simulation && release.mode === 'production') problems.push(`${name}: a simulated lot in a production release`);
     applied.push(lot);
   }
   if (problems.length) return empty();
@@ -373,6 +374,9 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   const approval = new Map<string, { entry: LotEntry; lot: LotManifest }>();
   /** Approvals in recorded, not yet applied lots: checked like applied ones, never published. */
   const recorded: { entry: LotEntry; lot: LotManifest }[] = [];
+  /** Each id's latest entry, applied or recorded: a verification that is still the last word on a record
+   *  is bound to it like an approval (a later decision supersedes it, so history never breaks). */
+  const latest = new Map<string, { entry: LotEntry; lot: LotManifest }>();
   const replay = (lot: LotManifest, at: Map<string, EditorialState>, takenOut: Map<string, string>, live: boolean): void => {
     const move = (id: string, to: EditorialState): boolean => {
       const from = at.get(id);
@@ -396,6 +400,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
       if (entry.decision === 'held') takenOut.set(entry.id, entry.decidedOn);
       // Only an approval clears it: its evidence is then bound to the record (approvalProblems).
       else if (entry.decision === 'approved') takenOut.delete(entry.id);
+      latest.set(entry.id, { entry, lot });
       if (move(entry.id, entry.decision) && entry.decision === 'approved') {
         at.set(entry.id, 'published');
         if (live) {
@@ -447,6 +452,9 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   };
   // A recorded approval must already match its record: an authorized lot never drifts from its candidate.
   for (const { entry, lot } of recorded) problems.push(...approvalProblems(entry, lot, records.get(entry.id)!));
+  for (const { entry, lot } of latest.values()) {
+    if (entry.decision === 'verified' && records.has(entry.id)) problems.push(...approvalProblems(entry, lot, records.get(entry.id)!));
+  }
 
   // The projection, and each published record checked against the decision that published it.
   const published: PublishedLearningResource[] = [];

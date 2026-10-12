@@ -364,3 +364,24 @@ test('a rolled-back lot stays preserved and out of the way: later lots apply nor
   // Still pinned: editing it fails.
   assert.match(problemsOf(project({ lots: [a, { ...b, title: 'x' }, c], release: releaseOf([a, c], inventoryWith(['google-mlcc', 'odin-foundations']), { ledger }) })), /L002-fundamental: changed after it was applied/);
 });
+
+// Codex review, round 5 ---------------------------------------------------------------------------------
+
+test('a verified decision is bound to its record like an approval while it is the latest decision', () => {
+  const fake = lotOf('L001-verificado', [entryFor('google-mlcc', { decision: 'verified', digest: `sha256:${'0'.repeat(64)}`, evidence: { ...entryFor('google-mlcc').evidence, url: 'https://example.com/' } })]);
+  for (const release of [releaseOf([fake], inventoryWith([])), releaseOf([], inventoryWith([]))]) {
+    const found = problemsOf(project({ lots: [fake], release }));
+    assert.match(found, /L001-verificado google-mlcc: the record changed after its approval/);
+    assert.match(found, /approved evidence at https:\/\/example\.com\//);
+  }
+  // A true verification passes; a later approval of a newer record supersedes it.
+  const real = lotOf('L001-verificado', [entryFor('google-mlcc', { decision: 'verified' })]);
+  assert.deepEqual(project({ lots: [real], release: releaseOf([real], inventoryWith([])) }).problems, []);
+});
+
+test('a simulated manifest is refused in a production release even when it is not applied', () => {
+  const lot = lotOf('L001-ensaio', [entryFor('google-mlcc')]);
+  const p = project({ lots: [lot], release: releaseOf([], inventoryWith([]), { mode: 'production' }) });
+  assert.match(problemsOf(p), /L001-ensaio: a simulated lot in a production release/);
+  assert.equal(p.ifApplied.get('google-mlcc'), undefined);
+});
