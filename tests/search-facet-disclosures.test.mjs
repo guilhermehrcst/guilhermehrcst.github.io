@@ -43,3 +43,12 @@ test('search facets: the entire directory still works when JavaScript is unavail
   assert.match(component, /data-search-entry/);
   assert.match(behavior, /form\.hidden = false/);
 });
+
+test('Phase D navigates through the nested facet before checking an option', () => {
+  const phaseD = readFileSync(new URL('../docs/superpowers/qa/2026-10-12-v04-evidence/phaseD.mjs', import.meta.url), 'utf8');
+  const panel = phaseD.indexOf("await p.click('details[data-search-filters] > summary')");
+  const facet = phaseD.indexOf("await p.click('details[data-facet-disclosure=\"caminho\"] > summary')");
+  const checkbox = phaseD.indexOf('await p.check(\'input[name="caminho"][value="tecnologia"]\')');
+  assert.ok(panel >= 0 && facet > panel && checkbox > facet,
+    'Phase D must open the filter panel and its nested caminho disclosure before checking a hidden option');
+});
