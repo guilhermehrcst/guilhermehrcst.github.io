@@ -51,6 +51,14 @@ idêntico byte a byte a A-pending-B. A referência obsoleta `"/tecnologia/#recur
 de dados do `dist/` de AB passava no `verify-dist` anterior e agora falha
 (`the suspended resource google-mlcc is still in dist`); o `dist/` de AB limpo continua passando.
 
+Segunda revisão Codex (`878e669`: arrays com buracos recusados, suspensão por ferramenta recusada,
+confiança de host só de registro inalterado, retorno de `held`/suspenso só com evidência posterior,
+ferramenta operando com build vermelho): os três cenários foram reconstruídos de novo, build +
+`verify-dist` passam, A idêntico a A-pending-B, `google-mlcc` e `pm-esa-provas-2026` em 0 arquivos do
+`dist/` de AB. Num worktree com o título de `cs50x` alterado, `tools/academy-release.ts digest cs50x`
+devolve o novo digest, `status` relata o problema do build e o build falha
+(`cs50x: changed since it was published`).
+
 ## Guardas de estado (AB)
 
 As 32 falhas em `guards-AB.txt` são testes que fixam o estado atual (nenhum lote aplicado, 37 publicados,
