@@ -12,7 +12,7 @@ medido em cópias descartáveis com lotes marcados `SIMULAÇÃO`.
 | `plans.json` | Os IDs exatos de cada plano. |
 | `plan-b.patch` | Plano B (6 recursos em caminhos ativos, 37 → 43): guardas de estado e espelhos de `verify-dist` (4 hosts, trilha Computação em Nuvem, Ensino Superior como objetivo de Matemática). |
 | `plan-a.patch` | Plano A (9 recursos, 37 → 46) **com** a ativação de Fundamental e Pré-Militar em `taxonomy.ts` e todos os espelhos dessa ativação; inclui o conteúdo do Plano B. |
-| `rehearse.sh plan-b\|plan-a` | Ensaio reprodutível: aplica o patch e um lote `SIMULAÇÃO` pela ferramenta e roda testes, `astro check`, build e `verify-dist`. Só passa se os únicos testes divergentes forem os 3 que fixam a identidade da release. |
+| `rehearse.sh plan-b\|plan-a [workdir]` | Ensaio reprodutível (o workdir, absoluto, não pode existir: o script nunca apaga nem reaproveita um diretório): aplica o patch e um lote `SIMULAÇÃO` pela ferramenta e roda testes, `astro check`, build e `verify-dist`. Só passa se os únicos testes divergentes forem os 3 que fixam a identidade da release. |
 | `qa.mjs` | QA de navegador do `dist/` ensaiado. |
 
 ## Medições (12/10/2026, commit desta branch)
@@ -20,7 +20,7 @@ medido em cópias descartáveis com lotes marcados `SIMULAÇÃO`.
 | Verificação | Plano B | Plano A |
 |---|---|---|
 | Publicados | 43 | 46 |
-| Testes | 313 passam; só os 3 pinos de identidade divergem | idem |
+| Testes | 316 passam; só os 3 pinos de identidade divergem | idem |
 | `astro check`, build, `verify-dist` | passam (22 páginas, 2 em preparação) | passam (24 páginas, 0 em preparação) |
 | QA de navegador, 360 e 1280 px (`qa-plan-*.json`) | 246 verificações, 0 falhas | 295 verificações, 0 falhas |
 | Rollback (patch revertido + `rollback`) | `dist/` idêntico byte a byte ao de produção | idem |
