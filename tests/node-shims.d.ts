@@ -29,3 +29,14 @@ declare module 'node:crypto' {
     update(data: { toString(): string }): { digest(encoding: 'hex'): string };
   };
 }
+declare module 'node:child_process' {
+  export function execFileSync(file: string, args: readonly string[], options: { encoding: 'utf8' }): string;
+}
+declare const process: {
+  readonly argv: readonly string[];
+  readonly execPath: string;
+  readonly env: Readonly<Record<string, string | undefined>>;
+  readonly stdout: { write(text: string): boolean };
+  readonly stderr: { write(text: string): boolean };
+  exit(code?: number): never;
+};

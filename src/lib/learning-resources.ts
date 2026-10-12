@@ -5,6 +5,13 @@
 // V0.4 (spec §5.1): three separate axes, each declared on the resource and never inherited from a helper:
 // the paths it serves (who it is for), the exams it prepares for (only with evidence) and its subject.
 import { EXAM_ORDER, EXAM_PARENT, PATH_ORDER, SUBJECTS, type AreaId, type ExamId, type PathId, type SubjectId } from './taxonomy.ts';
+import RELEASE_BASELINE from '../data/academy-release/baseline.json' with { type: 'json' };
+import RELEASE_MANIFEST from '../data/academy-release/release.json' with { type: 'json' };
+import { projectRelease } from './release/engine.ts';
+import { LOT_MANIFESTS } from './release/lots.ts';
+// Typed candidates: the only records a lot may resolve an id to. Importing them publishes nothing.
+import { STAGED_RESOURCES } from './staging.ts';
+import { GATEB_NEW_RESOURCES } from './staging-gateb.ts';
 
 export type LearningSubjectId = SubjectId;
 /** What a resource really is (spec §4.3): a past exam, a single lesson or an atlas is never a course.
@@ -219,15 +226,9 @@ export const catalogue: LearningResource[] = [
 export const isPublishedResource = (resource: LearningResource): resource is PublishedLearningResource =>
   resource.url !== null && resource.verified?.freeAccess === true;
 
-export const publishedResources = catalogue.filter(isPublishedResource);
-
 /** A resource's area, derived from its subject; a multidisciplinary resource has none. */
 export const areaOf = (resource: Pick<LearningResource, 'subject'>): AreaId | null =>
   resource.subject === null ? null : SUBJECTS[resource.subject].area;
-
-/** The hosts of published resources: the only places a page may link out to for a resource.
- *  scripts/verify-dist.mjs keeps a hand-written copy; tests/verify-dist-hosts.test.ts keeps them equal. */
-export const COURSE_HOSTS: ReadonlySet<string> = new Set(publishedResources.map((resource) => new URL(resource.url).hostname));
 
 const REQUIRED_CHECKS = ['free', 'scope', 'language', 'format', 'path'] as const;
 const isDate = (on: string): boolean => {
@@ -308,3 +309,24 @@ for (const resource of catalogue) {
   if (problems.length) throw new Error(`learning-resources: ${problems.join('; ')}`);
 }
 if (new Set(catalogue.map((resource) => resource.id)).size !== catalogue.length) throw new Error('learning-resources: duplicate id');
+
+/** The public catalogue (Academy incremental release): the 37 records of V0.4, each locked to the digest it
+ *  was published with, plus the records approved in the lots that release.json applies, minus the ones
+ *  those lots suspend. Every other record, staged or held, is not published, whatever its data says.
+ *  Any mismatch between a record and its decision fails the build (src/lib/release/engine.ts). */
+export const RELEASE = projectRelease({
+  catalogue,
+  pool: [...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES],
+  baseline: RELEASE_BASELINE,
+  lots: LOT_MANIFESTS,
+  release: RELEASE_MANIFEST,
+  validate: (resource) => resourceProblems(resource),
+  now: new Date(),
+});
+if (RELEASE.problems.length) throw new Error(`learning-resources: release\n${RELEASE.problems.join('\n')}`);
+
+export const publishedResources: readonly PublishedLearningResource[] = RELEASE.published;
+
+/** The hosts of published resources: the only places a page may link out to for a resource.
+ *  scripts/verify-dist.mjs keeps a hand-written copy; tests/verify-dist-hosts.test.ts keeps them equal. */
+export const COURSE_HOSTS: ReadonlySet<string> = new Set(publishedResources.map((resource) => new URL(resource.url).hostname));
