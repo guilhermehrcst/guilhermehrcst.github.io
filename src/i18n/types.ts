@@ -169,6 +169,8 @@ export interface Dict {
   subject: { map: string; eyebrow: string; content: string; practice: string; reference: string; objectives: string; objectivesLead: (subject: string) => string };
   notFound: { home: string; subjects: string; search: string };
   resource: {
+    openSource: string;
+    accessLabel: string;
     formats: Record<LearningFormatId, string>;
     languages: Record<LearningLanguageId, string>;
     /** Only confirmed values have a label: 'unconfirmed' is never shown as a fact (V0.4 Gate B, P4). */

@@ -418,6 +418,8 @@ export const pt: Dict = {
   }),
   notFound: { home: 'Página inicial', subjects: 'Explorar as matérias', search: 'Buscar' },
   resource: {
+    openSource: 'Abrir na fonte',
+    accessLabel: 'Acesso',
     formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', lesson: 'Aula', practice: 'Prática', 'past-exam': 'Prova anterior', simulator: 'Simulado', reference: 'Material de referência' },
     languages: { pt: 'Em português', en: 'Em inglês', es: 'Em espanhol' },
     registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
