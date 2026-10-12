@@ -1,5 +1,6 @@
 // V0.4 Gate B, P4: individual verification for new resources; the 37 legacy records frozen by id, URL and
 // date. Converted from the RED tests of tests/gateb/gate-b.red.ts (adjusted to the approved checks).
+import baseline from '../src/data/academy-release/baseline.json' with { type: 'json' };
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { publishedResources } from '../src/lib/learning-resources.ts';
@@ -22,7 +23,9 @@ const resource = (over: Record<string, unknown>) => ({
 test('P4: the legacy set is exactly the 37 published today, and they need nothing new', () => {
   const legacy = lr.LEGACY_VERIFIED_IDS as readonly string[] | undefined;
   assert.ok(legacy, 'LEGACY_VERIFIED_IDS is not defined');
-  assert.deepEqual([...(legacy ?? [])].sort(), publishedResources.map((r) => r.id).sort());
+  // The V0.4 baseline, every one of them still published; what lots add later is not legacy.
+  assert.deepEqual([...(legacy ?? [])].sort(), Object.keys(baseline.records).sort());
+  for (const id of legacy ?? []) assert.ok(publishedResources.some((r) => r.id === id), `${id} stays published`);
   const problems = need(lr, 'verificationProblems');
   for (const r of publishedResources) assert.deepEqual(problems(r), [], r.id);
 });

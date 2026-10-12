@@ -494,9 +494,32 @@ test('a return needs evidence strictly after the take-out: same-day evidence pro
 });
 
 test('a real lot may not carry a simulation label in any casing or accent form', () => {
-  for (const label of ['Simulação — fixture de teste', 'simulacao: ensaio', 'SIMULACAO ensaio', 'SiMuLaÇãO ensaio']) {
+  // Decomposed (NFD) accents and full-width letters spell the same label (Codex review of 23c182a).
+  for (const label of ['Simulação — fixture de teste', 'simulacao: ensaio', 'SIMULACAO ensaio', 'SiMuLaÇãO ensaio', 'Simulação — fixture de teste'.normalize('NFD'), 'ＳＩＭＵＬＡÇÃＯ ensaio']) {
     const lot = { ...lotOf('L001-real', [entryFor('google-mlcc', { decidedBy: label })]), simulation: false, authorization: { by: label, on: '2026-10-12' } };
     const found = lotProblems(lot, NOW).join('\n');
     assert.match(found, /a simulated decision in a real lot/, label);
+  }
+});
+
+test('a real lot is never signed by a fixture, a simulation label or a tool, in any decision or its authorization', () => {
+  const signers = ['Simulação — fixture de teste'.normalize('NFD'), 'fixture de teste', 'Fixture', 'Ｃｌａｕｄｅ', 'Bot editorial', 'AI', 'ＳＩＭＵＬＡÇÃＯ'];
+  for (const by of signers) {
+    const refused = /not a person|a simulated decision in a real lot/;
+    for (const decision of ['approved', 'verified', 'held'] as const) {
+      const lot = { ...lotOf('L001-real', [entryFor('google-mlcc', { decision, decidedBy: by, ...(decision === 'held' ? { reason: 'Teste' } : {}) })]), simulation: false, authorization: null };
+      assert.match(lotProblems(lot, NOW).join('\n'), refused, `${decision} by ${by}`);
+    }
+    const suspension = { ...lotOf('L001-real', [], { suspensions: [{ id: 'cs50x', reason: 'Teste', decidedBy: by, decidedOn: '2026-10-12' }] }), simulation: false, authorization: null };
+    assert.match(lotProblems(suspension, NOW).join('\n'), refused, `suspension by ${by}`);
+    const authorized = { ...lotOf('L001-real', [], { suspensions: [{ id: 'cs50x', reason: 'Teste', decidedBy: 'Maria Silva', decidedOn: '2026-10-12' }] }), simulation: false, authorization: { by, on: '2026-10-12' } };
+    assert.match(lotProblems(authorized, NOW).join('\n'), refused, `authorization by ${by}`);
+  }
+});
+
+test('a person whose name only resembles a mark is still a person', () => {
+  for (const by of ['Maria Simulacra', 'Aída Botelho', 'Fixtureira Souza']) {
+    const lot = { ...lotOf('L001-real', [], { suspensions: [{ id: 'cs50x', reason: 'Teste', decidedBy: by, decidedOn: '2026-10-12' }] }), simulation: false, authorization: { by, on: '2026-10-12' } };
+    assert.doesNotMatch(lotProblems(lot, NOW).join('\n'), /not a person|a simulated decision in a real lot/, by);
   }
 });

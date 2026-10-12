@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
+import release from '../src/data/academy-release/release.json' with { type: 'json' };
 import { publishedResources } from '../src/lib/learning-resources.ts';
 import { STAGED_RESOURCES } from '../src/lib/staging.ts';
 import { GATEB_NEW_RESOURCES } from '../src/lib/staging-gateb.ts';
@@ -10,12 +11,20 @@ import { techTracks, publishedTracks, techTracksFor, publishedTracksFor, GATEB_T
 import { placementOf } from '../src/lib/placement.ts';
 import { PATH_ORDER, PATH_STATUS, type PathId } from '../src/lib/taxonomy.ts';
 
-const future = [...publishedResources, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES];
+/** What the release publishes: a candidate has a page now exactly when a lot has published it. */
+const publishedIds = new Set(publishedResources.map((r) => r.id));
+
+// Every record once, the published version first: a candidate a lot has published is not counted twice.
+const future = [...new Map([...publishedResources, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES].reverse().map((r) => [r.id, r])).values()].reverse()
+  .sort((a, b) => Number(!publishedIds.has(a.id)) - Number(!publishedIds.has(b.id)));
 const active = Object.fromEntries(PATH_ORDER.map((path) => [path, 'active'])) as Record<PathId, 'active'>;
 const byId = new Map(future.map((resource) => [resource.id, resource]));
 
 test('T2 higher education: six new offerings have conditional field destinations without premature groups', () => {
-  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((group) => group.id), ['matematica', 'computacao']);
+  // The groups the published catalogue shows: the two of V0.3 first, plus each field a lot has published.
+  const shown = higherEducationGroupsFor(publishedResources).map((group) => group.id);
+  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((group) => group.id), shown);
+  assert.deepEqual(shown.slice(0, 2), ['matematica', 'computacao']);
   const projected = higherEducationGroupsFor(future);
   assert.deepEqual(projected.map((group) => group.id), [
     'matematica', 'computacao', 'fisica', 'biologia', 'psicologia', 'economia', 'meio-ambiente',
@@ -32,10 +41,15 @@ test('T2 higher education: six new offerings have conditional field destinations
   for (const [id, field] of expected) {
     const resource = byId.get(id);
     if (!resource) throw new Error(`missing ${id}`);
-    assert.equal(HIGHER_EDUCATION_GROUPS.some((group) => group.resourceIds.includes(id)), false, id);
+    assert.equal(HIGHER_EDUCATION_GROUPS.some((group) => group.resourceIds.includes(id)), publishedIds.has(id), id);
     const groups = projected.filter((group) => group.resourceIds.includes(id));
     assert.deepEqual(groups.map((group) => group.id), [field], id);
-    assert.equal(placementOf(resource, active), null, `${id} is still unpublished`);
+    if (publishedIds.has(id)) {
+      assert.deepEqual(placementOf(resource, active), { page: '/ensino-superior/', anchor: `recurso-${id}` }, `${id} is published`);
+      assert.ok((shown as readonly string[]).includes(field), `${id}: its field is shown once published`);
+    } else {
+      assert.equal(placementOf(resource, active), null, `${id} is still unpublished`);
+    }
     assert.deepEqual(placementOf(resource, active, future), {
       page: '/ensino-superior/', anchor: `recurso-${id}`,
     });
@@ -47,9 +61,11 @@ test('T2 higher education: six new offerings have conditional field destinations
 });
 
 test('T2 technology: seven existing published tracks stay unchanged until future candidates enter catalogue', () => {
-  assert.equal(techTracks.length, 8, 'seven published tracks plus Git planned');
-  assert.equal(publishedTracks().length, 7);
-  assert.ok(!techTracks.some((track) => track.id === 'computacao-em-nuvem'));
+  // The cloud track exists, and is published, exactly when its one resource is published.
+  const cloud = publishedIds.has('ms-learn-cloud-concepts');
+  assert.equal(techTracks.length, cloud ? 9 : 8, 'seven published tracks plus Git planned, plus cloud once published');
+  assert.equal(publishedTracks().length, cloud ? 8 : 7);
+  assert.equal(techTracks.some((track) => track.id === 'computacao-em-nuvem'), cloud);
   assert.deepEqual(GATEB_TECH_TRACK_ASSIGNMENTS, {
     'odin-foundations': 'desenvolvimento-web',
     'google-mlcc': 'inteligencia-artificial',
@@ -64,9 +80,10 @@ test('T2 technology: seven existing published tracks stay unchanged until future
   for (const [id, track] of Object.entries(GATEB_TECH_TRACK_ASSIGNMENTS)) {
     const item = byId.get(id);
     if (!item) throw new Error(`missing ${id}`);
-    assert.ok(!publishedTracks().some((entry) => entry.resourceIds.includes(id)), `${id}: hidden now`);
+    assert.equal(publishedTracks().some((entry) => entry.resourceIds.includes(id)), publishedIds.has(id), `${id}: shown exactly when published`);
     assert.equal(preview.find((entry) => entry.id === track)?.resourceIds.includes(id), true, id);
-    assert.equal(placementOf(item, active), null, `${id}: unpublished ID must have no destination yet`);
+    if (publishedIds.has(id)) assert.deepEqual(placementOf(item, active), { page: '/tecnologia/', anchor: `recurso-${id}` }, id);
+    else assert.equal(placementOf(item, active), null, `${id}: unpublished ID must have no destination yet`);
     assert.deepEqual(placementOf(item, active, future), { page: '/tecnologia/', anchor: `recurso-${id}` }, id);
   }
 });
@@ -97,12 +114,13 @@ test('T2 placement context refuses to route a tech resource with a forged non-te
 
 test('T2 all verified candidates have future placement; real publication flags remain unchanged', () => {
   assert.deepEqual(gatebPlacementGaps(), []);
-  assert.equal(gatebUnreleasedDestinations().length, 9);
+  // Nine selected candidates had no page before their routes were planned; none of them is routed early.
+  assert.ok(gatebUnreleasedDestinations().length <= 9);
+  assert.ok(gatebUnreleasedDestinations().every((id) => !publishedIds.has(id)));
   assert.equal(future.length, 74);
   for (const resource of publishedResources) {
     assert.deepEqual(placementOf(resource), placementOf(resource, PATH_STATUS, future), `${resource.id}: existing home must be stable`);
   }
-  assert.equal(publishedResources.length, 37);
-  assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
+  // The release state itself is pinned in tests/incremental-release/repository.test.ts.
+  assert.equal(publishedResources.length, release.inventory.length);
 });

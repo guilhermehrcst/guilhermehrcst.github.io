@@ -13,19 +13,28 @@ import { PATH_STATUS } from '../src/lib/taxonomy.ts';
 import { pt as t } from '../src/i18n/pt.ts';
 
 const PAGE = '/ensino-superior/';
-const future = [...publishedResources, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES];
+// Every record once, the published version first: a candidate a lot has published is not counted twice.
+const published = new Set(publishedResources.map((r) => r.id));
+const future = [...publishedResources, ...[...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES].filter((r) => !published.has(r.id))];
+/** The fields the Gate B courses add, by label: shown only once a course of theirs is published. */
+const NEW_FIELDS: Readonly<Record<string, string>> = { fisica: 'Física', biologia: 'Biologia', psicologia: 'Psicologia', economia: 'Economia', 'meio-ambiente': 'Meio Ambiente' };
 const newUniversityIds = [
   'mit-1801sc', 'mit-801sc', 'mit-7012',
   'yale-psyc-110', 'yale-econ-252', 'ou-environment-treading-lightly',
 ];
 
 test('T2 higher education: the existing two-group copy remains unchanged until a new resource is published', () => {
-  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao']);
   const current = superiorCopyFor();
-  assert.equal(current.description, t.pages['ensino-superior'].description);
-  assert.equal(current.note, t.superior.note);
-  assert.equal(current.objective, t.home.objectives.items['ensino-superior']);
-  assert.equal(publishedResources.length, 37);
+  if (!newUniversityIds.some((id) => published.has(id))) {
+    assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao']);
+    assert.equal(current.description, t.pages['ensino-superior'].description);
+    assert.equal(current.note, t.superior.note);
+    assert.equal(current.objective, t.home.objectives.items['ensino-superior']);
+    return;
+  }
+  // Once a lot publishes a university course, the copy names exactly the fields shown.
+  assert.notEqual(current.note, t.superior.note);
+  for (const group of HIGHER_EDUCATION_GROUPS) assert.ok(current.note.includes(group.label), group.label);
 });
 
 test('T2 higher education: page description, note and Home adapt to all actually available fields', () => {
@@ -82,10 +91,14 @@ test('T2 higher education: every future university course has an anchor when its
 });
 
 test('T2 higher education: no staged group is rendered or described before the release', () => {
-  assert.deepEqual(higherEducation().map((g) => g.id), ['matematica', 'computacao']);
-  assert.ok(!HIGHER_EDUCATION_GROUPS.some((g) => newUniversityIds.some((id) => g.resourceIds.includes(id))));
+  // Shown: the groups of published resources only; an unpublished course is in no group and no text.
+  assert.deepEqual(higherEducation().map((g) => g.id), higherEducationGroupsFor(publishedResources).map((g) => g.id));
+  for (const id of newUniversityIds) assert.equal(HIGHER_EDUCATION_GROUPS.some((g) => g.resourceIds.includes(id)), published.has(id), id);
   const currentText = JSON.stringify(superiorCopyFor());
-  assert.doesNotMatch(currentText, /Física|Biologia|Psicologia|Economia|Meio Ambiente/);
+  const shown = new Set<string>(HIGHER_EDUCATION_GROUPS.map((g) => g.id));
+  for (const [field, label] of Object.entries(NEW_FIELDS)) {
+    if (!shown.has(field)) assert.doesNotMatch(currentText, new RegExp(label), `${label} is not described before it is published`);
+  }
   assert.throws(() => resolveGroups([{
     id: 'fisica', label: 'Física', why: 'Não publicado', resourceIds: ['mit-801sc'],
   }]), /unknown or unpublished resource/);

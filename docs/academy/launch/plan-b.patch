@@ -1,0 +1,267 @@
+diff --git a/scripts/verify-dist.mjs b/scripts/verify-dist.mjs
+index 64471d9..7ddf7d5 100644
+--- a/scripts/verify-dist.mjs
++++ b/scripts/verify-dist.mjs
+@@ -72,6 +72,11 @@ const COURSE_HOSTS = [
+   'kultivi.com',
+   'www.gov.br',
+   'www.revista.vestibular.uerj.br',
++  // L001: hosts reviewed in the lot manifest, each with its institution.
++  'www.fuvest.br',
++  'oyc.yale.edu',
++  'www.theodinproject.com',
++  'learn.microsoft.com',
+ ];
+ const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
+ const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
+@@ -465,7 +470,7 @@ function checkAbout(path, html) {
+   if (!footerDate || pageDate !== footerDate) fail(path, `verification date ${pageDate} must match the footer's ${footerDate}`);
+ }
+ 
+-const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
++const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/ensino-superior/', '/tecnologia/'];
+ /** The formats a student practises with (V0.4 §4.3). Mirrors PRACTICE_FORMATS; a test keeps them equal. */
+ const PRACTICE_FORMATS = ['practice', 'past-exam', 'simulator'];
+ const PRACTICE_ATTR = new RegExp(`data-format="(?:${PRACTICE_FORMATS.join('|')})"`);
+@@ -633,7 +638,7 @@ function checkProduct(path, html) {
+   }
+   if (path === '/tecnologia/') {
+     const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
+-    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade'];
++    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade', 'computacao-em-nuvem'];
+     if (JSON.stringify(tracks.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `tracks ${tracks.map((m) => m[1]).join(',')}`);
+     for (const [, id, body] of tracks) if (!/\sdata-resource-id="/.test(body)) fail(path, `track ${id} is empty`);
+   }
+diff --git a/tests/exam-guides.test.ts b/tests/exam-guides.test.ts
+index 5e429ac..1448b65 100644
+--- a/tests/exam-guides.test.ts
++++ b/tests/exam-guides.test.ts
+@@ -82,9 +82,9 @@ test('UERJ subjects are exactly those with UERJ resources', () => {
+   assert.deepEqual(UERJ_SUBJECTS, ['matematica', 'portugues', 'redacao', 'fisica', 'historia', 'geografia', 'espanhol']);
+ });
+ 
+-// Staging state (V0.4 QA P2-RC5): the INEP collection is not published, so the practice note keeps its
+-// external link to INEP. A release that publishes it switches the note to the resource on the page.
+-test('staging today: the INEP source is not shown as a resource, so the note keeps its external link', () => {
++// Release state (V0.4 QA P2-RC5): L001 publishes the INEP collection on the practice section, so the note
++// points to that resource on the page instead of linking out to INEP a second time.
++test('L001: the INEP source is shown as a resource, so the note points to it on the page', () => {
+   const practice = resolveGuide('enem').find((s) => s.id === 'pratique')!;
+-  assert.equal(sourceShownAsResource('inep-provas-gabaritos', practice.resources), undefined);
++  assert.equal(sourceShownAsResource('inep-provas-gabaritos', practice.resources)?.id, 'inep-enem-provas-gabaritos');
+ });
+diff --git a/tests/higher-education.test.ts b/tests/higher-education.test.ts
+index 0bb9f72..091760e 100644
+--- a/tests/higher-education.test.ts
++++ b/tests/higher-education.test.ts
+@@ -15,8 +15,8 @@ test('the groups follow the plan order; none is empty; the two V0.3 groups keep
+   for (const id of ['matematica', 'computacao']) assert.ok(shown.find((g) => g.id === id)!.resources.length >= 2, id);
+ });
+ 
+-test('staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet)', () => {
+-  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao']);
++test('L001: the two V0.3 groups and Psicologia are shown (yale-psyc-110; mit-1801sc joins Matemática)', () => {
++  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao', 'psicologia']);
+ });
+ 
+ test('every course is published, unique, and published by a university', () => {
+@@ -32,10 +32,9 @@ test('an unknown id fails the build instead of leaving a gap', async () => {
+   assert.throws(() => resolveGroups([{ id: 'matematica', label: 'x', why: 'x', resourceIds: ['nope'] }]));
+ });
+ 
+-test('staging today: the Superior summary is the released V0.3 text, in the menu and on the Home', async () => {
++test('L001: the Superior summary names the three fields shown, in the menu and on the Home', async () => {
+   const copy = await import('../src/lib/superior-copy.ts') as Record<string, any>;
+-  const { pt } = await import('../src/i18n/pt.ts');
+-  assert.equal(copy.objectiveSummaryFor?.('ensino-superior'), pt.home.objectives.items['ensino-superior']);
++  assert.equal(copy.objectiveSummaryFor?.('ensino-superior'), 'Materiais gratuitos de nível superior em Matemática, Computação e Psicologia.');
+ });
+ 
+ test('the "Explorar" menu reads the path summaries from the shared source, not the fixed text', async () => {
+diff --git a/tests/home-sources.test.ts b/tests/home-sources.test.ts
+index 0f9ac19..fe3045e 100644
+--- a/tests/home-sources.test.ts
++++ b/tests/home-sources.test.ts
+@@ -10,11 +10,12 @@ import { homeSources } from '../src/lib/home-sources.ts';
+ const lib = { homeSources } as Record<string, any>;
+ const PROVIDERS = ['Harvard University', 'MIT OpenCourseWare', 'FGV', 'Cisco Networking Academy', 'Fundação Bradesco', 'Fundação Bradesco + Microsoft'];
+ 
+-test('staging today: every institution keeps its single-page link and count, exactly as before', () => {
++// L001: mit-1801sc adds Matemática (Ensino Superior) to MIT, so its line opens the search filtered by MIT.
++test('L001: every institution keeps its link and count; MIT spans two areas and opens the search', () => {
+   const sources = lib.homeSources(PROVIDERS, publishedResources, publishedTracksFor(publishedResources));
+   assert.deepEqual(sources.map((s: any) => [s.provider, s.count, s.areas, s.href]), [
+     ['Harvard University', 5, ['Tecnologia'], '/tecnologia/#comecar-a-programar'],
+-    ['MIT OpenCourseWare', 5, ['Tecnologia'], '/tecnologia/#python'],
++    ['MIT OpenCourseWare', 6, ['Tecnologia', 'Matemática'], '/buscar/?instituicao=mit-opencourseware'],
+     ['FGV', 3, ['Tecnologia'], '/tecnologia/#dados'],
+     ['Cisco Networking Academy', 1, ['Tecnologia'], '/tecnologia/#seguranca-e-privacidade'],
+     ['Fundação Bradesco', 2, ['Tecnologia'], '/tecnologia/#comecar-a-programar'],
+diff --git a/tests/learning-axes.test.ts b/tests/learning-axes.test.ts
+index a4bb177..cefbdea 100644
+--- a/tests/learning-axes.test.ts
++++ b/tests/learning-axes.test.ts
+@@ -65,11 +65,11 @@ test('Ensino Superior is declared on each resource and agrees with the universit
+ test('every count is the number of distinct published resources of that path or exam', () => {
+   assert.deepEqual(objectiveFacts('ensino-fundamental'), { resources: 0 });
+   assert.deepEqual(objectiveFacts('ensino-medio'), { resources: 12 });
+-  assert.deepEqual(objectiveFacts('vestibulares'), { resources: 20 });
++  assert.deepEqual(objectiveFacts('vestibulares'), { resources: 22 });
+   assert.deepEqual(objectiveFacts('pre-militar'), { resources: 0 });
+-  assert.deepEqual(objectiveFacts('ensino-superior'), { resources: 6 });
+-  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 17, tracks: 7 });
+-  assert.deepEqual(objectiveFacts('enem'), { resources: 13 });
++  assert.deepEqual(objectiveFacts('ensino-superior'), { resources: 8 });
++  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 19, tracks: 8 });
++  assert.deepEqual(objectiveFacts('enem'), { resources: 14 });
+   assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
+ });
+ 
+diff --git a/tests/learning-library.test.ts b/tests/learning-library.test.ts
+index d45ddf3..bc597e1 100644
+--- a/tests/learning-library.test.ts
++++ b/tests/learning-library.test.ts
+@@ -55,7 +55,7 @@ test('resourcesByIds fails closed on an unknown id', () => {
+ 
+ test('objectivesFor derives, in the Home order, the objectives a subject has resources for', async () => {
+   const { objectivesFor } = await import('../src/lib/learning-library.ts');
+-  assert.deepEqual(objectivesFor('matematica'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
++  assert.deepEqual(objectivesFor('matematica'), ['enem', 'uerj', 'ensino-medio', 'vestibulares', 'ensino-superior']);
+   assert.deepEqual(objectivesFor('quimica'), ['enem', 'ensino-medio', 'vestibulares']);
+   assert.deepEqual(objectivesFor('redacao'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
+ });
+@@ -70,10 +70,10 @@ test('objectiveFacts counts what each path really holds', async () => {
+   assert.deepEqual(objectiveFacts('ensino-medio'), { resources: onPath('ensino-medio') });
+   // Vestibular holds its exams: an exam's resources declare its parent path.
+   assert.deepEqual(objectiveFacts('vestibulares'), { resources: onPath('vestibulares') });
+-  assert.equal(objectiveFacts('vestibulares').resources, 20);
++  assert.equal(objectiveFacts('vestibulares').resources, 22);
+   assert.deepEqual(objectiveFacts('pre-militar'), { resources: 0 });
+   assert.deepEqual(objectiveFacts('ensino-superior'), { resources: higherEducation().flatMap((g) => g.resources).length });
+-  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 17, tracks: 7 });
++  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 19, tracks: 8 });
+   assert.deepEqual(objectiveFacts('enem'), { resources: forExam('enem') });
+   assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
+ });
+@@ -81,8 +81,8 @@ test('objectiveFacts counts what each path really holds', async () => {
+ test('institutions lists only providers that publish, with their resources in catalogue order', async () => {
+   const { institutions } = await import('../src/lib/learning-library.ts');
+   const { publishedResources } = await import('../src/lib/learning-resources.ts');
+-  const list = institutions(['Harvard University', 'Microsoft Learn', 'FGV']);
+-  // Microsoft Learn has no published resource: it is left out, never shown empty.
++  const list = institutions(['Harvard University', 'Google', 'FGV']);
++  // Google has no published resource: it is left out, never shown empty.
+   assert.deepEqual(list.map((i) => i.provider), ['Harvard University', 'FGV']);
+   const harvard = publishedResources.filter((r) => r.provider === 'Harvard University').map((r) => r.id);
+   assert.deepEqual(list[0]?.resources.map((r) => r.id), harvard);
+diff --git a/tests/learning-resources.test.ts b/tests/learning-resources.test.ts
+index e0b5e98..b9ce1ad 100644
+--- a/tests/learning-resources.test.ts
++++ b/tests/learning-resources.test.ts
+@@ -64,8 +64,8 @@ test('the catalogue is exactly the 40 records of the snapshot, field by field',
+   }
+ });
+ 
+-test('37 published, 3 held back with a review note', () => {
+-  assert.equal(publishedResources.length, 37);
++test('43 published (37 of V0.4 + 6 of L001), 3 held back with a review note', () => {
++  assert.equal(publishedResources.length, 43);
+   const held = catalogue.filter((r) => r.url === null);
+   assert.equal(held.length, 3);
+   for (const r of held) assert.ok(r.review?.trim(), `${r.id}: missing review note`);
+diff --git a/tests/release-candidate/STAGING-GUARDS.md b/tests/release-candidate/STAGING-GUARDS.md
+index 5c3ec75..7b188ca 100644
+--- a/tests/release-candidate/STAGING-GUARDS.md
++++ b/tests/release-candidate/STAGING-GUARDS.md
+@@ -18,7 +18,7 @@ Kinds: **A** guards against publication or activation (they must flip only with
+ 
+ | File | Test | Kind |
+ |---|---|---|
+-| `exam-guides.test.ts` | staging today: the INEP source is not shown as a resource, so the note keeps its external link | A |
++| `exam-guides.test.ts` | L001: the INEP source is shown as a resource, so the note points to it on the page | A |
+ | `featured.test.ts` | staging today: no highlight is homologated, so every list is empty and the selection is incomplete | A |
+ | `featured.test.ts` | featuredFor resolves a path to its published resources in order | A |
+ | `featured.test.ts` | featuredReady: a path is ready only with ten valid highlights | A |
+@@ -35,15 +35,15 @@ Kinds: **A** guards against publication or activation (they must flip only with
+ | `gateb-selection-preview.test.ts` | T2: Fundamental and Pré-Militar remain preparing until a separately approved release | A |
+ | `gateb-typed-staging.test.ts` | Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates | A |
+ | `gateb-typed-staging.test.ts` | Gate B: publication remains disabled and all earlier partial attempts remain historical | A |
+-| `higher-education.test.ts` | staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet) | A |
+-| `home-sources.test.ts` | staging today: every institution keeps its single-page link and count, exactly as before | A |
++| `higher-education.test.ts` | L001: the two V0.3 groups and Psicologia are shown (yale-psyc-110; mit-1801sc joins Matemática) | A |
++| `home-sources.test.ts` | L001: every institution keeps its link and count; MIT spans two areas and opens the search | A |
+ | `learning-axes.test.ts` | a technology resource serves Tecnologia and never Ensino Médio by inheritance | B |
+ | `learning-axes.test.ts` | every count is the number of distinct published resources of that path or exam | B |
+ | `learning-library.test.ts` | objectivesFor derives, in the Home order, the objectives a subject has resources for | B |
+ | `learning-library.test.ts` | objectiveFacts counts what each path really holds | B |
+ | `learning-library.test.ts` | institutions lists only providers that publish, with their resources in catalogue order | B |
+ | `learning-resources.test.ts` | the catalogue is exactly the 40 records of the snapshot, field by field | B |
+-| `learning-resources.test.ts` | 37 published, 3 held back with a review note | B |
++| `learning-resources.test.ts` | 43 published (37 of V0.4 + 6 of L001), 3 held back with a review note | B |
+ | `path-status.test.ts` | P2: one status per path; PREPARING_PATHS is derived from it | A |
+ | `placement.test.ts` | P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged) | B |
+ | `placement.test.ts` | P1: no destination on a page in preparation; a published resource without a destination fails | A |
+@@ -59,4 +59,4 @@ Kinds: **A** guards against publication or activation (they must flip only with
+ | `tech-tracks.test.ts` | the tracks and their resources are exactly the spec | B |
+ | `tech-tracks.test.ts` | a published track is never empty; a planned one is never shown | B |
+ | `verification.test.ts` | P4: the legacy set is exactly the 37 published today, and they need nothing new | B |
+-| `higher-education.test.ts` | staging today: the Superior summary is the released V0.3 text, in the menu and on the Home | B |
++| `higher-education.test.ts` | L001: the Superior summary names the three fields shown, in the menu and on the Home | B |
+diff --git a/tests/search-filter.test.ts b/tests/search-filter.test.ts
+index 2f872ea..339964f 100644
+--- a/tests/search-filter.test.ts
++++ b/tests/search-filter.test.ts
+@@ -59,7 +59,7 @@ test('facet options: only values some resource has, in the taxonomy order, each
+   assert.deepEqual(options.caminho.map((o: { value: string }) => o.value), ['ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia']);
+   assert.deepEqual(options.caminho.map((o: { label: string }) => o.label), ['Ensino Médio', 'Vestibular', 'Ensino Superior', 'Tecnologia']);
+   assert.deepEqual(options.idioma.map((o: { value: string }) => o.value), ['pt', 'en']);
+-  assert.deepEqual(options.formato.map((o: { value: string }) => o.value), ['course', 'practice']);
++  assert.deepEqual(options.formato.map((o: { value: string }) => o.value), ['course', 'track', 'practice', 'past-exam']);
+   assert.equal(options.materia.length, 13);
+   assert.ok(options.instituicao.some((o: { value: string; label: string }) => o.label === 'Harvard University' && o.value === 'harvard-university'));
+   for (const facet of Object.values(options) as { value: string }[][]) {
+diff --git a/tests/search-index.test.ts b/tests/search-index.test.ts
+index b18546c..a539038 100644
+--- a/tests/search-index.test.ts
++++ b/tests/search-index.test.ts
+@@ -36,9 +36,9 @@ test('one entry per objective, area, subject, published track and published reso
+   assert.equal(count('objetivo'), 8);
+   assert.equal(count('area'), 6);
+   assert.equal(count('materia'), 13);
+-  assert.equal(count('trilha'), 7);
++  assert.equal(count('trilha'), 8);
+   assert.equal(count('recurso'), publishedResources.length);
+-  assert.equal(index.length, 8 + 6 + 13 + 7 + publishedResources.length);
++  assert.equal(index.length, 8 + 6 + 13 + 8 + publishedResources.length);
+ });
+ 
+ test('every entry leads to a page of the site, never outside', () => {
+diff --git a/tests/tech-tracks.test.ts b/tests/tech-tracks.test.ts
+index d7ea432..bd3ad59 100644
+--- a/tests/tech-tracks.test.ts
++++ b/tests/tech-tracks.test.ts
+@@ -7,12 +7,14 @@ import { publishedResources } from '../src/lib/learning-resources.ts';
+ const SPEC = [
+   ['comecar-a-programar', ['cs50x', 'cs50p', 'fb-python']],
+   ['ciencia-da-computacao', ['cs50x', 'mit-6006', 'mit-6042j', 'mit-1806']],
+-  ['desenvolvimento-web', ['cs50w', 'fb-web']],
++  ['desenvolvimento-web', ['cs50w', 'fb-web', 'odin-foundations']],
+   ['python', ['cs50p', 'mit-6100l', 'fb-python']],
+   ['inteligencia-artificial', ['cs50ai', 'fluencia']],
+   ['dados', ['fgv-datasci', 'mit-60002', 'cs50sql']],
+   ['seguranca-e-privacidade', ['cisco-cyber', 'fgv-security', 'fgv-privacy']],
+   ['git-e-github', []],
++  // L001: the cloud track exists once its one resource is published.
++  ['computacao-em-nuvem', ['ms-learn-cloud-concepts']],
+ ];
+ 
+ test('the tracks and their resources are exactly the spec', () => {
+@@ -35,7 +37,7 @@ test('a published track is never empty; a planned one is never shown', () => {
+   }
+   assert.equal(techTracks.find((t) => t.id === 'git-e-github')!.status, 'planned');
+   assert.ok(!publishedTracks().some((t) => t.id === 'git-e-github'));
+-  assert.equal(publishedTracks().length, 7);
++  assert.equal(publishedTracks().length, 8);
+ });
+ 
+ test('no published technology resource is left out of every track', () => {

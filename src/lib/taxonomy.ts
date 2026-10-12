@@ -44,8 +44,10 @@ export const EXAM_PARENT: Readonly<Record<ExamId, PathId>> = { enem: 'vestibular
 export type PathState = 'preparing' | 'active';
 /** The publication state of each path: the one source (V0.4 Gate B, P2). A path in preparation is noindex,
  *  out of the sitemap, says so, and shows no resource. Fundamental and Pré-Militar become active only with
- *  their ten homologated highlights released and a page that shows their resources (src/lib/path-status.ts
- *  fails the build otherwise); scripts/verify-dist.mjs keeps its own, independent list. */
+ *  at least one published resource on their own page, in the same change that publishes it; their
+ *  highlights are a separate, later release that needs ten valid ones (src/lib/path-status.ts fails the
+ *  build otherwise). Activating a path is a person's decision; scripts/verify-dist.mjs keeps its own,
+ *  independent list. */
 export const PATH_STATUS: Readonly<Record<PathId, PathState>> = {
   'ensino-fundamental': 'preparing',
   'ensino-medio': 'active',

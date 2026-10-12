@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 
+import release from '../src/data/academy-release/release.json' with { type: 'json' };
 import { publishedResources } from '../src/lib/learning-resources.ts';
 import { STAGED_RESOURCES } from '../src/lib/staging.ts';
 import { GATEB_NEW_RESOURCES } from '../src/lib/staging-gateb.ts';
@@ -52,9 +53,11 @@ test('T2: draft matches the audited manifest exactly, slot by slot and in editor
 });
 
 test('T2: draft uses the original catalogue and two staging sets, never duplicates data', () => {
-  const all = [...publishedResources, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES];
+  // A candidate a lot has published is in both the catalogue and its pool: it counts once.
+  const all = [...new Map([...publishedResources, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES].map((r) => [r.id, r])).values()];
   assert.equal(all.length, 74);
-  assert.equal(new Set(all.map((r) => r.id)).size, 74);
+  assert.equal(gatebProjectedContext().length, 74);
+  assert.equal(new Set(gatebProjectedContext().map((r) => r.id)).size, 74);
   const byId = new Map(all.map((r) => [r.id, r]));
   for (const candidate of manifest.items) {
     const actual = byId.get(candidate.id);
@@ -82,7 +85,8 @@ test('T2: all sixty provisional candidates obey P4 and the existing featured gat
 test('T2: all nine previously missing destinations have conditional routes without public activation', () => {
   const requirements = Object.keys(GATEB_PLACEMENT_REQUIREMENTS);
   assert.deepEqual(requirements, EXPECTED_GAPS);
-  assert.deepEqual(gatebUnreleasedDestinations(), EXPECTED_GAPS,
+  const published = new Set(publishedResources.map((r) => r.id));
+  assert.deepEqual(gatebUnreleasedDestinations(), EXPECTED_GAPS.filter((id) => !published.has(id)),
     'normal production context must not prematurely route unpublished IDs');
   assert.deepEqual(gatebPlacementGaps(), [], 'conditional plans resolve all 60 future destinations');
 
@@ -93,7 +97,8 @@ test('T2: all nine previously missing destinations have conditional routes witho
   for (const [id, requirement] of Object.entries(GATEB_PLACEMENT_REQUIREMENTS)) {
     const resource = proposed.get(id);
     if (!resource) throw new Error(`missing placement candidate ${id}`);
-    assert.equal(placementOf(resource, states), null, `${id}: unpublished ID must not be shown`);
+    if (published.has(id)) assert.equal(placementOf(resource, states)?.page, requirement.target, `${id}: published, shown on its page`);
+    else assert.equal(placementOf(resource, states), null, `${id}: unpublished ID must not be shown`);
     const at = placementOf(resource, states, future);
     if (!at) throw new Error(`${id}: conditional route still missing`);
     assert.equal(at.page, requirement.target, id);
@@ -112,7 +117,8 @@ test('T2: Fundamental and Pré-Militar remain preparing until a separately appro
     assert.equal(FEATURED_RELEASE[path], 'staging', path);
     assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH[path], [], path);
   }
-  assert.equal(publishedResources.length, 37);
+  // The release state itself is pinned in tests/incremental-release/repository.test.ts.
+  assert.equal(publishedResources.length, release.inventory.length);
 });
 
 test('T2: preview is unreferenced by user-facing code, static scripts and the public build', () => {

@@ -90,7 +90,8 @@ Um lote registrado e não aplicado não publica nada (o build o valida e reporta
 ## 5. Como autorizar um lote?
 
 A pessoa responsável preenche, por entrada, `decision: "approved"`, `decidedBy` (nome de uma pessoa;
-nomes de ferramentas como Claude, Codex, GPT ou "bot" são recusados) e `decidedOn`. Itens com pendência
+nomes de ferramentas como Claude, Codex, GPT, "bot", "AI" ou "fixture" são recusados, em qualquer
+caixa, acento ou largura de caractere, em toda decisão e na autorização) e `decidedOn`. Itens com pendência
 ficam `decision: "held"` com `reason` — não travam os demais. Depois, a autorização de publicação do lote
 exato: `"authorization": { "by": "…", "on": "AAAA-MM-DD" }`, com data não anterior às decisões. Cada host
 novo entra em `hosts` com a instituição revisada.
@@ -105,7 +106,8 @@ python3 docs/superpowers/qa/2026-10-12-incremental-release/simulate.py /tmp/sim 
 cd /tmp/sim && ACADEMY_RELEASE_SIMULATION=1 npm run build
 ```
 
-Lotes simulados têm `simulation: true` e `decidedBy` começando por `SIMULAÇÃO`; o motor os recusa num
+Lotes simulados têm `simulation: true` e `decidedBy` começando por `SIMULAÇÃO` (lido sem caixa nem acento: `Simulação`, `simulacao`… também
+marcam simulação, e por isso são recusados num lote real); o motor os recusa num
 `release.json` em modo `production`, e o `verify-dist` recusa qualquer `release.json` em modo `simulation`
 sem a variável `ACADEMY_RELEASE_SIMULATION=1`. Resultado da simulação desta branch:
 `docs/superpowers/qa/2026-10-12-incremental-release/README.md`.
@@ -126,11 +128,13 @@ cobre lotes parciais.
 
 No PR do lote, e só com autorização expressa para o lote exato:
 
-1. `lot-digest` do manifesto autorizado:
-   `node --experimental-strip-types tools/academy-release.ts lot-digest src/data/academy-release/lots/L00N-nome.json`
-2. `release.json`: acrescente `{ "lot": "L00N-nome", "digest": "…" }` ao fim de `applied` **e** ao fim de
-   `ledger` (o registro de todo lote já aplicado, que só cresce, em ordem) e declare o novo `inventory`
-   (ordenado). Esquecer um ID, ou declarar um que não sai, falha o build.
+1. Confira o manifesto autorizado: `node --experimental-strip-types tools/academy-release.ts check <arquivo>`
+   (zero `problems`; hosts novos; recursos que ficariam sem página).
+2. Aplique: `node --experimental-strip-types tools/academy-release.ts apply <caminho>/L00N-nome.json`. A
+   ferramenta copia o manifesto para `lots/`, registra-o em `lots.ts`, acrescenta `{ lot, digest }` ao fim de
+   `applied` **e** de `ledger` e declara o `inventory` da projeção; depois carrega catálogo, posicionamento e
+   estados dos caminhos num processo novo, como o build, e desfaz tudo se algo não se sustentar. Ela recusa
+   placeholders, assinaturas simuladas ou automatizadas, lote sem autorização e lote já registrado.
 3. Espelhos escritos à mão em `scripts/verify-dist.mjs` (barreira independente): `COURSE_HOSTS` com os
    hosts novos; se um caminho for ativado, `CANONICAL`, `PREPARING`, `PATH_PAGES` e `OBJECTIVE_PATHS`; trilhas
    e áreas novas de Tecnologia/Superior quando surgirem.
@@ -148,7 +152,8 @@ publicar a versão nova sem aprovação aplicada seria publicar metadado não ap
 registros ficam em `src/lib/catalogue-records.ts` (e nos módulos de candidatos), lidos pela ferramenta sem
 passar pela projeção: `tools/academy-release.ts digest|entry <id>` funciona com o build vermelho e dá o
 digest que a reaprovação precisa. Um registro alterado deixa de valer como confiança de host da V0.4: o
-lote revisa o host para a instituição.
+lote revisa o host para a instituição. Manter a versão antiga publicada enquanto a nova aguarda aprovação
+(snapshots versionados por digest) é deliberadamente fora deste motor e fica para um PR próprio.
 
 ## 9. Como suspender um recurso?
 
@@ -158,11 +163,13 @@ nomeia uma pessoa (nomes de ferramentas são recusados). O recurso sai de págin
 busca, âncoras, destaques e dados públicos; `verify-dist` falha se o ID sobrar em qualquer arquivo do
 `dist/`. Se ele estiver numa seleção de destaques liberada, o build falha até a seleção ser corrigida.
 O manifesto antigo **não** é editado: o histórico fica nos lotes. Para voltar, o recurso precisa de
-verificação nova: evidência com data igual ou posterior à suspensão (o mesmo vale para um item `held`).
+verificação nova: evidência com data **estritamente posterior** à suspensão; a do mesmo dia não prova verificação nova (o mesmo vale para um item `held`).
 
 ## 10. Como fazer rollback?
 
-- **Antes do deploy:** retire do fim de `applied` o último lote e volte o `inventory` ao anterior; o lote
+- **Antes do deploy:** `node --experimental-strip-types tools/academy-release.ts rollback L00N-nome` retira do
+  fim de `applied` o último lote e volta o `inventory` ao da projeção (reverta no mesmo PR as guardas e a
+  ativação de caminho que o lote trouxe; ver `docs/academy/launch/`); o lote
   **fica no `ledger`** e o manifesto continua registrado e preso ao digest (decisão preservada, não
   publicada; editá-lo ou apagá-lo falha o build). Um lote revertido não volta a ser aplicado nem
   conta como pendente: para publicar de novo suas decisões, registre-as num lote novo. A simulação provou que o `dist/` volta byte a byte ao do
