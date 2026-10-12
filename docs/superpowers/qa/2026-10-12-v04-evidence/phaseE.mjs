@@ -1,8 +1,20 @@
+// Run: node phaseE.mjs [candidate-base] [main-base] [evidence-dir] [staging|rc]
+// Fetch the sitemap from the live preview under test; never use an unrelated checkout's dist.
 import { chromium } from '/opt/node-tools/node_modules/playwright/index.mjs';
-import { readFileSync, writeFileSync } from 'node:fs';
-const BASE = 'http://127.0.0.1:4321', MAIN = 'http://127.0.0.1:4322', OUT = '/tmp/claude-0/qa/e';
-const sitemap = readFileSync('/home/user/guilhermehrcst.github.io/dist/sitemap.xml', 'utf8');
-const PAGES = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname).concat(['/ensino-fundamental/', '/pre-militar/', '/nao-existe/']);
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+const BASE = (process.argv[2] ?? 'http://127.0.0.1:4321').replace(/\/$/, '');
+const MAIN = (process.argv[3] ?? 'http://127.0.0.1:4322').replace(/\/$/, '');
+const OUT = resolve(process.argv[4] ?? './qa-phaseE');
+const MODE = process.argv[5] ?? 'staging';
+if (!['staging', 'rc'].includes(MODE)) throw new Error('phaseE: mode must be staging or rc');
+mkdirSync(`${OUT}/shots`, { recursive: true });
+const sitemapResponse = await fetch(`${BASE}/sitemap.xml`);
+if (!sitemapResponse.ok) throw new Error(`phaseE: candidate sitemap unavailable (${sitemapResponse.status})`);
+const sitemap = await sitemapResponse.text();
+const sitemapPages = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
+if (!sitemapPages.length) throw new Error('phaseE: empty candidate sitemap');
+const PAGES = [...new Set([...sitemapPages, '/ensino-fundamental/', '/pre-militar/', '/nao-existe/'])];
 const WIDTHS = [320, 360, 390, 768, 1024, 1440];
 const SHOT = new Set(['/', '/ensino-superior/', '/tecnologia/', '/buscar/', '/ensino-fundamental/', '/pre-militar/', '/vestibulares/', '/ensino-medio/', '/enem/', '/materias/matematica/', '/nao-existe/']);
 const rows = []; const ok = (n, c, d = '') => rows.push({ n, ok: !!c, d: c ? '' : String(d).slice(0, 300) });
@@ -36,10 +48,13 @@ for (const w of WIDTHS) {
     const lowC = m.textEls.filter((e) => !e.img).map((e) => { const a = lum(e.fg), c = lum(e.bg); const r = (Math.max(a, c) + 0.05) / (Math.min(a, c) + 0.05); return { ...e, r }; }).filter((e) => e.r < ((e.size >= 24 || (e.size >= 18.66 && e.bold)) ? 3 : 4.5));
     ok(`E5 text contrast AA ${tag}`, lowC.length === 0, JSON.stringify(lowC.slice(0, 3).map((e) => [e.t, e.fg, e.bg, e.r.toFixed(2)])));
     if (w === 1440) {
-      const st = resp.status(); const isPrep = ['/ensino-fundamental/', '/pre-militar/'].includes(path);
+      const st = resp.status();
+      const isPrep = MODE === 'staging' && ['/ensino-fundamental/', '/pre-militar/'].includes(path);
       ok(`E6 status ${path}`, path === '/nao-existe/' ? st === 404 : st === 200, st);
       if (path !== '/nao-existe/') {
-        ok(`E7 canonical ${path}`, m.canonical === `https://guilhermehrcst.github.io${path}`, m.canonical);
+        ok(`E7 canonical ${path}`, isPrep
+          ? m.canonical === null
+          : m.canonical === `https://guilhermehrcst.github.io${path}`, m.canonical);
         ok(`E8 robots ${path}`, isPrep ? /noindex/.test(m.robots ?? '') : !/noindex/.test(m.robots ?? ''), m.robots);
         ok(`E9 sitemap ${path}`, isPrep ? !sitemap.includes(path === '/' ? 'xx' : path) : sitemap.includes(`https://guilhermehrcst.github.io${path}<`), path);
       }
@@ -119,3 +134,4 @@ const byKind = {}; for (const f of fails) { const k = f.n.split(' ')[0]; byKind[
 console.log('FAIL BY KIND', JSON.stringify(byKind));
 for (const f of fails.slice(0, 40)) console.log('FAIL', f.n, f.d);
 console.log(`${rows.length - fails.length}/${rows.length} pass`);
+if (fails.length) process.exitCode = 1; // Fail the visual QA gate on any regression.
