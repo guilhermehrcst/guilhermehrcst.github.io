@@ -16,7 +16,8 @@ export const PRACTICE_FORMATS = ['practice', 'past-exam', 'simulator'] as const 
 export const isPractice = (resource: { format: LearningFormatId }): boolean =>
   (PRACTICE_FORMATS as readonly LearningFormatId[]).includes(resource.format);
 export type LearningLanguageId = 'pt' | 'en' | 'es';
-export type LearningLevelId = 'high-school' | 'vestibular' | 'beginner' | 'beginner-intermediate' | 'intermediate';
+/** Admission preparation is not always an academic grade or university entrance examination. */
+export type LearningLevelId = 'high-school' | 'vestibular' | 'exam-prep' | 'beginner' | 'beginner-intermediate' | 'intermediate';
 /** 'unconfirmed': the source does not say; stated as such and never shown as a fact (V0.4 Gate B, P4). */
 export type LearningRegistrationId = 'required' | 'not-required' | 'unconfirmed';
 /** How a resource was verified: only directly at the official source, its page or the author's official
