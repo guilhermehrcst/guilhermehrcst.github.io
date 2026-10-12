@@ -46,27 +46,39 @@ const tenPm = { ...emptySel, 'pre-militar': pool.map((r) => r.id) };
 const STAGING = Object.fromEntries(PATHS.map((p) => [p, 'staging']));
 const RELEASED_PM = { ...STAGING, 'pre-militar': 'released' };
 
-test('P2: activating Pré-Militar with 0 resources, or 9 of 10 highlights, is refused', () => {
+// Academy incremental release (proposal §5): activating a path and releasing its highlights are separate
+// decisions. Fundamental and Pré-Militar activate with one published resource on their own page; the ten
+// highlights stay a separate, complete-or-absent release.
+test('P2: activating Pré-Militar with no resource is refused; one resource on its own page is enough', () => {
   const problems = need(pathStatus, 'activationProblems');
   const on = { ...TODAY, 'pre-militar': 'active' };
-  assert.match(problems(on, emptySel, [], RELEASED_PM).join('\n'), /pre-militar: active without its ten homologated highlights/);
-  assert.match(problems(on, { ...tenPm, 'pre-militar': tenPm['pre-militar']!.slice(0, 9) }, pool, RELEASED_PM).join('\n'), /pre-militar: active without/);
-  assert.deepEqual(problems(on, tenPm, [...publishedResources, ...pool], RELEASED_PM), [], 'ten valid highlights, released: activation allowed');
+  const nothing = problems(on, emptySel, publishedResources, STAGING).join('\n');
+  assert.match(nothing, /pre-militar: active without a page that shows its resources/);
+  assert.match(nothing, /pre-militar: active with no published resource/);
+  assert.deepEqual(problems(on, emptySel, [...publishedResources, pool[0]!], STAGING), [], 'one resource on /pre-militar/, no highlights: activation allowed');
+  assert.doesNotMatch(problems(on, emptySel, [...publishedResources, pool[0]!], STAGING).join('\n'), /highlight/);
 });
 
-test('P2: ten ids filled in staging authorise nothing: activation needs the explicit release', () => {
+test('P2: highlights are released only complete: 9 of 10, or ten filled in staging, never show', () => {
   const problems = need(pathStatus, 'activationProblems');
   const on = { ...TODAY, 'pre-militar': 'active' };
-  assert.match(problems(on, tenPm, pool, STAGING).join('\n'), /pre-militar: active without its ten homologated highlights released/);
+  const nine = { ...tenPm, 'pre-militar': tenPm['pre-militar']!.slice(0, 9) };
+  assert.match(problems(on, nine, [...publishedResources, ...pool], RELEASED_PM).join('\n'), /pre-militar: released without ten valid highlights/);
+  assert.deepEqual(problems(on, tenPm, [...publishedResources, ...pool], RELEASED_PM), [], 'ten valid highlights, released');
+  assert.deepEqual(problems(on, tenPm, [...publishedResources, ...pool], STAGING), [], 'ten in staging: the path is active, the highlights are not shown');
   assert.deepEqual(problems(TODAY, tenPm, [...publishedResources, ...pool], STAGING), [], 'staging while in preparation is ordinary editorial work');
 });
 
 test('P2: a gated path is active only with a page that shows its resources', () => {
   const problems = need(pathStatus, 'activationProblems');
-  // Ten highlights placed elsewhere (a subject page), none on Pré-Militar itself.
+  // Ten highlights placed elsewhere (a subject page), none on Pré-Militar itself: shown somewhere, but not
+  // on the path's own page. The guard is separate from the count of shown resources.
   const elsewhere = pool.map((r) => ({ ...r, subject: 'matematica', format: 'course', paths: ['pre-militar', 'vestibulares'] }));
   const on = { ...TODAY, 'pre-militar': 'active' };
-  assert.match(problems(on, tenPm, elsewhere, RELEASED_PM).join('\n'), /pre-militar: active without a page that shows its resources/);
+  const found = problems(on, tenPm, elsewhere, RELEASED_PM).join('\n');
+  assert.match(found, /pre-militar: active without a page that shows its resources/);
+  assert.doesNotMatch(found, /pre-militar: active with no published resource/, 'the resources are shown, just not there');
+  assert.match(problems(on, emptySel, [elsewhere[0]!], STAGING).join('\n'), /pre-militar: active without a page that shows its resources/);
 });
 
 test('P2: an unhomologated (unpublished) highlight never activates a path', () => {
