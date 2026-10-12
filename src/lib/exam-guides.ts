@@ -1,12 +1,12 @@
 // The ENEM and UERJ preparation guides (spec §6.4). They replace the former study tracks, which held
 // hand-kept lists of ids and empty "editorial" sections. Here the resource sections are derived from the
-// catalogue by goal and format, editorial sections cite official sources, and an empty section is never
+// catalogue by exam and format, editorial sections cite official sources, and an empty section is never
 // returned. No asset imports: this module runs under Node's test runner.
-import { publishedResources, type LearningGoalId, type PublishedLearningResource } from './learning-resources.ts';
+import { isPractice, publishedResources, type LearningResource, type PublishedLearningResource } from './learning-resources.ts';
 import type { OfficialSourceId } from './official-sources.ts';
-import { ACADEMIC_SUBJECTS, type SubjectId } from './taxonomy.ts';
+import { ACADEMIC_SUBJECTS, type ExamId, type SubjectId } from './taxonomy.ts';
 
-export type ExamId = 'enem' | 'uerj';
+export type { ExamId };
 export type GuideSectionId = 'entenda' | 'areas' | 'pratique' | 'aprofunde' | 'prepare' | 'materias' | 'provas';
 
 type Select = { practice: boolean };
@@ -41,8 +41,20 @@ export const examGuides: Readonly<Record<ExamId, readonly SectionDefinition[]>> 
   ],
 };
 
-const select = (exam: LearningGoalId, { practice }: Select) =>
-  publishedResources.filter((r) => r.goals.includes(exam) && (r.format === 'practice') === practice);
+type GuideCandidate = Pick<LearningResource, 'subject' | 'format'> & { exams?: readonly ExamId[] | undefined };
+const inSection = (exam: ExamId, { practice }: Select, r: GuideCandidate): boolean =>
+  (r.exams?.includes(exam) ?? false) && isPractice(r) === practice;
+const select = (exam: ExamId, selection: Select) => publishedResources.filter((r) => inSection(exam, selection, r));
+
+/** The ENEM area of a subject, as INEP organises it; none for a resource without a subject. "Aprofunde"
+ *  lists its resources by these areas, so it shows only those it can place in one. */
+export const enemAreaOf = (subject: SubjectId | null) =>
+  subject === null ? undefined : ENEM_AREAS.find((area) => area.subjects.includes(subject));
+
+/** Whether an exam's page shows this resource: the very rules its page renders by (V0.4 Gate B, P1). */
+export const guideShows = (exam: ExamId, r: GuideCandidate): boolean =>
+  examGuides[exam].some((section) =>
+    section.select !== undefined && inSection(exam, section.select, r) && (section.id !== 'aprofunde' || enemAreaOf(r.subject) !== undefined));
 
 /** The guide's sections with their resources, without any section that would be empty. */
 export const resolveGuide = (exam: ExamId): ResolvedSection[] =>
@@ -67,4 +79,4 @@ export const ENEM_AREAS: readonly { id: 'linguagens' | 'humanas' | 'natureza' | 
 
 /** The subjects with UERJ resources, in reading order. Derived, so a new UERJ resource adds its subject. */
 export const UERJ_SUBJECTS: readonly SubjectId[] = ACADEMIC_SUBJECTS.filter((id) =>
-  publishedResources.some((r) => r.subject === id && r.goals.includes('uerj')));
+  publishedResources.some((r) => r.subject === id && r.exams?.includes('uerj')));

@@ -2,22 +2,31 @@
 // /pre-militar/ (V0.3): a path in preparation. It names the selection processes it will organise, by
 // their official names only: no requirement, subject, date or link, because no edital could be checked
 // at its official source yet. No physical or medical training, no simulated exam. noindex and out of
-// the sitemap until it has published, verified material.
+// the sitemap until it has published, verified material. V0.4 Gate B: its state comes from PATH_STATUS
+// (isPreparing), never from a literal; src/lib/path-status.ts refuses an inconsistent one.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import PreparingNote from '../../components/PreparingNote.astro';
+import FeaturedResources from '../../components/FeaturedResources.astro';
+import PathResources from '../../components/PathResources.astro';
 import TrackSection from '../../components/TrackSection.astro';
 import { routes } from '../../lib/routes';
+import { isPreparing } from '../../lib/path-status';
 import { pt as t } from '../../i18n/pt';
 
 const c = t.pages['pre-militar'];
 const m = t.preMilitar;
+const preparing = isPreparing('pre-militar');
+// The copy follows the state (description and lead included): an active page never speaks of preparation.
+const s = m.byState[preparing ? 'preparing' : 'active'];
 ---
-<Base title={c.title} description={c.description} noindex>
-  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
-  <PreparingNote />
+<Base title={c.title} description={s.description} noindex={preparing}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={s.lead} />
+  {preparing && <PreparingNote />}
+  <FeaturedResources path="pre-militar" />
+  <PathResources path="pre-militar" id="materiais" title={t.pathResources.general.title} why={t.pathResources.general.why} />
 
-  <TrackSection id="processos" title={m.processesTitle} why={m.processesWhy}>
+  <TrackSection id="processos" title={s.processesTitle} why={m.processesWhy}>
     <div class="forces">
       {m.branches.map((branch) => (
         <section class="force" aria-label={branch.force}>
@@ -36,16 +45,18 @@ const m = t.preMilitar;
     </div>
   </TrackSection>
 
-  <TrackSection id="como" title={m.howTitle}>
+  <TrackSection id="como" title={s.howTitle}>
     <ol class="how" role="list">
-      {m.how.map((item, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span>{item}</span></li>)}
+      {s.how.map((item, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span>{item}</span></li>)}
     </ol>
     <p class="scope">{m.scope}</p>
   </TrackSection>
 
-  <TrackSection id="enquanto-isso" title={t.preparing.meanwhile}>
-    <p><a class="more" href={routes.objective('ensino-medio')}>{m.medio}{' '}<span aria-hidden="true">→</span></a></p>
-  </TrackSection>
+  {preparing && (
+    <TrackSection id="enquanto-isso" title={t.preparing.meanwhile}>
+      <p><a class="more" href={routes.objective('ensino-medio')}>{m.medio}{' '}<span aria-hidden="true">→</span></a></p>
+    </TrackSection>
+  )}
 </Base>
 
 <style>

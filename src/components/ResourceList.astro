@@ -4,11 +4,12 @@
 import ResourceItem from './ResourceItem.astro';
 import type { PublishedLearningResource } from '../lib/learning-resources';
 
-interface Props { resources: readonly PublishedLearningResource[]; headingLevel?: 2 | 3 | 4; compact?: boolean }
-const { resources, headingLevel = 3, compact = false } = Astro.props;
+/** anchored: the ids this list anchors (#recurso-<id>), from anchorPlan on the resources' home page. */
+interface Props { resources: readonly PublishedLearningResource[]; headingLevel?: 2 | 3 | 4; compact?: boolean; anchored?: ReadonlySet<string> | undefined }
+const { resources, headingLevel = 3, compact = false, anchored } = Astro.props;
 ---
 <ul class="resources" role="list" data-resource-list>
-  {resources.map((resource) => <ResourceItem resource={resource} headingLevel={headingLevel} compact={compact} />)}
+  {resources.map((resource) => <ResourceItem resource={resource} headingLevel={headingLevel} compact={compact} anchor={anchored?.has(resource.id) ?? false} />)}
 </ul>
 
 <style>

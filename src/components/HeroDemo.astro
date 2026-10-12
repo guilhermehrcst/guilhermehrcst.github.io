@@ -32,7 +32,7 @@ const route = [
   { id: 'conteudo', label: d.steps.content, value: content.provider },
   { id: 'pratica', label: d.steps.practice, value: 'INEP' },
 ];
-const facts = [l.formats[content.format], content.registration && l.registration[content.registration]].filter(Boolean).join(' · ');
+const facts = [l.formats[content.format], content.registration && content.registration !== 'unconfirmed' && l.registration[content.registration]].filter(Boolean).join(' · ');
 ---
 <ProductWindow
   class="hero-demo"

@@ -15,7 +15,7 @@ Design and plan: `docs/superpowers/specs/2026-10-11-pexis-academy-v01-design.md`
 | `/tecnologia/` | Technology: objective, area and its tracks |
 | `/materias/` | All areas and subjects ("Explorar") |
 | `/materias/{matematica,portugues,redacao,fisica,quimica,biologia,historia,geografia,filosofia,sociologia,ingles,espanhol}/` | Subjects |
-| `/buscar/` | Search: a full directory, filtered in the browser |
+| `/buscar/` | Search: a full directory, filtered in the browser by text and by five facets (path, subject, institution, language, format); a resource result opens its page at the resource (`#recurso-<id>`) |
 | `/sobre/` | Curation rules, verification, independence |
 
 `/pt/` and the former `/courses/*`, `/pt/cursos/*` routes redirect (a page that refreshes to its destination, `noindex`: GitHub Pages cannot send HTTP redirects). `/resume/` and `/pt/curriculo/` are gone and answer with the 404.
@@ -45,13 +45,15 @@ All content is typed TypeScript, validated at build time.
 - `src/lib/exam-guides.ts`: the ENEM and UERJ guides. Resource sections are derived from the catalogue by goal and format; editorial sections cite official sources.
 - `src/lib/official-sources.ts`: official INEP and UERJ pages, with their verification.
 - `src/lib/tech-tracks.ts`: the technology tracks, as ordered lists of catalogue ids.
+- `src/lib/featured.ts`: the editorial highlights, ten per path, in staging until every one is homologated (V0.4).
 - `src/lib/search-index.ts`: the search index, derived from all of the above.
+- `src/lib/search-filter.ts` and `src/lib/search-facets.ts`: the search facets (pure, shared with the browser) and their options (build time).
 - `src/i18n/pt.ts`: interface copy (V0.1 is Portuguese only; the typed shape is kept for a future `/en/`).
 
 ### Add a resource
 
 1. Open the resource on the provider's own page and confirm that the learning content is entirely free (no trial, no paywall, no teaser, no affiliate link; a free account is fine; a paid optional certificate is fine when the lessons are free).
-2. Add it to `catalogue` in `src/lib/learning-resources.ts` with its official title (never translated), provider, subject, format, goals, language, level and `url`, and `verified: { on, by, freeAccess: true }`. Duration and certificate only when the provider's page states them.
+2. Add it to `catalogue` in `src/lib/learning-resources.ts` with its official title (never translated), provider, subject (`null` for a multidisciplinary resource such as a complete past exam, never a false subject), its real format (a past exam, a lesson or an atlas is not a course), the `paths` it serves, the `exams` it prepares for (only with evidence), language, level and `url`, and `verified: { on, by, freeAccess: true, evidence }`: the real date it was opened and individual evidence from its own official host (`url`, what was `checked`: free, scope, language, format, path, and registration, certificate and grade when stated; a `note`). Registration and certificate are always stated; when the source does not say, use `'unconfirmed'`, which is never shown. School years (`schoolYears`, 1–9) only on Ensino Fundamental and only when the source states them. Duration only when the provider's page states it. Only the 37 resources of the 2026-10-11 baseline (`LEGACY_VERIFIED`, by id, URL and date) keep the collective verification; nothing stamps a date on a new resource. Technology resources declare `tecnologia`, never Ensino Médio.
 3. A resource that cannot be confirmed stays with `url: null` and a `review` note: it is not shown.
 4. A new provider host must also be added to `COURSE_HOSTS` in `scripts/verify-dist.mjs` (a test keeps that list equal to the catalogue).
 5. Record the evidence in `docs/superpowers/research/2026-10-11-learning-library-sources.md`.

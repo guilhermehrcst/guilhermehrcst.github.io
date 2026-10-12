@@ -46,3 +46,12 @@ export const resolveGroups = (
 };
 
 export const higherEducation = () => resolveGroups(HIGHER_EDUCATION_GROUPS);
+
+// V0.4 (spec §5.1): the path is declared on each resource; the groups only order them by field. The two
+// must agree, or Ensino Superior would count one thing and show another.
+{
+  const grouped = HIGHER_EDUCATION_GROUPS.flatMap((group) => group.resourceIds);
+  const declared = publishedResources.filter((resource) => resource.paths.includes('ensino-superior')).map((resource) => resource.id);
+  if (new Set(grouped).size !== grouped.length) throw new Error('higher-education: a course is in two groups');
+  if (JSON.stringify([...grouped].sort()) !== JSON.stringify([...declared].sort())) throw new Error('higher-education: the groups disagree with the resources that declare Ensino Superior');
+}

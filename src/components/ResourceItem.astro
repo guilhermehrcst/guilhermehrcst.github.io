@@ -2,33 +2,40 @@
 // One free resource: who offers it, its official title (never translated) as the one link out, and the
 // few facts that help a student decide. Adapted from the former LearningResourceCard, without the
 // curator plate, image or numbering (spec §2.2). The id stays in data-resource-id, never in `id`, so a
-// resource can appear in two lists of one page.
+// resource can appear in two lists of one page. V0.4: on the page that is its home, its first occurrence
+// carries `anchor`, the id #recurso-<id> that search results open (anchorPlan decides; verify-dist checks).
 import ProviderMark from './ProviderMark.astro';
 import ExternalLinkIcon from './icons/radix/ExternalLinkIcon.astro';
 import type { PublishedLearningResource } from '../lib/learning-resources';
+import { resourceAnchor } from '../lib/search-index';
 import { pt as t } from '../i18n/pt';
 
-interface Props { resource: PublishedLearningResource; headingLevel?: 2 | 3 | 4; compact?: boolean }
+interface Props { resource: PublishedLearningResource; headingLevel?: 2 | 3 | 4; compact?: boolean; anchor?: boolean }
 // compact: for long lists of similar resources; the provider joins the facts instead of its own line.
-const { resource: r, headingLevel = 3, compact = false } = Astro.props;
+const { resource: r, headingLevel = 3, compact = false, anchor = false } = Astro.props;
 const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
 const l = t.resource;
 
 const facts = [
   compact && r.provider,
   l.formats[r.format],
+  r.schoolYears && l.schoolYears(r.schoolYears),
   l.languages[r.language],
   r.duration && `${r.duration.value} ${l.units[r.duration.unit]}`,
-  r.registration && l.registration[r.registration],
-  r.certificate && r.certificate !== 'none' && l.certificates[r.certificate],
+  // An 'unconfirmed' registration or certificate is left out: uncertainty is never shown as a fact.
+  r.registration && r.registration !== 'unconfirmed' && l.registration[r.registration],
+  r.certificate && r.certificate !== 'none' && r.certificate !== 'unconfirmed' && l.certificates[r.certificate],
 ].filter((fact): fact is string => Boolean(fact));
 ---
 <li
   class:list={['resource', compact && 'compact']}
+  id={anchor ? resourceAnchor(r.id) : undefined}
   data-resource-id={r.id}
   data-subject={r.subject}
   data-format={r.format}
-  data-goals={r.goals.join(' ')}
+  data-school-years={r.schoolYears?.join(' ')}
+  data-paths={r.paths.join(' ')}
+  data-exams={r.exams?.join(' ')}
 >
   {!compact && <p class="provider"><ProviderMark name={r.provider} /></p>}
   <Heading class="title">

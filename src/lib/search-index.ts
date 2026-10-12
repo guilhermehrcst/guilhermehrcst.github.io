@@ -7,7 +7,9 @@ import { areaOf, publishedResources } from './learning-resources.ts';
 import { routes } from './routes.ts';
 import { normalize } from './search-normalize.ts';
 import { publishedTracks } from './tech-tracks.ts';
-import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf, type SubjectId } from './taxonomy.ts';
+import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf } from './taxonomy.ts';
+import { resourceFacets, type Facets } from './search-filter.ts';
+import { placementOf, type Placeable } from './placement.ts';
 
 export type SearchKind = 'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso';
 
@@ -18,16 +20,43 @@ export interface SearchEntry {
   url: string;
   context: string;
   terms: string;
+  /** A resource's values for each search filter (V0.4 M4); other entries have none. */
+  facets?: Facets;
 }
 
 const entry = (kind: SearchKind, key: string, title: string, url: string, context: string, extra: readonly string[] = []): SearchEntry =>
   ({ id: `${kind}:${key}`, kind, title, url, context, terms: normalize([title, context, ...extra].join(' ')) });
 
-/** Where a resource is shown: its subject's page, or the first technology track that holds it. */
-const homeOf = (id: string, subject: SubjectId): string => {
-  if (subject !== 'tecnologia') return routes.subject(subject);
-  const track = publishedTracks().find((t) => t.resourceIds.includes(id));
-  return `${routes.objective('tecnologia')}${track ? `#${track.id}` : ''}`;
+/** The id of the element that is a resource, on the page that shows it (V0.4 §5.4). */
+export const resourceAnchor = (id: string): string => `recurso-${id}`;
+
+/** Where a resource is shown: its canonical page (src/lib/placement.ts, the rules the pages render by), and on
+ *  /tecnologia/ the first track that holds it. No page shows it: the build fails rather than send the
+ *  student somewhere it is not. */
+export const resourceHome = (resource: Placeable): string => {
+  const at = placementOf(resource);
+  if (!at) throw new Error(`search-index: ${resource.id}: no page shows it yet`);
+  if (at.page !== routes.objective('tecnologia')) return at.page;
+  const track = publishedTracks().find((t) => t.resourceIds.includes(resource.id));
+  return `${at.page}#${track!.id}`;
+};
+
+/** Which resources of a page's lists carry their anchor: those whose home is this page, at their first
+ *  occurrence. One set per list, in order. Anchors are never repeated, never on a page that is not home. */
+export const anchorPlan = (
+  page: string,
+  lists: readonly (readonly Placeable[])[],
+): Set<string>[] => {
+  const done = new Set<string>();
+  return lists.map((list) => {
+    const anchored = new Set<string>();
+    for (const resource of list) {
+      if (done.has(resource.id) || resourceHome(resource).split('#')[0] !== page) continue;
+      anchored.add(resource.id);
+      done.add(resource.id);
+    }
+    return anchored;
+  });
 };
 
 export const buildSearchIndex = (): SearchEntry[] => [
@@ -41,6 +70,10 @@ export const buildSearchIndex = (): SearchEntry[] => [
     return entry('materia', id, SUBJECTS[id].label, routes.subject(id), area === SUBJECTS[id].label ? 'Matéria' : area);
   }),
   ...publishedTracks().map((t) => entry('trilha', t.id, t.label, `${routes.objective('tecnologia')}#${t.id}`, 'Trilha de Tecnologia', [t.why])),
-  ...publishedResources.map((r) => entry('recurso', r.id, r.title, homeOf(r.id, r.subject),
-    `${r.provider} · ${SUBJECTS[r.subject].label}`, [AREAS[areaOf(r)].label])),
+  ...publishedResources.map((r) => {
+    const area = areaOf(r);
+    const url = `${resourceHome(r).split('#')[0]}#${resourceAnchor(r.id)}`;
+    const context = [r.provider, r.subject === null ? null : SUBJECTS[r.subject].label].filter(Boolean).join(' · ');
+    return { ...entry('recurso', r.id, r.title, url, context, area === null ? [] : [AREAS[area].label]), facets: resourceFacets(r) };
+  }),
 ];

@@ -1,31 +1,18 @@
 ---
-// A subject's resources in the order of the flow: first what to study, then where to practise
-// (spec §6.3). An empty part is omitted, never rendered as a promise. With `anchors`, the parts are
-// the page's #conteudo and #pratique; without, a page can show several subjects without repeating ids.
-import ResourceList from './ResourceList.astro';
+// A subject's resources in the order of the flow: first what to study, then where to practise, then what
+// to consult (spec §6.3, V0.4 §4.3), grouped by ResourceGroups. With `anchors`, the groups are the page's
+// #conteudo, #pratique and #consulta; without, a page can show several subjects without repeating ids.
+// V0.4 Gate B: a subject page serves Ensino Médio and Vestibular (subjectPageShows, the rule placement
+// uses too); a Fundamental resource lives on the Fundamental page, never here.
+import ResourceGroups from './ResourceGroups.astro';
 import { filterResources } from '../lib/learning-library';
-import { publishedResources, type LearningGoalId } from '../lib/learning-resources';
-import type { SubjectId } from '../lib/taxonomy';
-import { pt as t } from '../i18n/pt';
+import { publishedResources } from '../lib/learning-resources';
+import { subjectPageShows } from '../lib/placement';
+import { routes } from '../lib/routes';
+import type { PathId, SubjectId } from '../lib/taxonomy';
 
-interface Props { subject: SubjectId; goal?: LearningGoalId | undefined; headingLevel?: 2 | 3; anchors?: boolean }
-const { subject, goal, headingLevel = 2, anchors = false } = Astro.props;
-const Heading = `h${headingLevel}` as 'h2' | 'h3';
-const itemLevel = (headingLevel + 1) as 3 | 4;
-const all = filterResources(publishedResources, { subject, ...(goal ? { goals: [goal] } : {}) });
-const parts = [
-  { id: 'conteudo', label: t.subject.content, resources: all.filter((r) => r.format !== 'practice') },
-  { id: 'pratique', label: t.subject.practice, resources: all.filter((r) => r.format === 'practice') },
-].filter((part) => part.resources.length > 0);
+interface Props { subject: SubjectId; path?: PathId | undefined; headingLevel?: 2 | 3; anchors?: boolean }
+const { subject, path, headingLevel = 2, anchors = false } = Astro.props;
+const all = filterResources(publishedResources, { subject, ...(path ? { paths: [path] } : {}) }).filter((r) => subjectPageShows(r, subject));
 ---
-{parts.map((part) => (
-  <section class="part" id={anchors ? part.id : undefined} data-part={part.id}>
-    <Heading class="part-title">{part.label}</Heading>
-    <ResourceList resources={part.resources} headingLevel={itemLevel} />
-  </section>
-))}
-
-<style>
-  .part + .part { margin-top: var(--space-7); }
-  .part-title { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-2); }
-</style>
+<ResourceGroups resources={all} headingLevel={headingLevel} anchors={anchors} page={anchors ? routes.subject(subject) : undefined} />

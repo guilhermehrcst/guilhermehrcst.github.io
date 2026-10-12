@@ -320,6 +320,11 @@ const hrefsIn = (fragment) => attrs(fragment, /<a\b[^>]*\shref="([^"]+)"/g);
  *  against every page's resource lists once all pages are read). */
 const DEMO_RESOURCE_IDS = new Set();
 const PUBLISHED_RESOURCE_IDS = new Set();
+/** Each search result for a resource, and the page#anchor it opens (V0.4 M4). */
+const SEARCH_RESOURCE_TARGETS = new Map();
+/** The distinct resources each page renders, and the count the Home prints for each path (V0.4 §5.3). */
+const PAGE_RESOURCE_IDS = new Map();
+const HOME_PATH_COUNTS = new Map();
 
 /** A product demo (a window that shows the real product) is decorative for assistive tech, holds nothing
  *  focusable, shows only real resources, and is captioned by a real link. */
@@ -354,6 +359,10 @@ function checkHome(path, html, resources) {
     if (!/<h2[^>]*>Qual é o seu objetivo\?<\/h2>/.test(objective)) fail(path, '#objetivo must ask "Qual é o seu objetivo?"');
     const hrefs = hrefsIn(objective);
     if (JSON.stringify(hrefs) !== JSON.stringify(PATHS)) fail(path, `#objetivo links ${hrefs.join(',')}`);
+    for (const [, href, n, body] of objective.matchAll(/<a\b[^>]*\shref="([^"]+)"[^>]*\sdata-path-count="(\d+)"[^>]*>([\s\S]*?)<\/a>/g)) {
+      if (!new RegExp(`>${n} recursos?\\b`).test(body)) fail(path, `#objetivo ${href} prints a count other than ${n}`);
+      HOME_PATH_COUNTS.set(href, Number(n));
+    }
   }
   // The learning path: the five steps, in order, each a real thing. A step that has nothing published yet
   // says so and links nowhere; the others lead to the page that holds them.
@@ -447,6 +456,10 @@ function checkAbout(path, html) {
 }
 
 const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+/** The formats a student practises with (V0.4 §4.3). Mirrors PRACTICE_FORMATS; a test keeps them equal. */
+const PRACTICE_FORMATS = ['practice', 'past-exam', 'simulator'];
+const PRACTICE_ATTR = new RegExp(`data-format="(?:${PRACTICE_FORMATS.join('|')})"`);
+const NON_PRACTICE_ATTR = new RegExp(`data-format="(?!(?:${PRACTICE_FORMATS.join('|')})")`);
 const resourceAttr = (item, name) => new RegExp(`\\s${name}="([^"]*)"`).exec(item[1])?.[1] ?? '';
 
 /** A subject page: content, then practice, then the objectives it serves (spec §6.3). An empty
@@ -460,8 +473,8 @@ function checkSubject(path, html, resources) {
   const content = sectionOf(html, /<section\b[^>]*\sid="conteudo"/);
   const practice = sectionOf(html, /<section\b[^>]*\sid="pratique"/);
   const objectives = sectionOf(html, /<section\b[^>]*\sid="objetivos"/);
-  if (content && /data-format="practice"/.test(content)) fail(path, '#conteudo holds no practice');
-  if (practice && /data-format="(?!practice")/.test(practice)) fail(path, '#pratique holds practice only');
+  if (content && PRACTICE_ATTR.test(content)) fail(path, '#conteudo holds no practice');
+  if (practice && NON_PRACTICE_ATTR.test(practice)) fail(path, '#pratique holds practice only');
   if (!content && !practice) fail(path, 'neither #conteudo nor #pratique');
   // A learning map, when present, is an ordered list of plain items that names its source; V0.1 topics have no pages.
   const map = sectionOf(html, /<section\b[^>]*\sdata-learning-map[\s>=]/);
@@ -505,7 +518,7 @@ function checkEnem(path, html) {
   if (JSON.stringify(groups) !== JSON.stringify(ENEM_GROUPS)) fail(path, `ENEM area groups ${JSON.stringify(groups)}`);
   const deepen = sectionOf(html, /<section\b[^>]*\sid="aprofunde"/) ?? '';
   if (!/\sdata-resource-id="/.test(deepen)) fail(path, '#aprofunde shows at least one resource');
-  if (/data-format="practice"/.test(deepen)) fail(path, '#aprofunde holds no practice');
+  if (PRACTICE_ATTR.test(deepen)) fail(path, '#aprofunde holds no practice');
 }
 
 /** /uerj/: its own personality, with past exams as the spine (spec §6.3). */
@@ -525,17 +538,18 @@ function checkUerj(path, html) {
   if (JSON.stringify(subjects) !== JSON.stringify(expected)) fail(path, `#materias links ${subjects.join(',')}`);
 }
 
-/** An objective page that maps subjects by area: only resources tagged for the objective (spec §6.3). */
-function checkObjectiveMap(path, html, resources, goal) {
+/** A path page that maps subjects by area: only resources that declare the path (spec §6.3, V0.4 §5.1). */
+function checkObjectiveMap(path, html, resources, pathId) {
   if (resources.length === 0) fail(path, 'shows at least one resource');
   for (const item of resources) {
-    if (!resourceAttr(item, 'data-goals').split(' ').includes(goal)) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} is not tagged ${goal}`);
+    if (!resourceAttr(item, 'data-paths').split(' ').includes(pathId)) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} does not declare ${pathId}`);
   }
 }
 
 function checkProduct(path, html) {
   const resources = checkResources(path, html);
   for (const item of resources) PUBLISHED_RESOURCE_IDS.add(resourceAttr(item, 'data-resource-id'));
+  PAGE_RESOURCE_IDS.set(path, new Set(resources.map((item) => resourceAttr(item, 'data-resource-id'))));
   if (path === '/') checkHome(path, html, resources);
   if (path === '/sobre/') checkAbout(path, html);
   // Every internal page says where it sits (V0.3): a breadcrumb from Início, through its section.
@@ -584,6 +598,17 @@ function checkProduct(path, html) {
       if (!terms || terms !== terms.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()) fail(path, `entry without normalized terms: ${li.slice(0, 80)}`);
     }
     if (!/<form\b[^>]*role="search"[^>]*\shidden[\s>=]/.test(main)) fail(path, 'the search form starts hidden (revealed by JavaScript)');
+    // V0.4 M4: a resource result opens its page at the resource itself, and carries its facets; the form
+    // filters by the five facets, in this order (it stays hidden without JavaScript).
+    for (const li of main.match(/<li\b[^>]*\sdata-entry-id="recurso:[^"]+"[^>]*>[\s\S]*?<\/li>/g) ?? []) {
+      const id = /data-entry-id="recurso:([^"]+)"/.exec(li)[1];
+      const href = hrefsIn(li)[0] ?? '';
+      if (!href.endsWith(`#recurso-${id}`)) fail(path, `result ${id} must open its page at #recurso-${id} (${href})`);
+      SEARCH_RESOURCE_TARGETS.set(id, href);
+      if (!/\sdata-facet-caminho="[^"]+"/.test(li) || !/\sdata-facet-formato="[^"]+"/.test(li)) fail(path, `result ${id} carries no facets`);
+    }
+    const facets = attrs(/<form\b[\s\S]*?<\/form>/.exec(main)?.[0] ?? '', /<fieldset\b[^>]*\sdata-facet="([^"]+)"/g);
+    if (JSON.stringify(facets) !== JSON.stringify(['caminho', 'materia', 'instituicao', 'idioma', 'formato'])) fail(path, `search facets ${facets.join(',')}`);
   }
   if (path === '/tecnologia/') {
     const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
@@ -593,13 +618,14 @@ function checkProduct(path, html) {
   }
   if (path === '/ensino-medio/') {
     checkObjectiveMap(path, html, resources, 'ensino-medio');
-    const ids = sectionIds(html);
+    // The editorial highlights (#destaques) may lead the map once complete; they are checked on their own.
+    const ids = sectionIds(html).filter((id) => id !== 'destaques');
     if (JSON.stringify(ids) !== JSON.stringify(['matematica', 'linguagens', 'natureza', 'humanas', 'idiomas', 'tecnologia'])) fail(path, `Ensino Médio sections ${ids.join(',')}`);
     if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="tecnologia"/) ?? '').includes('/tecnologia/')) fail(path, '#tecnologia leads to /tecnologia/');
   }
   if (path === '/ensino-superior/') {
     // University courses only, by field: the two fields of V0.3, each with courses.
-    const groups = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].map((m) => [m[1], (m[2].match(/\sdata-resource-id="/g) ?? []).length]);
+    const groups = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].filter((m) => m[1] !== 'destaques').map((m) => [m[1], (m[2].match(/\sdata-resource-id="/g) ?? []).length]);
     if (JSON.stringify(groups.map((g) => g[0])) !== JSON.stringify(['matematica', 'computacao'])) fail(path, `Ensino Superior groups ${groups.map((g) => g[0]).join(',')}`);
     for (const [id, n] of groups) if (n < 2) fail(path, `group ${id} lists ${n} courses`);
   }
@@ -622,6 +648,20 @@ for (const path of CANONICAL) {
   checkAccessibility(path, html);
 }
 
+/* An active path page never says it is in preparation (V0.4 Gate B, P2): its state and its page agree. */
+for (const path of PATHS.filter((p) => !PREPARING.includes(p))) {
+  const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+  if (/\sdata-preparing[\s>=]/.test(html)) fail(path, 'an active path does not say it is in preparation');
+  if (/<meta name="robots" content="[^"]*noindex/.test(html)) fail(path, 'an active path is indexable');
+  const description = /<meta name="description" content="([^"]*)"/.exec(html)?.[1] ?? '';
+  if (/prepara[çc][ãa]o|ainda n[ãa]o/i.test(description)) fail(path, 'an active path\'s description does not speak of preparation');
+}
+/* …and a path in preparation says so in its description too. */
+for (const path of PREPARING) {
+  const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+  if (!/<meta name="description" content="[^"]*prepara[çc][ãa]o/i.test(html)) fail(path, 'a path in preparation says so in its description');
+}
+
 /* Paths in preparation: real pages, linked from the Home, the header and the footer, that say what
    they are and list nothing. Not canonical, not in the sitemap. */
 for (const path of PREPARING) {
@@ -641,6 +681,73 @@ for (const path of PREPARING) {
   checkLinks(path, html);
   checkScripts(path, html);
   checkAccessibility(path, html);
+}
+
+/* In-page navigation (V0.4 M3): a long path page opens with a nav[data-section-nav] that leads, in order,
+   to every section of the page, and to nothing else. */
+const SECTION_NAV_PAGES = ['/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+for (const path of SECTION_NAV_PAGES) {
+  const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+  const nav = /<nav\b[^>]*\sdata-section-nav[\s\S]*?<\/nav>/.exec(html)?.[0];
+  if (!nav) { fail(path, 'a long path page opens with nav[data-section-nav]'); continue; }
+  const targets = hrefsIn(nav).map((href) => href.replace(/^#/, ''));
+  if (JSON.stringify(targets) !== JSON.stringify(sectionIds(html))) fail(path, `section nav ${targets.join(',')} ≠ sections ${sectionIds(html).join(',')}`);
+}
+
+/* Editorial highlights (V0.4 §5.2): a section[data-featured] appears only complete: ten distinct resources,
+   each declaring the page's path, none featured on two pages, none on a path in preparation. */
+{
+  const FEATURED_PAGES = { '/ensino-fundamental/': 'ensino-fundamental', '/ensino-medio/': 'ensino-medio', '/vestibulares/': 'vestibulares', '/pre-militar/': 'pre-militar', '/ensino-superior/': 'ensino-superior', '/tecnologia/': 'tecnologia' };
+  const seen = new Map();
+  for (const [path, pathId] of Object.entries(FEATURED_PAGES)) {
+    const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+    const sections = [...html.matchAll(/<section\b[^>]*\sdata-featured[\s>=][\s\S]*?<\/section>/g)].map((m) => m[0]);
+    if (sections.length > 1) fail(path, 'one featured section at most');
+    if (!sections.length) continue;
+    if (PREPARING.includes(path)) fail(path, 'a path in preparation features nothing');
+    const items = [...sections[0].matchAll(/<li\b([^>]*\sdata-resource-id="[^"]+"[^>]*)>/g)];
+    const ids = items.map((item) => resourceAttr(item, 'data-resource-id'));
+    if (ids.length !== 10 || new Set(ids).size !== 10) fail(path, `featured holds ${ids.length} (${new Set(ids).size} distinct), not ten`);
+    for (const item of items) {
+      const id = resourceAttr(item, 'data-resource-id');
+      if (!resourceAttr(item, 'data-paths').split(' ').includes(pathId)) fail(path, `featured ${id} does not declare ${pathId}`);
+      if (seen.has(id)) fail(path, `${id} is also featured on ${seen.get(id)}`);
+      seen.set(id, path);
+    }
+  }
+}
+
+/* Every count the Home prints for a path is the number of distinct resources that path's pages render:
+   Vestibular holds its exams' pages too (V0.4 §5.3). Counted from the DOM, never from the data module. */
+{
+  const PATH_PAGES = {
+    '/ensino-medio/': ['/ensino-medio/'],
+    '/vestibulares/': ['/vestibulares/', '/enem/', '/uerj/'],
+    '/ensino-superior/': ['/ensino-superior/'],
+    '/tecnologia/': ['/tecnologia/'],
+  };
+  const counted = [...HOME_PATH_COUNTS.keys()].sort();
+  if (JSON.stringify(counted) !== JSON.stringify(Object.keys(PATH_PAGES).sort())) fail('/', `#objetivo counts ${counted.join(',')}`);
+  for (const [href, pages] of Object.entries(PATH_PAGES)) {
+    const rendered = new Set(pages.flatMap((page) => [...(PAGE_RESOURCE_IDS.get(page) ?? [])]));
+    if (HOME_PATH_COUNTS.get(href) !== rendered.size) fail('/', `#objetivo says ${HOME_PATH_COUNTS.get(href)} for ${href}; its pages render ${rendered.size}`);
+  }
+}
+
+/* Resource anchors (V0.4 §5.4): every published resource has a search result, which opens the page that
+   shows it at an element that is that resource; an anchor is never on anything else, and never twice. */
+for (const id of PUBLISHED_RESOURCE_IDS) if (!SEARCH_RESOURCE_TARGETS.has(id)) fail('/buscar/', `no result for the published resource ${id}`);
+for (const [id, href] of SEARCH_RESOURCE_TARGETS) {
+  const [page] = href.split('#');
+  const html = existsSync(fileFor(page)) ? readFileSync(fileFor(page), 'utf8') : '';
+  const at = html.match(new RegExp(`<[a-z]+\\b[^>]*\\sid="recurso-${id}"[^>]*>`, 'g')) ?? [];
+  if (at.length !== 1 || !at[0].includes(`data-resource-id="${id}"`)) fail(page, `#recurso-${id} must be the resource itself, once (${at.length})`);
+}
+for (const path of CANONICAL) {
+  const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
+  for (const m of html.matchAll(/<[a-z]+\b([^>]*)\sid="recurso-([^"]+)"([^>]*)>/g)) {
+    if (!`${m[1]}${m[3]}`.includes(`data-resource-id="${m[2]}"`)) fail(path, `#recurso-${m[2]} is not that resource`);
+  }
 }
 
 for (const id of DEMO_RESOURCE_IDS) {

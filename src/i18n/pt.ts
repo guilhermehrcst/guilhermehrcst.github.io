@@ -64,17 +64,13 @@ export const pt: Dict = {
     },
     'ensino-fundamental': {
       title: 'Ensino Fundamental | Pexis Academy',
-      description: 'Ensino Fundamental na Pexis Academy: uma área em preparação, organizada por anos e disciplinas, que só receberá recursos verificados.',
       eyebrow: 'Caminho',
       heading: 'Ensino Fundamental',
-      lead: 'Do 1º ao 9º ano, organizado por etapa e por disciplina. Esta área ainda não tem recursos publicados.',
     },
     'pre-militar': {
       title: 'Pré-Militar | Pexis Academy',
-      description: 'Pré-Militar na Pexis Academy: uma central em preparação para entender os processos seletivos de escolas e academias militares.',
       eyebrow: 'Caminho',
       heading: 'Pré-Militar',
-      lead: 'Uma central para entender os processos seletivos de escolas e academias militares, com cada detalhe conferido no edital oficial.',
     },
     'ensino-superior': {
       title: 'Ensino Superior | Pexis Academy',
@@ -115,20 +111,57 @@ export const pt: Dict = {
     meanwhile: 'Enquanto isso',
   },
   fundamental: {
-    stagesTitle: 'Como esta área vai se organizar',
-    stagesWhy: 'O Ensino Fundamental tem nove anos, em duas etapas. Cada etapa terá seus próprios materiais.',
+    byState: {
+      preparing: {
+        description: 'Ensino Fundamental na Pexis Academy: uma área em preparação, organizada por anos e disciplinas, que só receberá recursos verificados.',
+        lead: 'Do 1º ao 9º ano, organizado por etapa e por disciplina. Esta área ainda não tem recursos publicados.',
+        stagesTitle: 'Como esta área vai se organizar',
+        stagesWhy: 'O Ensino Fundamental tem nove anos, em duas etapas. Cada etapa terá seus próprios materiais.',
+        subjectsTitle: 'Disciplinas previstas',
+        subjectsWhy: 'Cada disciplina entra quando houver material gratuito, adequado à etapa e verificado na fonte.',
+      },
+      active: {
+        description: 'Ensino Fundamental na Pexis Academy: recursos gratuitos do 1º ao 9º ano, organizados por etapa e conferidos na página de quem os publica.',
+        lead: 'Do 1º ao 9º ano, organizado por etapa, com recursos gratuitos conferidos na página de quem os publica.',
+        stagesTitle: 'Como esta área se organiza',
+        stagesWhy: 'O Ensino Fundamental tem nove anos, em duas etapas. Cada recurso aparece na etapa que a sua fonte indica.',
+      },
+    },
     stages: [
       { title: 'Anos iniciais', body: 'Do 1º ao 5º ano.' },
       { title: 'Anos finais', body: 'Do 6º ao 9º ano.' },
     ],
-    subjectsTitle: 'Disciplinas previstas',
-    subjectsWhy: 'Cada disciplina entra quando houver material gratuito, adequado à etapa e verificado na fonte.',
     subjects: ['Português', 'Matemática', 'Ciências', 'História', 'Geografia', 'Inglês'],
     rule: 'Materiais do Ensino Médio não são apresentados aqui como se servissem ao Fundamental.',
     medio: 'Já está no Ensino Médio? Veja as matérias por área',
   },
   preMilitar: {
-    processesTitle: 'Processos seletivos que vamos organizar',
+    byState: {
+      preparing: {
+        description: 'Pré-Militar na Pexis Academy: uma central em preparação para entender os processos seletivos de escolas e academias militares.',
+        lead: 'Uma central para entender os processos seletivos de escolas e academias militares, com cada detalhe conferido no edital oficial.',
+        processesTitle: 'Processos seletivos que vamos organizar',
+        howTitle: 'O que cada processo vai reunir',
+        how: [
+          'Como o processo seletivo funciona, segundo o edital.',
+          'O link para o edital e para a página oficial.',
+          'As matérias cobradas, como o edital as define.',
+          'Provas anteriores publicadas pela própria instituição.',
+          'Materiais gratuitos para estudar cada matéria.',
+        ],
+      },
+      active: {
+        description: 'Pré-Militar na Pexis Academy: materiais gratuitos para os processos seletivos de escolas e academias militares, conferidos na fonte oficial.',
+        lead: 'Os processos seletivos de escolas e academias militares, com materiais gratuitos conferidos na fonte oficial. Requisitos e datas valem sempre pelo edital.',
+        processesTitle: 'Processos seletivos',
+        howTitle: 'Como esta área funciona',
+        how: [
+          'Cada processo seletivo segue o próprio edital, publicado pela instituição.',
+          'Requisitos, datas e matérias valem sempre pelo edital oficial: esta área não os resume sem conferir na fonte.',
+          'Provas anteriores e materiais só aparecem aqui depois de conferidos na fonte oficial.',
+        ],
+      },
+    },
     processesWhy: 'Cada escola e academia tem o próprio processo seletivo, com etapas, matérias e requisitos definidos no edital. Nenhum deles é resumido aqui antes de ser conferido na fonte oficial.',
     branches: [
       { force: 'Exército', schools: [
@@ -138,6 +171,7 @@ export const pt: Dict = {
       ] },
       { force: 'Marinha', schools: [
         { acronym: 'CN', name: 'Colégio Naval' },
+        { acronym: 'EN', name: 'Escola Naval' },
       ] },
       { force: 'Aeronáutica', schools: [
         { acronym: 'EEAR', name: 'Escola de Especialistas de Aeronáutica' },
@@ -147,14 +181,6 @@ export const pt: Dict = {
       ] },
     ],
     status: 'Edital em verificação',
-    howTitle: 'O que cada processo vai reunir',
-    how: [
-      'Como o processo seletivo funciona, segundo o edital.',
-      'O link para o edital e para a página oficial.',
-      'As matérias cobradas, como o edital as define.',
-      'Provas anteriores publicadas pela própria instituição.',
-      'Materiais gratuitos para estudar cada matéria.',
-    ],
     scope: 'Esta área não oferece treinamento físico, avaliação médica nem simulados.',
     medio: 'Estude as matérias do Ensino Médio por área',
   },
@@ -282,12 +308,30 @@ export const pt: Dict = {
     },
   },
   tecnologia: { chooser: 'Escolha uma trilha' },
+  sectionNav: { areas: 'Escolha uma área', page: 'Nesta página' },
+  pathResources: {
+    other: { title: 'Outras provas e materiais', why: 'Provas anteriores e materiais de outros vestibulares, publicados pelas próprias instituições e conferidos na fonte.' },
+    general: { title: 'Recursos', why: 'Materiais gratuitos para este caminho, conferidos na página de quem os publica.' },
+    stages: { 'anos-iniciais': 'Anos iniciais (1º ao 5º ano)', 'anos-finais': 'Anos finais (6º ao 9º ano)', none: 'Outros materiais' },
+  },
+  featured: {
+    title: 'Destaques',
+    why: 'Uma seleção editorial para começar por este caminho, conferida na fonte. O acervo completo continua abaixo.',
+  },
   search: {
     label: 'Buscar na Pexis Academy',
     placeholder: 'Matéria, prova, trilha ou curso',
     groups: { objetivo: 'Caminhos e provas', area: 'Áreas', materia: 'Matérias', trilha: 'Trilhas de tecnologia', recurso: 'Recursos' },
     results: (n) => (n === 1 ? '1 resultado' : `${n} resultados`),
     empty: 'Nada encontrado. Tente outra palavra, ou explore pelas áreas.',
+    filters: {
+      title: 'Filtrar recursos',
+      note: 'Os filtros valem para os recursos. Marque mais de uma opção para ampliar dentro do mesmo filtro.',
+      facets: { caminho: 'Caminho', materia: 'Matéria', instituicao: 'Instituição', idioma: 'Idioma', formato: 'Formato' },
+      clear: 'Limpar filtros',
+      emptyFiltered: 'Nenhum recurso atende a todos os filtros marcados.',
+    },
+    languages: { pt: 'Português', en: 'Inglês', es: 'Espanhol' },
   },
   vestibulares: {
     exams: {
@@ -347,6 +391,7 @@ export const pt: Dict = {
     eyebrow: 'Matéria',
     content: 'Para estudar',
     practice: 'Para praticar',
+    reference: 'Para consultar',
     objectives: 'Por objetivo',
     objectivesLead: (subject) => `Veja como ${subject} entra na preparação de cada objetivo.`,
   },
@@ -359,11 +404,18 @@ export const pt: Dict = {
   }),
   notFound: { home: 'Página inicial', subjects: 'Explorar as matérias', search: 'Buscar' },
   resource: {
-    formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', practice: 'Prática' },
+    formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', lesson: 'Aula', practice: 'Prática', 'past-exam': 'Prova anterior', simulator: 'Simulado', reference: 'Material de referência' },
     languages: { pt: 'Em português', en: 'Em inglês', es: 'Em espanhol' },
     registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
     certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', available: 'Certificado disponível' },
     units: { hours: 'h', weeks: 'semanas' },
+    schoolYears: (years) => {
+      const ord = years.map((y) => `${y}º`);
+      const consecutive = years.length > 2 && years.every((y, i) => i === 0 || y === years[i - 1]! + 1);
+      if (years.length === 1) return `${ord[0]} ano`;
+      if (consecutive) return `${ord[0]} ao ${ord[ord.length - 1]} ano`;
+      return `${ord.slice(0, -1).join(', ')} e ${ord[ord.length - 1]} ano`;
+    },
     newTab: 'abre o site do provedor em nova aba',
   },
 };

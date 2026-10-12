@@ -77,6 +77,9 @@ The stack is Astro with plain CSS:
 | `LearningPath` | Five steps on a rail: vertical below 1180px, horizontal above. A pending step links nowhere. |
 | `OfficialSources` | Supplied third-party marks, shown whole, in a ruled panel. |
 | `AreaList` | Editorial grid of areas, with subjects as 44px rows. |
+| `SectionNav` (V0.4) | In-page navigation of a long path page: ruled rows (label, one muted line), two columns from 768px, each leading to a section id. verify-dist checks it lists every section of the page, in order. |
+| `FeaturedResources` (V0.4) | A path's ten editorial highlights (`#destaques`, `[data-featured]`). Renders nothing until the path's selection is complete and valid; never on a path in preparation. |
+| `ResourceGroups` (V0.4) | Resources by what the student does: Para estudar, Para praticar (practice, past exams, simulators), Para consultar (reference). Empty groups are omitted. |
 
 **Cards** are used only where a unit is self-contained: an exam on Vestibular, a featured path, a mark.
 Lists are ruled rows.

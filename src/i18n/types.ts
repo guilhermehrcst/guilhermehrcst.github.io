@@ -22,6 +22,10 @@ export interface PageCopy extends PageMeta {
   lead: string;
 }
 
+/** The paths whose page copy follows PATH_STATUS (V0.4): their description and lead live in byState. */
+export type GatedPageKey = 'ensino-fundamental' | 'pre-militar';
+type StatePageCopy = { description: string; lead: string };
+
 export type PageKey =
   | 'home' | 'enem' | 'uerj' | 'ensino-medio' | 'vestibulares' | 'tecnologia'
   | 'ensino-fundamental' | 'pre-militar' | 'ensino-superior'
@@ -45,26 +49,26 @@ export interface Dict {
     explore: string;
     marks: string;
   };
-  pages: Record<PageKey, PageCopy>;
+  pages: Record<Exclude<PageKey, GatedPageKey>, PageCopy> & Record<GatedPageKey, Omit<PageCopy, 'description' | 'lead'>>;
   /** Copy of a path in preparation and of the new paths (V0.3). */
   preparing: { label: string; why: string; meanwhile: string };
   fundamental: {
-    stagesTitle: string;
-    stagesWhy: string;
+    /** The copy that follows PATH_STATUS: the page picks it with isPreparing. Subjects show only in preparation. */
+    byState: {
+      preparing: StatePageCopy & { stagesTitle: string; stagesWhy: string; subjectsTitle: string; subjectsWhy: string };
+      active: StatePageCopy & { stagesTitle: string; stagesWhy: string };
+    };
     stages: { title: string; body: string }[];
-    subjectsTitle: string;
-    subjectsWhy: string;
     subjects: string[];
     rule: string;
     medio: string;
   };
   preMilitar: {
-    processesTitle: string;
+    /** The copy that follows PATH_STATUS: the page picks it with isPreparing. */
+    byState: Record<'preparing' | 'active', StatePageCopy & { processesTitle: string; howTitle: string; how: string[] }>;
     processesWhy: string;
     branches: { force: string; schools: { acronym: string; name: string }[] }[];
     status: string;
-    howTitle: string;
-    how: string[];
     scope: string;
     medio: string;
   };
@@ -123,7 +127,17 @@ export interface Dict {
   };
   subjectPage: (subject: string, area: string) => PageCopy;
   tecnologia: { chooser: string };
-  search: { label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string };
+  /** V0.4: the in-page navigation of a long path page, and the editorial highlights of a path. */
+  sectionNav: { areas: string; page: string };
+  featured: { title: string; why: string };
+  /** V0.4 Gate B: the general section of a path page (resources no subject, exam or field page shows). */
+  pathResources: { other: { title: string; why: string }; general: { title: string; why: string }; stages: Record<'anos-iniciais' | 'anos-finais' | 'none', string> };
+  search: {
+    label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string;
+    /** V0.4 M4: the filters of the resources. */
+    filters: { title: string; note: string; facets: Record<'caminho' | 'materia' | 'instituicao' | 'idioma' | 'formato', string>; clear: string; emptyFiltered: string };
+    languages: Record<'pt' | 'en' | 'es', string>;
+  };
   vestibulares: {
     exams: { title: string; why: string; items: Record<'enem' | 'uerj', { name: string; what: string; link: string }> };
     note: { title: string; body: string };
@@ -145,14 +159,17 @@ export interface Dict {
     };
   };
   source: { label: string; verified: (date: string) => string };
-  subject: { map: string; eyebrow: string; content: string; practice: string; objectives: string; objectivesLead: (subject: string) => string };
+  subject: { map: string; eyebrow: string; content: string; practice: string; reference: string; objectives: string; objectivesLead: (subject: string) => string };
   notFound: { home: string; subjects: string; search: string };
   resource: {
     formats: Record<LearningFormatId, string>;
     languages: Record<LearningLanguageId, string>;
-    registration: Record<LearningRegistrationId, string>;
-    certificates: Record<LearningCertificateId, string>;
+    /** Only confirmed values have a label: 'unconfirmed' is never shown as a fact (V0.4 Gate B, P4). */
+    registration: Record<Exclude<LearningRegistrationId, 'unconfirmed'>, string>;
+    certificates: Record<Exclude<LearningCertificateId, 'unconfirmed'>, string>;
     units: { hours: string; weeks: string };
+    /** V0.4 Gate B, P3: the school years the source states ("2º ano", "6º ao 9º ano"). */
+    schoolYears: (years: readonly number[]) => string;
     newTab: string;
   };
 }

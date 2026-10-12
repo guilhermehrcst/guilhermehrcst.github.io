@@ -1,26 +1,18 @@
 ---
-// An objective seen through the school areas: for each area, its subjects, each with the resources tagged
-// for this objective and a link to the subject's page. Technology closes the page with its own tracks.
-// An area or subject without resources for the objective is left out, never shown empty.
+// A path seen through the school areas: for each area, its subjects, each with the resources that declare
+// this path and a link to the subject's page. Technology closes the page with a link to its own path.
+// An area or subject without resources for the path is left out, never shown empty. Without `practice`,
+// practice is left to the exam pages that hold it (Vestibular: /enem/ and /uerj/).
 import TrackSection from './TrackSection.astro';
 import ResourceList from './ResourceList.astro';
-import { filterResources } from '../lib/learning-library';
-import { publishedResources, type LearningGoalId } from '../lib/learning-resources';
+import { mapSections } from '../lib/learning-library';
 import { routes } from '../lib/routes';
-import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf } from '../lib/taxonomy';
+import type { PathId } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
-interface Props { goal: LearningGoalId; technology?: boolean }
-const { goal, technology = true } = Astro.props;
-const areas = AREA_ORDER.filter((id) => id !== 'tecnologia')
-  .map((id) => ({
-    id,
-    label: AREAS[id].label,
-    subjects: subjectsOf(id)
-      .map((s) => ({ id: s, label: SUBJECTS[s].label, resources: filterResources(publishedResources, { subject: s, goals: [goal] }) }))
-      .filter((s) => s.resources.length > 0),
-  }))
-  .filter((area) => area.subjects.length > 0);
+interface Props { path: PathId; technology?: boolean; practice?: boolean }
+const { path, technology = true, practice = true } = Astro.props;
+const areas = mapSections(path, { practice });
 const tech = t.objectiveMap.technology;
 ---
 {areas.map((area) => (

@@ -1,0 +1,33 @@
+---
+// Resources by what the student does with them (V0.4 §4.3): study (courses, tracks, lessons), practise
+// (practice, past exams, simulators), consult (reference material). An empty group is omitted, never
+// rendered as a promise. With `anchors`, each group carries its id (#conteudo, #pratique, #consulta).
+// With `page`, the resources whose home is that page carry their own anchor (#recurso-<id>).
+import ResourceList from './ResourceList.astro';
+import { isPractice, type PublishedLearningResource } from '../lib/learning-resources';
+import { anchorPlan } from '../lib/search-index';
+import { pt as t } from '../i18n/pt';
+
+interface Props { resources: readonly PublishedLearningResource[]; headingLevel?: 2 | 3; anchors?: boolean; page?: string | undefined }
+const { resources, headingLevel = 2, anchors = false, page } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
+const itemLevel = (headingLevel + 1) as 3 | 4;
+const isReference = (r: PublishedLearningResource) => r.format === 'reference';
+const groups = [
+  { id: 'conteudo', label: t.subject.content, resources: resources.filter((r) => !isPractice(r) && !isReference(r)) },
+  { id: 'pratique', label: t.subject.practice, resources: resources.filter(isPractice) },
+  { id: 'consulta', label: t.subject.reference, resources: resources.filter(isReference) },
+].filter((group) => group.resources.length > 0);
+const plan = page ? anchorPlan(page, groups.map((group) => group.resources)) : [];
+---
+{groups.map((group, i) => (
+  <section class="part" id={anchors ? group.id : undefined} data-part={group.id}>
+    <Heading class="part-title">{group.label}</Heading>
+    <ResourceList resources={group.resources} headingLevel={itemLevel} anchored={plan[i]} />
+  </section>
+))}
+
+<style>
+  .part + .part { margin-top: var(--space-7); }
+  .part-title { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-2); }
+</style>

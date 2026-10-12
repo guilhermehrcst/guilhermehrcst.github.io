@@ -1,0 +1,33 @@
+---
+// The in-page navigation of a long path page (V0.4 M3, spec §3.1): one ruled row per section, in the
+// page's order, each leading to the section's stable id (anchors land below the sticky header through
+// scroll-padding). verify-dist checks that it leads to every section of the page and to nothing else.
+interface Item { id: string; label: string; why?: string | undefined }
+interface Props { id: string; title: string; items: readonly Item[] }
+const { id, title, items } = Astro.props;
+---
+<nav class="wrap section-nav" aria-labelledby={`${id}-title`} data-section-nav>
+  <h2 id={`${id}-title`}>{title}</h2>
+  <ul role="list">
+    {items.map((item) => (
+      <li>
+        <a href={`#${item.id}`}>
+          <span class="name">{item.label}</span>
+          {item.why && <span class="why">{item.why}</span>}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .section-nav { padding-bottom: var(--space-7); }
+  h2 { font-size: var(--fs-h3); font-weight: 600; margin-bottom: var(--space-3); }
+  ul { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: var(--space-7); }
+  @media (min-width: 768px) { ul { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  li { border-top: 1px solid var(--rule); }
+  a { display: grid; gap: var(--space-1); min-height: 44px; align-content: center; padding-block: var(--space-3) var(--space-4); text-decoration: none; }
+  .name { font-weight: 600; }
+  a:hover .name { color: var(--action); text-decoration: underline; }
+  .why { font-size: var(--fs-small); color: var(--muted); }
+</style>

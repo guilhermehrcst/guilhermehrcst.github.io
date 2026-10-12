@@ -16,11 +16,11 @@ const l = t.resource;
 const subject = SUBJECTS.fisica;
 const [content, practice] = resourcesByIds(publishedResources, ['kultivi-physics-enem', 'uerj-physics-practice']);
 if (!content || !practice) throw new Error('LearningPath: the course or the practice is missing');
-if (!content.goals.includes('vestibulares')) throw new Error('LearningPath: the course is not tagged for Vestibular');
+if (!content.paths.includes('vestibulares')) throw new Error('LearningPath: the course does not declare Vestibular');
 if (EXAM_PARENT.uerj !== 'vestibulares') throw new Error('LearningPath: the UERJ is not inside Vestibular');
 if (!resolveGuide('uerj').find((s) => s.id === 'provas')?.resources.some((r) => r.id === practice.id)) throw new Error('LearningPath: the practice is not in the UERJ guide');
 const topic = subject.topics.find((item) => item.published);
-const facts = (r: typeof content) => [r.provider, l.formats[r.format], r.registration && l.registration[r.registration]].filter(Boolean).join(' · ');
+const facts = (r: typeof content) => [r.provider, l.formats[r.format], r.registration && r.registration !== 'unconfirmed' && l.registration[r.registration]].filter(Boolean).join(' · ');
 
 type Step = {
   id: keyof typeof p.steps;
