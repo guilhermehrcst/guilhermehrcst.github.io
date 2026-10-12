@@ -12,6 +12,8 @@ import {
   gatebDraftProblems,
   gatebSelectedResources,
   gatebPlacementGaps,
+  gatebUnreleasedDestinations,
+  gatebProjectedContext,
 } from '../src/lib/gateb-selection-preview.ts';
 import { featuredProblems, FEATURED_RELEASE, FEATURED_RESOURCE_IDS_BY_PATH } from '../src/lib/featured.ts';
 import { PATH_ORDER, PATH_STATUS, type PathId } from '../src/lib/taxonomy.ts';
@@ -77,24 +79,28 @@ test('T2: all sixty provisional candidates obey P4 and the existing featured gat
   assert.match(featuredProblems(duplicate, 'final', resources).join('\n'), /does not declare tecnologia|featured in/);
 });
 
-test('T2: only nine independently accounted-for placements still need future integration', () => {
+test('T2: all nine previously missing destinations have conditional routes without public activation', () => {
   const requirements = Object.keys(GATEB_PLACEMENT_REQUIREMENTS);
   assert.deepEqual(requirements, EXPECTED_GAPS);
-  assert.deepEqual(gatebPlacementGaps(), EXPECTED_GAPS);
+  assert.deepEqual(gatebUnreleasedDestinations(), EXPECTED_GAPS,
+    'normal production context must not prematurely route unpublished IDs');
+  assert.deepEqual(gatebPlacementGaps(), [], 'conditional plans resolve all 60 future destinations');
+
   const states = Object.fromEntries(PATH_ORDER.map((path) => [path, 'active'])) as Record<PathId, 'active'>;
   const proposed = new Map(gatebSelectedResources().map((r) => [r.id, r]));
+  const future = gatebProjectedContext();
+  assert.equal(future.length, 74, 'projected context includes all 37 legacies + 37 staged entries');
   for (const [id, requirement] of Object.entries(GATEB_PLACEMENT_REQUIREMENTS)) {
     const resource = proposed.get(id);
     if (!resource) throw new Error(`missing placement candidate ${id}`);
-    assert.equal(placementOf(resource, states), null, `${id}: not a real gap`);
+    assert.equal(placementOf(resource, states), null, `${id}: unpublished ID must not be shown`);
+    const at = placementOf(resource, states, future);
+    assert.ok(at, `${id}: conditional route still missing`);
+    assert.equal(at.page, requirement.target, id);
+    assert.equal(at.anchor, `recurso-${id}`, id);
     assert.ok(requirement.next.trim().length > 20, id);
-    if (id.startsWith('mit-') || id.startsWith('yale-') || id.startsWith('ou-')) {
-      assert.equal(requirement.target, '/ensino-superior/');
-    } else {
-      assert.equal(requirement.target, '/tecnologia/');
-    }
   }
-  assert.equal(gatebSelectedResources().filter((r) => placementOf(r, states) !== null).length, 51);
+  assert.equal(gatebSelectedResources().filter((r) => placementOf(r, states, future) !== null).length, 60);
 });
 
 test('T2: Fundamental and Pré-Militar remain preparing until a separately approved release', () => {
