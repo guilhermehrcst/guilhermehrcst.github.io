@@ -96,8 +96,9 @@ export interface GateBPlacementRequirement {
   readonly next: string;
 }
 
-/** Exactly those candidates that have no valid destination even with all paths active.
- *  This table must match placementOf in tests, so it cannot paper over an unknown link. */
+/** Nine candidates whose rendering relies on the conditional grouping/track plans.
+ *  These plans define potential page anchors, not actual publication or activation.
+ *  Their nine default-production destinations stay absent until a separate release. */
 export const GATEB_PLACEMENT_REQUIREMENTS: Readonly<Record<string, GateBPlacementRequirement>> = {
   'mit-1801sc': { target: '/ensino-superior/', next: "Acrescentar ao grupo existente de Matemática, sem duplicar MIT 18.06." },
   'mit-801sc': { target: '/ensino-superior/', next: "Criar grupo de Física quando o curso for publicado." },
@@ -143,11 +144,29 @@ export const gatebDraftProblems = (at: Date = new Date()): string[] => {
   ];
 };
 
-/** Dry-run only: paths in preparation are *hypothetically* active to reveal actual
- *  remaining route gaps. It never changes PATH_STATUS or renders anything. */
+/** Dry-run only: hypothetically activate all paths and include all 74 actual typed
+ *  records as potential catalogue entries. This does not mutate publishedResources.
+ *  The normal placementOf() call still sees only the 37 public resources. */
+const hypotheticalStates = (): Record<PathId, 'active'> =>
+  Object.fromEntries(PATH_ORDER.map((path) => [path, 'active'])) as Record<PathId, 'active'>;
+
+export const gatebProjectedContext = (): readonly LearningResource[] => available();
+
+/** After the conditional field and technology plans, every one of the 60 candidates
+ *  has a future internal destination. Any missing link fails T2 before promotion. */
 export const gatebPlacementGaps = (): readonly string[] => {
-  const hypotheticalActive = Object.fromEntries(PATH_ORDER.map((path) => [path, 'active'])) as Record<PathId, 'active'>;
+  const states = hypotheticalStates();
+  const futureResources = gatebProjectedContext();
   return gatebSelectedResources()
-    .filter((resource) => placementOf(resource, hypotheticalActive) === null)
+    .filter((resource) => placementOf(resource, states, futureResources) === null)
+    .map((resource) => resource.id);
+};
+
+/** These nine IDs are still not routed by the real published-only data context.
+ *  This should stay nine until an explicitly authorized publication is prepared. */
+export const gatebUnreleasedDestinations = (): readonly string[] => {
+  const states = hypotheticalStates();
+  return gatebSelectedResources()
+    .filter((resource) => placementOf(resource, states) === null)
     .map((resource) => resource.id);
 };
