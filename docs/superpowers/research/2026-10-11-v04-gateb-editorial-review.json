@@ -1799,5 +1799,178 @@
     }
   ],
   "review_03_summary": "As nove posições antes pendentes receberam prova documental direta, mediante oito arquivos do planejamento e a substituição EsPCEx por ESA 2026. A prova EsPCEx permanece não verificada fora da shortlist. Nenhuma autorização de publicação.",
-  "review_04_summary": "Correcoes de quatro apontamentos do Codex no PR #35: proveniencia ESA, substituicao Cisco, destino canônico INEP, datas da autoridade. Refinamento adicional dos titulos das provas, que passaram a prometer exclusivamente o documento efetivamente conferido; recorte de paginas ESA retificado."
+  "review_04_summary": "Correcoes de quatro apontamentos do Codex no PR #35: proveniencia ESA, substituicao Cisco, destino canônico INEP, datas da autoridade. Refinamento adicional dos titulos das provas, que passaram a prometer exclusivamente o documento efetivamente conferido; recorte de paginas ESA retificado. Technical readiness classification and T0-T4 gates added; this is documentation only, not code implementation.",
+  "technical_readiness": {
+    "status": "preparation_only_no_code_promotion",
+    "observed_main_commit": "40bf3e4d920720e066d4026f08aa7a0b16bca61c",
+    "observed_at": "2026-10-12",
+    "provenance": {
+      "catalogue": "src/lib/learning-resources.ts",
+      "staging": "src/lib/staging.ts",
+      "selection": "docs/superpowers/research/2026-10-11-v04-gateb-editorial-review.json"
+    },
+    "classification_counts": {
+      "legacy": 23,
+      "staged": 23,
+      "partial": 3,
+      "untyped": 11
+    },
+    "by_path": {
+      "ensino-fundamental": {
+        "legacy": 0,
+        "staged": 10,
+        "partial": 0,
+        "untyped": 0
+      },
+      "ensino-medio": {
+        "legacy": 10,
+        "staged": 0,
+        "partial": 0,
+        "untyped": 0
+      },
+      "vestibulares": {
+        "legacy": 2,
+        "staged": 3,
+        "partial": 0,
+        "untyped": 5
+      },
+      "pre-militar": {
+        "legacy": 0,
+        "staged": 1,
+        "partial": 3,
+        "untyped": 6
+      },
+      "ensino-superior": {
+        "legacy": 4,
+        "staged": 6,
+        "partial": 0,
+        "untyped": 0
+      },
+      "tecnologia": {
+        "legacy": 7,
+        "staged": 3,
+        "partial": 0,
+        "untyped": 0
+      }
+    },
+    "by_classification": {
+      "legacy": [
+        "kultivi-math-enem",
+        "kultivi-portuguese-enem",
+        "kultivi-physics-enem",
+        "kultivi-chemistry-enem",
+        "kultivi-biology-enem",
+        "kultivi-history-enem",
+        "kultivi-geography-enem",
+        "kultivi-philosophy-enem",
+        "kultivi-sociology-enem",
+        "kultivi-english-enem",
+        "kultivi-writing-enem",
+        "inep-writing-2026",
+        "mit-6100l",
+        "mit-60002",
+        "mit-6006",
+        "mit-6042j",
+        "cs50x",
+        "cs50p",
+        "fb-python",
+        "fb-web",
+        "cs50w",
+        "cs50ai",
+        "cs50sql"
+      ],
+      "staged": [
+        "ef-sme-alfabeto-1",
+        "sme-goiania-letras-e-palavras",
+        "ef-sme-vegetacao-3",
+        "ef-sme-municipio-4",
+        "ef-sme-vestigios-5",
+        "sme-goiania-leitura-em-foco",
+        "ef-obmep-fracoes-6",
+        "ef-sme-tecnologia-vida-7",
+        "ef-obmep-potenciacao-8",
+        "ef-sme-funcoes-9",
+        "kultivi-enem-completo",
+        "inep-enem-provas-gabaritos",
+        "fuvest-acervo-2026",
+        "ita-provas-anteriores",
+        "mit-1801sc",
+        "mit-801sc",
+        "mit-7012",
+        "yale-psyc-110",
+        "yale-econ-252",
+        "ou-environment-treading-lightly",
+        "odin-foundations",
+        "google-mlcc",
+        "ms-learn-cloud-concepts"
+      ],
+      "partial": [
+        "pm-cn-provas",
+        "pm-en-provas",
+        "pm-eear-provas"
+      ],
+      "untyped": [
+        "cecierj-pvs-portugues-v1",
+        "cecierj-pvs-matematica-mod1",
+        "cecierj-pvs-historia-mod2",
+        "cecierj-pvs-geografia-mod1",
+        "cecierj-pvs-fisica-v1",
+        "pm-eam-provas",
+        "pm-afa-provas",
+        "pm-epcar-provas",
+        "cecierj-aprovarj",
+        "pm-esa-provas-2026",
+        "pm-ime-provas"
+      ]
+    },
+    "catalogue_selection_new_records_required": 37,
+    "typed_staging_records_available": 23,
+    "partial_records_to_retype": 3,
+    "entirely_new_records_to_type": 11,
+    "gate_b_source_scope_verified": 60,
+    "final_homologations_authorized": 0,
+    "published_new_resources": 0,
+    "source_metadata_contract": [
+      "id",
+      "title",
+      "provider",
+      "subject nullable",
+      "format",
+      "paths",
+      "exams only with evidence",
+      "language",
+      "level",
+      "url HTTPS",
+      "registration",
+      "certificate",
+      "individual verification with exact date",
+      "evidence url same host as resource url",
+      "checked checklist",
+      "note",
+      "schoolYears only when grade evidenced"
+    ],
+    "promotion_prerequisites": [
+      "reconcile the editorial revision with the actual main HEAD and current staging before any code change",
+      "retain 37 legacy published records and their original id+url+verified date unchanged",
+      "do not import src/lib/staging.ts from any page, component or script before final release",
+      "treat partial Marine and EEAR entries as historical while creating independently evidenced typed candidates",
+      "correct or preserve the INEP archive index as canonical user destination; PDF and answer key remain supporting evidence",
+      "never associate Cecierj prep volumes with official UERJ questions without source proof",
+      "obtain placement for all 37 unpublished before any catalogue promotion; active paths without full featured selection are blocked",
+      "expand independent external-host allowlists only for verified links and test consistency",
+      "prove 60 distinct featured entries, 10 per path, no duplicate placements, no new public visibility while staging",
+      "run npm test, npm run check, npm run build and verify-dist on the exact candidate commit",
+      "verify HTML, sitemap, noindex, redirects, accessibility and no third-party requests",
+      "require separate explicit authorization and independent review before merge or deployment"
+    ],
+    "decisions_pending": [
+      "whether the Microsoft Learn cloud resource needs a new standalone technology section or a suitable real track, without misclassifying it",
+      "how to represent grades 1-9 in the visible Fundamental UX without inventing precision in the level field",
+      "additional higher-education groups for verified MIT/Yale/Open University resources",
+      "choice of per-path partial release versus all-path atomic release, preserving gate invariants"
+    ],
+    "release_guard": "FEATURED_RELEASE remains staging; PATH_STATUS for ensino-fundamental and pre-militar remains preparing; no public catalogue changes permitted in this editorial PR.",
+    "static_checks_only": true,
+    "code_tests_not_run_in_this_editorial_review": true
+  }
 }
