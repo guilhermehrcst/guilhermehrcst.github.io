@@ -24,6 +24,10 @@ const CANONICAL = [
 const PATHS = ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/pre-militar/', '/ensino-superior/', '/tecnologia/'];
 const PREPARING = ['/ensino-fundamental/', '/pre-militar/'];
 
+/** The fields of Ensino Superior, in page order (V0.4 QA P1-RC2): Matemática and Computação since V0.3, then
+ *  the fields planned for the Gate B university courses. A field is shown only with a published course. */
+const SUPERIOR_FIELDS = ['matematica', 'computacao', 'fisica', 'biologia', 'psicologia', 'economia', 'meio-ambiente'];
+
 /** Routes of the former personal site that keep a destination (spec §8.4). */
 const REDIRECTS = {
   '/pt/': '/',
@@ -322,6 +326,8 @@ const DEMO_RESOURCE_IDS = new Set();
 const PUBLISHED_RESOURCE_IDS = new Set();
 /** Each search result for a resource, and the page#anchor it opens (V0.4 M4). */
 const SEARCH_RESOURCE_TARGETS = new Map();
+/** Institution filters the Home's #fontes leads to (V0.4 QA P1-RC1); each must work on the built search. */
+const HOME_SEARCH_FILTERS = new Set();
 /** The distinct resources each page renders, and the count the Home prints for each path (V0.4 §5.3). */
 const PAGE_RESOURCE_IDS = new Map();
 const HOME_PATH_COUNTS = new Map();
@@ -388,7 +394,11 @@ function checkHome(path, html, resources) {
     if (cells.length < 3) fail(path, `#fontes shows ${cells.length} institutions`);
     for (const [, name, body] of cells) {
       const links = hrefsIn(body);
-      if (links.length !== 1 || !/^\/[^#]*#[\w-]+$/.test(links[0])) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
+      // A track on one page, or (V0.4 QA P1-RC1) the search filtered by the institution when its courses
+      // span pages; that filter value is checked against the built search page below.
+      const filtered = /^\/buscar\/\?instituicao=([a-z0-9-]+)$/.exec(links[0] ?? '');
+      if (filtered) HOME_SEARCH_FILTERS.add(filtered[1]);
+      if (links.length !== 1 || !(/^\/[^#]*#[\w-]+$/.test(links[0]) || filtered)) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
     }
   }
   // Featured paths: at most three, each a real guide or track with its steps, opened by one internal link.
@@ -493,7 +503,15 @@ const sectionIds = (html) => attrs(/<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '
 function checkSourceNote(path, fragment, where) {
   const note = /<[a-z]+\b[^>]*\sdata-source-note[\s\S]*?<\/(p|div)>/.exec(fragment)?.[0];
   if (!note) { fail(path, `${where}: official source note missing`); return; }
-  const hosts = hrefsIn(note).map((h) => { try { return new URL(h).hostname; } catch { return ''; } });
+  // The official page itself, or (V0.4 QA P2-RC5) the resource on this section that is that page: an
+  // element #recurso-<id> in the same section, whose own link is on an official host.
+  const target = (href) => {
+    const local = /^#(recurso-[\w-]+)$/.exec(href);
+    if (!local) return href;
+    const item = new RegExp(`<([a-z]+)\\b[^>]*\\sid="${local[1]}"[^>]*>[\\s\\S]*?<\\/\\1>`).exec(fragment)?.[0] ?? '';
+    return hrefsIn(item).find((h) => /^https:/.test(h)) ?? '';
+  };
+  const hosts = hrefsIn(note).map((h) => { try { return new URL(target(h)).hostname; } catch { return ''; } });
   if (!hosts.some((h) => OFFICIAL_HOSTS.includes(h))) fail(path, `${where}: source note must link an official page`);
   if (!/<time datetime="\d{4}-\d{2}-\d{2}"/.test(note)) fail(path, `${where}: source note must date its verification`);
 }
@@ -577,7 +595,10 @@ function checkProduct(path, html) {
   if (path === '/vestibulares/') {
     checkObjectiveMap(path, html, resources, 'vestibulares');
     // Vestibular is the hub of its exams (V0.3): it opens with them, ENEM then UERJ, then the editorial note.
-    const ids = sectionIds(html);
+    // Released highlights (#destaques, checked on their own) may come first, and only first (V0.4 QA P2-RC3).
+    const all = sectionIds(html);
+    if (all.indexOf('destaques') > 0) fail(path, `#destaques must lead the page (${all.join(',')})`);
+    const ids = all.filter((id) => id !== 'destaques');
     if (ids[0] !== 'provas' || ids[1] !== 'nota-editorial') fail(path, `Vestibular opens with its exams, then the editorial note (${ids.join(',')})`);
     const exams = hrefsIn(sectionOf(html, /<section\b[^>]*\sid="provas"/) ?? '');
     if (JSON.stringify(exams) !== JSON.stringify(['/enem/', '/uerj/'])) fail(path, `#provas links ${exams.join(',')}`);
@@ -624,10 +645,15 @@ function checkProduct(path, html) {
     if (!hrefsIn(sectionOf(html, /<section\b[^>]*\sid="tecnologia"/) ?? '').includes('/tecnologia/')) fail(path, '#tecnologia leads to /tecnologia/');
   }
   if (path === '/ensino-superior/') {
-    // University courses only, by field: the two fields of V0.3, each with courses.
+    // University courses only, by field (V0.4 QA P1-RC2). The fields, in order, written out by hand: the two of
+    // V0.3 always, first, each with at least two courses; a later field only when it holds a published course.
+    // A field never appears empty, out of order, twice, or under a name not listed here.
     const groups = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].filter((m) => m[1] !== 'destaques').map((m) => [m[1], (m[2].match(/\sdata-resource-id="/g) ?? []).length]);
-    if (JSON.stringify(groups.map((g) => g[0])) !== JSON.stringify(['matematica', 'computacao'])) fail(path, `Ensino Superior groups ${groups.map((g) => g[0]).join(',')}`);
-    for (const [id, n] of groups) if (n < 2) fail(path, `group ${id} lists ${n} courses`);
+    const ids = groups.map((g) => g[0]);
+    const known = ids.filter((id) => SUPERIOR_FIELDS.includes(id));
+    const inOrder = known.length === ids.length && new Set(ids).size === ids.length && ids.every((id, i) => i === 0 || SUPERIOR_FIELDS.indexOf(id) > SUPERIOR_FIELDS.indexOf(ids[i - 1]));
+    if (!inOrder || ids[0] !== 'matematica' || ids[1] !== 'computacao') fail(path, `Ensino Superior groups ${ids.join(',')}`);
+    for (const [id, n] of groups) if (n < (['matematica', 'computacao'].includes(id) ? 2 : 1)) fail(path, `group ${id} lists ${n} courses`);
   }
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
@@ -747,6 +773,18 @@ for (const path of CANONICAL) {
   const html = existsSync(fileFor(path)) ? readFileSync(fileFor(path), 'utf8') : '';
   for (const m of html.matchAll(/<[a-z]+\b([^>]*)\sid="recurso-([^"]+)"([^>]*)>/g)) {
     if (!`${m[1]}${m[3]}`.includes(`data-resource-id="${m[2]}"`)) fail(path, `#recurso-${m[2]} is not that resource`);
+  }
+}
+
+/* A #fontes link to the search filtered by institution must be a filter the built search page offers, and
+   that filter must list results on more than one page (the reason it is used instead of a track link). */
+{
+  const search = existsSync(fileFor('/buscar/')) ? readFileSync(fileFor('/buscar/'), 'utf8') : '';
+  for (const value of HOME_SEARCH_FILTERS) {
+    if (!new RegExp(`<input\\b[^>]*\\sname="instituicao"[^>]*\\svalue="${value}"`).test(search)) fail('/', `#fontes leads to a search filter the search page does not offer (${value})`);
+    const pages = new Set([...search.matchAll(/<li\b[^>]*\sdata-entry-id="recurso:[^"]+"[^>]*>[\s\S]*?<\/li>/g)]
+      .map((m) => m[0]).filter((li) => new RegExp(`\\sdata-facet-instituicao="${value}"`).test(li)).map((li) => (hrefsIn(li)[0] ?? '').split('#')[0]));
+    if (pages.size < 2) fail('/', `#fontes filters the search by ${value}, whose results are on ${pages.size} page(s): link the track instead`);
   }
 }
 

@@ -1,0 +1,3448 @@
+
+> test
+> node --experimental-strip-types --test "tests/**/*.test.{ts,mjs}"
+
+TAP version 13
+# Subtest: every brand file is exactly what the script generated from the official sources
+ok 1 - every brand file is exactly what the script generated from the official sources
+  ---
+  duration_ms: 7.896038
+  type: 'test'
+  ...
+# Subtest: the official sources are kept as supplied
+ok 2 - the official sources are kept as supplied
+  ---
+  duration_ms: 0.155176
+  type: 'test'
+  ...
+# Subtest: the --brand token is the red measured from the official artwork
+ok 3 - the --brand token is the red measured from the official artwork
+  ---
+  duration_ms: 0.433256
+  type: 'test'
+  ...
+# Subtest: the lockup keeps the artwork whole: its proportions are the original box
+ok 4 - the lockup keeps the artwork whole: its proportions are the original box
+  ---
+  duration_ms: 1.386696
+  type: 'test'
+  ...
+# Subtest: the page shell links the generated icons, and nothing else stands for the brand
+ok 5 - the page shell links the generated icons, and nothing else stands for the brand
+  ---
+  duration_ms: 3.247829
+  type: 'test'
+  ...
+# Subtest: the contrast function matches a known reference
+ok 6 - the contrast function matches a known reference
+  ---
+  duration_ms: 2.34463
+  type: 'test'
+  ...
+# Subtest: --ink on --paper is at least 7:1
+ok 7 - --ink on --paper is at least 7:1
+  ---
+  duration_ms: 0.584551
+  type: 'test'
+  ...
+# Subtest: --ink on --surface is at least 7:1
+ok 8 - --ink on --surface is at least 7:1
+  ---
+  duration_ms: 0.320077
+  type: 'test'
+  ...
+# Subtest: --muted on --paper is at least 4.5:1
+ok 9 - --muted on --paper is at least 4.5:1
+  ---
+  duration_ms: 0.420897
+  type: 'test'
+  ...
+# Subtest: --muted on --surface is at least 4.5:1
+ok 10 - --muted on --surface is at least 4.5:1
+  ---
+  duration_ms: 0.214215
+  type: 'test'
+  ...
+# Subtest: --action on --paper is at least 4.5:1
+ok 11 - --action on --paper is at least 4.5:1
+  ---
+  duration_ms: 0.36376
+  type: 'test'
+  ...
+# Subtest: --action on --surface is at least 4.5:1
+ok 12 - --action on --surface is at least 4.5:1
+  ---
+  duration_ms: 0.752189
+  type: 'test'
+  ...
+# Subtest: --action-hover on --paper is at least 4.5:1
+ok 13 - --action-hover on --paper is at least 4.5:1
+  ---
+  duration_ms: 1.982972
+  type: 'test'
+  ...
+# Subtest: --on-action on --action is at least 4.5:1
+ok 14 - --on-action on --action is at least 4.5:1
+  ---
+  duration_ms: 0.721971
+  type: 'test'
+  ...
+# Subtest: --on-action on --action-hover is at least 4.5:1
+ok 15 - --on-action on --action-hover is at least 4.5:1
+  ---
+  duration_ms: 0.598511
+  type: 'test'
+  ...
+# Subtest: --ink on --raised is at least 7:1
+ok 16 - --ink on --raised is at least 7:1
+  ---
+  duration_ms: 0.36409
+  type: 'test'
+  ...
+# Subtest: --muted on --raised is at least 4.5:1
+ok 17 - --muted on --raised is at least 4.5:1
+  ---
+  duration_ms: 0.149026
+  type: 'test'
+  ...
+# Subtest: --action on --raised is at least 4.5:1
+ok 18 - --action on --raised is at least 4.5:1
+  ---
+  duration_ms: 0.128325
+  type: 'test'
+  ...
+# Subtest: --ink on --tint-brand is at least 7:1
+ok 19 - --ink on --tint-brand is at least 7:1
+  ---
+  duration_ms: 0.245255
+  type: 'test'
+  ...
+# Subtest: --muted on --tint-brand is at least 4.5:1
+ok 20 - --muted on --tint-brand is at least 4.5:1
+  ---
+  duration_ms: 0.135603
+  type: 'test'
+  ...
+# Subtest: --action on --tint-brand is at least 4.5:1
+ok 21 - --action on --tint-brand is at least 4.5:1
+  ---
+  duration_ms: 0.119492
+  type: 'test'
+  ...
+# Subtest: --on-action on --brand is at least 7:1
+ok 22 - --on-action on --brand is at least 7:1
+  ---
+  duration_ms: 0.256743
+  type: 'test'
+  ...
+# Subtest: --on-brand on --brand is at least 7:1
+ok 23 - --on-brand on --brand is at least 7:1
+  ---
+  duration_ms: 0.182251
+  type: 'test'
+  ...
+# Subtest: --on-brand-muted on --brand is at least 4.5:1
+ok 24 - --on-brand-muted on --brand is at least 4.5:1
+  ---
+  duration_ms: 0.219858
+  type: 'test'
+  ...
+# Subtest: --on-brand on --brand-deep is at least 7:1
+ok 25 - --on-brand on --brand-deep is at least 7:1
+  ---
+  duration_ms: 0.201356
+  type: 'test'
+  ...
+# Subtest: --on-brand-muted on --brand-deep is at least 4.5:1
+ok 26 - --on-brand-muted on --brand-deep is at least 4.5:1
+  ---
+  duration_ms: 0.098491
+  type: 'test'
+  ...
+# Subtest: --ink on --raised is at least 7:1
+ok 27 - --ink on --raised is at least 7:1
+  ---
+  duration_ms: 0.093076
+  type: 'test'
+  ...
+# Subtest: --action on --raised is at least 4.5:1
+ok 28 - --action on --raised is at least 4.5:1
+  ---
+  duration_ms: 0.09352
+  type: 'test'
+  ...
+# Subtest: --ink on --tint-sand is at least 7:1
+ok 29 - --ink on --tint-sand is at least 7:1
+  ---
+  duration_ms: 0.229191
+  type: 'test'
+  ...
+# Subtest: --muted on --tint-sand is at least 4.5:1
+ok 30 - --muted on --tint-sand is at least 4.5:1
+  ---
+  duration_ms: 0.124768
+  type: 'test'
+  ...
+# Subtest: no hex colour outside :root, but the theme-color meta, which equals --paper
+ok 31 - no hex colour outside :root, but the theme-color meta, which equals --paper
+  ---
+  duration_ms: 5.667693
+  type: 'test'
+  ...
+# Subtest: one action colour, and it is the brand red (the official mark leads; no blue competes)
+ok 32 - one action colour, and it is the brand red (the official mark leads; no blue competes)
+  ---
+  duration_ms: 0.237517
+  type: 'test'
+  ...
+# Subtest: ISO dates read as a Brazilian reader writes them, whatever the time zone
+ok 33 - ISO dates read as a Brazilian reader writes them, whatever the time zone
+  ---
+  duration_ms: 1.952579
+  type: 'test'
+  ...
+# Subtest: each guide has its own closed sections, in order
+ok 34 - each guide has its own closed sections, in order
+  ---
+  duration_ms: 2.142148
+  type: 'test'
+  ...
+# Subtest: enem: no resource of the former study track is lost
+ok 35 - enem: no resource of the former study track is lost
+  ---
+  duration_ms: 0.198711
+  type: 'test'
+  ...
+# Subtest: enem: only published resources tagged for the exam, each listed once
+ok 36 - enem: only published resources tagged for the exam, each listed once
+  ---
+  duration_ms: 0.283196
+  type: 'test'
+  ...
+# Subtest: enem: editorial sections cite official sources; no section is empty
+ok 37 - enem: editorial sections cite official sources; no section is empty
+  ---
+  duration_ms: 0.150618
+  type: 'test'
+  ...
+# Subtest: uerj: no resource of the former study track is lost
+ok 38 - uerj: no resource of the former study track is lost
+  ---
+  duration_ms: 0.171441
+  type: 'test'
+  ...
+# Subtest: uerj: only published resources tagged for the exam, each listed once
+ok 39 - uerj: only published resources tagged for the exam, each listed once
+  ---
+  duration_ms: 0.145767
+  type: 'test'
+  ...
+# Subtest: uerj: editorial sections cite official sources; no section is empty
+ok 40 - uerj: editorial sections cite official sources; no section is empty
+  ---
+  duration_ms: 0.137432
+  type: 'test'
+  ...
+# Subtest: ENEM: practice holds practice only, deepening holds none; the mandatory sections are there
+not ok 41 - ENEM: practice holds practice only, deepening holds none; the mandatory sections are there
+  ---
+  duration_ms: 12.753922
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/exam-guides.test.ts:55:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(byId.get('pratique') .resources.every((r) => r.format === 'practice'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/exam-guides.test.ts:59:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: UERJ: past exams are the spine; the mandatory sections are there
+ok 42 - UERJ: past exams are the spine; the mandatory sections are there
+  ---
+  duration_ms: 3.230877
+  type: 'test'
+  ...
+# Subtest: ENEM areas follow INEP: four areas and the essay, covering the twelve subjects once
+ok 43 - ENEM areas follow INEP: four areas and the essay, covering the twelve subjects once
+  ---
+  duration_ms: 0.940204
+  type: 'test'
+  ...
+# Subtest: UERJ subjects are exactly those with UERJ resources
+ok 44 - UERJ subjects are exactly those with UERJ resources
+  ---
+  duration_ms: 0.20249
+  type: 'test'
+  ...
+# Subtest: the selection has one list per path and holds ten per path
+ok 45 - the selection has one list per path and holds ten per path
+  ---
+  duration_ms: 2.094692
+  type: 'test'
+  ...
+# Subtest: staging today: no highlight is homologated, so every list is empty and the selection is incomplete
+not ok 46 - staging today: no highlight is homologated, so every list is empty and the selection is incomplete
+  ---
+  duration_ms: 0.957859
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/featured.test.ts:24:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'final' !== 'staging'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'staging'
+  actual: 'final'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/featured.test.ts:25:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: sixty distinct, ten per path, is a valid final selection
+ok 47 - sixty distinct, ten per path, is a valid final selection
+  ---
+  duration_ms: 0.264088
+  type: 'test'
+  ...
+# Subtest: final requires exactly ten in every path; staging accepts fewer but never more
+ok 48 - final requires exactly ten in every path; staging accepts fewer but never more
+  ---
+  duration_ms: 0.408647
+  type: 'test'
+  ...
+# Subtest: an unknown or unpublished id is refused
+ok 49 - an unknown or unpublished id is refused
+  ---
+  duration_ms: 0.155989
+  type: 'test'
+  ...
+# Subtest: a highlight must declare the path it is featured in
+ok 50 - a highlight must declare the path it is featured in
+  ---
+  duration_ms: 4.890018
+  type: 'test'
+  ...
+# Subtest: an id repeated in one list, or featured in two paths, is refused: sixty must be distinct
+ok 51 - an id repeated in one list, or featured in two paths, is refused: sixty must be distinct
+  ---
+  duration_ms: 0.207433
+  type: 'test'
+  ...
+# Subtest: featuredFor resolves a path to its published resources in order
+not ok 52 - featuredFor resolves a path to its published resources in order
+  ---
+  duration_ms: 5.382891
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/featured.test.ts:62:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     curated: {
+    +       image: {
+    +         alt: 'cs50x',
+    +         id: 'cs50x',
+    +         kind: 'photo',
+    +         layout: 'opening',
+    +         position: '50% 39%',
+    +         priority: true
+    +       },
+    +       plate: 'CS50x'
+    +     },
+    +     duration: {
+    +       unit: 'weeks',
+    +       value: 11
+    +     },
+    +     format: 'course',
+    +     id: 'cs50x',
+    +     language: 'en',
+    +     level: 'beginner',
+    +     paths: [
+    +       'tecnologia',
+    +       'ensino-superior'
+    +     ],
+    +     provider: 'Harvard University',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'build',
+    +       topic: 'cs'
+    +     },
+    +     title: 'CS50x: Introduction to Computer Science',
+    +     url: 'https://cs50.harvard.edu/x/',
+    +     verified: {
+    +       by: 'official-page',
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     curated: {
+    +       image: {
+    +         alt: 'cs50p',
+    +         id: 'cs50p',
+    +         kind: 'photo',
+    +         layout: 'media-right',
+    +         position: '82% 50%'
+    +       },
+    +       plate: 'CS50P'
+    +     },
+    +     duration: {
+    +       unit: 'weeks',
+    +       value: 10
+    +     },
+    +     format: 'course',
+    +     id: 'cs50p',
+    +     language: 'en',
+    +     level: 'beginner',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'Harvard University',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'build',
+    +       topic: 'python'
+    +     },
+    +     title: 'CS50’s Introduction to Programming with Python',
+    +     url: 'https://cs50.harvard.edu/python/',
+    +     verified: {
+    +       by: 'official-page',
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     certificate: 'unconfirmed',
+    +     format: 'track',
+    +     id: 'odin-foundations',
+    +     language: 'en',
+    +     level: 'beginner',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'The Odin Project',
+    +     registration: 'not-required',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'build',
+    +       topic: 'webdev'
+    +     },
+    +     title: 'Foundations Course',
+    +     url: 'https://www.theodinproject.com/paths/foundations/courses/foundations',
+    +     verified: {
+    +       by: 'official-page',
+    +       evidence: {
+    +         checked: [
+    +           'free',
+    +           'scope',
+    +           'language',
+    +           'format',
+    +           'path',
+    +           'registration'
+    +         ],
+    +         note: 'Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Módulos de HTML, CSS, JavaScript, Git e projetos; currículo declarado gratuito e aberto. Não é certificado.',
+    +         url: 'https://www.theodinproject.com/paths/foundations/courses/foundations'
+    +       },
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     certificate: 'unconfirmed',
+    +     format: 'course',
+    +     id: 'google-mlcc',
+    +     language: 'en',
+    +     level: 'beginner-intermediate',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'Google',
+    +     registration: 'not-required',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'data',
+    +       topic: 'ai'
+    +     },
+    +     title: 'Machine Learning Crash Course',
+    +     url: 'https://developers.google.com/machine-learning/crash-course/',
+    +     verified: {
+    +       by: 'official-page',
+    +       evidence: {
+    +         checked: [
+    +           'free',
+    +           'scope',
+    +           'language',
+    +           'format',
+    +           'path',
+    +           'registration'
+    +         ],
+    +         note: 'Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Módulos, vídeos, visualizações e exercícios públicos (módulo de regressão linear também aberto). Não prometer certificado.',
+    +         url: 'https://developers.google.com/machine-learning/crash-course/'
+    +       },
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     certificate: 'unconfirmed',
+    +     format: 'track',
+    +     id: 'ms-learn-cloud-concepts',
+    +     language: 'pt',
+    +     level: 'beginner',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'Microsoft Learn',
+    +     registration: 'not-required',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'cloud',
+    +       topic: 'cloud-fundamentals'
+    +     },
+    +     title: 'Introdução à infraestrutura de nuvem: descrever conceitos de nuvem',
+    +     url: 'https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/',
+    +     verified: {
+    +       by: 'official-page',
+    +       evidence: {
+    +         checked: [
+    +           'free',
+    +           'scope',
+    +           'language',
+    +           'format',
+    +           'path',
+    +           'registration'
+    +         ],
+    +         note: 'Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Roteiro oficial em pt-BR com três módulos. FAQ oficial (https://learn.microsoft.com/en-us/training/support/faq): treinamento gratuito, conteúdo sem conta; a certificação AZ-900 é separada.',
+    +         url: 'https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/'
+    +       },
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     duration: {
+    +       unit: 'hours',
+    +       value: 18
+    +     },
+    +     format: 'course',
+    +     id: 'fb-python',
+    +     language: 'pt',
+    +     level: 'beginner',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'Fundação Bradesco',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'build',
+    +       topic: 'python'
+    +     },
+    +     title: 'Linguagem de Programação Python - Básico',
+    +     url: 'https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico',
+    +     verified: {
+    +       by: 'official-page',
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     duration: {
+    +       unit: 'hours',
+    +       value: 2
+    +     },
+    +     format: 'course',
+    +     id: 'fb-web',
+    +     language: 'pt',
+    +     level: 'beginner',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'Fundação Bradesco',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'build',
+    +       topic: 'web'
+    +     },
+    +     title: 'Crie um site simples usando HTML, CSS e JavaScript',
+    +     url: 'https://www.ev.org.br/cursos/crie-um-site-simples-usando-html-css-e-javascript',
+    +     verified: {
+    +       by: 'official-page',
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     duration: {
+    +       unit: 'weeks',
+    +       value: 9
+    +     },
+    +     format: 'course',
+    +     id: 'cs50w',
+    +     language: 'en',
+    +     level: 'intermediate',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'Harvard University',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'build',
+    +       topic: 'webdev'
+    +     },
+    +     title: 'CS50’s Web Programming with Python and JavaScript',
+    +     url: 'https://cs50.harvard.edu/web/',
+    +     verified: {
+    +       by: 'official-page',
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     curated: {
+    +       image: {
+    +         alt: 'cs50ai',
+    +         id: 'cs50ai',
+    +         kind: 'photo',
+    +         layout: 'half',
+    +         position: '36% 42%'
+    +       },
+    +       plate: 'CS50 AI'
+    +     },
+    +     duration: {
+    +       unit: 'weeks',
+    +       value: 7
+    +     },
+    +     format: 'course',
+    +     id: 'cs50ai',
+    +     language: 'en',
+    +     level: 'intermediate',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'Harvard University',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'data',
+    +       topic: 'ai'
+    +     },
+    +     title: 'CS50’s Introduction to Artificial Intelligence with Python',
+    +     url: 'https://cs50.harvard.edu/ai/',
+    +     verified: {
+    +       by: 'official-page',
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   },
+    +   {
+    +     format: 'course',
+    +     id: 'cs50sql',
+    +     language: 'en',
+    +     level: 'beginner-intermediate',
+    +     paths: [
+    +       'tecnologia'
+    +     ],
+    +     provider: 'Harvard University',
+    +     subject: 'tecnologia',
+    +     technology: {
+    +       section: 'systems',
+    +       topic: 'databases'
+    +     },
+    +     title: 'CS50’s Introduction to Databases with SQL',
+    +     url: 'https://cs50.harvard.edu/sql/',
+    +     verified: {
+    +       by: 'official-page',
+    +       freeAccess: true,
+    +       on: '2026-10-11'
+    +     }
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      id: 'cs50x'
+      paths:
+        0: 'tecnologia'
+        1: 'ensino-superior'
+      title: 'CS50x: Introduction to Computer Science'
+      provider: 'Harvard University'
+      level: 'beginner'
+      language: 'en'
+      url: 'https://cs50.harvard.edu/x/'
+      duration:
+        value: 11
+        unit: 'weeks'
+      technology:
+        section: 'build'
+        topic: 'cs'
+      curated:
+        plate: 'CS50x'
+        image:
+          id: 'cs50x'
+          alt: 'cs50x'
+          layout: 'opening'
+          kind: 'photo'
+          position: '50% 39%'
+          priority: true
+      subject: 'tecnologia'
+      format: 'course'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+    1:
+      id: 'cs50p'
+      paths:
+        0: 'tecnologia'
+      title: 'CS50’s Introduction to Programming with Python'
+      provider: 'Harvard University'
+      level: 'beginner'
+      language: 'en'
+      url: 'https://cs50.harvard.edu/python/'
+      duration:
+        value: 10
+        unit: 'weeks'
+      technology:
+        section: 'build'
+        topic: 'python'
+      curated:
+        plate: 'CS50P'
+        image:
+          id: 'cs50p'
+          alt: 'cs50p'
+          layout: 'media-right'
+          kind: 'photo'
+          position: '82% 50%'
+      subject: 'tecnologia'
+      format: 'course'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+    2:
+      id: 'odin-foundations'
+      title: 'Foundations Course'
+      provider: 'The Odin Project'
+      subject: 'tecnologia'
+      format: 'track'
+      paths:
+        0: 'tecnologia'
+      language: 'en'
+      level: 'beginner'
+      url: 'https://www.theodinproject.com/paths/foundations/courses/foundations'
+      registration: 'not-required'
+      certificate: 'unconfirmed'
+      technology:
+        section: 'build'
+        topic: 'webdev'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+        evidence:
+          url: 'https://www.theodinproject.com/paths/foundations/courses/foundations'
+          checked:
+            0: 'free'
+            1: 'scope'
+            2: 'language'
+            3: 'format'
+            4: 'path'
+            5: 'registration'
+          note: 'Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Módulos de HTML, CSS, JavaScript, Git e projetos; currículo declarado gratuito e aberto. Não é certificado.'
+    3:
+      id: 'google-mlcc'
+      title: 'Machine Learning Crash Course'
+      provider: 'Google'
+      subject: 'tecnologia'
+      format: 'course'
+      paths:
+        0: 'tecnologia'
+      language: 'en'
+      level: 'beginner-intermediate'
+      url: 'https://developers.google.com/machine-learning/crash-course/'
+      registration: 'not-required'
+      certificate: 'unconfirmed'
+      technology:
+        section: 'data'
+        topic: 'ai'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+        evidence:
+          url: 'https://developers.google.com/machine-learning/crash-course/'
+          checked:
+            0: 'free'
+            1: 'scope'
+            2: 'language'
+            3: 'format'
+            4: 'path'
+            5: 'registration'
+          note: 'Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Módulos, vídeos, visualizações e exercícios públicos (módulo de regressão linear também aberto). Não prometer certificado.'
+    4:
+      id: 'ms-learn-cloud-concepts'
+      title: 'Introdução à infraestrutura de nuvem: descrever conceitos de nuvem'
+      provider: 'Microsoft Learn'
+      subject: 'tecnologia'
+      format: 'track'
+      paths:
+        0: 'tecnologia'
+      language: 'pt'
+      level: 'beginner'
+      url: 'https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/'
+      registration: 'not-required'
+      certificate: 'unconfirmed'
+      technology:
+        section: 'cloud'
+        topic: 'cloud-fundamentals'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+        evidence:
+          url: 'https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/'
+          checked:
+            0: 'free'
+            1: 'scope'
+            2: 'language'
+            3: 'format'
+            4: 'path'
+            5: 'registration'
+          note: 'Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Roteiro oficial em pt-BR com três módulos. FAQ oficial (https://learn.microsoft.com/en-us/training/support/faq): treinamento gratuito, conteúdo sem conta; a certificação AZ-900 é separada.'
+    5:
+      id: 'fb-python'
+      paths:
+        0: 'tecnologia'
+      title: 'Linguagem de Programação Python - Básico'
+      provider: 'Fundação Bradesco'
+      level: 'beginner'
+      language: 'pt'
+      url: 'https://www.ev.org.br/cursos/linguagem-de-programacao-python-basico'
+      duration:
+        value: 18
+        unit: 'hours'
+      technology:
+        section: 'build'
+        topic: 'python'
+      subject: 'tecnologia'
+      format: 'course'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+    6:
+      id: 'fb-web'
+      paths:
+        0: 'tecnologia'
+      title: 'Crie um site simples usando HTML, CSS e JavaScript'
+      provider: 'Fundação Bradesco'
+      level: 'beginner'
+      language: 'pt'
+      url: 'https://www.ev.org.br/cursos/crie-um-site-simples-usando-html-css-e-javascript'
+      duration:
+        value: 2
+        unit: 'hours'
+      technology:
+        section: 'build'
+        topic: 'web'
+      subject: 'tecnologia'
+      format: 'course'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+    7:
+      id: 'cs50w'
+      paths:
+        0: 'tecnologia'
+      title: 'CS50’s Web Programming with Python and JavaScript'
+      provider: 'Harvard University'
+      level: 'intermediate'
+      language: 'en'
+      url: 'https://cs50.harvard.edu/web/'
+      duration:
+        value: 9
+        unit: 'weeks'
+      technology:
+        section: 'build'
+        topic: 'webdev'
+      subject: 'tecnologia'
+      format: 'course'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+    8:
+      id: 'cs50ai'
+      paths:
+        0: 'tecnologia'
+      title: 'CS50’s Introduction to Artificial Intelligence with Python'
+      provider: 'Harvard University'
+      level: 'intermediate'
+      language: 'en'
+      url: 'https://cs50.harvard.edu/ai/'
+      duration:
+        value: 7
+        unit: 'weeks'
+      technology:
+        section: 'data'
+        topic: 'ai'
+      curated:
+        plate: 'CS50 AI'
+        image:
+          id: 'cs50ai'
+          alt: 'cs50ai'
+          layout: 'half'
+          kind: 'photo'
+          position: '36% 42%'
+      subject: 'tecnologia'
+      format: 'course'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+    9:
+      id: 'cs50sql'
+      paths:
+        0: 'tecnologia'
+      title: 'CS50’s Introduction to Databases with SQL'
+      provider: 'Harvard University'
+      level: 'beginner-intermediate'
+      language: 'en'
+      url: 'https://cs50.harvard.edu/sql/'
+      technology:
+        section: 'systems'
+        topic: 'databases'
+      subject: 'tecnologia'
+      format: 'course'
+      verified:
+        on: '2026-10-11'
+        by: 'official-page'
+        freeAccess: true
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/featured.test.ts:63:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: featuredReady: a path is ready only with ten valid highlights
+not ok 53 - featuredReady: a path is ready only with ten valid highlights
+  ---
+  duration_ms: 0.575997
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/featured.test.ts:68:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    ensino-fundamental is not ready today
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/featured.test.ts:75:33)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: T2 higher education: six new offerings have conditional field destinations without premature groups
+not ok 54 - T2 higher education: six new offerings have conditional field destinations without premature groups
+  ---
+  duration_ms: 5.95274
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-conditional-placement.test.ts:17:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'matematica',
+        'computacao',
+    +   'fisica',
+    +   'biologia',
+    +   'psicologia',
+    +   'economia',
+    +   'meio-ambiente'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'matematica'
+    1: 'computacao'
+  actual:
+    0: 'matematica'
+    1: 'computacao'
+    2: 'fisica'
+    3: 'biologia'
+    4: 'psicologia'
+    5: 'economia'
+    6: 'meio-ambiente'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-conditional-placement.test.ts:18:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: T2 technology: seven existing published tracks stay unchanged until future candidates enter catalogue
+not ok 55 - T2 technology: seven existing published tracks stay unchanged until future candidates enter catalogue
+  ---
+  duration_ms: 0.534912
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-conditional-placement.test.ts:49:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    seven published tracks plus Git planned
+    
+    9 !== 8
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 8
+  actual: 9
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-conditional-placement.test.ts:50:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: T2 cloud is a distinct genuine topic; no false Security attribution or certification
+ok 56 - T2 cloud is a distinct genuine topic; no false Security attribution or certification
+  ---
+  duration_ms: 0.53031
+  type: 'test'
+  ...
+# Subtest: T2 placement context refuses to route a tech resource with a forged non-tech subject or path
+ok 57 - T2 placement context refuses to route a tech resource with a forged non-tech subject or path
+  ---
+  duration_ms: 0.2863
+  type: 'test'
+  ...
+# Subtest: T2 all verified candidates have future placement; real publication flags remain unchanged
+not ok 58 - T2 all verified candidates have future placement; real publication flags remain unchanged
+  ---
+  duration_ms: 3.758596
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-conditional-placement.test.ts:98:1'
+  failureType: 'testCodeFailure'
+  error: 'gateb: duplicate catalogue/staging IDs'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    gatebSelectedResources (file:///tmp/claude-0/qa/wt-rc/src/lib/gateb-selection-preview.ts:125:45)
+    gatebPlacementGaps (file:///tmp/claude-0/qa/wt-rc/src/lib/gateb-selection-preview.ts:160:10)
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-conditional-placement.test.ts:99:20)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: T2 higher education: the existing two-group copy remains unchanged until a new resource is published
+not ok 59 - T2 higher education: the existing two-group copy remains unchanged until a new resource is published
+  ---
+  duration_ms: 3.003762
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-higher-education-content.test.ts:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'matematica',
+        'computacao',
+    +   'fisica',
+    +   'biologia',
+    +   'psicologia',
+    +   'economia',
+    +   'meio-ambiente'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'matematica'
+    1: 'computacao'
+  actual:
+    0: 'matematica'
+    1: 'computacao'
+    2: 'fisica'
+    3: 'biologia'
+    4: 'psicologia'
+    5: 'economia'
+    6: 'meio-ambiente'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-higher-education-content.test.ts:23:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: T2 higher education: page description, note and Home adapt to all actually available fields
+ok 60 - T2 higher education: page description, note and Home adapt to all actually available fields
+  ---
+  duration_ms: 0.961585
+  type: 'test'
+  ...
+# Subtest: T2 higher education: every public resource has an actual first-occurrence anchor on its canonical university page
+ok 61 - T2 higher education: every public resource has an actual first-occurrence anchor on its canonical university page
+  ---
+  duration_ms: 1.709507
+  type: 'test'
+  ...
+# Subtest: T2 higher education: every future university course has an anchor when its group is published
+not ok 62 - T2 higher education: every future university course has an anchor when its group is published
+  ---
+  duration_ms: 3.441608
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-higher-education-content.test.ts:61:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'mit-1801sc',
+    -   'mit-1801sc',
+        'mit-7012',
+    -   'mit-7012',
+        'mit-801sc',
+    -   'mit-801sc',
+        'ou-environment-treading-lightly',
+    -   'ou-environment-treading-lightly',
+        'yale-econ-252',
+    -   'yale-econ-252',
+        'yale-psyc-110',
+    -   'yale-psyc-110'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'mit-1801sc'
+    1: 'mit-1801sc'
+    2: 'mit-7012'
+    3: 'mit-7012'
+    4: 'mit-801sc'
+    5: 'mit-801sc'
+    6: 'ou-environment-treading-lightly'
+    7: 'ou-environment-treading-lightly'
+    8: 'yale-econ-252'
+    9: 'yale-econ-252'
+    10: 'yale-psyc-110'
+    11: 'yale-psyc-110'
+  actual:
+    0: 'mit-1801sc'
+    1: 'mit-7012'
+    2: 'mit-801sc'
+    3: 'ou-environment-treading-lightly'
+    4: 'yale-econ-252'
+    5: 'yale-psyc-110'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-higher-education-content.test.ts:81:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: T2 higher education: no staged group is rendered or described before the release
+not ok 63 - T2 higher education: no staged group is rendered or described before the release
+  ---
+  duration_ms: 0.43987
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-higher-education-content.test.ts:84:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'matematica',
+        'computacao',
+    +   'fisica',
+    +   'biologia',
+    +   'psicologia',
+    +   'economia',
+    +   'meio-ambiente'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'matematica'
+    1: 'computacao'
+  actual:
+    0: 'matematica'
+    1: 'computacao'
+    2: 'fisica'
+    3: 'biologia'
+    4: 'psicologia'
+    5: 'economia'
+    6: 'meio-ambiente'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-higher-education-content.test.ts:85:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: T2 higher education: university page and Home wire copy and first-occurrence anchors to production groups
+ok 64 - T2 higher education: university page and Home wire copy and first-occurrence anchors to production groups
+  ---
+  duration_ms: 0.676745
+  type: 'test'
+  ...
+# Subtest: T2: draft matches the audited manifest exactly, slot by slot and in editorial order
+not ok 65 - T2: draft matches the audited manifest exactly, slot by slot and in editorial order
+  ---
+  duration_ms: 4.10187
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:39:1'
+  failureType: 'testCodeFailure'
+  error: 'gateb: duplicate catalogue/staging IDs'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    gatebSelectedResources (file:///tmp/claude-0/qa/wt-rc/src/lib/gateb-selection-preview.ts:125:45)
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:50:16)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: T2: draft uses the original catalogue and two staging sets, never duplicates data
+not ok 66 - T2: draft uses the original catalogue and two staging sets, never duplicates data
+  ---
+  duration_ms: 1.333306
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:54:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    111 !== 74
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 74
+  actual: 111
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:56:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: T2: all sixty provisional candidates obey P4 and the existing featured gate
+not ok 67 - T2: all sixty provisional candidates obey P4 and the existing featured gate
+  ---
+  duration_ms: 0.385623
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:68:1'
+  failureType: 'testCodeFailure'
+  error: 'gateb: duplicate catalogue/staging IDs'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    gatebSelectedResources (file:///tmp/claude-0/qa/wt-rc/src/lib/gateb-selection-preview.ts:125:45)
+    gatebDraftProblems (file:///tmp/claude-0/qa/wt-rc/src/lib/gateb-selection-preview.ts:136:20)
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:70:20)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: T2: all nine previously missing destinations have conditional routes without public activation
+not ok 68 - T2: all nine previously missing destinations have conditional routes without public activation
+  ---
+  duration_ms: 0.399665
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:82:1'
+  failureType: 'testCodeFailure'
+  error: 'gateb: duplicate catalogue/staging IDs'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    gatebSelectedResources (file:///tmp/claude-0/qa/wt-rc/src/lib/gateb-selection-preview.ts:125:45)
+    gatebUnreleasedDestinations (file:///tmp/claude-0/qa/wt-rc/src/lib/gateb-selection-preview.ts:169:10)
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:85:20)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: T2: Fundamental and Pré-Militar remain preparing until a separately approved release
+not ok 69 - T2: Fundamental and Pré-Militar remain preparing until a separately approved release
+  ---
+  duration_ms: 0.709156
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:106:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'active'
+    - 'preparing'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'preparing'
+  actual: 'active'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-selection-preview.test.ts:109:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: T2: preview is unreferenced by user-facing code, static scripts and the public build
+ok 70 - T2: preview is unreferenced by user-facing code, static scripts and the public build
+  ---
+  duration_ms: 7.959112
+  type: 'test'
+  ...
+# Subtest: Gate B: exactly 60 independently audited slots, ten consecutive positions per path
+ok 71 - Gate B: exactly 60 independently audited slots, ten consecutive positions per path
+  ---
+  duration_ms: 2.816212
+  type: 'test'
+  ...
+# Subtest: Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates
+not ok 72 - Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates
+  ---
+  duration_ms: 1.17721
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-typed-staging.test.ts:52:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    legacy published count stays unchanged
+    
+    74 !== 37
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 37
+  actual: 74
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-typed-staging.test.ts:53:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: Gate B: all fourteen new typed resources obey the existing P4 contract
+ok 73 - Gate B: all fourteen new typed resources obey the existing P4 contract
+  ---
+  duration_ms: 0.786191
+  type: 'test'
+  ...
+# Subtest: Gate B: five Cecierj apostilas are references, never courses or official UERJ exams
+ok 74 - Gate B: five Cecierj apostilas are references, never courses or official UERJ exams
+  ---
+  duration_ms: 0.291956
+  type: 'test'
+  ...
+# Subtest: Gate B: eight institutional exam booklets and AprovaRJ are accurately classified
+ok 75 - Gate B: eight institutional exam booklets and AprovaRJ are accurately classified
+  ---
+  duration_ms: 0.226809
+  type: 'test'
+  ...
+# Subtest: Gate B: placement of new resources resolves when the corresponding paths are active
+ok 76 - Gate B: placement of new resources resolves when the corresponding paths are active
+  ---
+  duration_ms: 0.282251
+  type: 'test'
+  ...
+# Subtest: Gate B: incomplete or misleading source evidence fails closed
+ok 77 - Gate B: incomplete or misleading source evidence fails closed
+  ---
+  duration_ms: 0.458588
+  type: 'test'
+  ...
+# Subtest: Gate B: publication remains disabled and all earlier partial attempts remain historical
+not ok 78 - Gate B: publication remains disabled and all earlier partial attempts remain historical
+  ---
+  duration_ms: 9.339528
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/gateb-typed-staging.test.ts:174:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(GATEB_NEW_RESOURCES.every((r) => !catalogue.some((p) => p.id === r.id)))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/gateb-typed-staging.test.ts:178:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: the hero demo separators are decorative: hidden from assistive technology
+ok 79 - the hero demo separators are decorative: hidden from assistive technology
+  ---
+  duration_ms: 3.243011
+  type: 'test'
+  ...
+# Subtest: hidden always wins over component display rules
+ok 80 - hidden always wins over component display rules
+  ---
+  duration_ms: 0.972562
+  type: 'test'
+  ...
+# Subtest: the groups, in order, each with courses
+not ok 81 - the groups, in order, each with courses
+  ---
+  duration_ms: 3.142463
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/higher-education.test.ts:8:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'matematica',
+        'computacao',
+    +   'fisica',
+    +   'biologia',
+    +   'psicologia',
+    +   'economia',
+    +   'meio-ambiente'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'matematica'
+    1: 'computacao'
+  actual:
+    0: 'matematica'
+    1: 'computacao'
+    2: 'fisica'
+    3: 'biologia'
+    4: 'psicologia'
+    5: 'economia'
+    6: 'meio-ambiente'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/higher-education.test.ts:9:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: every course is published, unique, and published by a university
+not ok 82 - every course is published, unique, and published by a university
+  ---
+  duration_ms: 0.612344
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/higher-education.test.ts:13:1'
+  failureType: 'testCodeFailure'
+  error: 'yale-psyc-110: Open Yale Courses'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/higher-education.test.ts:19:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: an unknown id fails the build instead of leaving a gap
+ok 83 - an unknown id fails the build instead of leaving a gap
+  ---
+  duration_ms: 0.449052
+  type: 'test'
+  ...
+# Subtest: every resource declares the paths it serves: at least one, each known, none repeated
+ok 84 - every resource declares the paths it serves: at least one, each known, none repeated
+  ---
+  duration_ms: 1.944775
+  type: 'test'
+  ...
+# Subtest: the legacy goals field is gone: path and exam are separate axes
+ok 85 - the legacy goals field is gone: path and exam are separate axes
+  ---
+  duration_ms: 0.334509
+  type: 'test'
+  ...
+# Subtest: an exam is never a path, and an exam resource sits in its parent path
+ok 86 - an exam is never a path, and an exam resource sits in its parent path
+  ---
+  duration_ms: 0.350403
+  type: 'test'
+  ...
+# Subtest: a technology resource serves Tecnologia and never Ensino Médio by inheritance
+not ok 87 - a technology resource serves Tecnologia and never Ensino Médio by inheritance
+  ---
+  duration_ms: 1.261956
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/learning-axes.test.ts:40:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    23 !== 20
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 20
+  actual: 23
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/learning-axes.test.ts:42:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: Ensino Médio holds school subjects only, so its count is what /ensino-medio/ renders
+ok 88 - Ensino Médio holds school subjects only, so its count is what /ensino-medio/ renders
+  ---
+  duration_ms: 1.887959
+  type: 'test'
+  ...
+# Subtest: Ensino Superior is declared on each resource and agrees with the university groups
+ok 89 - Ensino Superior is declared on each resource and agrees with the university groups
+  ---
+  duration_ms: 2.10759
+  type: 'test'
+  ...
+# Subtest: every count is the number of distinct published resources of that path or exam
+not ok 90 - every count is the number of distinct published resources of that path or exam
+  ---
+  duration_ms: 4.053164
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/learning-axes.test.ts:65:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   resources: 10
+    -   resources: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    resources: 0
+  actual:
+    resources: 10
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/learning-axes.test.ts:66:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: the format axis names what a resource really is, and knows which formats are practice
+ok 91 - the format axis names what a resource really is, and knows which formats are practice
+  ---
+  duration_ms: 0.573717
+  type: 'test'
+  ...
+# Subtest: every format has a label, and no label calls a past exam, a lesson or a reference a course
+ok 92 - every format has a label, and no label calls a past exam, a lesson or a reference a course
+  ---
+  duration_ms: 6.591989
+  type: 'test'
+  ...
+# Subtest: verify-dist keeps an independent, equal list of the practice formats
+ok 93 - verify-dist keeps an independent, equal list of the practice formats
+  ---
+  duration_ms: 3.312311
+  type: 'test'
+  ...
+# Subtest: a resource without a subject is reached by path and exam, never by area or subject
+ok 94 - a resource without a subject is reached by path and exam, never by area or subject
+  ---
+  duration_ms: 0.901996
+  type: 'test'
+  ...
+# Subtest: the search index never sends a resource without a subject to a page that does not show it
+ok 95 - the search index never sends a resource without a subject to a page that does not show it
+  ---
+  duration_ms: 26.27007
+  type: 'test'
+  ...
+# Subtest: P3: school years read as the source states them
+ok 96 - P3: school years read as the source states them
+  ---
+  duration_ms: 0.494994
+  type: 'test'
+  ...
+# Subtest: one selected goal matches a multi-goal resource
+ok 97 - one selected goal matches a multi-goal resource
+  ---
+  duration_ms: 2.427586
+  type: 'test'
+  ...
+# Subtest: values inside one dimension use OR semantics
+ok 98 - values inside one dimension use OR semantics
+  ---
+  duration_ms: 0.316207
+  type: 'test'
+  ...
+# Subtest: path and exam are separate dimensions and combine with AND
+ok 99 - path and exam are separate dimensions and combine with AND
+  ---
+  duration_ms: 0.238061
+  type: 'test'
+  ...
+# Subtest: multiple selected formats use OR semantics
+ok 100 - multiple selected formats use OR semantics
+  ---
+  duration_ms: 0.252294
+  type: 'test'
+  ...
+# Subtest: dimensions combine with AND semantics
+ok 101 - dimensions combine with AND semantics
+  ---
+  duration_ms: 0.26091
+  type: 'test'
+  ...
+# Subtest: the area is derived from the subject
+ok 102 - the area is derived from the subject
+  ---
+  duration_ms: 0.334654
+  type: 'test'
+  ...
+# Subtest: empty filter restores the full ordered list
+ok 103 - empty filter restores the full ordered list
+  ---
+  duration_ms: 0.221974
+  type: 'test'
+  ...
+# Subtest: resourcesByArea preserves source order
+ok 104 - resourcesByArea preserves source order
+  ---
+  duration_ms: 0.262736
+  type: 'test'
+  ...
+# Subtest: resourcesByIds follows the requested order
+ok 105 - resourcesByIds follows the requested order
+  ---
+  duration_ms: 0.419184
+  type: 'test'
+  ...
+# Subtest: resourcesByIds fails closed on an unknown id
+ok 106 - resourcesByIds fails closed on an unknown id
+  ---
+  duration_ms: 0.618804
+  type: 'test'
+  ...
+# Subtest: objectivesFor derives, in the Home order, the objectives a subject has resources for
+not ok 107 - objectivesFor derives, in the Home order, the objectives a subject has resources for
+  ---
+  duration_ms: 3.19836
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/learning-library.test.ts:56:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'enem',
+        'uerj',
+    +   'ensino-fundamental',
+        'ensino-medio',
+        'vestibulares',
+    +   'ensino-superior'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'enem'
+    1: 'uerj'
+    2: 'ensino-medio'
+    3: 'vestibulares'
+  actual:
+    0: 'enem'
+    1: 'uerj'
+    2: 'ensino-fundamental'
+    3: 'ensino-medio'
+    4: 'vestibulares'
+    5: 'ensino-superior'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/learning-library.test.ts:58:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: objectiveFacts counts what each path really holds
+not ok 108 - objectiveFacts counts what each path really holds
+  ---
+  duration_ms: 3.125417
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/learning-library.test.ts:63:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   resources: 10
+    -   resources: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    resources: 0
+  actual:
+    resources: 10
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/learning-library.test.ts:69:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: institutions lists only providers that publish, with their resources in catalogue order
+not ok 109 - institutions lists only providers that publish, with their resources in catalogue order
+  ---
+  duration_ms: 0.627202
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/learning-library.test.ts:81:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'Harvard University',
+    +   'Microsoft Learn',
+        'FGV'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'Harvard University'
+    1: 'FGV'
+  actual:
+    0: 'Harvard University'
+    1: 'Microsoft Learn'
+    2: 'FGV'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/learning-library.test.ts:86:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: mapNavItems: one row per area of the map; an area named like its only subject gives its count
+ok 110 - mapNavItems: one row per area of the map; an area named like its only subject gives its count
+  ---
+  duration_ms: 0.971665
+  type: 'test'
+  ...
+# Subtest: the catalogue is exactly the 40 records of the snapshot, field by field
+not ok 111 - the catalogue is exactly the 40 records of the snapshot, field by field
+  ---
+  duration_ms: 3.772229
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/learning-resources.test.ts:55:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      [
+        'cs50x',
+        'cs50p',
+        'mit-6100l',
+        'fb-python',
+    ...
+        'uerj-physics-practice',
+    +   'sme-goiania-letras-e-palavras',
+    +   'sme-goiania-leitura-em-foco',
+    +   'ef-sme-alfabeto-1',
+    +   'ef-sme-vegetacao-3',
+    +   'ef-sme-municipio-4',
+    +   'ef-sme-vestigios-5',
+    +   'ef-obmep-fracoes-6',
+    +   'ef-sme-tecnologia-vida-7',
+    +   'ef-obmep-potenciacao-8',
+    +   'ef-sme-funcoes-9',
+    +   'kultivi-enem-completo',
+    +   'inep-enem-provas-gabaritos',
+    +   'fuvest-acervo-2026',
+    +   'ita-provas-anteriores',
+    +   'mit-1801sc',
+    +   'mit-801sc',
+    +   'mit-7012',
+    +   'yale-psyc-110',
+    +   'yale-econ-252',
+    +   'ou-environment-treading-lightly',
+    +   'odin-foundations',
+    +   'google-mlcc',
+    +   'ms-learn-cloud-concepts',
+    +   'cecierj-pvs-portugues-v1',
+    +   'cecierj-pvs-matematica-mod1',
+    +   'cecierj-pvs-historia-mod2',
+    +   'cecierj-pvs-geografia-mod1',
+    +   'cecierj-pvs-fisica-v1',
+    +   'pm-cn-provas',
+    +   'pm-en-provas',
+    +   'pm-eear-provas',
+    +   'pm-eam-provas',
+    +   'pm-afa-provas',
+    +   'pm-epcar-provas',
+    +   'cecierj-aprovarj',
+    +   'pm-esa-provas-2026',
+    +   'pm-ime-provas'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'cs50x'
+    1: 'cs50p'
+    2: 'mit-6100l'
+    3: 'fb-python'
+    4: 'fb-web'
+    5: 'cs50w'
+    6: 'cs50ai'
+    7: 'fluencia'
+    8: 'ms-explore-genai'
+    9: 'ibm-genai'
+    10: 'fgv-datasci'
+    11: 'mit-60002'
+    12: 'cs50sql'
+    13: 'mit-6006'
+    14: 'mit-6042j'
+    15: 'mit-1806'
+    16: 'cisco-cyber'
+    17: 'fgv-security'
+    18: 'fgv-privacy'
+    19: 'ms-azure-ai'
+    20: 'kultivi-math-enem'
+    21: 'kultivi-portuguese-enem'
+    22: 'kultivi-writing-enem'
+    23: 'kultivi-physics-enem'
+    24: 'kultivi-chemistry-enem'
+    25: 'kultivi-biology-enem'
+    26: 'kultivi-history-enem'
+    27: 'kultivi-geography-enem'
+    28: 'kultivi-philosophy-enem'
+    29: 'kultivi-sociology-enem'
+    30: 'kultivi-english-enem'
+    31: 'kultivi-spanish-enem'
+    32: 'inep-writing-2026'
+    33: 'uerj-portuguese-practice'
+    34: 'uerj-writing-practice'
+    35: 'uerj-math-practice'
+    36: 'uerj-history-practice'
+    37: 'uerj-geography-practice'
+    38: 'uerj-spanish-practice'
+    39: 'uerj-physics-practice'
+  actual:
+    0: 'cs50x'
+    1: 'cs50p'
+    2: 'mit-6100l'
+    3: 'fb-python'
+    4: 'fb-web'
+    5: 'cs50w'
+    6: 'cs50ai'
+    7: 'fluencia'
+    8: 'ms-explore-genai'
+    9: 'ibm-genai'
+    10: 'fgv-datasci'
+    11: 'mit-60002'
+    12: 'cs50sql'
+    13: 'mit-6006'
+    14: 'mit-6042j'
+    15: 'mit-1806'
+    16: 'cisco-cyber'
+    17: 'fgv-security'
+    18: 'fgv-privacy'
+    19: 'ms-azure-ai'
+    20: 'kultivi-math-enem'
+    21: 'kultivi-portuguese-enem'
+    22: 'kultivi-writing-enem'
+    23: 'kultivi-physics-enem'
+    24: 'kultivi-chemistry-enem'
+    25: 'kultivi-biology-enem'
+    26: 'kultivi-history-enem'
+    27: 'kultivi-geography-enem'
+    28: 'kultivi-philosophy-enem'
+    29: 'kultivi-sociology-enem'
+    30: 'kultivi-english-enem'
+    31: 'kultivi-spanish-enem'
+    32: 'inep-writing-2026'
+    33: 'uerj-portuguese-practice'
+    34: 'uerj-writing-practice'
+    35: 'uerj-math-practice'
+    36: 'uerj-history-practice'
+    37: 'uerj-geography-practice'
+    38: 'uerj-spanish-practice'
+    39: 'uerj-physics-practice'
+    40: 'sme-goiania-letras-e-palavras'
+    41: 'sme-goiania-leitura-em-foco'
+    42: 'ef-sme-alfabeto-1'
+    43: 'ef-sme-vegetacao-3'
+    44: 'ef-sme-municipio-4'
+    45: 'ef-sme-vestigios-5'
+    46: 'ef-obmep-fracoes-6'
+    47: 'ef-sme-tecnologia-vida-7'
+    48: 'ef-obmep-potenciacao-8'
+    49: 'ef-sme-funcoes-9'
+    50: 'kultivi-enem-completo'
+    51: 'inep-enem-provas-gabaritos'
+    52: 'fuvest-acervo-2026'
+    53: 'ita-provas-anteriores'
+    54: 'mit-1801sc'
+    55: 'mit-801sc'
+    56: 'mit-7012'
+    57: 'yale-psyc-110'
+    58: 'yale-econ-252'
+    59: 'ou-environment-treading-lightly'
+    60: 'odin-foundations'
+    61: 'google-mlcc'
+    62: 'ms-learn-cloud-concepts'
+    63: 'cecierj-pvs-portugues-v1'
+    64: 'cecierj-pvs-matematica-mod1'
+    65: 'cecierj-pvs-historia-mod2'
+    66: 'cecierj-pvs-geografia-mod1'
+    67: 'cecierj-pvs-fisica-v1'
+    68: 'pm-cn-provas'
+    69: 'pm-en-provas'
+    70: 'pm-eear-provas'
+    71: 'pm-eam-provas'
+    72: 'pm-afa-provas'
+    73: 'pm-epcar-provas'
+    74: 'cecierj-aprovarj'
+    75: 'pm-esa-provas-2026'
+    76: 'pm-ime-provas'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/learning-resources.test.ts:56:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: 37 published, 3 held back with a review note
+not ok 112 - 37 published, 3 held back with a review note
+  ---
+  duration_ms: 0.390901
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/learning-resources.test.ts:67:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    74 !== 37
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 37
+  actual: 74
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/learning-resources.test.ts:68:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: resource ids are unique
+ok 113 - resource ids are unique
+  ---
+  duration_ms: 0.207256
+  type: 'test'
+  ...
+# Subtest: published resources are HTTPS and explicitly verified free
+ok 114 - published resources are HTTPS and explicitly verified free
+  ---
+  duration_ms: 0.423053
+  type: 'test'
+  ...
+# Subtest: the subject is the only source of the area
+ok 115 - the subject is the only source of the area
+  ---
+  duration_ms: 0.384153
+  type: 'test'
+  ...
+# Subtest: exams are the exam ids, never a path
+ok 116 - exams are the exam ids, never a path
+  ---
+  duration_ms: 0.29258
+  type: 'test'
+  ...
+# Subtest: every school subject has at least one published resource
+ok 117 - every school subject has at least one published resource
+  ---
+  duration_ms: 0.220135
+  type: 'test'
+  ...
+# Subtest: free practice exists for ENEM and UERJ
+ok 118 - free practice exists for ENEM and UERJ
+  ---
+  duration_ms: 0.189036
+  type: 'test'
+  ...
+# Subtest: COURSE_HOSTS is exactly the set of hosts of published resources
+ok 119 - COURSE_HOSTS is exactly the set of hosts of published resources
+  ---
+  duration_ms: 0.753638
+  type: 'test'
+  ...
+# Subtest: the V0.1 official sources are exactly the ones recorded in the source audit
+ok 120 - the V0.1 official sources are exactly the ones recorded in the source audit
+  ---
+  duration_ms: 4.550071
+  type: 'test'
+  ...
+# Subtest: official hosts are a closed list
+ok 121 - official hosts are a closed list
+  ---
+  duration_ms: 0.25482
+  type: 'test'
+  ...
+# Subtest: every source is HTTPS, on an official host, issued by INEP or UERJ, and verified
+ok 122 - every source is HTTPS, on an official host, issued by INEP or UERJ, and verified
+  ---
+  duration_ms: 0.66749
+  type: 'test'
+  ...
+# Subtest: every component is used
+ok 123 - every component is used
+  ---
+  duration_ms: 2.245946
+  type: 'test'
+  ...
+# Subtest: every module in src/lib is used, but for the declared exceptions
+ok 124 - every module in src/lib is used, but for the declared exceptions
+  ---
+  duration_ms: 0.736788
+  type: 'test'
+  ...
+# Subtest: every global token is read somewhere
+ok 125 - every global token is read somewhere
+  ---
+  duration_ms: 3.588656
+  type: 'test'
+  ...
+# Subtest: every repository path the README cites exists
+ok 126 - every repository path the README cites exists
+  ---
+  duration_ms: 0.832261
+  type: 'test'
+  ...
+# Subtest: ensino-fundamental: one copy per state, with the SEO description and the lead
+ok 127 - ensino-fundamental: one copy per state, with the SEO description and the lead
+  ---
+  duration_ms: 1.030636
+  type: 'test'
+  ...
+# Subtest: ensino-fundamental: in preparation the copy says so; active, it never speaks of preparation or the future
+ok 128 - ensino-fundamental: in preparation the copy says so; active, it never speaks of preparation or the future
+  ---
+  duration_ms: 0.63126
+  type: 'test'
+  ...
+# Subtest: ensino-fundamental: the description and the lead live only in the state copy (one source)
+ok 129 - ensino-fundamental: the description and the lead live only in the state copy (one source)
+  ---
+  duration_ms: 0.571419
+  type: 'test'
+  ...
+# Subtest: pre-militar: one copy per state, with the SEO description and the lead
+ok 130 - pre-militar: one copy per state, with the SEO description and the lead
+  ---
+  duration_ms: 0.189768
+  type: 'test'
+  ...
+# Subtest: pre-militar: in preparation the copy says so; active, it never speaks of preparation or the future
+ok 131 - pre-militar: in preparation the copy says so; active, it never speaks of preparation or the future
+  ---
+  duration_ms: 0.231624
+  type: 'test'
+  ...
+# Subtest: pre-militar: the description and the lead live only in the state copy (one source)
+ok 132 - pre-militar: the description and the lead live only in the state copy (one source)
+  ---
+  duration_ms: 0.165949
+  type: 'test'
+  ...
+# Subtest: the state-independent copy of both pages never speaks of the future
+ok 133 - the state-independent copy of both pages never speaks of the future
+  ---
+  duration_ms: 0.464019
+  type: 'test'
+  ...
+# Subtest: P2: one status per path; PREPARING_PATHS is derived from it
+not ok 134 - P2: one status per path; PREPARING_PATHS is derived from it
+  ---
+  duration_ms: 18.995399
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/path-status.test.ts:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    today: Fundamental and Pré-Militar in preparation
+    + actual - expected
+    
+      {
+    +   'ensino-fundamental': 'active',
+    -   'ensino-fundamental': 'preparing',
+        'ensino-medio': 'active',
+        'ensino-superior': 'active',
+    +   'pre-militar': 'active',
+    -   'pre-militar': 'preparing',
+        tecnologia: 'active',
+        vestibulares: 'active'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    ensino-fundamental: 'preparing'
+    ensino-medio: 'active'
+    vestibulares: 'active'
+    pre-militar: 'preparing'
+    ensino-superior: 'active'
+    tecnologia: 'active'
+  actual:
+    ensino-fundamental: 'active'
+    ensino-medio: 'active'
+    vestibulares: 'active'
+    pre-militar: 'active'
+    ensino-superior: 'active'
+    tecnologia: 'active'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/path-status.test.ts:29:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: P2: the path pages read noindex and the preparing note from the status, not from literals
+ok 135 - P2: the path pages read noindex and the preparing note from the status, not from literals
+  ---
+  duration_ms: 1.835368
+  type: 'test'
+  ...
+# Subtest: P2: activating Pré-Militar with 0 resources, or 9 of 10 highlights, is refused
+ok 136 - P2: activating Pré-Militar with 0 resources, or 9 of 10 highlights, is refused
+  ---
+  duration_ms: 1.970848
+  type: 'test'
+  ...
+# Subtest: P2: ten ids filled in staging authorise nothing: activation needs the explicit release
+ok 137 - P2: ten ids filled in staging authorise nothing: activation needs the explicit release
+  ---
+  duration_ms: 1.059938
+  type: 'test'
+  ...
+# Subtest: P2: a gated path is active only with a page that shows its resources
+ok 138 - P2: a gated path is active only with a page that shows its resources
+  ---
+  duration_ms: 0.351408
+  type: 'test'
+  ...
+# Subtest: P2: an unhomologated (unpublished) highlight never activates a path
+ok 139 - P2: an unhomologated (unpublished) highlight never activates a path
+  ---
+  duration_ms: 0.302011
+  type: 'test'
+  ...
+# Subtest: P2: highlights released while still in preparation (noindex, invisible highlights) are refused
+ok 140 - P2: highlights released while still in preparation (noindex, invisible highlights) are refused
+  ---
+  duration_ms: 0.184013
+  type: 'test'
+  ...
+# Subtest: P2: a release without ten valid highlights is refused on any path
+ok 141 - P2: a release without ten valid highlights is refused on any path
+  ---
+  duration_ms: 0.224689
+  type: 'test'
+  ...
+# Subtest: P2: the real state today is consistent
+ok 142 - P2: the real state today is consistent
+  ---
+  duration_ms: 3.377384
+  type: 'test'
+  ...
+# Subtest: Pré-Militar names Escola Naval under Marinha, as structure only: edital in verification, no link
+ok 143 - Pré-Militar names Escola Naval under Marinha, as structure only: edital in verification, no link
+  ---
+  duration_ms: 8.424943
+  type: 'test'
+  ...
+# Subtest: P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged)
+not ok 144 - P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged)
+  ---
+  duration_ms: 2.013807
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/placement.test.ts:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    74 !== 37
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 37
+  actual: 74
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/placement.test.ts:29:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: P1: a military past exam (no subject, no ENEM/UERJ) lives on Pré-Militar once that page is active
+ok 145 - P1: a military past exam (no subject, no ENEM/UERJ) lives on Pré-Militar once that page is active
+  ---
+  duration_ms: 1.474457
+  type: 'test'
+  ...
+# Subtest: P1: a Fuvest past exam (no subject, no ExamId) lives on the Vestibular hub
+ok 146 - P1: a Fuvest past exam (no subject, no ExamId) lives on the Vestibular hub
+  ---
+  duration_ms: 0.160018
+  type: 'test'
+  ...
+# Subtest: P1: no destination on a page in preparation; a published resource without a destination fails
+not ok 147 - P1: no destination on a page in preparation; a published resource without a destination fails
+  ---
+  duration_ms: 8.742394
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/placement.test.ts:48:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    the 37 all have a destination
+    + actual - expected
+    
+    + [
+    +   'placement: sme-goiania-letras-e-palavras has no page that shows it',
+    +   'placement: sme-goiania-leitura-em-foco has no page that shows it',
+    +   'placement: ef-sme-alfabeto-1 has no page that shows it',
+    +   'placement: ef-sme-vegetacao-3 has no page that shows it',
+    +   'placement: ef-sme-municipio-4 has no page that shows it',
+    +   'placement: ef-sme-vestigios-5 has no page that shows it',
+    +   'placement: ef-obmep-fracoes-6 has no page that shows it',
+    +   'placement: ef-sme-tecnologia-vida-7 has no page that shows it',
+    +   'placement: ef-obmep-potenciacao-8 has no page that shows it',
+    +   'placement: ef-sme-funcoes-9 has no page that shows it',
+    +   'placement: ita-provas-anteriores has no page that shows it',
+    +   'placement: pm-cn-provas has no page that shows it',
+    +   'placement: pm-en-provas has no page that shows it',
+    +   'placement: pm-eear-provas has no page that shows it',
+    +   'placement: pm-eam-provas has no page that shows it',
+    +   'placement: pm-afa-provas has no page that shows it',
+    +   'placement: pm-epcar-provas has no page that shows it',
+    +   'placement: cecierj-aprovarj has no page that shows it',
+    +   'placement: pm-esa-provas-2026 has no page that shows it',
+    +   'placement: pm-ime-provas has no page that shows it'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'placement: sme-goiania-letras-e-palavras has no page that shows it'
+    1: 'placement: sme-goiania-leitura-em-foco has no page that shows it'
+    2: 'placement: ef-sme-alfabeto-1 has no page that shows it'
+    3: 'placement: ef-sme-vegetacao-3 has no page that shows it'
+    4: 'placement: ef-sme-municipio-4 has no page that shows it'
+    5: 'placement: ef-sme-vestigios-5 has no page that shows it'
+    6: 'placement: ef-obmep-fracoes-6 has no page that shows it'
+    7: 'placement: ef-sme-tecnologia-vida-7 has no page that shows it'
+    8: 'placement: ef-obmep-potenciacao-8 has no page that shows it'
+    9: 'placement: ef-sme-funcoes-9 has no page that shows it'
+    10: 'placement: ita-provas-anteriores has no page that shows it'
+    11: 'placement: pm-cn-provas has no page that shows it'
+    12: 'placement: pm-en-provas has no page that shows it'
+    13: 'placement: pm-eear-provas has no page that shows it'
+    14: 'placement: pm-eam-provas has no page that shows it'
+    15: 'placement: pm-afa-provas has no page that shows it'
+    16: 'placement: pm-epcar-provas has no page that shows it'
+    17: 'placement: cecierj-aprovarj has no page that shows it'
+    18: 'placement: pm-esa-provas-2026 has no page that shows it'
+    19: 'placement: pm-ime-provas has no page that shows it'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/placement.test.ts:54:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: P1: a destination is always a built, indexable page of the site
+ok 148 - P1: a destination is always a built, indexable page of the site
+  ---
+  duration_ms: 2.227267
+  type: 'test'
+  ...
+# Subtest: P1: a Fundamental resource with a school subject lives on Fundamental, never among the Médio subject pages
+ok 149 - P1: a Fundamental resource with a school subject lives on Fundamental, never among the Médio subject pages
+  ---
+  duration_ms: 1.66491
+  type: 'test'
+  ...
+# Subtest: the 22 canonical routes, exactly and in a stable order
+not ok 150 - the 22 canonical routes, exactly and in a stable order
+  ---
+  duration_ms: 3.470429
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/routes.test.ts:16:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        '/',
+    +   '/ensino-fundamental/',
+        '/ensino-medio/',
+        '/vestibulares/',
+        '/enem/',
+        '/uerj/',
+    +   '/pre-militar/',
+        '/ensino-superior/',
+        '/tecnologia/',
+        '/materias/',
+        '/materias/matematica/',
+        '/materias/portugues/',
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: '/'
+    1: '/ensino-medio/'
+    2: '/vestibulares/'
+    3: '/enem/'
+    4: '/uerj/'
+    5: '/ensino-superior/'
+    6: '/tecnologia/'
+    7: '/materias/'
+    8: '/materias/matematica/'
+    9: '/materias/portugues/'
+    10: '/materias/redacao/'
+    11: '/materias/fisica/'
+    12: '/materias/quimica/'
+    13: '/materias/biologia/'
+    14: '/materias/historia/'
+    15: '/materias/geografia/'
+    16: '/materias/filosofia/'
+    17: '/materias/sociologia/'
+    18: '/materias/ingles/'
+    19: '/materias/espanhol/'
+    20: '/buscar/'
+    21: '/sobre/'
+  actual:
+    0: '/'
+    1: '/ensino-fundamental/'
+    2: '/ensino-medio/'
+    3: '/vestibulares/'
+    4: '/enem/'
+    5: '/uerj/'
+    6: '/pre-militar/'
+    7: '/ensino-superior/'
+    8: '/tecnologia/'
+    9: '/materias/'
+    10: '/materias/matematica/'
+    11: '/materias/portugues/'
+    12: '/materias/redacao/'
+    13: '/materias/fisica/'
+    14: '/materias/quimica/'
+    15: '/materias/biologia/'
+    16: '/materias/historia/'
+    17: '/materias/geografia/'
+    18: '/materias/filosofia/'
+    19: '/materias/sociologia/'
+    20: '/materias/ingles/'
+    21: '/materias/espanhol/'
+    22: '/buscar/'
+    23: '/sobre/'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/routes.test.ts:17:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: the paths in preparation have pages but are not canonical (noindex, out of the sitemap)
+not ok 151 - the paths in preparation have pages but are not canonical (noindex, out of the sitemap)
+  ---
+  duration_ms: 0.40133
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/routes.test.ts:21:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + []
+    - [
+    -   '/ensino-fundamental/',
+    -   '/pre-militar/'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: '/ensino-fundamental/'
+    1: '/pre-militar/'
+  actual:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/routes.test.ts:22:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: every route is lowercase, unaccented, slash-terminated and unique
+ok 152 - every route is lowercase, unaccented, slash-terminated and unique
+  ---
+  duration_ms: 0.60442
+  type: 'test'
+  ...
+# Subtest: technology lives at /tecnologia/ only
+ok 153 - technology lives at /tecnologia/ only
+  ---
+  duration_ms: 0.154432
+  type: 'test'
+  ...
+# Subtest: an unpublished topic has no route
+ok 154 - an unpublished topic has no route
+  ---
+  duration_ms: 0.170454
+  type: 'test'
+  ...
+# Subtest: legacy routes redirect to existing canonical pages; the résumé is gone
+ok 155 - legacy routes redirect to existing canonical pages; the résumé is gone
+  ---
+  duration_ms: 0.470333
+  type: 'test'
+  ...
+# Subtest: the header navigation, in order: the Explorar menu, then four direct links (V0.3)
+ok 156 - the header navigation, in order: the Explorar menu, then four direct links (V0.3)
+  ---
+  duration_ms: 0.271223
+  type: 'test'
+  ...
+# Subtest: a section of the header is current on its own page and on the pages inside it
+ok 157 - a section of the header is current on its own page and on the pages inside it
+  ---
+  duration_ms: 0.233086
+  type: 'test'
+  ...
+# Subtest: P3: schoolYears accepts 1..9, distinct, ascending, only on Fundamental, only with individual evidence
+ok 158 - P3: schoolYears accepts 1..9, distinct, ascending, only on Fundamental, only with individual evidence
+  ---
+  duration_ms: 2.299898
+  type: 'test'
+  ...
+# Subtest: P3: a multidisciplinary Fundamental resource needs no subject; no resource is forced to have a year
+ok 159 - P3: a multidisciplinary Fundamental resource needs no subject; no resource is forced to have a year
+  ---
+  duration_ms: 0.498485
+  type: 'test'
+  ...
+# Subtest: P3: the stage is derived from the years, never typed
+ok 160 - P3: the stage is derived from the years, never typed
+  ---
+  duration_ms: 0.250559
+  type: 'test'
+  ...
+# Subtest: a resource result leads to its home page, at the resource itself (\#recurso-<id>)
+ok 161 - a resource result leads to its home page, at the resource itself (\#recurso-<id>)
+  ---
+  duration_ms: 3.608372
+  type: 'test'
+  ...
+# Subtest: anchorPlan anchors a resource once, on its home page only, at its first occurrence
+ok 162 - anchorPlan anchors a resource once, on its home page only, at its first occurrence
+  ---
+  duration_ms: 1.803008
+  type: 'test'
+  ...
+# Subtest: a resource without a subject lives on the exam page that shows it; with no such page it has no destination
+ok 163 - a resource without a subject lives on the exam page that shows it; with no such page it has no destination
+  ---
+  duration_ms: 0.467031
+  type: 'test'
+  ...
+# Subtest: resource entries carry their facets; other entries carry none
+ok 164 - resource entries carry their facets; other entries carry none
+  ---
+  duration_ms: 1.557489
+  type: 'test'
+  ...
+# Subtest: facet options: only values some resource has, in the taxonomy order, each with its label
+not ok 165 - facet options: only values some resource has, in the taxonomy order, each with its label
+  ---
+  duration_ms: 15.369639
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/search-filter.test.ts:56:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'ensino-fundamental',
+        'ensino-medio',
+        'vestibulares',
+    +   'pre-militar',
+        'ensino-superior',
+        'tecnologia'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'ensino-medio'
+    1: 'vestibulares'
+    2: 'ensino-superior'
+    3: 'tecnologia'
+  actual:
+    0: 'ensino-fundamental'
+    1: 'ensino-medio'
+    2: 'vestibulares'
+    3: 'pre-militar'
+    4: 'ensino-superior'
+    5: 'tecnologia'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/search-filter.test.ts:59:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: entryMatches: AND across facets, OR inside one; no selection matches everything
+ok 166 - entryMatches: AND across facets, OR inside one; no selection matches everything
+  ---
+  duration_ms: 0.351619
+  type: 'test'
+  ...
+# Subtest: a resource without a subject is left out by a subject filter and kept by the others
+ok 167 - a resource without a subject is left out by a subject filter and kept by the others
+  ---
+  duration_ms: 0.155815
+  type: 'test'
+  ...
+# Subtest: an entry without facets (a path, an area, a subject page) is shown only when no filter is set
+ok 168 - an entry without facets (a path, an area, a subject page) is shown only when no filter is set
+  ---
+  duration_ms: 0.130512
+  type: 'test'
+  ...
+# Subtest: the selection lives in the URL; unknown facets and values are dropped, never trusted
+ok 169 - the selection lives in the URL; unknown facets and values are dropped, never trusted
+  ---
+  duration_ms: 2.57079
+  type: 'test'
+  ...
+# Subtest: filtering the real index: Tecnologia in Portuguese is exactly the Portuguese technology resources
+ok 170 - filtering the real index: Tecnologia in Portuguese is exactly the Portuguese technology resources
+  ---
+  duration_ms: 0.711587
+  type: 'test'
+  ...
+# Subtest: normalize: lowercase, no accents, single spaces
+ok 171 - normalize: lowercase, no accents, single spaces
+  ---
+  duration_ms: 1.518374
+  type: 'test'
+  ...
+# Subtest: matches: every word of the query, in any order; an empty query matches everything
+ok 172 - matches: every word of the query, in any order; an empty query matches everything
+  ---
+  duration_ms: 0.39243
+  type: 'test'
+  ...
+# Subtest: filterEntries returns the visible ids and their count
+ok 173 - filterEntries returns the visible ids and their count
+  ---
+  duration_ms: 2.310177
+  type: 'test'
+  ...
+# Subtest: one entry per objective, area, subject, published track and published resource
+not ok 174 - one entry per objective, area, subject, published track and published resource
+  ---
+  duration_ms: 1.599633
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/search-index.test.ts:34:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    8 !== 7
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 7
+  actual: 8
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/search-index.test.ts:39:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: every entry leads to a page of the site, never outside
+ok 175 - every entry leads to a page of the site, never outside
+  ---
+  duration_ms: 3.159124
+  type: 'test'
+  ...
+# Subtest: no duplicate entry; the index is deterministic
+ok 176 - no duplicate entry; the index is deterministic
+  ---
+  duration_ms: 4.277072
+  type: 'test'
+  ...
+# Subtest: terms are normalized and find what a student types
+ok 177 - terms are normalized and find what a student types
+  ---
+  duration_ms: 1.536716
+  type: 'test'
+  ...
+# Subtest: Lote 03: the eight Fundamental lessons are staged once each, with the year, subject and format of the source
+ok 178 - Lote 03: the eight Fundamental lessons are staged once each, with the year, subject and format of the source
+  ---
+  duration_ms: 3.588248
+  type: 'test'
+  ...
+# Subtest: Lote 03: neither the source nor the evidence states registration or certificate: both stay unconfirmed
+ok 179 - Lote 03: neither the source nor the evidence states registration or certificate: both stay unconfirmed
+  ---
+  duration_ms: 1.017043
+  type: 'test'
+  ...
+# Subtest: Lote 03: Ciências da Natureza is never filed under Tecnologia nor given a false subject
+ok 180 - Lote 03: Ciências da Natureza is never filed under Tecnologia nor given a false subject
+  ---
+  duration_ms: 0.522773
+  type: 'test'
+  ...
+# Subtest: Fundamental: ten distinct staged lessons, each shown on the Fundamental page once it is active
+ok 181 - Fundamental: ten distinct staged lessons, each shown on the Fundamental page once it is active
+  ---
+  duration_ms: 0.441282
+  type: 'test'
+  ...
+# Subtest: Lote 03: the three military collections stay partial: recorded, never staged as ready, never in the draft
+not ok 182 - Lote 03: the three military collections stay partial: recorded, never staged as ready, never in the draft
+  ---
+  duration_ms: 1.116382
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/staging-lote03.test.ts:70:1'
+  failureType: 'testCodeFailure'
+  error: 'pm-cn-provas is staged or published'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/staging-lote03.test.ts:82:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: the Lote 02 sheet: 60 candidates, 18 opened directly, none authorised for publication
+ok 183 - the Lote 02 sheet: 60 candidates, 18 opened directly, none authorised for publication
+  ---
+  duration_ms: 5.718446
+  type: 'test'
+  ...
+# Subtest: staging: every one of the 18 direct sources is a staged record or a re-verified published id, never both
+ok 184 - staging: every one of the 18 direct sources is a staged record or a re-verified published id, never both
+  ---
+  duration_ms: 0.792073
+  type: 'test'
+  ...
+# Subtest: reuse: the published ids are re-verified, never duplicated
+not ok 185 - reuse: the published ids are re-verified, never duplicated
+  ---
+  duration_ms: 3.308986
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/staging.test.ts:53:1'
+  failureType: 'testCodeFailure'
+  error: 'sme-goiania-letras-e-palavras duplicates a catalogue id'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/staging.test.ts:62:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: every staged record passes every rule of a catalogue record (paths, exams, P3, P4) with its individual evidence
+ok 186 - every staged record passes every rule of a catalogue record (paths, exams, P3, P4) with its individual evidence
+  ---
+  duration_ms: 1.679353
+  type: 'test'
+  ...
+# Subtest: no lesson, past exam or reference becomes a course; the formats are the observed ones
+ok 187 - no lesson, past exam or reference becomes a course; the formats are the observed ones
+  ---
+  duration_ms: 0.534541
+  type: 'test'
+  ...
+# Subtest: staged records are not published: not in the catalogue, not imported by any page or component
+not ok 188 - staged records are not published: not in the catalogue, not imported by any page or component
+  ---
+  duration_ms: 0.646137
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/staging.test.ts:90:1'
+  failureType: 'testCodeFailure'
+  error: 'sme-goiania-letras-e-palavras'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/staging.test.ts:92:34)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: nothing is released or activated by this lot
+not ok 189 - nothing is released or activated by this lot
+  ---
+  duration_ms: 1.692784
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/staging.test.ts:99:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    ensino-fundamental
+    + actual - expected
+    
+    + [
+    +   'ef-sme-alfabeto-1',
+    +   'sme-goiania-letras-e-palavras',
+    +   'ef-sme-vegetacao-3',
+    +   'ef-sme-municipio-4',
+    +   'ef-sme-vestigios-5',
+    +   'sme-goiania-leitura-em-foco',
+    +   'ef-obmep-fracoes-6',
+    +   'ef-sme-tecnologia-vida-7',
+    +   'ef-obmep-potenciacao-8',
+    +   'ef-sme-funcoes-9'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'ef-sme-alfabeto-1'
+    1: 'sme-goiania-letras-e-palavras'
+    2: 'ef-sme-vegetacao-3'
+    3: 'ef-sme-municipio-4'
+    4: 'ef-sme-vestigios-5'
+    5: 'sme-goiania-leitura-em-foco'
+    6: 'ef-obmep-fracoes-6'
+    7: 'ef-sme-tecnologia-vida-7'
+    8: 'ef-obmep-potenciacao-8'
+    9: 'ef-sme-funcoes-9'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/staging.test.ts:101:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: each staged record has a destination once its page is active, or a declared placement step (P1)
+ok 190 - each staged record has a destination once its page is active, or a declared placement step (P1)
+  ---
+  duration_ms: 3.020009
+  type: 'test'
+  ...
+# Subtest: the selection draft: at most ten per path, distinct across paths, each declaring its path, staged or published
+ok 191 - the selection draft: at most ten per path, distinct across paths, each declaring its path, staged or published
+  ---
+  duration_ms: 0.870492
+  type: 'test'
+  ...
+# Subtest: the six paths, in the approved order (V0.3)
+ok 192 - the six paths, in the approved order (V0.3)
+  ---
+  duration_ms: 3.175606
+  type: 'test'
+  ...
+# Subtest: ENEM and UERJ are exams inside Vestibular, not paths
+ok 193 - ENEM and UERJ are exams inside Vestibular, not paths
+  ---
+  duration_ms: 0.488506
+  type: 'test'
+  ...
+# Subtest: the paths in preparation are named, and are paths
+not ok 194 - the paths in preparation are named, and are paths
+  ---
+  duration_ms: 1.604898
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/taxonomy.test.ts:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + []
+    - [
+    -   'ensino-fundamental',
+    -   'pre-militar'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'ensino-fundamental'
+    1: 'pre-militar'
+  actual:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/taxonomy.test.ts:19:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: the six areas keep the Home order
+ok 195 - the six areas keep the Home order
+  ---
+  duration_ms: 0.355678
+  type: 'test'
+  ...
+# Subtest: twelve academic subjects plus technology, each in exactly one area
+ok 196 - twelve academic subjects plus technology, each in exactly one area
+  ---
+  duration_ms: 0.458971
+  type: 'test'
+  ...
+# Subtest: slugs are unique, lowercase and unaccented
+ok 197 - slugs are unique, lowercase and unaccented
+  ---
+  duration_ms: 0.525286
+  type: 'test'
+  ...
+# Subtest: every objective, area and subject has a human label
+ok 198 - every objective, area and subject has a human label
+  ---
+  duration_ms: 0.343847
+  type: 'test'
+  ...
+# Subtest: every topic names its source and none is published in V0.1
+ok 199 - every topic names its source and none is published in V0.1
+  ---
+  duration_ms: 0.406081
+  type: 'test'
+  ...
+# Subtest: no subject has a learning map until each topic is checked against its source
+ok 200 - no subject has a learning map until each topic is checked against its source
+  ---
+  duration_ms: 0.55428
+  type: 'test'
+  ...
+# Subtest: the tracks and their resources are exactly the spec
+not ok 201 - the tracks and their resources are exactly the spec
+  ---
+  duration_ms: 5.483691
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/tech-tracks.test.ts:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      [
+        [
+          'comecar-a-programar',
+          [
+            'cs50x',
+    ...
+            'fb-web',
+    +       'odin-foundations'
+          ]
+        ],
+        [
+          'python',
+          [
+    ...
+            'fluencia',
+    +       'google-mlcc'
+          ]
+        ],
+        [
+          'dados',
+          [
+    ...
+        ],
+    +   [
+    +     'computacao-em-nuvem',
+    +     [
+    +       'ms-learn-cloud-concepts'
+    +     ]
+    +   ]
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      0: 'comecar-a-programar'
+      1:
+        0: 'cs50x'
+        1: 'cs50p'
+        2: 'fb-python'
+    1:
+      0: 'ciencia-da-computacao'
+      1:
+        0: 'cs50x'
+        1: 'mit-6006'
+        2: 'mit-6042j'
+        3: 'mit-1806'
+    2:
+      0: 'desenvolvimento-web'
+      1:
+        0: 'cs50w'
+        1: 'fb-web'
+    3:
+      0: 'python'
+      1:
+        0: 'cs50p'
+        1: 'mit-6100l'
+        2: 'fb-python'
+    4:
+      0: 'inteligencia-artificial'
+      1:
+        0: 'cs50ai'
+        1: 'fluencia'
+    5:
+      0: 'dados'
+      1:
+        0: 'fgv-datasci'
+        1: 'mit-60002'
+        2: 'cs50sql'
+    6:
+      0: 'seguranca-e-privacidade'
+      1:
+        0: 'cisco-cyber'
+        1: 'fgv-security'
+        2: 'fgv-privacy'
+    7:
+      0: 'git-e-github'
+      1:
+  actual:
+    0:
+      0: 'comecar-a-programar'
+      1:
+        0: 'cs50x'
+        1: 'cs50p'
+        2: 'fb-python'
+    1:
+      0: 'ciencia-da-computacao'
+      1:
+        0: 'cs50x'
+        1: 'mit-6006'
+        2: 'mit-6042j'
+        3: 'mit-1806'
+    2:
+      0: 'desenvolvimento-web'
+      1:
+        0: 'cs50w'
+        1: 'fb-web'
+        2: 'odin-foundations'
+    3:
+      0: 'python'
+      1:
+        0: 'cs50p'
+        1: 'mit-6100l'
+        2: 'fb-python'
+    4:
+      0: 'inteligencia-artificial'
+      1:
+        0: 'cs50ai'
+        1: 'fluencia'
+        2: 'google-mlcc'
+    5:
+      0: 'dados'
+      1:
+        0: 'fgv-datasci'
+        1: 'mit-60002'
+        2: 'cs50sql'
+    6:
+      0: 'seguranca-e-privacidade'
+      1:
+        0: 'cisco-cyber'
+        1: 'fgv-security'
+        2: 'fgv-privacy'
+    7:
+      0: 'git-e-github'
+      1:
+    8:
+      0: 'computacao-em-nuvem'
+      1:
+        0: 'ms-learn-cloud-concepts'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/tech-tracks.test.ts:19:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: every referenced resource exists, is published and is technology
+ok 202 - every referenced resource exists, is published and is technology
+  ---
+  duration_ms: 0.639022
+  type: 'test'
+  ...
+# Subtest: a published track is never empty; a planned one is never shown
+not ok 203 - a published track is never empty; a planned one is never shown
+  ---
+  duration_ms: 0.658684
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/tech-tracks.test.ts:32:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    8 !== 7
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 7
+  actual: 8
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/tech-tracks.test.ts:38:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: no published technology resource is left out of every track
+ok 204 - no published technology resource is left out of every track
+  ---
+  duration_ms: 0.302674
+  type: 'test'
+  ...
+# Subtest: every track says what it is and why
+ok 205 - every track says what it is and why
+  ---
+  duration_ms: 0.325835
+  type: 'test'
+  ...
+# Subtest: P4: the legacy set is exactly the 37 published today, and they need nothing new
+not ok 206 - P4: the legacy set is exactly the 37 published today, and they need nothing new
+  ---
+  duration_ms: 3.831963
+  type: 'test'
+  location: '/tmp/claude-0/qa/wt-rc/tests/verification.test.ts:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      [
+    -   'cecierj-aprovarj',
+    -   'cecierj-pvs-fisica-v1',
+    -   'cecierj-pvs-geografia-mod1',
+    -   'cecierj-pvs-historia-mod2',
+    -   'cecierj-pvs-matematica-mod1',
+    -   'cecierj-pvs-portugues-v1',
+        'cisco-cyber',
+        'cs50ai',
+        'cs50p',
+        'cs50sql',
+        'cs50w',
+        'cs50x',
+    -   'ef-obmep-fracoes-6',
+    -   'ef-obmep-potenciacao-8',
+    -   'ef-sme-alfabeto-1',
+    -   'ef-sme-funcoes-9',
+    -   'ef-sme-municipio-4',
+    -   'ef-sme-tecnologia-vida-7',
+    -   'ef-sme-vegetacao-3',
+    -   'ef-sme-vestigios-5',
+        'fb-python',
+        'fb-web',
+        'fgv-datasci',
+        'fgv-privacy',
+        'fgv-security',
+        'fluencia',
+    -   'fuvest-acervo-2026',
+    -   'google-mlcc',
+    -   'inep-enem-provas-gabaritos',
+        'inep-writing-2026',
+    -   'ita-provas-anteriores',
+        'kultivi-biology-enem',
+        'kultivi-chemistry-enem',
+    -   'kultivi-enem-completo',
+        'kultivi-english-enem',
+        'kultivi-geography-enem',
+        'kultivi-history-enem',
+        'kultivi-math-enem',
+        'kultivi-philosophy-enem',
+    ...
+        'kultivi-writing-enem',
+    -   'mit-1801sc',
+        'mit-1806',
+        'mit-60002',
+        'mit-6006',
+        'mit-6042j',
+        'mit-6100l',
+    -   'mit-7012',
+    -   'mit-801sc',
+    -   'ms-learn-cloud-concepts',
+    -   'odin-foundations',
+    -   'ou-environment-treading-lightly',
+    -   'pm-afa-provas',
+    -   'pm-cn-provas',
+    -   'pm-eam-provas',
+    -   'pm-eear-provas',
+    -   'pm-en-provas',
+    -   'pm-epcar-provas',
+    -   'pm-esa-provas-2026',
+    -   'pm-ime-provas',
+    -   'sme-goiania-leitura-em-foco',
+    -   'sme-goiania-letras-e-palavras',
+        'uerj-geography-practice',
+        'uerj-history-practice',
+        'uerj-math-practice',
+        'uerj-physics-practice',
+        'uerj-portuguese-practice',
+        'uerj-spanish-practice',
+        'uerj-writing-practice',
+    -   'yale-econ-252',
+    -   'yale-psyc-110'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'cecierj-aprovarj'
+    1: 'cecierj-pvs-fisica-v1'
+    2: 'cecierj-pvs-geografia-mod1'
+    3: 'cecierj-pvs-historia-mod2'
+    4: 'cecierj-pvs-matematica-mod1'
+    5: 'cecierj-pvs-portugues-v1'
+    6: 'cisco-cyber'
+    7: 'cs50ai'
+    8: 'cs50p'
+    9: 'cs50sql'
+    10: 'cs50w'
+    11: 'cs50x'
+    12: 'ef-obmep-fracoes-6'
+    13: 'ef-obmep-potenciacao-8'
+    14: 'ef-sme-alfabeto-1'
+    15: 'ef-sme-funcoes-9'
+    16: 'ef-sme-municipio-4'
+    17: 'ef-sme-tecnologia-vida-7'
+    18: 'ef-sme-vegetacao-3'
+    19: 'ef-sme-vestigios-5'
+    20: 'fb-python'
+    21: 'fb-web'
+    22: 'fgv-datasci'
+    23: 'fgv-privacy'
+    24: 'fgv-security'
+    25: 'fluencia'
+    26: 'fuvest-acervo-2026'
+    27: 'google-mlcc'
+    28: 'inep-enem-provas-gabaritos'
+    29: 'inep-writing-2026'
+    30: 'ita-provas-anteriores'
+    31: 'kultivi-biology-enem'
+    32: 'kultivi-chemistry-enem'
+    33: 'kultivi-enem-completo'
+    34: 'kultivi-english-enem'
+    35: 'kultivi-geography-enem'
+    36: 'kultivi-history-enem'
+    37: 'kultivi-math-enem'
+    38: 'kultivi-philosophy-enem'
+    39: 'kultivi-physics-enem'
+    40: 'kultivi-portuguese-enem'
+    41: 'kultivi-sociology-enem'
+    42: 'kultivi-spanish-enem'
+    43: 'kultivi-writing-enem'
+    44: 'mit-1801sc'
+    45: 'mit-1806'
+    46: 'mit-60002'
+    47: 'mit-6006'
+    48: 'mit-6042j'
+    49: 'mit-6100l'
+    50: 'mit-7012'
+    51: 'mit-801sc'
+    52: 'ms-learn-cloud-concepts'
+    53: 'odin-foundations'
+    54: 'ou-environment-treading-lightly'
+    55: 'pm-afa-provas'
+    56: 'pm-cn-provas'
+    57: 'pm-eam-provas'
+    58: 'pm-eear-provas'
+    59: 'pm-en-provas'
+    60: 'pm-epcar-provas'
+    61: 'pm-esa-provas-2026'
+    62: 'pm-ime-provas'
+    63: 'sme-goiania-leitura-em-foco'
+    64: 'sme-goiania-letras-e-palavras'
+    65: 'uerj-geography-practice'
+    66: 'uerj-history-practice'
+    67: 'uerj-math-practice'
+    68: 'uerj-physics-practice'
+    69: 'uerj-portuguese-practice'
+    70: 'uerj-spanish-practice'
+    71: 'uerj-writing-practice'
+    72: 'yale-econ-252'
+    73: 'yale-psyc-110'
+  actual:
+    0: 'cisco-cyber'
+    1: 'cs50ai'
+    2: 'cs50p'
+    3: 'cs50sql'
+    4: 'cs50w'
+    5: 'cs50x'
+    6: 'fb-python'
+    7: 'fb-web'
+    8: 'fgv-datasci'
+    9: 'fgv-privacy'
+    10: 'fgv-security'
+    11: 'fluencia'
+    12: 'inep-writing-2026'
+    13: 'kultivi-biology-enem'
+    14: 'kultivi-chemistry-enem'
+    15: 'kultivi-english-enem'
+    16: 'kultivi-geography-enem'
+    17: 'kultivi-history-enem'
+    18: 'kultivi-math-enem'
+    19: 'kultivi-philosophy-enem'
+    20: 'kultivi-physics-enem'
+    21: 'kultivi-portuguese-enem'
+    22: 'kultivi-sociology-enem'
+    23: 'kultivi-spanish-enem'
+    24: 'kultivi-writing-enem'
+    25: 'mit-1806'
+    26: 'mit-60002'
+    27: 'mit-6006'
+    28: 'mit-6042j'
+    29: 'mit-6100l'
+    30: 'uerj-geography-practice'
+    31: 'uerj-history-practice'
+    32: 'uerj-math-practice'
+    33: 'uerj-physics-practice'
+    34: 'uerj-portuguese-practice'
+    35: 'uerj-spanish-practice'
+    36: 'uerj-writing-practice'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/claude-0/qa/wt-rc/tests/verification.test.ts:25:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: P4: a new resource needs individual evidence: HTTPS source, what was checked, a note
+ok 207 - P4: a new resource needs individual evidence: HTTPS source, what was checked, a note
+  ---
+  duration_ms: 0.669942
+  type: 'test'
+  ...
+# Subtest: P4: a new resource states its registration and certificate (never left unknown by omission)
+ok 208 - P4: a new resource states its registration and certificate (never left unknown by omission)
+  ---
+  duration_ms: 0.207959
+  type: 'test'
+  ...
+# Subtest: P4: the legacy exemption covers the baseline data only: a changed URL or date loses it
+ok 209 - P4: the legacy exemption covers the baseline data only: a changed URL or date loses it
+  ---
+  duration_ms: 0.17828
+  type: 'test'
+  ...
+# Subtest: P4: nothing stamps a verification on a new resource: the legacy helper refuses ids outside the baseline
+ok 210 - P4: nothing stamps a verification on a new resource: the legacy helper refuses ids outside the baseline
+  ---
+  duration_ms: 0.471738
+  type: 'test'
+  ...
+# Subtest: P4: a verification date is a real date, never in the future
+ok 211 - P4: a verification date is a real date, never in the future
+  ---
+  duration_ms: 0.39234
+  type: 'test'
+  ...
+# Subtest: P4: evidence comes from the resource's own official host
+ok 212 - P4: evidence comes from the resource's own official host
+  ---
+  duration_ms: 0.219648
+  type: 'test'
+  ...
+# Subtest: P4: an unconfirmed detail is stated as unconfirmed and never shown as a fact
+ok 213 - P4: an unconfirmed detail is stated as unconfirmed and never shown as a fact
+  ---
+  duration_ms: 2.808408
+  type: 'test'
+  ...
+# Subtest: P4: the verification methods are direct only: official page, or the author's official channel
+ok 214 - P4: the verification methods are direct only: official page, or the author's official channel
+  ---
+  duration_ms: 0.394711
+  type: 'test'
+  ...
+# Subtest: P4: a new resource verified through a search index, or with a missing or unknown method, is refused
+ok 215 - P4: a new resource verified through a search index, or with a missing or unknown method, is refused
+  ---
+  duration_ms: 0.596984
+  type: 'test'
+  ...
+# Subtest: P4: the legacy exemption also requires the baseline method
+ok 216 - P4: the legacy exemption also requires the baseline method
+  ---
+  duration_ms: 0.22932
+  type: 'test'
+  ...
+# Subtest: verify-dist COURSE_HOSTS equals the hosts of published resources
+ok 217 - verify-dist COURSE_HOSTS equals the hosts of published resources
+  ---
+  duration_ms: 2.291565
+  type: 'test'
+  ...
+# Subtest: verify-dist OFFICIAL_HOSTS equals the official-source hosts
+ok 218 - verify-dist OFFICIAL_HOSTS equals the official-source hosts
+  ---
+  duration_ms: 0.335764
+  type: 'test'
+  ...
+1..218
+# tests 218
+# suites 0
+# pass 177
+# fail 41
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2317.144669

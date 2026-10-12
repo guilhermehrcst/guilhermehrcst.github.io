@@ -1,0 +1,30 @@
+NEW_HOSTS 17 assets.marinha.mil.br canal.cecierj.edu.br developers.google.com esa.eb.mil.br extensao.cecierj.edu.br ingresso.eear.fab.mil.br learn.microsoft.com oyc.yale.edu portaldaobmep.impa.br sme.goiania.go.gov.br vestibular.ita.br www.fab.mil.br www.fuvest.br www.ime.eb.mil.br www.inscricao.marinha.mil.br www.open.edu www.theodinproject.com
+PASS C1 exactly 60 IDs 
+PASS C2 60 distinct IDs 
+PASS C3 ten in ensino-fundamental 
+PASS C3 ten in ensino-medio 
+PASS C3 ten in vestibulares 
+PASS C3 ten in pre-militar 
+PASS C3 ten in ensino-superior 
+PASS C3 ten in tecnologia 
+PASS C4 no duplicated URL among the 60 
+PASS C4b no new candidate repeats a legacy URL as an independent offer 
+PASS C5 resourceProblems() empty for all 60 (now=2026-10-12) 
+PASS C6 verification dates are 2026-10-11/12 
+PASS C7 featuredProblems(final) accepts the 60 as a hypothetical catalogue 
+PASS C7b gatebDraftProblems() empty 
+PASS C8 evidence host == resource host (new records) 
+PASS C10 past exams are multidisciplinary: subject null 
+PASS C11 schoolYears only on Fundamental with grade evidence 
+PASS C11b every Fundamental candidate has a proven year 
+PASS C12 selection order == editorial review 05 JSON 
+PASS C12b record URL == review official_url 
+PASS C13 Cecierj PVS: reference, never past-exam, no exam claims 
+PASS C14 AprovaRJ is a course, not a past exam 
+PASS C15 ESA 2026 never presented as EsPCEx 
+PASS C16 37 published records byte-identical to main 5e4b086 
+PASS C17 no candidate promoted: published set unchanged, FEATURED lists empty, all staging 
+PASS C18 Fundamental and Pré-Militar still preparing 
+PASS C19 publication flags false 
+PASS C20 placement: no gaps when projected, nine unreleased destinations 
+28/28 pass

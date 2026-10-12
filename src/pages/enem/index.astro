@@ -7,7 +7,7 @@ import TrackSection from '../../components/TrackSection.astro';
 import SourceNote from '../../components/SourceNote.astro';
 import ResourceList from '../../components/ResourceList.astro';
 import SubjectLinks from '../../components/SubjectLinks.astro';
-import { ENEM_AREAS, enemAreaOf, resolveGuide } from '../../lib/exam-guides';
+import { ENEM_AREAS, enemAreaOf, resolveGuide, sourceShownAsResource } from '../../lib/exam-guides';
 import { anchorPlan } from '../../lib/search-index';
 import { routes } from '../../lib/routes';
 import { OBJECTIVES } from '../../lib/taxonomy';
@@ -23,6 +23,9 @@ const deepenByArea = ENEM_AREAS
   .filter((area) => area.resources.length > 0);
 // A resource whose home is this guide (one without a subject) carries its anchor at its first occurrence.
 const [practiceAnchors, ...deepenAnchors] = anchorPlan(routes.objective('enem'), [practice?.resources ?? [], ...deepenByArea.map((area) => area.resources)]);
+// The INEP collection, once published, is the page the practice note cites: the note points to it here.
+const practiceSource = sourceShownAsResource('inep-provas-gabaritos', practice?.resources ?? []);
+const practiceSourceAnchor = practiceSource && practiceAnchors?.has(practiceSource.id) ? `recurso-${practiceSource.id}` : undefined;
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} crumbs={[{ label: OBJECTIVES.vestibulares.label, href: routes.objective('vestibulares') }]} />
@@ -49,7 +52,7 @@ const [practiceAnchors, ...deepenAnchors] = anchorPlan(routes.objective('enem'),
 
   {practice && (
     <TrackSection id="pratique" title={g.pratique.title} why={g.pratique.why}>
-      <SourceNote source="inep-provas-gabaritos" />
+      <SourceNote source="inep-provas-gabaritos" inPage={practiceSourceAnchor} />
       {practice.resources.length > 0 && <div class="after-note"><ResourceList resources={practice.resources} anchored={practiceAnchors} /></div>}
     </TrackSection>
   )}

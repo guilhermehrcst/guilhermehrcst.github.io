@@ -1,0 +1,224 @@
+[
+ {
+  "id": "ef-sme-alfabeto-1",
+  "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-nosso-alfabeto/",
+  "at": "2026-10-12T13:35:49.948Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-nosso-alfabeto/"
+ },
+ {
+  "id": "sme-goiania-letras-e-palavras",
+  "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-letras-e-palavras/",
+  "at": "2026-10-12T13:35:50.377Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-letras-e-palavras/"
+ },
+ {
+  "id": "ef-sme-vegetacao-3",
+  "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/ciencias-da-natureza-vegetacao-e-a-preservacao-do-solo/",
+  "at": "2026-10-12T13:35:50.721Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/ciencias-da-natureza-vegetacao-e-a-preservacao-do-solo/"
+ },
+ {
+  "id": "ef-sme-municipio-4",
+  "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/geografia-municipio-estado-e-pais/",
+  "at": "2026-10-12T13:35:51.058Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/geografia-municipio-estado-e-pais/"
+ },
+ {
+  "id": "ef-sme-vestigios-5",
+  "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/historia-vestigios-do-passado/",
+  "at": "2026-10-12T13:35:51.403Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/historia-vestigios-do-passado/"
+ },
+ {
+  "id": "sme-goiania-leitura-em-foco",
+  "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-leitura-em-foco/",
+  "at": "2026-10-12T13:35:51.726Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-leitura-em-foco/"
+ },
+ {
+  "id": "ef-obmep-fracoes-6",
+  "url": "https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=28",
+  "at": "2026-10-12T13:35:52.132Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=28"
+ },
+ {
+  "id": "ef-sme-tecnologia-vida-7",
+  "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/ciencias-da-natureza-tecnologia-e-vida-humana/",
+  "at": "2026-10-12T13:35:52.454Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/ciencias-da-natureza-tecnologia-e-vida-humana/"
+ },
+ {
+  "id": "ef-obmep-potenciacao-8",
+  "url": "https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=1059",
+  "at": "2026-10-12T13:35:52.839Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=1059"
+ },
+ {
+  "id": "ef-sme-funcoes-9",
+  "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/matematica-funcao-de-1o-e-de-2o-grau/",
+  "at": "2026-10-12T13:35:53.160Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/matematica-funcao-de-1o-e-de-2o-grau/"
+ },
+ {
+  "id": "kultivi-enem-completo",
+  "url": "https://kultivi.com/curso/enem-completo",
+  "at": "2026-10-12T13:35:53.479Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://kultivi.com/curso/enem-completo"
+ },
+ {
+  "id": "inep-enem-provas-gabaritos",
+  "url": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos",
+  "at": "2026-10-12T13:35:53.776Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos"
+ },
+ {
+  "id": "fuvest-acervo-2026",
+  "url": "https://www.fuvest.br/acervo-vestibular-2026/",
+  "at": "2026-10-12T13:35:54.257Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.fuvest.br/acervo-vestibular-2026/"
+ },
+ {
+  "id": "cecierj-pvs-portugues-v1",
+  "url": "https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf",
+  "at": "2026-10-12T13:35:54.624Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf"
+ },
+ {
+  "id": "cecierj-pvs-matematica-mod1",
+  "url": "https://canal.cecierj.edu.br/122016/efcafab1e59a9c49c5244cbbdc982539.pdf",
+  "at": "2026-10-12T13:35:54.919Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/122016/efcafab1e59a9c49c5244cbbdc982539.pdf"
+ },
+ {
+  "id": "cecierj-pvs-historia-mod2",
+  "url": "https://canal.cecierj.edu.br/122016/d0522fa0af463530f6629b02000952d5.pdf",
+  "at": "2026-10-12T13:35:55.269Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/122016/d0522fa0af463530f6629b02000952d5.pdf"
+ },
+ {
+  "id": "cecierj-pvs-geografia-mod1",
+  "url": "https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf",
+  "at": "2026-10-12T13:35:55.708Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf"
+ },
+ {
+  "id": "cecierj-pvs-fisica-v1",
+  "url": "https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf",
+  "at": "2026-10-12T13:35:56.076Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf"
+ },
+ {
+  "id": "ita-provas-anteriores",
+  "url": "https://vestibular.ita.br/provas.htm",
+  "at": "2026-10-12T13:35:56.392Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://vestibular.ita.br/provas.htm"
+ },
+ {
+  "id": "pm-cn-provas",
+  "url": "https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf",
+  "at": "2026-10-12T13:35:56.695Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf"
+ },
+ {
+  "id": "pm-en-provas",
+  "url": "https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961",
+  "at": "2026-10-12T13:35:57.071Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961"
+ },
+ {
+  "id": "pm-eear-provas",
+  "url": "https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf",
+  "at": "2026-10-12T13:35:57.357Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf"
+ },
+ {
+  "id": "pm-eam-provas",
+  "url": "https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf",
+  "at": "2026-10-12T13:35:57.676Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf"
+ },
+ {
+  "id": "pm-afa-provas",
+  "url": "https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf",
+  "at": "2026-10-12T13:35:58.008Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf"
+ },
+ {
+  "id": "pm-epcar-provas",
+  "url": "https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf",
+  "at": "2026-10-12T13:35:58.350Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf"
+ },
+ {
+  "id": "cecierj-aprovarj",
+  "url": "https://extensao.cecierj.edu.br/cursos/aprovarj/",
+  "at": "2026-10-12T13:35:58.607Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://extensao.cecierj.edu.br/cursos/aprovarj/"
+ },
+ {
+  "id": "pm-esa-provas-2026",
+  "url": "https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf",
+  "at": "2026-10-12T13:35:58.982Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf"
+ },
+ {
+  "id": "pm-ime-provas",
+  "url": "https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf",
+  "at": "2026-10-12T13:35:59.357Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf"
+ },
+ {
+  "id": "mit-1801sc",
+  "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/",
+  "at": "2026-10-12T13:35:59.560Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+ },
+ {
+  "id": "mit-801sc",
+  "url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/",
+  "at": "2026-10-12T13:35:59.887Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/"
+ },
+ {
+  "id": "mit-7012",
+  "url": "https://ocw.mit.edu/courses/7-012-introduction-to-biology-fall-2004/",
+  "at": "2026-10-12T13:36:00.245Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://ocw.mit.edu/courses/7-012-introduction-to-biology-fall-2004/"
+ },
+ {
+  "id": "yale-psyc-110",
+  "url": "https://oyc.yale.edu/introduction-psychology/psyc-110",
+  "at": "2026-10-12T13:36:00.610Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://oyc.yale.edu/introduction-psychology/psyc-110"
+ },
+ {
+  "id": "yale-econ-252",
+  "url": "https://oyc.yale.edu/economics/econ-252",
+  "at": "2026-10-12T13:36:00.900Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://oyc.yale.edu/economics/econ-252"
+ },
+ {
+  "id": "ou-environment-treading-lightly",
+  "url": "https://www.open.edu/openlearn/nature-environment/environmental-studies/environment-treading-lightly-on-the-earth/content-section-0",
+  "at": "2026-10-12T13:36:01.251Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.open.edu/openlearn/nature-environment/environmental-studies/environment-treading-lightly-on-the-earth/content-section-0"
+ },
+ {
+  "id": "odin-foundations",
+  "url": "https://www.theodinproject.com/paths/foundations/courses/foundations",
+  "at": "2026-10-12T13:36:01.531Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://www.theodinproject.com/paths/foundations/courses/foundations"
+ },
+ {
+  "id": "google-mlcc",
+  "url": "https://developers.google.com/machine-learning/crash-course/",
+  "at": "2026-10-12T13:36:01.973Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://developers.google.com/machine-learning/crash-course/"
+ },
+ {
+  "id": "ms-learn-cloud-concepts",
+  "url": "https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/",
+  "at": "2026-10-12T13:36:02.305Z",
+  "error": "page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/"
+ }
+]

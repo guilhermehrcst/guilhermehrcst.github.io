@@ -1,0 +1,41 @@
+pages 25
+VISUAL 390 / DIFFERS from main
+VISUAL 1440 / DIFFERS from main
+VISUAL 390 /ensino-superior/ identical to main
+VISUAL 1440 /ensino-superior/ identical to main
+VISUAL 390 /tecnologia/ identical to main
+VISUAL 1440 /tecnologia/ identical to main
+VISUAL 390 /buscar/ identical to main
+VISUAL 1440 /buscar/ identical to main
+VISUAL 390 /ensino-medio/ identical to main
+VISUAL 1440 /ensino-medio/ identical to main
+FAIL BY KIND {"E5":12,"E4":14,"E7":2}
+FAIL E5 text contrast AA 320 / [["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 320 /ensino-medio/ [{"t":"Tudo sobre Matemática →","w":217.5625,"h":22,"inline":null},{"t":"Tudo sobre Português →","w":203.453125,"h":22,"inline":null},{"t":"Tudo sobre Redação →","w":189.734375,"h":22,"inline":null},{"t":"Tudo sobre Física →","w":164.359375,"h":22,"inline":null}]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 320 /vestibulares/ [{"t":"Tudo sobre Matemática →","w":217.5625,"h":22,"inline":null},{"t":"Tudo sobre Português →","w":203.453125,"h":22,"inline":null},{"t":"Tudo sobre Redação →","w":189.734375,"h":22,"inline":null},{"t":"Tudo sobre Física →","w":164.359375,"h":22,"inline":null}]
+FAIL E5 text contrast AA 320 /materias/ [["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 320 /buscar/ [{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false}]
+FAIL E5 text contrast AA 360 / [["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 360 /ensino-medio/ [{"t":"Tudo sobre Matemática →","w":217.5625,"h":22,"inline":null},{"t":"Tudo sobre Português →","w":203.453125,"h":22,"inline":null},{"t":"Tudo sobre Redação →","w":189.734375,"h":22,"inline":null},{"t":"Tudo sobre Física →","w":164.359375,"h":22,"inline":null}]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 360 /vestibulares/ [{"t":"Tudo sobre Matemática →","w":217.5625,"h":22,"inline":null},{"t":"Tudo sobre Português →","w":203.453125,"h":22,"inline":null},{"t":"Tudo sobre Redação →","w":189.734375,"h":22,"inline":null},{"t":"Tudo sobre Física →","w":164.359375,"h":22,"inline":null}]
+FAIL E5 text contrast AA 360 /materias/ [["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 360 /buscar/ [{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false}]
+FAIL E5 text contrast AA 390 / [["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 390 /ensino-medio/ [{"t":"Tudo sobre Matemática →","w":217.5625,"h":22,"inline":null},{"t":"Tudo sobre Português →","w":203.453125,"h":22,"inline":null},{"t":"Tudo sobre Redação →","w":189.734375,"h":22,"inline":null},{"t":"Tudo sobre Física →","w":164.359375,"h":22,"inline":null}]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 390 /vestibulares/ [{"t":"Tudo sobre Matemática →","w":217.5625,"h":22,"inline":null},{"t":"Tudo sobre Português →","w":203.453125,"h":22,"inline":null},{"t":"Tudo sobre Redação →","w":189.734375,"h":22,"inline":null},{"t":"Tudo sobre Física →","w":164.359375,"h":22,"inline":null}]
+FAIL E5 text contrast AA 390 /materias/ [["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 390 /buscar/ [{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false}]
+FAIL E5 text contrast AA 768 / [["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 768 /ensino-medio/ [{"t":"Tudo sobre Matemática →","w":230.640625,"h":23,"inline":null},{"t":"Tudo sobre Português →","w":215.6875,"h":23,"inline":null},{"t":"Tudo sobre Redação →","w":201.15625,"h":23,"inline":null},{"t":"Tudo sobre Física →","w":174.25,"h":23,"inline":null}]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 768 /vestibulares/ [{"t":"Tudo sobre Matemática →","w":230.640625,"h":23,"inline":null},{"t":"Tudo sobre Português →","w":215.6875,"h":23,"inline":null},{"t":"Tudo sobre Redação →","w":201.15625,"h":23,"inline":null},{"t":"Tudo sobre Física →","w":174.25,"h":23,"inline":null}]
+FAIL E5 text contrast AA 768 /materias/ [["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 768 /buscar/ [{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false}]
+FAIL E5 text contrast AA 1024 / [["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E5 text contrast AA 1024 /materias/ [["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 1024 /buscar/ [{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false}]
+FAIL E5 text contrast AA 1440 / [["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["/","rgb(207, 200, 187)","rgb(255, 253, 249)","1.64"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E5 text contrast AA 1440 /materias/ [["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"],["→","rgb(207, 200, 187)","rgb(250, 248, 244)","1.57"]]
+FAIL E4 targets ≥24×24 (WCAG 2.5.8) 1440 /buscar/ [{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false},{"t":"caminho","w":20,"h":20,"inline":false}]
+FAIL E7 canonical /ensino-fundamental/ null
+FAIL E7 canonical /pre-militar/ null
+844/872 pass

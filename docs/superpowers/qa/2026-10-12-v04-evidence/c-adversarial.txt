@@ -1,0 +1,26 @@
+REJECTED A1 future verification date | pm-afa-provas: verified in the future (2026-12-01)
+REJECTED A2 impossible date | pm-afa-provas: 2026-02-30 is not a date
+REJECTED A3 search-index method | pm-afa-provas: search-index is not a direct verification at the official source
+REJECTED A4 missing method | pm-afa-provas: no verification method
+REJECTED A5 evidence on another host | pm-afa-provas: evidence is not on the resource's own host
+REJECTED A6 no evidence (not legacy) | pm-afa-provas: no individual evidence
+REJECTED A7 plain HTTP | pm-afa-provas: evidence must be https
+REJECTED A8 scope not checked | pm-afa-provas: scope not checked
+REJECTED A9 registration claimed without check | cecierj-aprovarj: registration not checked
+REJECTED A10 school year outside Fundamental | pm-afa-provas: school years only on Ensino Fundamental
+REJECTED A11 school year without grade evidence | ef-sme-alfabeto-1: school years without evidence of the school year
+REJECTED A12 unordered school years | ef-sme-alfabeto-1: schoolYears must be ascending
+REJECTED A13 school year 10 | ef-sme-alfabeto-1: school year 10 is not 1–9
+REJECTED A14 exam outside its parent path | pm-afa-provas prepares for enem outside its path
+REJECTED A15 no path | pm-afa-provas needs distinct paths
+REJECTED A16 nine in one path (final) | pre-militar: 9 of 10
+REJECTED A17 eleven in one path | pre-militar: 11 of 10
+REJECTED A18 same ID in two paths | mit-6006 is featured in ensino-superior and tecnologia
+REJECTED A19 ID listed twice | tecnologia: cs50x is listed twice
+REJECTED A20 unknown ID | pre-militar: pm-espcex-provas is not a published resource
+ACCEPTED!! A21 ID in a path it does not declare | 
+REJECTED A22 staged candidate against the real published catalogue | ensino-fundamental: ef-sme-alfabeto-1 is not a published resource
+REJECTED A23 military exam while Pré-Militar is preparing has no destination | no placement
+22/23 rejected
+22/23 rejected
+REJECTED A21b Fundamental lesson featured in Tecnologia | ensino-fundamental: cs50x does not declare ensino-fundamental

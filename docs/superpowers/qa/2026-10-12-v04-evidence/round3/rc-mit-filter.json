@@ -1,0 +1,27 @@
+[
+ {
+  "js": true,
+  "cell": {
+   "href": "/buscar/?instituicao=mit-opencourseware",
+   "text": "8 cursos em Tecnologia, Matemática e Ciências da Natureza →"
+  },
+  "url": "http://127.0.0.1:4324/buscar/?instituicao=mit-opencourseware",
+  "checked": [
+   "mit-opencourseware"
+  ],
+  "visible": 8,
+  "allMit": true,
+  "pages": [
+   "/tecnologia/",
+   "/ensino-superior/"
+  ]
+ },
+ {
+  "js": false,
+  "cell": {
+   "href": "/buscar/?instituicao=mit-opencourseware",
+   "text": "8 cursos em Tecnologia, Matemática e Ciências da Natureza →"
+  }
+ }
+]
+[["Harvard University","/tecnologia/#comecar-a-programar","5 cursos em Tecnologia →"],["MIT OpenCourseWare","/buscar/?instituicao=mit-opencourseware","8 cursos em Tecnologia, Matemática e Ciências da Natureza →"],["FGV","/tecnologia/#dados","3 cursos em Tecnologia →"],["Cisco Networking Academy","/tecnologia/#seguranca-e-privacidade","1 curso em Tecnologia →"],["Fundação Bradesco","/tecnologia/#comecar-a-programar","2 cursos em Tecnologia →"],["Fundação Bradesco + Microsoft","/tecnologia/#inteligencia-artificial","+ 1 curso em Tecnologia →"]]

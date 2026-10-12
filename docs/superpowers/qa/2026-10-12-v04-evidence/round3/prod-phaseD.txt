@@ -1,0 +1,3 @@
+search resource entries 37
+SUPERIOR_TEXT Início Ensino Superior CAMINHO Ensino Superior Disciplinas de cursos universitários, publicadas gratuitamente pelas próprias universidades. Por enquanto, Matemática e Computação: são as áreas em que já verificamos cursos universitários gratuitos. Outras áreas do conhecimento entram à medida que verificarmos cursos na fonte. Matemática Disciplinas de matemática de cursos universitários, com aulas e materiais publicados pelo MIT. Linear Algebra (abre o site do provedor em nova aba) Curso · Em inglês Mathematics for Computer Science (abre o site do provedor em nova aba) Curso · Em inglês Computação Cursos introdutórios e de base da computação, como são ensinados em Harvard e no MIT. CS50x: Intr
+99/99 pass

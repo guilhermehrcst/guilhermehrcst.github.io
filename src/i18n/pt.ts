@@ -277,6 +277,7 @@ export const pt: Dict = {
       lead: 'Universidades e instituições que publicam cursos gratuitos. Indicamos o que cada uma oferece e levamos você à página de quem publica.',
       independence: 'A Pexis Academy é independente. Nenhuma destas instituições produz, revisa ou financia a Academy; os nomes e as marcas são delas.',
       count: (resources, page) => `${resources} ${resources === 1 ? 'curso' : 'cursos'} em ${page}`,
+      countAreas: (resources, areas) => `${resources} ${resources === 1 ? 'curso' : 'cursos'} em ${areas.length > 1 ? `${areas.slice(0, -1).join(', ')} e ${areas.at(-1)}` : areas[0]}`,
       exams: 'Para as provas, a fonte é quem as aplica:',
       examLinks: { enem: 'INEP, no guia do ENEM', uerj: 'Vestibular Estadual UERJ, no guia da UERJ' },
       pending: 'Outras instituições entram à medida que verificamos, na página delas, um curso gratuito.',
@@ -420,7 +421,7 @@ export const pt: Dict = {
     formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', lesson: 'Aula', practice: 'Prática', 'past-exam': 'Prova anterior', simulator: 'Simulado', reference: 'Material de referência' },
     languages: { pt: 'Em português', en: 'Em inglês', es: 'Em espanhol' },
     registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
-    certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', available: 'Certificado disponível' },
+    certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', participation: 'Declaração de participação', available: 'Certificado disponível' },
     units: { hours: 'h', weeks: 'semanas' },
     schoolYears: (years) => {
       const ord = years.map((y) => `${y}º`);

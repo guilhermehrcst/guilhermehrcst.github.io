@@ -105,7 +105,7 @@ export const STAGED_RESOURCES: readonly LearningResource[] = [
     verified: opened(YALE_PSYC, NONE_NONE, `Aulas numeradas de PSYC 110 e materiais; gravado em 2007. ${YALE_POLICY}`) },
   { id: 'yale-econ-252', title: 'Financial Markets (2011)', provider: 'Open Yale Courses', subject: null, format: 'course', paths: ['ensino-superior'], language: 'en', level: 'intermediate', url: YALE_ECON, registration: 'not-required', certificate: 'none',
     verified: opened(YALE_ECON, NONE_NONE, `23 aulas de ECON 252 e avaliações; edição de 2011. Leituras suplementares pagas ficam de fora. ${YALE_POLICY}`) },
-  { id: 'ou-environment-treading-lightly', title: 'Environment: treading lightly on the Earth', provider: 'The Open University', subject: null, format: 'course', paths: ['ensino-superior'], language: 'en', level: 'beginner', url: OU_ENV, registration: 'not-required', certificate: 'statement',
+  { id: 'ou-environment-treading-lightly', title: 'Environment: treading lightly on the Earth', provider: 'The Open University', subject: null, format: 'course', paths: ['ensino-superior'], language: 'en', level: 'beginner', url: OU_ENV, registration: 'not-required', certificate: 'participation',
     verified: opened(OU_ENV, NONE_NONE, 'Free course de 15 horas, sem cadastro para o conteúdo; conta opcional para atividades, progresso e declaração gratuita de participação.') },
   // Tecnologia (certificate unconfirmed: never shown as a fact)
   { id: 'odin-foundations', title: 'Foundations Course', provider: 'The Odin Project', subject: 'tecnologia', format: 'track', paths: ['tecnologia'], language: 'en', level: 'beginner', url: ODIN, registration: 'not-required', certificate: 'unconfirmed', technology: { section: 'build', topic: 'webdev' },
