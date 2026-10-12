@@ -1,4 +1,5 @@
 const root = process.argv[2];
+if (!root) throw new Error('usage: node partial.mjs <release-candidate-root>');
 const ps = await import(`${root}/src/lib/path-status.ts`);
 const fe = await import(`${root}/src/lib/featured.ts`);
 const lr = await import(`${root}/src/lib/learning-resources.ts`);
@@ -13,7 +14,14 @@ const cases = [
   ['Fundamental released while preparing', { ...active, 'ensino-fundamental': 'preparing' }, sel, all, rel, true],
   ['Fundamental active with no published resource', active, { ...sel, 'ensino-fundamental': [] }, all.filter((r) => !r.paths.includes('ensino-fundamental')), { ...rel, 'ensino-fundamental': 'staging' }, true],
 ];
+let failures = 0;
 for (const [name, st, s, res, r, expectProblems] of cases) {
   const problems = ps.activationProblems(st, s, res, r);
-  console.log((problems.length > 0) === expectProblems ? 'OK ' : 'BAD', name, '|', problems.slice(0, 2).join(' ; ') || 'no problems');
+  const valid = (problems.length > 0) === expectProblems;
+  if (!valid) failures++;
+  console.log(valid ? 'OK ' : 'BAD', name, '|', problems.slice(0, 2).join(' ; ') || 'no problems');
+}
+if (failures) {
+  console.error(`partial-release guard: ${failures} unexpected activation outcome(s)`);
+  process.exitCode = 1;
 }
