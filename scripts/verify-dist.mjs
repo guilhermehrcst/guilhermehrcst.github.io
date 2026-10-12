@@ -503,7 +503,15 @@ const sectionIds = (html) => attrs(/<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '
 function checkSourceNote(path, fragment, where) {
   const note = /<[a-z]+\b[^>]*\sdata-source-note[\s\S]*?<\/(p|div)>/.exec(fragment)?.[0];
   if (!note) { fail(path, `${where}: official source note missing`); return; }
-  const hosts = hrefsIn(note).map((h) => { try { return new URL(h).hostname; } catch { return ''; } });
+  // The official page itself, or (V0.4 QA P2-RC5) the resource on this section that is that page: an
+  // element #recurso-<id> in the same section, whose own link is on an official host.
+  const target = (href) => {
+    const local = /^#(recurso-[\w-]+)$/.exec(href);
+    if (!local) return href;
+    const item = new RegExp(`<([a-z]+)\\b[^>]*\\sid="${local[1]}"[^>]*>[\\s\\S]*?<\\/\\1>`).exec(fragment)?.[0] ?? '';
+    return hrefsIn(item).find((h) => /^https:/.test(h)) ?? '';
+  };
+  const hosts = hrefsIn(note).map((h) => { try { return new URL(target(h)).hostname; } catch { return ''; } });
   if (!hosts.some((h) => OFFICIAL_HOSTS.includes(h))) fail(path, `${where}: source note must link an official page`);
   if (!/<time datetime="\d{4}-\d{2}-\d{2}"/.test(note)) fail(path, `${where}: source note must date its verification`);
 }

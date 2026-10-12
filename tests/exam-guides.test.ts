@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ENEM_AREAS, examGuides, resolveGuide, UERJ_SUBJECTS } from '../src/lib/exam-guides.ts';
-import { publishedResources } from '../src/lib/learning-resources.ts';
+import { isPractice, publishedResources } from '../src/lib/learning-resources.ts';
 import { officialSources } from '../src/lib/official-sources.ts';
 import { ACADEMIC_SUBJECTS } from '../src/lib/taxonomy.ts';
 
@@ -56,7 +56,8 @@ test('ENEM: practice holds practice only, deepening holds none; the mandatory se
   const enem = resolveGuide('enem');
   const byId = new Map(enem.map((s) => [s.id, s]));
   assert.ok(byId.get('entenda'));
-  assert.ok(byId.get('pratique')!.resources.every((r) => r.format === 'practice'));
+  // Practice is a kind of format (a past exam is practice), not the one format 'practice' (V0.4 QA P2-RC5).
+  assert.ok(byId.get('pratique')!.resources.every((r) => isPractice(r)));
   assert.ok(byId.get('pratique')!.sources.includes('inep-provas-gabaritos'));
   assert.ok(byId.get('aprofunde')!.resources.length > 0);
   assert.ok(byId.get('aprofunde')!.resources.every((r) => r.format !== 'practice'));
