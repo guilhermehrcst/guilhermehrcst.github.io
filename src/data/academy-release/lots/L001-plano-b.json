@@ -1,0 +1,139 @@
+{
+  "schema": "pexis-academy-lot/1",
+  "lot": "L001-plano-b",
+  "title": "Academy L001: seis recursos aprovados editorialmente (publicação pendente)",
+  "createdOn": "2026-10-12",
+  "simulation": false,
+  "hosts": [
+    {
+      "host": "learn.microsoft.com",
+      "institution": "Microsoft Learn"
+    },
+    {
+      "host": "ocw.mit.edu",
+      "institution": "MIT OpenCourseWare"
+    },
+    {
+      "host": "oyc.yale.edu",
+      "institution": "Open Yale Courses"
+    },
+    {
+      "host": "www.fuvest.br",
+      "institution": "Fuvest"
+    },
+    {
+      "host": "www.gov.br",
+      "institution": "INEP"
+    },
+    {
+      "host": "www.theodinproject.com",
+      "institution": "The Odin Project"
+    }
+  ],
+  "entries": [
+    {
+      "id": "inep-enem-provas-gabaritos",
+      "url": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos",
+      "digest": "sha256:ff6ecadb0749aed0644bfcc32e0d6872d19b892db22b022f99549f9b48c71b46",
+      "institution": "INEP",
+      "format": "past-exam",
+      "evidence": {
+        "on": "2026-10-11",
+        "version": "l001-browser-qa-2026-10-12-pr37-6134661606",
+        "method": "official-page",
+        "url": "https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos",
+        "observed": "Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Arquivo oficial de provas e gabaritos de 1998 a 2025, publicado por quem aplica o exame. Não é curso."
+      },
+      "decision": "approved",
+      "decidedBy": "Guilherme Henrique",
+      "decidedOn": "2026-10-12"
+    },
+    {
+      "id": "fuvest-acervo-2026",
+      "url": "https://www.fuvest.br/acervo-vestibular-2026/",
+      "digest": "sha256:262d4895ee404404b19afd522e11b7fac4ebb4c88fec34879501fc3bda2e90aa",
+      "institution": "Fuvest",
+      "format": "past-exam",
+      "evidence": {
+        "on": "2026-10-11",
+        "version": "l001-browser-qa-2026-10-12-pr37-6134661606",
+        "method": "official-page",
+        "url": "https://www.fuvest.br/acervo-vestibular-2026/",
+        "observed": "Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Provas e gabaritos de primeira e segunda fase do vestibular 2026, em PDF. Só a edição de 2026."
+      },
+      "decision": "approved",
+      "decidedBy": "Guilherme Henrique",
+      "decidedOn": "2026-10-12"
+    },
+    {
+      "id": "mit-1801sc",
+      "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/",
+      "digest": "sha256:cbeeb44d6711d542a87e68cb0c3f27cd23a261434b5241d66e8e2f51f0d9c501",
+      "institution": "MIT OpenCourseWare",
+      "format": "course",
+      "evidence": {
+        "on": "2026-10-11",
+        "version": "l001-browser-qa-2026-10-12-pr37-6134661606",
+        "method": "official-page",
+        "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/",
+        "observed": "Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Vídeos, listas, exames e notas: derivadas, integrais e séries. Política oficial: https://ocw.mit.edu/about/ (gratuito, sem cadastro nem certificado)."
+      },
+      "decision": "approved",
+      "decidedBy": "Guilherme Henrique",
+      "decidedOn": "2026-10-12"
+    },
+    {
+      "id": "yale-psyc-110",
+      "url": "https://oyc.yale.edu/introduction-psychology/psyc-110",
+      "digest": "sha256:4d5bc8b3b14f857b9772e100beeddedcd973daa6b46b631568ca498d14f1c31a",
+      "institution": "Open Yale Courses",
+      "format": "course",
+      "evidence": {
+        "on": "2026-10-11",
+        "version": "l001-browser-qa-2026-10-12-pr37-6134661606",
+        "method": "official-page",
+        "url": "https://oyc.yale.edu/introduction-psychology/psyc-110",
+        "observed": "Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Aulas numeradas de PSYC 110 e materiais; gravado em 2007. Política oficial: https://oyc.yale.edu/about (gratuito, sem registro, sem diploma, crédito ou certificado)."
+      },
+      "decision": "approved",
+      "decidedBy": "Guilherme Henrique",
+      "decidedOn": "2026-10-12"
+    },
+    {
+      "id": "odin-foundations",
+      "url": "https://www.theodinproject.com/paths/foundations/courses/foundations",
+      "digest": "sha256:a74923e82c46a4f02ee0450825f2b7b13dc72bccf605d41f9e0c63e2c380cbbc",
+      "institution": "The Odin Project",
+      "format": "track",
+      "evidence": {
+        "on": "2026-10-11",
+        "version": "l001-browser-qa-2026-10-12-pr37-6134661606",
+        "method": "official-page",
+        "url": "https://www.theodinproject.com/paths/foundations/courses/foundations",
+        "observed": "Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Módulos de HTML, CSS, JavaScript, Git e projetos; currículo declarado gratuito e aberto. Não é certificado."
+      },
+      "decision": "approved",
+      "decidedBy": "Guilherme Henrique",
+      "decidedOn": "2026-10-12"
+    },
+    {
+      "id": "ms-learn-cloud-concepts",
+      "url": "https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/",
+      "digest": "sha256:b3f09cf9b7e652cdefb81d13da6333e3eeb19a7584e7c7ca7849665200850c11",
+      "institution": "Microsoft Learn",
+      "format": "track",
+      "evidence": {
+        "on": "2026-10-11",
+        "version": "l001-browser-qa-2026-10-12-pr37-6134661606",
+        "method": "official-page",
+        "url": "https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/",
+        "observed": "Aberta diretamente por ChatGPT (fora do ambiente do Claude Code) em 11/10/2026. Roteiro oficial em pt-BR com três módulos. FAQ oficial (https://learn.microsoft.com/en-us/training/support/faq): treinamento gratuito, conteúdo sem conta; a certificação AZ-900 é separada."
+      },
+      "decision": "approved",
+      "decidedBy": "Guilherme Henrique",
+      "decidedOn": "2026-10-12"
+    }
+  ],
+  "suspensions": [],
+  "authorization": null
+}
