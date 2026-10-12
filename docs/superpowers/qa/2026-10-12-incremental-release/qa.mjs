@@ -60,3 +60,5 @@ await b.close();
 writeFileSync(`${OUT}/qa-${LABEL}.json`, JSON.stringify({ label: LABEL, pages: PAGES.length, checks: rows.length, failed: rows.filter((r) => !r.ok) }, null, 2));
 console.log(LABEL, 'pages', PAGES.length, 'checks', rows.length, 'failed', rows.filter((r) => !r.ok).length);
 for (const r of rows.filter((r) => !r.ok).slice(0, 15)) console.log(' FAIL', r.n, r.d);
+// A failed check fails the run.
+if (rows.some((r) => !r.ok)) process.exitCode = 1;

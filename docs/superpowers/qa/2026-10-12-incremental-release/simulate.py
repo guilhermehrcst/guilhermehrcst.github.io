@@ -58,8 +58,12 @@ inventory = set(release['inventory'])
 for l in applied:
     inventory |= {e['id'] for e in l['entries'] if e['decision'] == 'approved'}
     inventory -= {s['id'] for s in l['suspensions']}
+pins = {l['lot']: tool('lot-digest', f"src/data/academy-release/lots/{l['lot']}.json").strip() for l in lots}
+# The ledger keeps every lot ever applied: in the rollback scenario, B was applied before being rolled back.
+ever = lots if SCENARIO == 'A-pending-B' else applied
 release.update(mode='simulation', inventory=sorted(inventory),
-               applied=[{'lot': l['lot'], 'digest': tool('lot-digest', f"src/data/academy-release/lots/{l['lot']}.json").strip()} for l in applied])
+               applied=[{'lot': l['lot'], 'digest': pins[l['lot']]} for l in applied],
+               ledger=[{'lot': l['lot'], 'digest': pins[l['lot']]} for l in ever])
 json.dump(release, open(release_path, 'w'), indent=2); open(release_path, 'a').write('\n')
 
 def edit(path, fn):

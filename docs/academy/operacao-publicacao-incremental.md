@@ -21,7 +21,7 @@ separadas. Merge, CI verde, relatório de pesquisa ou simulação **não** são 
 | `src/data/academy-release/baseline.json` | Digest de cada um dos 37 da V0.4, como publicados (idênticos à `main` 5e4b086). Trava de integridade |
 | `src/data/academy-release/lots/L000-nome.json` | Manifesto de lote: decisões humanas e, quando houver, autorização |
 | `src/lib/release/lots.ts` | Lista dos manifestos (um import por arquivo); um teste a mantém igual aos arquivos |
-| `src/data/academy-release/release.json` | `mode`, lotes aplicados (cada um preso ao seu digest) e inventário público declarado |
+| `src/data/academy-release/release.json` | `mode`, lotes aplicados, `ledger` de todo lote já aplicado (cada um preso ao seu digest) e inventário público declarado |
 | `src/lib/release/engine.ts` | Estados, transições, validação fechada e projeção cumulativa |
 | `src/lib/release/canonical.ts` | Serialização canônica e `digestOf` (SHA-256) |
 | `scripts/verify-dist.mjs` | Verificador independente do `dist/`: inventário, suspensos ausentes, modo simulação recusado |
@@ -128,9 +128,9 @@ No PR do lote, e só com autorização expressa para o lote exato:
 
 1. `lot-digest` do manifesto autorizado:
    `node --experimental-strip-types tools/academy-release.ts lot-digest src/data/academy-release/lots/L00N-nome.json`
-2. `release.json`: acrescente `{ "lot": "L00N-nome", "digest": "…" }` ao fim de `applied` (lista só
-   cresce, em ordem) e declare o novo `inventory` (ordenado). Esquecer um ID, ou declarar um que não sai,
-   falha o build.
+2. `release.json`: acrescente `{ "lot": "L00N-nome", "digest": "…" }` ao fim de `applied` **e** ao fim de
+   `ledger` (o registro de todo lote já aplicado, que só cresce, em ordem) e declare o novo `inventory`
+   (ordenado). Esquecer um ID, ou declarar um que não sai, falha o build.
 3. Espelhos escritos à mão em `scripts/verify-dist.mjs` (barreira independente): `COURSE_HOSTS` com os
    hosts novos; se um caminho for ativado, `CANONICAL`, `PREPARING`, `PATH_PAGES` e `OBJECTIVE_PATHS`; trilhas
    e áreas novas de Tecnologia/Superior quando surgirem.
@@ -162,12 +162,14 @@ verificação nova: evidência com data igual ou posterior à suspensão (o mesm
 
 ## 10. Como fazer rollback?
 
-- **Antes do deploy:** retire do fim de `applied` o último lote e volte o `inventory` ao anterior; o
-  manifesto continua registrado (decisão preservada, não publicada). A simulação provou que o `dist/`
-  volta byte a byte ao do lote anterior.
+- **Antes do deploy:** retire do fim de `applied` o último lote e volte o `inventory` ao anterior; o lote
+  **fica no `ledger`** e o manifesto continua registrado e preso ao digest (decisão preservada, não
+  publicada; editá-lo ou apagá-lo falha o build). A simulação provou que o `dist/` volta byte a byte ao do
+  lote anterior.
 - **Depois do deploy:** reverta o commit do PR do lote (`git revert`) e faça novo deploy autorizado; ou,
   para tirar um único recurso, use uma suspensão (9), que deixa trilha.
-- Nunca reescreva um manifesto já aplicado: o build recusa (o digest preso em `release.json` não bate).
+- Nunca reescreva um manifesto já aplicado, mesmo depois do rollback: o build recusa (o digest preso no
+  `ledger` de `release.json` não bate).
 
 ## Limites conhecidos
 

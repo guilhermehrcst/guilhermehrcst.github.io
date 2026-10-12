@@ -2,6 +2,7 @@
   "schema": "pexis-academy-release/1",
   "mode": "production",
   "applied": [],
+  "ledger": [],
   "inventory": [
     "cisco-cyber",
     "cs50ai",

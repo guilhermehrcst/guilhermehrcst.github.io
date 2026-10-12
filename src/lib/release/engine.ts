@@ -82,6 +82,9 @@ export interface ReleaseManifest {
   mode: 'production' | 'simulation';
   /** The lots in the public projection, in order, each pinned to its digest when applied. Append only. */
   applied: readonly { lot: string; digest: string }[];
+  /** Every lot ever applied, in order, each with the digest it was applied with. Append only: a lot
+   *  rolled back leaves `applied` but stays here, so its decision record can never be edited or dropped. */
+  ledger: readonly { lot: string; digest: string }[];
   /** The ids the projection must publish, sorted: an undeclared change of inventory fails the build. */
   inventory: readonly string[];
 }
@@ -182,7 +185,7 @@ export const lotProblems = (lot: unknown, now: Date): string[] => {
     if (!isText(entry.institution)) problems.push(`${who}: no institution`);
     if (!isText(entry.format)) problems.push(`${who}: no format`);
     if (!(ENTRY_DECISIONS as readonly unknown[]).includes(entry.decision)) problems.push(`${who}: ${String(entry.decision)} is not a decision`);
-    problems.push(...decidedByProblems(`${who} decidedBy`, entry.decidedBy, entry.decision === 'approved', simulation));
+    problems.push(...decidedByProblems(`${who} decidedBy`, entry.decidedBy, true, simulation));
     problems.push(...dateProblems(`${who} decidedOn`, entry.decidedOn, now));
     if (entry.decision === 'held' && !isText(entry.reason)) problems.push(`${who}: held without a reason`);
     if ('reason' in entry && !isText(entry.reason)) problems.push(`${who}: empty reason`);
@@ -225,17 +228,20 @@ export const lotProblems = (lot: unknown, now: Date): string[] => {
 };
 
 export const releaseManifestProblems = (release: unknown): string[] => {
-  const problems = closed('release', release, ['schema', 'mode', 'applied', 'inventory']);
+  const problems = closed('release', release, ['schema', 'mode', 'applied', 'ledger', 'inventory']);
   if (!isObject(release) || problems.length) return problems;
   if (release.schema !== 'pexis-academy-release/1') problems.push(`release: unknown schema ${String(release.schema)}`);
   if (release.mode !== 'production' && release.mode !== 'simulation') problems.push(`release: ${String(release.mode)} is not a mode`);
-  if (!Array.isArray(release.applied)) problems.push('release: applied is not a list');
-  else for (const [i, a] of release.applied.entries()) {
-    const keys = closed(`release applied[${i}]`, a, ['lot', 'digest']);
-    if (keys.length) { problems.push(...keys); continue; }
-    const applied = a as Record<string, unknown>;
-    if (typeof applied.lot !== 'string' || !LOT_ID.test(applied.lot)) problems.push(`release applied[${i}]: ${String(applied.lot)} is not a lot id`);
-    if (typeof applied.digest !== 'string' || !DIGEST_PATTERN.test(applied.digest)) problems.push(`release applied[${i}]: digest must be sha256:<64 hex>`);
+  for (const list of ['applied', 'ledger'] as const) {
+    const items = release[list];
+    if (!Array.isArray(items)) { problems.push(`release: ${list} is not a list`); continue; }
+    for (const [i, a] of items.entries()) {
+      const keys = closed(`release ${list}[${i}]`, a, ['lot', 'digest']);
+      if (keys.length) { problems.push(...keys); continue; }
+      const pin = a as Record<string, unknown>;
+      if (typeof pin.lot !== 'string' || !LOT_ID.test(pin.lot)) problems.push(`release ${list}[${i}]: ${String(pin.lot)} is not a lot id`);
+      if (typeof pin.digest !== 'string' || !DIGEST_PATTERN.test(pin.digest)) problems.push(`release ${list}[${i}]: digest must be sha256:<64 hex>`);
+    }
   }
   if (!Array.isArray(release.inventory) || !release.inventory.every((id) => typeof id === 'string' && ID.test(id))) problems.push('release: inventory must list ids');
   else {
@@ -318,10 +324,22 @@ export const projectRelease = (input: ReleaseInput): Projection => {
   if (new Set(appliedNames).size !== appliedNames.length) problems.push('release: a lot is applied twice');
   if (appliedNames.some((name, i) => i > 0 && appliedNames[i - 1]! >= name)) problems.push('release: applied lots must be in lot order');
   const applied: LotManifest[] = [];
+  // The ledger: every lot ever applied keeps its manifest, unchanged, whether or not it is applied now.
+  const ledgerNames = release.ledger.map((l) => l.lot);
+  if (new Set(ledgerNames).size !== ledgerNames.length) problems.push('release: a lot is in the ledger twice');
+  if (ledgerNames.some((name, i) => i > 0 && ledgerNames[i - 1]! >= name)) problems.push('release: the ledger must be in lot order');
+  for (const { lot: name, digest } of release.ledger) {
+    const lot = byName.get(name);
+    if (!lot) problems.push(`release: ${name} is in the ledger but has no manifest`);
+    else if (digestOf(lot) !== digest) problems.push(`${name}: changed after it was applied (digest ${digestOf(lot)}, pinned ${digest})`);
+  }
   for (const { lot: name, digest } of release.applied) {
+    const pinned = release.ledger.find((l) => l.lot === name);
+    if (!pinned) problems.push(`release: ${name} is applied but not in the ledger`);
+    else if (pinned.digest !== digest) problems.push(`release: ${name} is applied with another digest than the ledger's`);
     const lot = byName.get(name);
     if (!lot) { problems.push(`release: ${name} is applied but has no manifest`); continue; }
-    if (digestOf(lot) !== digest) problems.push(`${name}: changed after it was applied (digest ${digestOf(lot)}, pinned ${digest})`);
+    if (!pinned && digestOf(lot) !== digest) problems.push(`${name}: changed after it was applied (digest ${digestOf(lot)}, pinned ${digest})`);
     if (lot.authorization === null) problems.push(`${name}: applied without an authorization to publish`);
     if (lot.simulation && release.mode === 'production') problems.push(`${name}: a simulated lot in a production release`);
     applied.push(lot);
@@ -374,7 +392,8 @@ export const projectRelease = (input: ReleaseInput): Projection => {
         problems.push(`${lot.lot}: ${entry.id} returns on evidence of ${entry.evidence.on}, older than the decision of ${outOn} that took it out`);
       }
       if (entry.decision === 'held') takenOut.set(entry.id, entry.decidedOn);
-      else if (entry.decision === 'verified' || entry.decision === 'approved') takenOut.delete(entry.id);
+      // Only an approval clears it: its evidence is then bound to the record (approvalProblems).
+      else if (entry.decision === 'approved') takenOut.delete(entry.id);
       if (move(entry.id, entry.decision) && entry.decision === 'approved') {
         at.set(entry.id, 'published');
         if (live) {

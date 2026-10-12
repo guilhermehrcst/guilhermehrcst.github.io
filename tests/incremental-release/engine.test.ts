@@ -227,7 +227,8 @@ test('15. rollback: removing the last lot from the release restores the earlier 
   const b = lotOf('L002-fundamental', [entryFor('ef-obmep-fracoes-6')]);
   const before = project({ lots: [a, b], release: releaseOf([a], inventoryWith(['google-mlcc'])) });
   const after = project({ lots: [a, b], release: releaseOf([a, b], inventoryWith(['google-mlcc', 'ef-obmep-fracoes-6'])) });
-  const rolledBack = project({ lots: [a, b], release: releaseOf([a], inventoryWith(['google-mlcc'])) });
+  // B was applied, then rolled back: it leaves `applied`, keeps its ledger pin.
+  const rolledBack = project({ lots: [a, b], release: releaseOf([a], inventoryWith(['google-mlcc']), { ledger: releaseOf([a, b], []).ledger }) });
   assert.deepEqual(after.problems, []);
   assert.deepEqual(rolledBack.problems, []);
   assert.deepEqual(ids(rolledBack), ids(before));
@@ -316,3 +317,37 @@ test('a held or suspended resource returns only on evidence dated on or after th
   assert.match(problemsOf(project({ lots: [held, again], release: releaseOf([held, again], inventoryWith(['google-mlcc'])) })), /returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
 });
 
+
+// Codex review, round 3 ---------------------------------------------------------------------------------
+
+test('a verified entry does not clear a suspension: only a checked approval on fresh evidence does', () => {
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const b = lotOf('L002-suspensao', [], { suspensions: [{ id: 'google-mlcc', reason: 'Página mudou', decidedBy: SIMULATED_BY, decidedOn: '2026-10-12' }] });
+  // Claims a fresh date but binds nothing to the record; then the old record is approved again.
+  const fake = lotOf('L003-verificado', [entryFor('google-mlcc', { decision: 'verified', digest: `sha256:${'1'.repeat(64)}`, evidence: { ...entryFor('google-mlcc').evidence, on: '2026-10-12' } })]);
+  const again = lotOf('L004-retorno', [entryFor('google-mlcc')]);
+  const p = project({ lots: [a, b, fake, again], release: releaseOf([a, b, fake, again], inventoryWith(['google-mlcc'])) });
+  assert.match(problemsOf(p), /L004-retorno: google-mlcc returns on evidence of 2026-10-11, older than the decision of 2026-10-12/);
+});
+
+test('verified and held decisions are a person\'s too: a tool named as author is refused', () => {
+  for (const decision of ['verified', 'held'] as const) {
+    const lot = { ...lotOf('L001-pessoa', [entryFor('google-mlcc', { decision, reason: 'Pendência', decidedBy: 'Codex' })]), simulation: false, authorization: null };
+    assert.match(lotProblems(lot, NOW).join('\n'), /Codex is not a person/, decision);
+  }
+});
+
+test('a rolled-back lot keeps its pin: the ledger of every lot ever applied is append-only and checked', () => {
+  const a = lotOf('L001-tecnologia', [entryFor('google-mlcc')]);
+  const b = lotOf('L002-fundamental', [entryFor('ef-obmep-fracoes-6')]);
+  const ledger = releaseOf([a, b], []).applied;
+  // Rolled back: B leaves `applied`, stays in the ledger.
+  const rolledBack = releaseOf([a], inventoryWith(['google-mlcc']), { ledger });
+  assert.deepEqual(project({ lots: [a, b], release: rolledBack }).problems, []);
+  // Editing or deleting B afterwards breaks the ledger.
+  const edited = { ...b, title: 'Lote B reescrito' };
+  assert.match(problemsOf(project({ lots: [a, edited], release: rolledBack })), /L002-fundamental: changed after it was applied/);
+  assert.match(problemsOf(project({ lots: [a], release: rolledBack })), /L002-fundamental is in the ledger but has no manifest/);
+  // Every applied lot is in the ledger, with the same digest.
+  assert.match(problemsOf(project({ lots: [a, b], release: releaseOf([a, b], inventoryWith(['google-mlcc', 'ef-obmep-fracoes-6']), { ledger: ledger.slice(0, 1) }) })), /L002-fundamental is applied but not in the ledger/);
+});

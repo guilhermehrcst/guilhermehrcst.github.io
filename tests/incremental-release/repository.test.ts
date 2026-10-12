@@ -16,6 +16,7 @@ import { lotOf, NOW, record } from './fixtures.ts';
 test('this PR applies no lot: production mode, nothing applied, the inventory is the 37 of V0.4', () => {
   assert.equal(release.mode, 'production');
   assert.deepEqual(release.applied, []);
+  assert.deepEqual(release.ledger, [], 'no lot was ever applied');
   assert.deepEqual(release.inventory, Object.keys(baseline.records).sort());
   assert.deepEqual(release.inventory, catalogue.filter(isPublishedResource).map((r) => r.id).sort());
   assert.deepEqual(RELEASE.problems, []);

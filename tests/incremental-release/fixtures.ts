@@ -62,6 +62,7 @@ export const releaseOf = (applied: readonly LotManifest[], inventory: readonly s
   schema: 'pexis-academy-release/1',
   mode: 'simulation',
   applied: applied.map((lot) => ({ lot: lot.lot, digest: digestOf(lot) })),
+  ledger: applied.map((lot) => ({ lot: lot.lot, digest: digestOf(lot) })),
   inventory: [...inventory].sort(),
   ...over,
 });
