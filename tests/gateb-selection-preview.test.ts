@@ -95,7 +95,7 @@ test('T2: all nine previously missing destinations have conditional routes witho
     if (!resource) throw new Error(`missing placement candidate ${id}`);
     assert.equal(placementOf(resource, states), null, `${id}: unpublished ID must not be shown`);
     const at = placementOf(resource, states, future);
-    assert.ok(at, `${id}: conditional route still missing`);
+    if (!at) throw new Error(`${id}: conditional route still missing`);
     assert.equal(at.page, requirement.target, id);
     assert.equal(at.anchor, `recurso-${id}`, id);
     assert.ok(requirement.next.trim().length > 20, id);
