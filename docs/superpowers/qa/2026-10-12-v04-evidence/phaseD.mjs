@@ -35,7 +35,11 @@ for (const width of [390, 1440]) {
   await p.waitForTimeout(300);
   const py = await vis(); ok('D2 query "python" finds cs50p and only python-related', py.some((i) => i.endsWith(':cs50p')) && py.length < 20, py.join(','));
   await p.fill('[data-search-input] input, input[data-search-input]', '');
-  await p.click('details[data-search-filters] > summary'); await p.check('input[name="caminho"][value="tecnologia"]'); await p.waitForTimeout(200);
+  // Nested facets remain closed until their own summary is activated.
+  await p.click('details[data-search-filters] > summary');
+  await p.click('details[data-facet-disclosure="caminho"] > summary');
+  await p.check('input[name="caminho"][value="tecnologia"]');
+  await p.waitForTimeout(200);
   const tech = await vis(); ok('D3 filter caminho=tecnologia shows only tech entries', tech.length > 0 && tech.every((i) => i.startsWith('recurso:')), tech.length);
   ok('D4 filter state in URL', /caminho=tecnologia/.test(p.url()), p.url());
   await p.goto(`${BASE}/buscar/?caminho=nao-existe&formato=xyz`); await p.waitForTimeout(200);
