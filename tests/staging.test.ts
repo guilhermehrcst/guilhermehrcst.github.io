@@ -13,6 +13,10 @@ const staging = await import('../src/lib/staging.ts').catch(() => ({})) as Recor
 const staged = (staging.STAGED_RESOURCES ?? []) as typeof catalogue;
 const reverified = (staging.REVERIFIED_LEGACY ?? {}) as Record<string, { on: string; by: string; evidence: { url: string; checked: string[]; note: string } }>;
 const draft = (staging.SELECTION_DRAFT ?? {}) as Record<string, string[]>;
+// Lote 03 adds eight Fundamental records (tests/staging-lote03.test.ts); the sheet checks below hold the
+// Lote 02 records only.
+const LOTE03_IDS = ['ef-sme-alfabeto-1', 'ef-sme-vegetacao-3', 'ef-sme-municipio-4', 'ef-sme-vestigios-5', 'ef-obmep-fracoes-6', 'ef-sme-tecnologia-vida-7', 'ef-obmep-potenciacao-8', 'ef-sme-funcoes-9'];
+const lote02 = staged.filter((r) => !LOTE03_IDS.includes(r.id));
 
 const csv = readFileSync(new URL('../docs/superpowers/research/2026-10-11-v04-gateb-lote02-direct.csv', import.meta.url), 'utf8');
 const rows = (() => {
@@ -39,11 +43,11 @@ test('the Lote 02 sheet: 60 candidates, 18 opened directly, none authorised for 
 
 test('staging: every one of the 18 direct sources is a staged record or a re-verified published id, never both', () => {
   assert.equal(staging.STAGING_AUTHORIZES_PUBLICATION, false);
-  const covered: string[] = [...staged.map((r) => r.url ?? ''), ...Object.values(reverified).map((v) => v.evidence.url)];
+  const covered: string[] = [...lote02.map((r) => r.url ?? ''), ...Object.values(reverified).map((v) => v.evidence.url)];
   for (const row of direct) assert.ok(covered.includes(row['direct_resource_url']!), `not staged: ${row['direct_resource_url']}`);
   assert.equal(covered.length, 18, 'nothing beyond the 18 direct sources');
   const pending = rows.filter((r) => r['direct_access_status'] !== 'FONTE_ABERTA_E_ESCOPo_CONFIRMADO').map((r) => r['direct_resource_url']).filter(Boolean);
-  for (const r of staged) assert.ok(!pending.includes(r.url ?? ''), `${r.id} comes from a pending row`);
+  for (const r of lote02) assert.ok(!pending.includes(r.url ?? ''), `${r.id} comes from a pending row`);
 });
 
 test('reuse: the published ids are re-verified, never duplicated', () => {
@@ -62,7 +66,8 @@ test('reuse: the published ids are re-verified, never duplicated', () => {
 });
 
 test('every staged record passes every rule of a catalogue record (paths, exams, P3, P4) with its individual evidence', () => {
-  assert.equal(staged.length, 15);
+  assert.equal(lote02.length, 15);
+  assert.equal(staged.length, 23);
   const now = new Date('2026-10-11T23:59:59Z');
   for (const r of staged) {
     assert.deepEqual(resourceProblems(r, now), [], r.id);
@@ -73,7 +78,7 @@ test('every staged record passes every rule of a catalogue record (paths, exams,
 });
 
 test('no lesson, past exam or reference becomes a course; the formats are the observed ones', () => {
-  for (const r of staged) {
+  for (const r of lote02) {
     const row = direct.find((d) => d['direct_resource_url'] === r.url)!;
     assert.equal(r.format, row['official_format_observed'], r.id);
     if (row['school_years']) assert.deepEqual([...(r.schoolYears ?? [])], [Number(row['school_years'])], r.id);
@@ -122,5 +127,5 @@ test('the selection draft: at most ten per path, distinct across paths, each dec
       seen.add(id);
     }
   }
-  assert.equal(seen.size, 18, 'the draft holds the 18 directly verified sources, and only them');
+  assert.equal(seen.size, 26, 'the draft holds the 26 directly verified sources (Lotes 02 e 03), and only them');
 });

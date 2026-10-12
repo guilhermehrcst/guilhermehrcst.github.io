@@ -1,5 +1,6 @@
-// Gate B staging (V0.4, Lote 02): records whose official source was opened directly, outside this
-// environment, on 2026-10-11 (docs/superpowers/research/2026-10-11-v04-gateb-lote02-direct.csv). Each one
+// Gate B staging (V0.4, Lotes 02 e 03): records whose official source was opened directly, outside this
+// environment, on 2026-10-11 (docs/superpowers/research/2026-10-11-v04-gateb-lote02-direct.csv and
+// 2026-10-11-v04-gateb-lote03-sources.md). Each one
 // passes every rule of a catalogue record (resourceProblems: paths, exams, school years, individual evidence,
 // direct method) — tests/staging.test.ts holds them to it — but none is in the catalogue: no page imports
 // this module, nothing here is published, and nothing here authorises publication. Promotion is a later,
@@ -39,11 +40,26 @@ const ODIN = 'https://www.theodinproject.com/paths/foundations/courses/foundatio
 const MLCC = 'https://developers.google.com/machine-learning/crash-course/';
 const MS_CLOUD = 'https://learn.microsoft.com/pt-br/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/';
 
+const SME_EF = 'https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/';
+const SME_ALFABETO = `${SME_EF}lingua-portuguesa-nosso-alfabeto/`;
+const SME_VEGETACAO = `${SME_EF}ciencias-da-natureza-vegetacao-e-a-preservacao-do-solo/`;
+const SME_MUNICIPIO = `${SME_EF}geografia-municipio-estado-e-pais/`;
+const SME_VESTIGIOS = `${SME_EF}historia-vestigios-do-passado/`;
+const OBMEP_FRACOES = 'https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=28';
+const SME_TECNOLOGIA_VIDA = `${SME_EF}ciencias-da-natureza-tecnologia-e-vida-humana/`;
+const OBMEP_POTENCIACAO = 'https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=1059';
+const SME_FUNCOES = `${SME_EF}matematica-funcao-de-1o-e-de-2o-grau/`;
+
 const NONE_NONE: readonly EvidenceCheck[] = ['registration', 'certificate'];
+/** Lote 03, Fundamental: the page body was read and its year confirmed; neither registration nor certificate
+ *  was shown, so both stay 'unconfirmed' (never displayed) and are not claimed as checked. */
+const GRADE_ONLY: readonly EvidenceCheck[] = ['grade'];
+const SME_UNTESTED = 'Downloads e materiais vinculados não foram abertos nem testados; cadastro e certificado não declarados.';
+const OBMEP_UNTESTED = 'Os testes da plataforma exigem login e não foram abertos; cadastro e certificado não declarados.';
 const MIT_POLICY = 'Política oficial: https://ocw.mit.edu/about/ (gratuito, sem cadastro nem certificado).';
 const YALE_POLICY = 'Política oficial: https://oyc.yale.edu/about (gratuito, sem registro, sem diploma, crédito ou certificado).';
 
-/** The 15 new records of Lote 02, in the sheet's order. Formats are the observed ones: a lesson, a past exam
+/** The 15 new records of Lote 02, in the sheet's order, then the 8 Fundamental lessons of Lote 03. Formats are the observed ones: a lesson, a past exam
  *  or a reference is never a course. */
 export const STAGED_RESOURCES: readonly LearningResource[] = [
   // Ensino Fundamental
@@ -51,6 +67,23 @@ export const STAGED_RESOURCES: readonly LearningResource[] = [
     verified: opened(SME_LETRAS, [...NONE_NONE, 'grade'], 'Texto integral, videoaula vinculada e exercícios; a página indica o 2º ano. Aula, não curso.') },
   { id: 'sme-goiania-leitura-em-foco', title: 'Língua Portuguesa: Leitura em Foco', provider: 'SME Goiânia', subject: 'portugues', format: 'lesson', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: SME_LEITURA, schoolYears: [5], registration: 'not-required', certificate: 'none',
     verified: opened(SME_LEITURA, [...NONE_NONE, 'grade'], 'Atividade, exercícios, conteúdo e videoaula; a página indica o 5º ano. Aula, não curso completo.') },
+  // Ensino Fundamental, Lote 03 (Ciências da Natureza has no SubjectId: subject null, never a false one)
+  { id: 'ef-sme-alfabeto-1', title: 'Língua Portuguesa – Nosso Alfabeto', provider: 'SME Goiânia', subject: 'portugues', format: 'lesson', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: SME_ALFABETO, schoolYears: [1], registration: 'unconfirmed', certificate: 'unconfirmed',
+    verified: opened(SME_ALFABETO, GRADE_ONLY, `A página declara o 1º ano e explica o alfabeto, com links para slides, atividades e texto. ${SME_UNTESTED}`) },
+  { id: 'ef-sme-vegetacao-3', title: 'Ciências da Natureza – Vegetação e a Preservação do Solo', provider: 'SME Goiânia', subject: null, format: 'lesson', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: SME_VEGETACAO, schoolYears: [3], registration: 'unconfirmed', certificate: 'unconfirmed',
+    verified: opened(SME_VEGETACAO, GRADE_ONLY, `A página declara o 3º ano e traz texto, questões e experimento. ${SME_UNTESTED}`) },
+  { id: 'ef-sme-municipio-4', title: 'Geografia – Município, Estado e País', provider: 'SME Goiânia', subject: 'geografia', format: 'lesson', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: SME_MUNICIPIO, schoolYears: [4], registration: 'unconfirmed', certificate: 'unconfirmed',
+    verified: opened(SME_MUNICIPIO, GRADE_ONLY, `A página declara o 4º ano, define município, estado e país e apresenta atividades. ${SME_UNTESTED}`) },
+  { id: 'ef-sme-vestigios-5', title: 'História – Vestígios do Passado', provider: 'SME Goiânia', subject: 'historia', format: 'lesson', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: SME_VESTIGIOS, schoolYears: [5], registration: 'unconfirmed', certificate: 'unconfirmed',
+    verified: opened(SME_VESTIGIOS, GRADE_ONLY, `A página declara o 5º ano e aborda fontes e registros históricos. ${SME_UNTESTED}`) },
+  { id: 'ef-obmep-fracoes-6', title: 'Frações, o Primeiro Contato', provider: 'Portal da OBMEP', subject: 'matematica', format: 'lessons', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: OBMEP_FRACOES, schoolYears: [6], registration: 'unconfirmed', certificate: 'unconfirmed',
+    verified: opened(OBMEP_FRACOES, GRADE_ONLY, `O catálogo oficial põe o módulo no 6º ano; a página lista vídeos, exercícios, caderno e textos. ${OBMEP_UNTESTED}`) },
+  { id: 'ef-sme-tecnologia-vida-7', title: 'Ciências da Natureza – Tecnologia e Vida Humana', provider: 'SME Goiânia', subject: null, format: 'lesson', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: SME_TECNOLOGIA_VIDA, schoolYears: [7], registration: 'unconfirmed', certificate: 'unconfirmed',
+    verified: opened(SME_TECNOLOGIA_VIDA, GRADE_ONLY, `A página declara o 7º ano e traz texto e perguntas sobre ciência, tecnologia, sociedade e ambiente. Aula de Ciências, não trilha de Tecnologia. ${SME_UNTESTED}`) },
+  { id: 'ef-obmep-potenciacao-8', title: 'Potenciação', provider: 'Portal da OBMEP', subject: 'matematica', format: 'lessons', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: OBMEP_POTENCIACAO, schoolYears: [8], registration: 'unconfirmed', certificate: 'unconfirmed',
+    verified: opened(OBMEP_POTENCIACAO, GRADE_ONLY, `O índice oficial da OBMEP põe o módulo no 8º ano; a página do módulo abriu e o apresenta. ${OBMEP_UNTESTED}`) },
+  { id: 'ef-sme-funcoes-9', title: 'Matemática – Função de 1º e de 2º grau', provider: 'SME Goiânia', subject: 'matematica', format: 'lesson', paths: ['ensino-fundamental'], language: 'pt', level: 'beginner', url: SME_FUNCOES, schoolYears: [9], registration: 'unconfirmed', certificate: 'unconfirmed',
+    verified: opened(SME_FUNCOES, GRADE_ONLY, `A página declara o 9º ano e oferece explicação, exemplos, atividades e vídeo. ${SME_UNTESTED}`) },
   // Vestibular
   { id: 'kultivi-enem-completo', title: 'ENEM Completo', provider: 'Kultivi', subject: null, format: 'course', paths: ['vestibulares'], exams: ['enem'], language: 'pt', level: 'vestibular', url: KULTIVI_ENEM, registration: 'required', certificate: 'available',
     verified: opened(KULTIVI_ENEM, NONE_NONE, 'Curso online gratuito, multidisciplinar, 1.058 aulas, acesso vitalício; matrícula e certificado gratuitos.') },
@@ -105,10 +138,35 @@ export const PLACEMENT_PLAN: Readonly<Record<string, string>> = {
   'ms-learn-cloud-concepts': 'Tecnologia: nenhuma trilha publicada cobre nuvem; decidir a trilha (ou criar uma) antes de publicar.',
 };
 
-/** The editorial selection as Lote 02 leaves it: only the 18 directly verified sources, each in one path.
+/** Lote 03: official past-exam collections whose page was opened but whose attachments were not. A partial
+ *  verification, not a homologation: never a staged record, never in the selection draft, until the exam
+ *  files themselves are opened. */
+export type PartialVerification = {
+  readonly id: string;
+  readonly title: string;
+  readonly provider: string;
+  readonly url: string;
+  readonly format: 'past-exam';
+  readonly paths: readonly PathId[];
+  readonly on: string;
+  readonly status: 'page-confirmed-attachments-pending';
+  readonly seen: string;
+  readonly pending: string;
+};
+
+export const PARTIAL_VERIFICATIONS: readonly PartialVerification[] = [
+  { id: 'pm-cn-provas', title: 'Colégio Naval – Provas e Gabaritos', provider: 'Marinha do Brasil (SSPM)', url: 'https://www.marinha.mil.br/sspm/colegionaval/colegio_princ', format: 'past-exam', paths: ['pre-militar'], on: ON, status: 'page-confirmed-attachments-pending',
+    seen: 'A página do SSPM lista provas de 2021 a 2026 e gabaritos.', pending: 'Abrir os anexos das provas e gabaritos.' },
+  { id: 'pm-en-provas', title: 'Escola Naval – Provas e Gabaritos', provider: 'Marinha do Brasil (SSPM)', url: 'https://www.marinha.mil.br/sspm/node/95', format: 'past-exam', paths: ['pre-militar'], on: ON, status: 'page-confirmed-attachments-pending',
+    seen: 'A página do SSPM lista anexos de provas de 2020 a 2026.', pending: 'Abrir os arquivos anexos.' },
+  { id: 'pm-eear-provas', title: 'EEAR – Provas Anteriores', provider: 'Força Aérea Brasileira (EEAR)', url: 'https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25', format: 'past-exam', paths: ['pre-militar'], on: ON, status: 'page-confirmed-attachments-pending',
+    seen: 'O portal oficial de ingresso lista itens de concursos CFS e gabaritos de várias edições.', pending: 'Confirmar os PDFs das provas, e não só os gabaritos.' },
+];
+
+/** The editorial selection as Lote 03 leaves it: only the 26 directly verified sources, each in one path.
  *  Not FEATURED_RESOURCE_IDS_BY_PATH: nothing here is selected, released or shown. */
 export const SELECTION_DRAFT: Readonly<Record<PathId, readonly string[]>> = {
-  'ensino-fundamental': ['sme-goiania-letras-e-palavras', 'sme-goiania-leitura-em-foco'],
+  'ensino-fundamental': ['ef-sme-alfabeto-1', 'sme-goiania-letras-e-palavras', 'ef-sme-vegetacao-3', 'ef-sme-municipio-4', 'ef-sme-vestigios-5', 'sme-goiania-leitura-em-foco', 'ef-obmep-fracoes-6', 'ef-sme-tecnologia-vida-7', 'ef-obmep-potenciacao-8', 'ef-sme-funcoes-9'],
   'ensino-medio': [],
   vestibulares: ['kultivi-enem-completo', 'kultivi-writing-enem', 'inep-enem-provas-gabaritos', 'fuvest-acervo-2026'],
   'pre-militar': ['ita-provas-anteriores'],
