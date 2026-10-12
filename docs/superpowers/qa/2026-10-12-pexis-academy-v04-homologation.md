@@ -10,6 +10,30 @@ Nada foi publicado, mergeado ou implantado.
 
 Este documento tem três rodadas. **A rodada 3 é o estado atual**; as rodadas 2 e 1 ficam abaixo como registro.
 
+## Adendo — revisão do Codex no PR #38 (12/10/2026)
+
+Os 5 apontamentos do Codex eram reais.
+
+**Scripts de evidência** (`rc-apply.py`, `phaseD.mjs`, `phaseE.mjs`, `partial.mjs`): corrigidos pelo proprietário (`27a657d` … `1d26b07`), com guardas em `tests/qa-review-guards.test.mjs`.
+
+**Complemento do Claude:**
+
+1. **Defeito real revelado pelo D12 (`4892d8d`).** No release, o menu "Explorar" de todas as páginas continuaria dizendo "Matemática e Computação", enquanto a Home listava as sete áreas.
+   - O teste com o D12 corrigido acusou o texto antigo em `/`, `/ensino-superior/`, `/tecnologia/` e `/buscar/`: 172/173 antes da correção (`round5/phaseD-rc-before-menu-fix.txt`), 173/173 depois.
+   - `objectiveSummaryFor()` passa a ser a fonte única do menu e da Home.
+   - A produção não muda.
+   - Um novo teste de staging entra como guarda (42).
+2. **Patch-modelo regenerado.** `round2/rc-release-steps.patch` ainda promovia todo o staging, sem filtro; foi regenerado pelo `rc-apply.py` corrigido e agora promove só os 60 IDs selecionados.
+
+**Release candidate no HEAD atual:**
+- build e `verify-dist` OK, com 24 páginas;
+- testes 200/242, e as 42 falhas são exatamente os guardas registrados;
+- D12 real 173/173.
+
+**Retificação:** o "173/173" das rodadas 2 e 3 tinha um falso positivo no D12.
+
+**A decisão continua NO-GO**, pelos bloqueios de homologação em navegador da rodada 4.
+
 ## Rodada 3 — operação final (estado atual)
 
 ### Parecer

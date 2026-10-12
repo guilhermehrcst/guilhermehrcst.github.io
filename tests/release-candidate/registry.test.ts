@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 test('every staging guard listed in STAGING-GUARDS.md is a test that exists', () => {
   const md = readFileSync(new URL('./STAGING-GUARDS.md', import.meta.url), 'utf8');
   const rows = [...md.matchAll(/^\| `([^`]+)` \| (.+) \| [AB] \|$/gm)];
-  assert.equal(rows.length, 41);
+  assert.equal(rows.length, 42);
   for (const [, file, name] of rows) {
     const source = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
     assert.ok(source.includes(name!.replace(/\\\|/g, '|')), `${file}: "${name}"`);

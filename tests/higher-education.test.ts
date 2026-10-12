@@ -31,3 +31,16 @@ test('an unknown id fails the build instead of leaving a gap', async () => {
   const { resolveGroups } = await import('../src/lib/higher-education.ts');
   assert.throws(() => resolveGroups([{ id: 'matematica', label: 'x', why: 'x', resourceIds: ['nope'] }]));
 });
+
+test('staging today: the Superior summary is the released V0.3 text, in the menu and on the Home', async () => {
+  const copy = await import('../src/lib/superior-copy.ts') as Record<string, any>;
+  const { pt } = await import('../src/i18n/pt.ts');
+  assert.equal(copy.objectiveSummaryFor?.('ensino-superior'), pt.home.objectives.items['ensino-superior']);
+});
+
+test('the "Explorar" menu reads the path summaries from the shared source, not the fixed text', async () => {
+  const { readFileSync } = await import('node:fs');
+  const header = readFileSync(new URL('../src/components/SiteHeader.astro', import.meta.url), 'utf8');
+  assert.match(header, /objectiveSummaryFor\(item\.id\)/);
+  assert.doesNotMatch(header, /t\.home\.objectives\.items\[item\.id\]/);
+});

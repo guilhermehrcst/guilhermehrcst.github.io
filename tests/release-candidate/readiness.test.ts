@@ -28,6 +28,10 @@ test('release candidate: every resource has a page, and the 37 published keep ex
 test('release candidate: a partial release is still refused', () => {
   const nine = { ...GATEB_DRAFT_SELECTION, 'pre-militar': GATEB_DRAFT_SELECTION['pre-militar'].slice(0, 9) };
   assert.ok(activationProblems(ACTIVE, nine, RC_CATALOGUE, RELEASED).length > 0);
-  assert.ok(activationProblems(ACTIVE, GATEB_DRAFT_SELECTION, RC_CATALOGUE, { ...RELEASED, 'pre-militar': 'staging' }).length > 0);
+  // Academy incremental release (proposal §5, master prompt scenario 13): activating Pré-Militar no longer
+  // waits for its highlights. With its resources on its own page and its ten kept in staging, the path is
+  // active and its "Destaques" section simply is not shown; this was the one assertion here that encoded the
+  // former coupling. The two refusals around it (nine released; released while in preparation) stand.
+  assert.deepEqual(activationProblems(ACTIVE, GATEB_DRAFT_SELECTION, RC_CATALOGUE, { ...RELEASED, 'pre-militar': 'staging' }), []);
   assert.ok(activationProblems({ ...ACTIVE, 'ensino-fundamental': 'preparing' }, GATEB_DRAFT_SELECTION, RC_CATALOGUE, RELEASED).length > 0);
 });

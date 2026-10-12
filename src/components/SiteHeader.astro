@@ -9,6 +9,7 @@
 import { Image } from 'astro:assets';
 import lockup from '../assets/brand/lockup-white.png';
 import { EXPLORE_MENU, HEADER_NAV, routes, sectionOf } from '../lib/routes';
+import { objectiveSummaryFor } from '../lib/superior-copy';
 import { PREPARING_PATHS } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
@@ -17,7 +18,7 @@ const section = sectionOf(path);
 const current = (href: string) => (href === path ? 'page' : undefined);
 const items = EXPLORE_MENU.items.map((item) => ({
   ...item,
-  what: t.home.objectives.items[item.id],
+  what: objectiveSummaryFor(item.id),
   preparing: PREPARING_PATHS.includes(item.id),
 }));
 const exploreActive = section === routes.subjectIndex || items.some((item) => item.href === path && !HEADER_NAV.some((n) => n.href === path));
