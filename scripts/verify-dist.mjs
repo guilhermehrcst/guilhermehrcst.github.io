@@ -883,6 +883,41 @@ for (const f of files.filter((f) => /\.(html|css|js)$/.test(f))) {
   for (const re of DENY) if (re.test(visible)) fail('/' + relative(DIST, f).split(sep).join('/'), `trace of the former personal site: ${re}`);
 }
 
+/* The release inventory (Academy incremental release). An independent reading of the same manifests the
+ * build projects from: the resources dist shows are exactly the ones release.json declares, and no id an
+ * applied lot suspended survives anywhere in dist (page, anchor, search data, asset name). A release
+ * manifest in simulation mode never passes here unless the simulation itself asks for it. */
+{
+  const RELEASE_DIR = new URL('../src/data/academy-release/', import.meta.url).pathname;
+  const release = JSON.parse(readFileSync(join(RELEASE_DIR, 'release.json'), 'utf8'));
+  if (release.mode !== 'production' && process.env.ACADEMY_RELEASE_SIMULATION !== '1') {
+    fail('release.json', `mode ${release.mode}: a simulated release is never published`);
+  }
+  const shown = new Set();
+  for (const f of files.filter((f) => f.endsWith('.html'))) {
+    for (const m of readFileSync(f, 'utf8').matchAll(/\sdata-resource-id="([^"]+)"/g)) shown.add(m[1]);
+  }
+  const declared = new Set(release.inventory);
+  for (const id of declared) if (!shown.has(id)) fail('release.json', `inventory: ${id} is declared but no page shows it`);
+  for (const id of shown) if (!declared.has(id)) fail('release.json', `inventory: ${id} is shown but not declared`);
+  const suspended = [];
+  for (const { lot } of release.applied) {
+    const file = join(RELEASE_DIR, 'lots', `${lot}.json`);
+    if (!existsSync(file)) { fail('release.json', `${lot} is applied but has no manifest`); continue; }
+    for (const s of JSON.parse(readFileSync(file, 'utf8')).suspensions ?? []) suspended.push(s.id);
+  }
+  // A later lot may re-approve a suspended id; only ids still out of the inventory must be absent.
+  const absent = suspended.filter((id) => !declared.has(id));
+  for (const f of files.filter((f) => /\.(html|js|json|xml|txt)$/.test(f) || f.includes('/_astro/'))) {
+    const name = relative(DIST, f).split(sep).join('/');
+    const text = /\.(html|js|json|xml|txt|css|svg)$/.test(f) ? readFileSync(f, 'utf8') : '';
+    for (const id of absent) {
+      const re = new RegExp(`(?<![\\w-])${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`);
+      if (re.test(text) || re.test(name)) fail('/' + name, `the suspended resource ${id} is still in dist`);
+    }
+  }
+}
+
 if (errors.length) {
   console.error(`verify-dist: ${errors.length} problem(s)\n  ` + errors.join('\n  '));
   process.exit(1);
