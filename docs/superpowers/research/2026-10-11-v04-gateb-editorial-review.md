@@ -91,7 +91,7 @@ Cada posição foi validada por abertura de PDF em host institucional HTTPS, com
 | Ensino Médio | 10 | `kultivi-english-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/ingles-para-enem) | Página oficial da Kultivi, curso de Inglês voltado ao ENEM, gratuito; exige conta para matrícula e informa certificado gratuito. |
 | Vestibular | 1 | `kultivi-enem-completo` | Fonte aprovada | [Oficial](https://kultivi.com/curso/enem-completo) | Página própria de ENEM Completo confirma curso multidisciplinar gratuito, matrícula com conta e certificado gratuito. |
 | Vestibular | 2 | `kultivi-writing-enem` | Fonte aprovada | [Oficial](https://kultivi.com/curso/redacao-para-enem) | Página própria de Redação para ENEM confirma curso gratuito e certificado; ID legado preservado. |
-| Vestibular | 3 | `inep-enem-provas-gabaritos` | Fonte aprovada | [PDF oficial](https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf) | **Provas e gabaritos do ENEM, acervo oficial do INEP**. ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente. |
+| Vestibular | 3 | `inep-enem-provas-gabaritos` | Fonte aprovada | [Acervo INEP](https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos) | **Provas e gabaritos do ENEM, acervo oficial do INEP**. ENEM 2024: Caderno 1 azul do 1º dia, com 90 questões e proposta de redação; gabarito azul oficial inspecionado separadamente. |
 | Vestibular | 4 | `fuvest-acervo-2026` | Fonte aprovada | [Oficial](https://www.fuvest.br/acervo-vestibular-2026/) | Índice oficial da Fuvest 2026 aberto; gabarito PDF e simulado PDF foram inspecionados. Não afirmar que todos os cadernos de prova abriram. |
 | Vestibular | 5 | `inep-writing-2026` | Fonte aprovada | [Oficial](https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante) | Cartilha oficial da Redação ENEM 2026, material de referência/prática, não curso. |
 | Vestibular | 6 | `cecierj-pvs-portugues-v1` | Fonte aprovada | [Oficial](https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf) | PDF institucional integral aberto em 11/10/2026; 162 páginas, material didático de Língua Portuguesa publicado pela Fundação Cecierj em 2021. Texto, leitura, coesão e exercícios; referência de estudo, não banco de questões da UERJ nem curso completo. |
@@ -129,6 +129,49 @@ Cada posição foi validada por abertura de PDF em host institucional HTTPS, com
 | Tecnologia | 8 | `cs50w` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/web/) | Harvard CS50 Web: curso livre sobre desenvolvimento web com Python e JavaScript. |
 | Tecnologia | 9 | `cs50ai` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/ai/) | Harvard CS50 AI: curso livre sobre IA com Python. |
 | Tecnologia | 10 | `cs50sql` | Fonte aprovada | [Oficial](https://cs50.harvard.edu/sql/) | Harvard CS50 SQL: curso gratuito de banco de dados; atividades podem exigir conta edX; certificado verificado é separado. Substitui Cisco apenas na shortlist. |
+
+## Preparação técnica para homologação (snapshot sem promoção)
+
+**Fonte de verdade:** `main` observado no commit `40bf3e4d920720e066d4026f08aa7a0b16bca61c` e o inventário editorial desta revisão 04. Esta seção é um plano executável de **preparação**; não confirma execução de testes ou alteração em `src/`.
+
+### Reutilização do que existe
+
+| Caminho | Legado publicado | Staging tipado | Verificação parcial | Novo a tipar |
+|---|---:|---:|---:|---:|
+| Ensino Fundamental | 0 | 10 | 0 | 0 |
+| Ensino Médio | 10 | 0 | 0 | 0 |
+| Vestibular | 2 | 3 | 0 | 5 |
+| Pré-Militar | 0 | 1 | 3 | 6 |
+| Ensino Superior | 4 | 6 | 0 | 0 |
+| Tecnologia | 7 | 3 | 0 | 0 |
+| **Total** | **23** | **23** | **3** | **11** |
+
+**Interpretação:** dos 60 destaques candidatos, 23 já pertencem aos 37 registros publicados; 23 têm `LearningResource` tipado em `src/lib/staging.ts`; 3 constam somente em `PARTIAL_VERIFICATIONS` (Colégio Naval, Escola Naval e EEAR); 11 precisam de modelagem. Portanto, **37 posições ainda não integram o catálogo público**. Não criar outro catálogo nem reescrever os 23 legados.
+
+**Já publicados (reaproveitar)** (23): `kultivi-math-enem`, `kultivi-portuguese-enem`, `kultivi-physics-enem`, `kultivi-chemistry-enem`, `kultivi-biology-enem`, `kultivi-history-enem`, `kultivi-geography-enem`, `kultivi-philosophy-enem`, `kultivi-sociology-enem`, `kultivi-english-enem`, `kultivi-writing-enem`, `inep-writing-2026`, `mit-6100l`, `mit-60002`, `mit-6006`, `mit-6042j`, `cs50x`, `cs50p`, `fb-python`, `fb-web`, `cs50w`, `cs50ai`, `cs50sql`.
+
+**Staging tipado (não importar)** (23): `ef-sme-alfabeto-1`, `sme-goiania-letras-e-palavras`, `ef-sme-vegetacao-3`, `ef-sme-municipio-4`, `ef-sme-vestigios-5`, `sme-goiania-leitura-em-foco`, `ef-obmep-fracoes-6`, `ef-sme-tecnologia-vida-7`, `ef-obmep-potenciacao-8`, `ef-sme-funcoes-9`, `kultivi-enem-completo`, `inep-enem-provas-gabaritos`, `fuvest-acervo-2026`, `ita-provas-anteriores`, `mit-1801sc`, `mit-801sc`, `mit-7012`, `yale-psyc-110`, `yale-econ-252`, `ou-environment-treading-lightly`, `odin-foundations`, `google-mlcc`, `ms-learn-cloud-concepts`.
+
+**Parciais (tipar com nova evidência)** (3): `pm-cn-provas`, `pm-en-provas`, `pm-eear-provas`.
+
+**Ainda sem tipo (criar registros)** (11): `cecierj-pvs-portugues-v1`, `cecierj-pvs-matematica-mod1`, `cecierj-pvs-historia-mod2`, `cecierj-pvs-geografia-mod1`, `cecierj-pvs-fisica-v1`, `pm-eam-provas`, `pm-afa-provas`, `pm-epcar-provas`, `cecierj-aprovarj`, `pm-esa-provas-2026`, `pm-ime-provas`.
+
+### Gates técnicos recomendados
+
+1. **T0 | Baseline imutável.** Conferir HEAD de `main` e evidências da revisão 04; rodar `npm test`, `npm run check`, `npm run build`. Os 37 recursos legados devem permanecer idênticos em ID, URL e estado de publicação. Nenhuma alteração em `FEATURED_RELEASE` ou `PATH_STATUS` antes da autorização final.
+2. **T1 | Registros isolados.** Converter as três entradas `PARTIAL_VERIFICATIONS` em registros tipados com as evidências diretas do PDF; adicionar os onze registros faltantes e preservar os 23 candidatos tipados. Declarar `subject: null` para provas multidisciplinares e `format: 'past-exam'` quando cabível. Cada novo registro precisa de `ResourceVerification` individual e `resourceProblems() === []`. Não inferir certificado, matrícula, duração ou nível além da fonte. Não importar staging em páginas e scripts de produção.
+3. **T2 | Contrato de destino.** Para cada um dos 37 ainda não publicados, garantir `placementOf()` resolvível **quando sua página estiver ativa**. Ensino Superior exige grupos coerentes em `higher-education.ts`; Tecnologia exige posicionamento honesto de `ms-learn-cloud-concepts` sem fingir que é curso de segurança; Fundamental e Pré-Militar dependem da ativação futura, de modo que devem permanecer em staging até o gate de release. `COURSE_HOSTS` e seu espelho em `verify-dist.mjs` só são ampliados quando houver promoção de fonte real.
+4. **T3 | Invariantes da seleção.** Preparar os IDs 10/10 por caminho sem preencher `FEATURED_RESOURCE_IDS_BY_PATH` na produção antes de estarem publicados e válidos; testar duplicações, ausência de fonte, datas futuras, divergência de host entre `url` e `verified.evidence.url`, questões da UERJ falsamente atribuídas às apostilas Cecierj e ausência de âncora/destino. ENEM deve abrir o acervo completo do INEP, com caderno 2024 e gabarito como evidências auxiliares. EsPCEx segue retida; a posição da shortlist utiliza ESA 2026.
+5. **T4 | Gate de release separado.** Só considerar publicação com nova revisão independente, testes `npm test`/`npm run check`/`npm run build`/`verify-dist`, `noindex` coerente, rotas e busca sem 404, preservação dos 37 recursos e sete trilhas, verificação em navegador e autorização explícita. Provar que staging não aparece no `dist` antes disso.
+
+### Decisões ainda necessárias antes da implementação
+
+- **Nuvem no caminho Tecnologia:** não colocar o recurso Microsoft Learn em Segurança apenas para passar o validador; preferir uma seção geral de recursos adequadamente rotulada, caso não exista trilha de nuvem suficiente, ou justificar nova trilha real.
+- **Ensino Superior:** criar grupos por campo para as seis novas ofertas sem duplicar recursos já exibidos.
+- **Ensino Fundamental:** a interface deve refletir anos comprovados (1º–9º) e não derivar os anos do `level`, que permanece um indicador genérico na versão atual.
+- **Coerência da liberação:** decidir o corte de entrega e a ordem de ativação sem publicar caminhos vazios; o gate de publicação jamais é satisfeito só pelo número editorial 60/60.
+
+**Resultado desta etapa:** prontidão documental para T0–T4, sem alteração de código, sem execução de teste, sem homologação final e sem publicação.
 
 ## Próximas condições
 
