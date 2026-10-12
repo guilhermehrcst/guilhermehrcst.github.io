@@ -25,7 +25,7 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
     "language": "pt",
     "level": "vestibular",
     "url": "https://canal.cecierj.edu.br/042022/a205887b2635b3f593ce443d1603fa7d.pdf",
-    "registration": "unconfirmed",
+    "registration": "not-required",
     "certificate": "unconfirmed",
     "verified": {
       "on": "2026-10-11",
@@ -38,9 +38,10 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
           "scope",
           "language",
           "format",
-          "path"
+          "path",
+          "registration"
         ],
-        "note": "PDF institucional integral aberto em 11/10/2026; 162 páginas, material didático de Língua Portuguesa publicado pela Fundação Cecierj em 2021. Texto, leitura, coesão e exercícios; referência de estudo, não banco de questões da UERJ nem curso completo. O documento acessado sem autenticação comprova conteúdo gratuito; requisitos de cadastro e certificado não foram verificados individualmente."
+        "note": "PDF institucional integral aberto em 11/10/2026; 162 páginas, material didático de Língua Portuguesa publicado pela Fundação Cecierj em 2021. Texto, leitura, coesão e exercícios; referência de estudo, não banco de questões da UERJ nem curso completo. O PDF institucional completo abriu diretamente sem login ou pagamento: cadastro não requerido para ler a apostila. Nada se afirma sobre áreas autenticadas ou certificados, que continuam não confirmados."
       }
     }
   },
@@ -56,7 +57,7 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
     "language": "pt",
     "level": "vestibular",
     "url": "https://canal.cecierj.edu.br/122016/efcafab1e59a9c49c5244cbbdc982539.pdf",
-    "registration": "unconfirmed",
+    "registration": "not-required",
     "certificate": "unconfirmed",
     "verified": {
       "on": "2026-10-11",
@@ -69,9 +70,10 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
           "scope",
           "language",
           "format",
-          "path"
+          "path",
+          "registration"
         ],
-        "note": "PDF integral de 118 páginas aberto em 11/10/2026; módulo de 2015 da Fundação Cecierj com números, funções, combinatória, probabilidade e exercícios. Material de referência, não prova da UERJ. O documento acessado sem autenticação comprova conteúdo gratuito; requisitos de cadastro e certificado não foram verificados individualmente."
+        "note": "PDF integral de 118 páginas aberto em 11/10/2026; módulo de 2015 da Fundação Cecierj com números, funções, combinatória, probabilidade e exercícios. Material de referência, não prova da UERJ. O PDF institucional completo abriu diretamente sem login ou pagamento: cadastro não requerido para ler a apostila. Nada se afirma sobre áreas autenticadas ou certificados, que continuam não confirmados."
       }
     }
   },
@@ -87,7 +89,7 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
     "language": "pt",
     "level": "vestibular",
     "url": "https://canal.cecierj.edu.br/122016/d0522fa0af463530f6629b02000952d5.pdf",
-    "registration": "unconfirmed",
+    "registration": "not-required",
     "certificate": "unconfirmed",
     "verified": {
       "on": "2026-10-11",
@@ -100,9 +102,10 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
           "scope",
           "language",
           "format",
-          "path"
+          "path",
+          "registration"
         ],
-        "note": "PDF institucional de 128 páginas aberto em 11/10/2026; apostila de 2015 sobre Guerras Mundiais, Guerra Fria e Américas, com conteúdo integral. Material de referência, não questões comentadas da UERJ. O documento acessado sem autenticação comprova conteúdo gratuito; requisitos de cadastro e certificado não foram verificados individualmente."
+        "note": "PDF institucional de 128 páginas aberto em 11/10/2026; apostila de 2015 sobre Guerras Mundiais, Guerra Fria e Américas, com conteúdo integral. Material de referência, não questões comentadas da UERJ. O PDF institucional completo abriu diretamente sem login ou pagamento: cadastro não requerido para ler a apostila. Nada se afirma sobre áreas autenticadas ou certificados, que continuam não confirmados."
       }
     }
   },
@@ -118,7 +121,7 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
     "language": "pt",
     "level": "vestibular",
     "url": "https://canal.cecierj.edu.br/122016/91e80944820052a74356bfa1fc1b6489.pdf",
-    "registration": "unconfirmed",
+    "registration": "not-required",
     "certificate": "unconfirmed",
     "verified": {
       "on": "2026-10-11",
@@ -131,9 +134,10 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
           "scope",
           "language",
           "format",
-          "path"
+          "path",
+          "registration"
         ],
-        "note": "PDF integral de 126 páginas aberto em 11/10/2026; apostila de 2015 da Fundação Cecierj com industrialização, urbanização, globalização e exercícios do Enem. Material de referência, não banco de questões da UERJ. O documento acessado sem autenticação comprova conteúdo gratuito; requisitos de cadastro e certificado não foram verificados individualmente."
+        "note": "PDF integral de 126 páginas aberto em 11/10/2026; apostila de 2015 da Fundação Cecierj com industrialização, urbanização, globalização e exercícios do Enem. Material de referência, não banco de questões da UERJ. O PDF institucional completo abriu diretamente sem login ou pagamento: cadastro não requerido para ler a apostila. Nada se afirma sobre áreas autenticadas ou certificados, que continuam não confirmados."
       }
     }
   },
@@ -149,7 +153,7 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
     "language": "pt",
     "level": "vestibular",
     "url": "https://canal.cecierj.edu.br/042022/cad642065613839097b51486f3ec3eec.pdf",
-    "registration": "unconfirmed",
+    "registration": "not-required",
     "certificate": "unconfirmed",
     "verified": {
       "on": "2026-10-11",
@@ -162,9 +166,10 @@ export const GATEB_NEW_RESOURCES: readonly LearningResource[] = [
           "scope",
           "language",
           "format",
-          "path"
+          "path",
+          "registration"
         ],
-        "note": "PDF integral de 188 páginas aberto em 11/10/2026; volume de Física de 2021 da Fundação Cecierj, com cinemática, movimentos e exercícios. Material de referência, não simulador/questões da UERJ. O documento acessado sem autenticação comprova conteúdo gratuito; requisitos de cadastro e certificado não foram verificados individualmente."
+        "note": "PDF integral de 188 páginas aberto em 11/10/2026; volume de Física de 2021 da Fundação Cecierj, com cinemática, movimentos e exercícios. Material de referência, não simulador/questões da UERJ. O PDF institucional completo abriu diretamente sem login ou pagamento: cadastro não requerido para ler a apostila. Nada se afirma sobre áreas autenticadas ou certificados, que continuam não confirmados."
       }
     }
   },
