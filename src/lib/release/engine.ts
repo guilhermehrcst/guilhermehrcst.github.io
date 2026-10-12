@@ -101,8 +101,11 @@ export interface BaselineManifest {
 const ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const LOT_ID = /^L\d{3}-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** A person's decision is not an automated one: approvals and authorizations naming a tool are refused. */
-const AUTOMATED = /\b(claude|codex|chatgpt|gpt|copilot|openai|anthropic|bot|ia|ai|automa\w*)\b/i;
-const SIMULATED = /^simula[cç][aã]o\b/iu;
+const AUTOMATED = /\b(claude|codex|chatgpt|gpt|copilot|openai|anthropic|bot|ia|ai|automa\w*|fixture)\b/;
+/** A rehearsal's mark, in any casing, accent or width form (SIMULAÇÃO, Simulação, simulacao…). */
+const SIMULATED = /^simulacao\b/;
+/** A name as the guards read it: compatibility-folded (full-width letters), without accents, lower case. */
+const folded = (name: string): string => name.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase();
 
 const isObject = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const isText = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0 && v === v.trim();
@@ -140,8 +143,8 @@ const dateProblems = (where: string, on: unknown, now: Date): string[] => {
 
 const decidedByProblems = (where: string, by: unknown, automatedRefused: boolean, simulation: boolean): string[] => {
   if (!isText(by)) return [`${where}: no person named`];
-  if (SIMULATED.test(by) !== simulation) return [simulation ? `${where}: a simulated lot must say so in decidedBy` : `${where}: a simulated decision in a real lot`];
-  if (automatedRefused && !simulation && AUTOMATED.test(by)) return [`${where}: ${by} is not a person; an approval is never automated`];
+  if (SIMULATED.test(folded(by)) !== simulation) return [simulation ? `${where}: a simulated lot must say so in decidedBy` : `${where}: a simulated decision in a real lot`];
+  if (automatedRefused && !simulation && AUTOMATED.test(folded(by))) return [`${where}: ${by} is not a person; an approval is never automated`];
   return [];
 };
 
@@ -413,7 +416,7 @@ export const projectRelease = (input: ReleaseInput): Projection => {
       }
       if (entry.decision === 'held') takeOut(takenOut, entry.id, entry.decidedOn);
       // Never cleared: once taken out, every later verification or approval needs evidence strictly later
-      // as that decision (a fresh return does not license a stale re-approval afterwards).
+      // than that decision (a fresh return does not license a stale re-approval afterwards).
       latest.set(entry.id, { entry, lot });
       if (move(entry.id, entry.decision) && entry.decision === 'approved') {
         at.set(entry.id, 'published');

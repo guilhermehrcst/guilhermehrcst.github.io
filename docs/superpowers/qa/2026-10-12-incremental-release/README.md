@@ -65,6 +65,17 @@ reconstruídos passam (o cenário A-pending-B agora registra B no `ledger`, como
 idêntico a A-pending-B, e a QA Playwright passou de novo (A: 236, AB: 252 verificações, 0 falhas, saída 0).
 A mesma QA com uma expectativa deliberadamente errada sai com código 1.
 
+## Escopo final do proprietário (PR #43): núcleo sem versionamento de registros live
+
+O mecanismo de revisões de registros publicados foi retirado (`9516b1f`); mudar um recurso publicado
+continua exigindo reaprovação aplicada no mesmo PR. Os cenários de readmissão por revisão (ABC,
+AB-pending-C) saíram com ele. Mantidos: evidência estritamente posterior à retirada e marcas de simulação
+lidas sem caixa, acento nem largura (inclusive acentos decompostos, NFD, e letras de largura total), com
+`fixture` entre os nomes recusados. Reconstruídos sobre o núcleo final: A, AB e A-pending-B passam build +
+`verify-dist`, A continua idêntico a A-pending-B, `google-mlcc` e `pm-esa-provas-2026` em 0 arquivos do
+`dist/` de AB, o `verify-dist` sem a variável recusa o `dist/` simulado, e a QA Playwright repete
+A: 236 e AB: 252 verificações, 0 falhas. O `dist/` de produção é idêntico byte a byte ao anterior ao motor.
+
 ## Guardas de estado (AB)
 
 As 32 falhas em `guards-AB.txt` são testes que fixam o estado atual (nenhum lote aplicado, 37 publicados,
