@@ -83,7 +83,15 @@ test('P4: an unconfirmed detail is stated as unconfirmed and never shown as a fa
   assert.match(problems(resource({ id: 'new-6', registration: 'not-required', certificate: 'available', verified: { ...verified, evidence: ev } })).join('\n'), /registration not checked[\s\S]*certificate not checked/);
   const { readFileSync } = await import('node:fs');
   const item = readFileSync(new URL('../src/components/ResourceItem.astro', import.meta.url), 'utf8');
-  assert.match(item, /unconfirmed/, 'ResourceItem leaves unconfirmed details out of the facts');
+  assert.match(item, /resourceDisplayFacts\(r, l, compact\)/,
+    'ResourceItem must use the single typed presenter for resource facts');
+  const { resourceDisplayFacts } = await import('../src/lib/resource-display.ts');
+  const { pt } = await import('../src/i18n/pt.ts');
+  const published = publishedResources[0];
+  if (!published) throw new Error('missing legacy resource for the verification test');
+  const unknown = { ...published, registration: 'unconfirmed' as const, certificate: 'unconfirmed' as const };
+  assert.deepEqual(resourceDisplayFacts(unknown, pt.resource).access, [],
+    'ResourceItem must not show unsupported requirements or certificate claims');
 });
 
 /* Only direct verification at the official source (V0.4, review of P4). */
