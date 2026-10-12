@@ -1,0 +1,52 @@
+# Ephemeral QA of PR #37 staged HTML in Chromium, never a GitHub Pages release.
+name: Academy browser QA (staging only)
+
+on:
+  pull_request:
+    branches:
+      - feat/academy-gateb-typed-staging-v01
+    paths:
+      - scripts/qa/academy-browser-smoke.mjs
+      - .github/workflows/academy-browser-qa.yml
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    if: github.event.pull_request.head.ref == 'qa/academy-v04-browser-validation-20261012'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Check out exact QA commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked project dependencies
+        run: npm ci
+      - name: Build staging and verify dist invariants
+        run: npm run build
+      - name: Install browser test runner locally without modifying lockfile
+        run: npm install --no-save --package-lock=false playwright@1.56.1
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Real-browser tests on local Astro preview (no publication)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/academy-preview-qa.log 2>&1 &
+          PREVIEW_PID=$!
+          trap 'kill "$PREVIEW_PID" 2>/dev/null || true' EXIT
+          node scripts/qa/academy-browser-smoke.mjs
+      - name: Upload visual evidence and structured results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: academy-v04-staging-chromium-evidence
+          path: artifacts/academy-browser-qa/
+          if-no-files-found: warn
+          retention-days: 7
