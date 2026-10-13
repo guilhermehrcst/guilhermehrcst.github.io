@@ -140,28 +140,30 @@ export const pt: Dict = {
       preparing: {
         description: 'Pré-Militar na Pexis Academy: uma central em preparação para entender os processos seletivos de escolas e academias militares.',
         lead: 'Uma central para entender os processos seletivos de escolas e academias militares, com cada detalhe conferido no edital oficial.',
-        processesTitle: 'Processos seletivos que vamos organizar',
-        howTitle: 'O que cada processo vai reunir',
-        how: [
-          'Como o processo seletivo funciona, segundo o edital.',
-          'O link para o edital e para a página oficial.',
-          'As matérias cobradas, como o edital as define.',
-          'Provas anteriores publicadas pela própria instituição.',
-          'Materiais gratuitos para estudar cada matéria.',
-        ],
+        practice: {
+          title: 'Estude as matérias-base',
+          text: 'Enquanto esta área é preparada, revise as matérias do Ensino Médio, organizadas por área.',
+          link: 'Estude as matérias do Ensino Médio por área',
+        },
       },
       active: {
         description: 'Pré-Militar na Pexis Academy: materiais gratuitos para os processos seletivos de escolas e academias militares, conferidos na fonte oficial.',
         lead: 'Os processos seletivos de escolas e academias militares, com materiais gratuitos conferidos na fonte oficial. Requisitos e datas valem sempre pelo edital.',
-        processesTitle: 'Processos seletivos',
-        howTitle: 'Como esta área funciona',
-        how: [
-          'Cada processo seletivo segue o próprio edital, publicado pela instituição.',
-          'Requisitos, datas e matérias valem sempre pelo edital oficial: esta área não os resume sem conferir na fonte.',
-          'Provas anteriores e materiais só aparecem aqui depois de conferidos na fonte oficial.',
-        ],
+        practice: {
+          title: 'Pratique com provas oficiais',
+          text: 'Provas anteriores publicadas pela própria instituição, conferidas na fonte. Elas não substituem o edital mais recente.',
+          link: 'Ver os materiais oficiais',
+        },
       },
     },
+    startTitle: 'Como começar',
+    start: [
+      { title: 'Entenda o processo seletivo', text: 'Cada escola e academia tem etapas, matérias e requisitos próprios. Comece pela instituição que você pretende prestar.' },
+      { title: 'Consulte o edital vigente', text: 'Requisitos, datas e matérias valem sempre pelo edital publicado na página oficial da instituição.' },
+    ],
+    materialsTitle: 'Materiais oficiais',
+    materialsWhy: 'Provas anteriores e materiais gratuitos, publicados por quem os produz e conferidos na fonte.',
+    processesTitle: 'Instituições e processos',
     processesWhy: 'Cada escola e academia tem o próprio processo seletivo, com etapas, matérias e requisitos definidos no edital. Nenhum deles é resumido aqui antes de ser conferido na fonte oficial.',
     branches: [
       { force: 'Exército', schools: [
@@ -177,12 +179,11 @@ export const pt: Dict = {
         { acronym: 'EEAR', name: 'Escola de Especialistas de Aeronáutica' },
         { acronym: 'EPCAR', name: 'Escola Preparatória de Cadetes do Ar' },
         { acronym: 'AFA', name: 'Academia da Força Aérea' },
-        { acronym: 'ITA', name: 'Instituto Tecnológico de Aeronáutica' },
+        { acronym: 'ITA', name: 'Instituto Tecnológico de Aeronáutica', resourceId: 'ita-provas-anteriores' },
       ] },
     ],
-    status: 'Edital em verificação',
+    available: 'Provas anteriores disponíveis',
     scope: 'Esta área não oferece treinamento físico, avaliação médica nem simulados.',
-    medio: 'Estude as matérias do Ensino Médio por área',
   },
   explore: { paths: 'Caminhos', areas: 'Áreas e matérias' },
   superior: {
