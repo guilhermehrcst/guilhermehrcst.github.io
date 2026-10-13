@@ -30,12 +30,6 @@ const { overview, access } = resourceDisplayFacts(r, l, compact);
   data-exams={r.exams?.join(' ')}
 >
 
-  <!-- Authored Academy illustration. Never a third-party photograph or an invented course cover. -->
-  <div class="resource-poster" aria-hidden="true" data-resource-poster data-poster-format={r.format}>
-    <span class="poster-top"><span class="poster-seal"><img src="/icon-192.png" alt="" width="24" height="24" loading="lazy" /></span> PEXIS ACADEMY <span class="poster-plus">+</span></span>
-    <span class="poster-center"><ProviderMark name={r.provider} /></span>
-    <span class="poster-bottom"><span>{l.formats[r.format]}</span><span>↗</span></span>
-  </div>
   {!compact && <p class="provider"><ProviderMark name={r.provider} /></p>}
   <Heading class="title">
     <a href={r.url} target="_blank" rel="noopener noreferrer">
@@ -51,35 +45,40 @@ const { overview, access } = resourceDisplayFacts(r, l, compact);
 </li>
 
 <style>
-  .resource-poster { display: none; }
+  /* The card of "Comece por um caminho pronto" (FeaturedPaths): raised paper, a hairline rule, the large
+     radius, the serif title. The title is the one link out; it covers the whole card, and its visible
+     action ("Abrir na fonte"), inside that same link, sits at the card's foot (verify-dist: exactly one). */
   .resource {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    padding-block: var(--space-5);
-    border-top: 1px solid var(--rule);
     min-width: 0;
+    height: 100%;
+    padding: var(--space-5) var(--space-5) calc(var(--space-5) + 44px + var(--space-2));
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--t-ui) var(--ease);
   }
+  .resource:hover { border-color: var(--rule-strong); }
+  .resource:focus-within { outline: 2px solid var(--action); outline-offset: 3px; }
   .provider { font-size: var(--fs-small); color: var(--muted); min-height: 36px; display: flex; align-items: center; }
-  .title { font-size: var(--fs-h3); font-weight: 560; line-height: 1.3; letter-spacing: -0.01em; }
-  /* The entire title and visible source action form one genuine link. No duplicate CTA or fake button. */
-  .title a {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-1);
-    padding-block: 0.25em;
-    text-decoration: none;
-  }
-  .link-title { display: inline; }
-  .title a:hover .link-title, .title a:focus-visible .link-title { text-decoration: underline; text-decoration-thickness: 1px; }
-  .link-title :global(svg) { display: inline-block; width: 0.8em; height: 0.8em; margin-left: 0.3em; vertical-align: -0.02em; color: var(--muted); }
-  .title a:hover :global(svg) { color: var(--action); }
-  .source-action { font-family: var(--sans); font-size: var(--fs-small); font-weight: 600; line-height: 1.5; color: var(--action); }
-  .source-action::after { content: '↗'; margin-left: 0.35em; }
-  .facts { font-size: var(--fs-small); color: var(--muted); line-height: 1.5; }
+  .title { font-family: var(--serif); font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem); font-weight: 460; line-height: 1.2; letter-spacing: -0.015em; }
+  .title a { text-decoration: none; }
+  .title a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  .title a:focus-visible { outline: none; }
+  .resource:hover .link-title, .title a:focus-visible .link-title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
+  .link-title :global(svg) { display: inline-block; width: 0.7em; height: 0.7em; margin-left: 0.3em; vertical-align: 0; color: var(--muted); }
+  .resource:hover .link-title :global(svg) { color: var(--action); }
+  .facts { padding-top: var(--space-3); border-top: 1px solid var(--rule); font-size: var(--fs-small); color: var(--muted); line-height: 1.5; }
   .access { font-size: var(--fs-small); line-height: 1.5; color: var(--ink); }
   .access-label { margin-right: 0.3em; font-weight: 600; }
-  .compact { gap: var(--space-1); padding-block: var(--space-3) var(--space-4); }
-  .compact .title { font-size: var(--fs-body); }
+  /* The link's visible action, like "Abrir o guia do ENEM →" on the Home. */
+  .source-action { position: absolute; left: var(--space-5); bottom: var(--space-5); display: inline-flex; align-items: center; min-height: 44px; font-family: var(--sans); font-size: var(--fs-body); font-weight: 560; letter-spacing: 0; color: var(--action); }
+  .source-action::after { content: '↗'; margin-left: 0.35em; transition: transform var(--t-ui) var(--ease); }
+  .resource:hover .source-action::after { transform: translate(2px, -2px); }
+  .compact { gap: var(--space-1); padding: var(--space-4) var(--space-4) calc(var(--space-4) + 44px + var(--space-1)); }
+  .compact .title { font-size: var(--fs-h3); }
+  .compact .source-action { left: var(--space-4); bottom: var(--space-4); }
 </style>

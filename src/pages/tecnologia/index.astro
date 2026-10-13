@@ -25,7 +25,7 @@ const nav = [
   ...tracks.map((track) => ({ id: track.id, label: track.label, why: track.why })),
 ];
 ---
-<Base title={c.title} description={c.description} courseEdition>
+<Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
 
   <SectionNav id="chooser" title={t.tecnologia.chooser} items={nav} />

@@ -20,7 +20,7 @@ const copy = superiorCopyFor(groups);
 // New conditional fields stay absent until a verified course is actually published.
 const anchors = anchorPlan(routes.objective('ensino-superior'), groups.map((group) => group.resources));
 ---
-<Base title={c.title} description={copy.description} courseEdition>
+<Base title={c.title} description={copy.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
   <p class="wrap note">{copy.note}</p>
   <FeaturedResources path="ensino-superior" />
