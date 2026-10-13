@@ -82,7 +82,7 @@ test('SIMULAÇÃO: the two path activations and three resources must arrive toge
   } as const;
   for (const [id, page] of Object.entries(expected)) {
     const resource = result.published.find(resource => resource.id === id);
-    assert.ok(resource, id);
+    if (!resource) throw new Error(`missing simulated L002 resource ${id}`);
     assert.equal(placementOf(resource, STATES, result.published)?.page, page);
     assert.equal(placementOf(resource, STATES, result.published)?.anchor, `recurso-${id}`);
   }
