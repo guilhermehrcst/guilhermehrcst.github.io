@@ -1,0 +1,42 @@
+{
+  "schema": "pexis-academy-launch-preview/1",
+  "lot": "L002-fundamental-pre-militar",
+  "basedOnApplied": "L001-plano-b",
+  "previewOnly": true,
+  "editorialApproval": "pending",
+  "activationApproval": "pending",
+  "publicationAuthorization": "pending",
+  "expectedPublishedBefore": 43,
+  "expectedPublishedAfter": 46,
+  "activate": [
+    "ensino-fundamental",
+    "pre-militar"
+  ],
+  "featuredReleased": false,
+  "resources": [
+    {
+      "id": "ef-sme-alfabeto-1",
+      "path": "ensino-fundamental",
+      "source": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-nosso-alfabeto/",
+      "coreAccess": "public-html-without-login-observed",
+      "storedRegistration": "unconfirmed",
+      "reviewNote": "1st grade; public exercises visible. External Wordwall and Drive attachments not exhaustively verified; third-party privacy for minors must be assessed. Intro text oversimplifies the history of Latin alphabet; editorial accuracy review."
+    },
+    {
+      "id": "ef-sme-funcoes-9",
+      "path": "ensino-fundamental",
+      "source": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/matematica-funcao-de-1o-e-de-2o-grau/",
+      "coreAccess": "public-html-without-login-observed",
+      "storedRegistration": "unconfirmed",
+      "reviewNote": "9th grade; explanation and exercises public. Optional YouTube media not fully reproduced; Google Docs /copy attachments may require Google sign-in; preserve this caveat for students."
+    },
+    {
+      "id": "ita-provas-anteriores",
+      "path": "pre-militar",
+      "source": "https://vestibular.ita.br/provas.htm",
+      "coreAccess": "public-index-without-login-observed",
+      "storedRegistration": "not-required",
+      "reviewNote": "Official ITA past exams and answer keys listed, including 2026 PDFs. It is an exam archive, not a course. Complete mobile PDF usability and accessibility need human review."
+    }
+  ]
+}
