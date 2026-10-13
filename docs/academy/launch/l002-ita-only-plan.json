@@ -4,7 +4,11 @@
   "basedOnApplied": "L001-plano-b",
   "previewOnly": true,
   "editorialApproval": "approved",
-  "activationApproval": "pending",
+  "activationApproval": "approved",
+  "activationApprovalScope": "release-branch-only",
+  "activationApprovedBy": "Guilherme Henrique",
+  "activationApprovedOn": "2026-10-12",
+  "activationExecution": "awaiting-l002-authorization",
   "publicationAuthorization": "pending",
   "expectedPublishedBefore": 43,
   "expectedPublishedAfter": 44,
@@ -43,7 +47,7 @@
       "Complete mobile PDF ergonomics and assistive technology support remain unverified."
     ]
   },
-  "scope": "Technical preparation of pre-militar-only activation patch. Editorial approval was recorded, but activationApproval and publicationAuthorization remain pending. No release application, main merge, activation or deploy is authorized.",
+  "scope": "Human approval to activate pre-militar is recorded for an isolated release branch only. Activating the real path requires an atomic change with a separately authorized L002 release; until then the patch stays unapplied and the site remains in preparing. No L002 application, main merge or deployment is authorized, and ensino-fundamental stays preparing.",
   "editorialApprovedBy": "Guilherme Henrique",
   "editorialApprovedOn": "2026-10-12",
   "editorialManifest": "src/data/academy-release/lots/L002-ita-pre-militar.json",
@@ -62,6 +66,6 @@
       "scripts/verify-dist.mjs"
     ],
     "preparedOn": "2026-10-12",
-    "notes": "Patch changes only the pre-militar path status and the independent verifier's route, preparing list and ITA host; it remains unapplied. Applying it alone without a matching authorized release must fail activation checks. A real activation requires the separate approved L002 release + updated release identity tests and QA before merge/deploy."
+    "notes": "The branch-only category activation was approved by the owner on 2026-10-12, but this patch remains unapplied. Applying it alone without a separately authorized L002 release must fail activation checks. Apply the exact authorized L002 and the patch atomically on the isolated release branch, then update the release identity tests and run build/browser QA. Production merge and deploy require another authorization."
   }
 }

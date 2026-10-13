@@ -1,6 +1,7 @@
 // Isolated, simulation-only rehearsal on the REAL published L001 inventory.
 // The recorded L002 approval is real, but only its APPLICATION remains hypothetical.
-// A pass never authorizes category activation, publication or deploy.
+// Category activation has separate human approval for an isolated branch; tests never enact it,
+// apply the L002 manifest, or authorize publication/deploy.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -35,7 +36,7 @@ const appliedOnly = LOT_MANIFESTS.filter(lot => release.applied.some(pin => pin.
 const run = (r: unknown = hypothetical, lot: unknown = simulation) =>
   project({ lots: [...appliedOnly, lot], release: r });
 
-test('ITA editorial approval is signed, with no activation or publication authorization', () => {
+test('ITA editorial and release-branch category approvals are recorded; publishing remains unauthorized', () => {
   assert.equal(plan.previewOnly, true);
   assert.equal(plan.editorialApproval, 'approved');
   assert.equal(plan.editorialApprovedBy, 'Guilherme Henrique');
@@ -43,7 +44,11 @@ test('ITA editorial approval is signed, with no activation or publication author
   assert.equal(plan.lot, 'L002-ita-pre-militar');
   assert.equal(plan.editorialManifest, 'src/data/academy-release/lots/L002-ita-pre-militar.json');
   assert.equal(plan.editorialRecordDigest, digestOf(record(ID)));
-  assert.equal(plan.activationApproval, 'pending');
+  assert.equal(plan.activationApproval, 'approved');
+  assert.equal(plan.activationApprovalScope, 'release-branch-only');
+  assert.equal(plan.activationApprovedBy, 'Guilherme Henrique');
+  assert.equal(plan.activationApprovedOn, '2026-10-12');
+  assert.equal(plan.activationExecution, 'awaiting-l002-authorization');
   assert.equal(plan.publicationAuthorization, 'pending');
   assert.deepEqual(plan.activate, ['pre-militar']);
   assert.deepEqual(plan.keepPreparing, ['ensino-fundamental']);

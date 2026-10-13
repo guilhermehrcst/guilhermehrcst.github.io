@@ -21,11 +21,15 @@ const ROOT = new URL('../../', import.meta.url).pathname;
 const FILE = 'docs/academy/launch/l002-ita-activation.patch';
 const patch = readFileSync(new URL('../../' + FILE, import.meta.url), 'utf8');
 
-test('the authorized preparation is not a human authorization to activate or publish', () => {
+test('branch-scoped category activation approval cannot apply L002 or publish the site', () => {
   assert.equal(plan.previewOnly, true);
   assert.equal(plan.lot, 'L002-ita-pre-militar');
   assert.equal(plan.editorialApproval, 'approved');
-  assert.equal(plan.activationApproval, 'pending');
+  assert.equal(plan.activationApproval, 'approved');
+  assert.equal(plan.activationApprovalScope, 'release-branch-only');
+  assert.equal(plan.activationApprovedBy, 'Guilherme Henrique');
+  assert.equal(plan.activationApprovedOn, '2026-10-12');
+  assert.equal(plan.activationExecution, 'awaiting-l002-authorization');
   assert.equal(plan.publicationAuthorization, 'pending');
   assert.equal(plan.activationPreparation.status, 'patch-ready-for-review');
   assert.equal(plan.activationPreparation.patch, FILE);
