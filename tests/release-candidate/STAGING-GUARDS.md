@@ -18,7 +18,7 @@ Kinds: **A** guards against publication or activation (they must flip only with 
 
 | File | Test | Kind |
 |---|---|---|
-| `exam-guides.test.ts` | staging today: the INEP source is not shown as a resource, so the note keeps its external link | A |
+| `exam-guides.test.ts` | L001: the INEP source is shown as a resource, so the note points to it on the page | A |
 | `featured.test.ts` | staging today: no highlight is homologated, so every list is empty and the selection is incomplete | A |
 | `featured.test.ts` | featuredFor resolves a path to its published resources in order | A |
 | `featured.test.ts` | featuredReady: a path is ready only with ten valid highlights | A |
@@ -35,15 +35,15 @@ Kinds: **A** guards against publication or activation (they must flip only with 
 | `gateb-selection-preview.test.ts` | T2: Fundamental and Pré-Militar remain preparing until a separately approved release | A |
 | `gateb-typed-staging.test.ts` | Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates | A |
 | `gateb-typed-staging.test.ts` | Gate B: publication remains disabled and all earlier partial attempts remain historical | A |
-| `higher-education.test.ts` | staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet) | A |
-| `home-sources.test.ts` | staging today: every institution keeps its single-page link and count, exactly as before | A |
+| `higher-education.test.ts` | L001: the two V0.3 groups and Psicologia are shown (yale-psyc-110; mit-1801sc joins Matemática) | A |
+| `home-sources.test.ts` | L001: every institution keeps its link and count; MIT spans two areas and opens the search | A |
 | `learning-axes.test.ts` | a technology resource serves Tecnologia and never Ensino Médio by inheritance | B |
 | `learning-axes.test.ts` | every count is the number of distinct published resources of that path or exam | B |
 | `learning-library.test.ts` | objectivesFor derives, in the Home order, the objectives a subject has resources for | B |
 | `learning-library.test.ts` | objectiveFacts counts what each path really holds | B |
 | `learning-library.test.ts` | institutions lists only providers that publish, with their resources in catalogue order | B |
 | `learning-resources.test.ts` | the catalogue is exactly the 40 records of the snapshot, field by field | B |
-| `learning-resources.test.ts` | 37 published, 3 held back with a review note | B |
+| `learning-resources.test.ts` | 43 published (37 of V0.4 + 6 of L001), 3 held back with a review note | B |
 | `path-status.test.ts` | P2: one status per path; PREPARING_PATHS is derived from it | A |
 | `placement.test.ts` | P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged) | B |
 | `placement.test.ts` | P1: no destination on a page in preparation; a published resource without a destination fails | A |
@@ -59,4 +59,4 @@ Kinds: **A** guards against publication or activation (they must flip only with 
 | `tech-tracks.test.ts` | the tracks and their resources are exactly the spec | B |
 | `tech-tracks.test.ts` | a published track is never empty; a planned one is never shown | B |
 | `verification.test.ts` | P4: the legacy set is exactly the 37 published today, and they need nothing new | B |
-| `higher-education.test.ts` | staging today: the Superior summary is the released V0.3 text, in the menu and on the Home | B |
+| `higher-education.test.ts` | L001: the Superior summary names the three fields shown, in the menu and on the Home | B |
