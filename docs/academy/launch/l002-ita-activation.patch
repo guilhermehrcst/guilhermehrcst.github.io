@@ -35,8 +35,7 @@ diff --git a/scripts/verify-dist.mjs b/scripts/verify-dist.mjs
    'www.fuvest.br',
    'oyc.yale.edu',
    'www.theodinproject.com',
--  'learn.microsoft.com',
-+  'learn.microsoft.com',
+   'learn.microsoft.com',
 +  'vestibular.ita.br',
  ];
  const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
