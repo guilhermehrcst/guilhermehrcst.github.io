@@ -64,8 +64,8 @@ test('the catalogue is exactly the 40 records of the snapshot, field by field', 
   }
 });
 
-test('37 published, 3 held back with a review note', () => {
-  assert.equal(publishedResources.length, 37);
+test('43 published (37 of V0.4 + 6 of L001), 3 held back with a review note', () => {
+  assert.equal(publishedResources.length, 43);
   const held = catalogue.filter((r) => r.url === null);
   assert.equal(held.length, 3);
   for (const r of held) assert.ok(r.review?.trim(), `${r.id}: missing review note`);

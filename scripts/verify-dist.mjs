@@ -72,6 +72,11 @@ const COURSE_HOSTS = [
   'kultivi.com',
   'www.gov.br',
   'www.revista.vestibular.uerj.br',
+  // L001: hosts reviewed in the lot manifest, each with its institution.
+  'www.fuvest.br',
+  'oyc.yale.edu',
+  'www.theodinproject.com',
+  'learn.microsoft.com',
 ];
 const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
 const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
@@ -465,7 +470,7 @@ function checkAbout(path, html) {
   if (!footerDate || pageDate !== footerDate) fail(path, `verification date ${pageDate} must match the footer's ${footerDate}`);
 }
 
-const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
+const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/ensino-superior/', '/tecnologia/'];
 /** The formats a student practises with (V0.4 §4.3). Mirrors PRACTICE_FORMATS; a test keeps them equal. */
 const PRACTICE_FORMATS = ['practice', 'past-exam', 'simulator'];
 const PRACTICE_ATTR = new RegExp(`data-format="(?:${PRACTICE_FORMATS.join('|')})"`);
@@ -633,7 +638,7 @@ function checkProduct(path, html) {
   }
   if (path === '/tecnologia/') {
     const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
-    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade'];
+    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade', 'computacao-em-nuvem'];
     if (JSON.stringify(tracks.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `tracks ${tracks.map((m) => m[1]).join(',')}`);
     for (const [, id, body] of tracks) if (!/\sdata-resource-id="/.test(body)) fail(path, `track ${id} is empty`);
   }

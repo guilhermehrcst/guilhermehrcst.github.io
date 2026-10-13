@@ -1,8 +1,18 @@
 {
   "schema": "pexis-academy-release/1",
   "mode": "production",
-  "applied": [],
-  "ledger": [],
+  "applied": [
+    {
+      "lot": "L001-plano-b",
+      "digest": "sha256:ce7770fbf67599579767fa457baffeb7af99a6e9dd41f3c96b0b750355db59f1"
+    }
+  ],
+  "ledger": [
+    {
+      "lot": "L001-plano-b",
+      "digest": "sha256:ce7770fbf67599579767fa457baffeb7af99a6e9dd41f3c96b0b750355db59f1"
+    }
+  ],
   "inventory": [
     "cisco-cyber",
     "cs50ai",
@@ -16,6 +26,8 @@
     "fgv-privacy",
     "fgv-security",
     "fluencia",
+    "fuvest-acervo-2026",
+    "inep-enem-provas-gabaritos",
     "inep-writing-2026",
     "kultivi-biology-enem",
     "kultivi-chemistry-enem",
@@ -29,17 +41,21 @@
     "kultivi-sociology-enem",
     "kultivi-spanish-enem",
     "kultivi-writing-enem",
+    "mit-1801sc",
     "mit-1806",
     "mit-60002",
     "mit-6006",
     "mit-6042j",
     "mit-6100l",
+    "ms-learn-cloud-concepts",
+    "odin-foundations",
     "uerj-geography-practice",
     "uerj-history-practice",
     "uerj-math-practice",
     "uerj-physics-practice",
     "uerj-portuguese-practice",
     "uerj-spanish-practice",
-    "uerj-writing-practice"
+    "uerj-writing-practice",
+    "yale-psyc-110"
   ]
 }

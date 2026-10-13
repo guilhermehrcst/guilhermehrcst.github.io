@@ -36,9 +36,9 @@ test('one entry per objective, area, subject, published track and published reso
   assert.equal(count('objetivo'), 8);
   assert.equal(count('area'), 6);
   assert.equal(count('materia'), 13);
-  assert.equal(count('trilha'), 7);
+  assert.equal(count('trilha'), 8);
   assert.equal(count('recurso'), publishedResources.length);
-  assert.equal(index.length, 8 + 6 + 13 + 7 + publishedResources.length);
+  assert.equal(index.length, 8 + 6 + 13 + 8 + publishedResources.length);
 });
 
 test('every entry leads to a page of the site, never outside', () => {

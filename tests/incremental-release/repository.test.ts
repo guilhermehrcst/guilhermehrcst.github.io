@@ -1,4 +1,4 @@
-// The repository's own release state (this PR adds the engine and publishes nothing) and the wiring the
+// The repository's real L001 release state (six explicitly approved and authorized resources) and the wiring the
 // build and the independent verifier rely on.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -7,20 +7,39 @@ import { readdirSync, readFileSync } from 'node:fs';
 
 import baseline from '../../src/data/academy-release/baseline.json' with { type: 'json' };
 import release from '../../src/data/academy-release/release.json' with { type: 'json' };
+import l001 from '../../src/data/academy-release/lots/L001-plano-b.json' with { type: 'json' };
 import { LOT_MANIFESTS } from '../../src/lib/release/lots.ts';
 import { lotProblems } from '../../src/lib/release/engine.ts';
 import { catalogue, isPublishedResource, publishedResources, RELEASE } from '../../src/lib/learning-resources.ts';
 import { digestOf } from '../../src/lib/release/canonical.ts';
 import { lotOf, NOW, record } from './fixtures.ts';
 
-test('this PR applies no lot: production mode, nothing applied, the inventory is the 37 of V0.4', () => {
+const L001_IDS = [
+  'inep-enem-provas-gabaritos', 'fuvest-acervo-2026', 'mit-1801sc',
+  'yale-psyc-110', 'odin-foundations', 'ms-learn-cloud-concepts',
+];
+
+test('L001 Plano B is the only applied, authorized release: 37 baseline + exactly 6 approved resources', () => {
   assert.equal(release.mode, 'production');
-  assert.deepEqual(release.applied, []);
-  assert.deepEqual(release.ledger, [], 'no lot was ever applied');
-  assert.deepEqual(release.inventory, Object.keys(baseline.records).sort());
-  assert.deepEqual(release.inventory, catalogue.filter(isPublishedResource).map((r) => r.id).sort());
+  assert.equal(l001.schema, 'pexis-academy-lot/1');
+  assert.equal(l001.lot, 'L001-plano-b');
+  assert.equal(l001.simulation, false);
+  assert.deepEqual(l001.entries.map((entry) => entry.id), L001_IDS);
+  for (const entry of l001.entries) {
+    assert.equal(entry.decision, 'approved', entry.id);
+    assert.equal(entry.decidedBy, 'Guilherme Henrique', entry.id);
+    assert.equal(entry.decidedOn, '2026-10-12', entry.id);
+  }
+  assert.deepEqual(l001.authorization, { by: 'Guilherme Henrique', on: '2026-10-12' });
+  const pin = { lot: l001.lot, digest: digestOf(l001) };
+  assert.deepEqual(release.applied, [pin], 'the authorization binds precisely this manifest');
+  assert.deepEqual(release.ledger, [pin], 'the append-only history includes exactly L001');
+  const expected = [...Object.keys(baseline.records), ...L001_IDS].sort();
+  assert.equal(expected.length, 43);
+  assert.equal(new Set(expected).size, 43, 'no duplicate baseline or new resource');
+  assert.deepEqual(release.inventory, expected);
+  assert.deepEqual(publishedResources.map((resource) => resource.id).sort(), expected);
   assert.deepEqual(RELEASE.problems, []);
-  assert.deepEqual(publishedResources.map((r) => r.id), catalogue.filter(isPublishedResource).map((r) => r.id), 'same records, same order');
 });
 
 test('the baseline locks each of the 37 to the record as typed today', () => {

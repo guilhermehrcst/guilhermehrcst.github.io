@@ -82,9 +82,9 @@ test('UERJ subjects are exactly those with UERJ resources', () => {
   assert.deepEqual(UERJ_SUBJECTS, ['matematica', 'portugues', 'redacao', 'fisica', 'historia', 'geografia', 'espanhol']);
 });
 
-// Staging state (V0.4 QA P2-RC5): the INEP collection is not published, so the practice note keeps its
-// external link to INEP. A release that publishes it switches the note to the resource on the page.
-test('staging today: the INEP source is not shown as a resource, so the note keeps its external link', () => {
+// Release state (V0.4 QA P2-RC5): L001 publishes the INEP collection on the practice section, so the note
+// points to that resource on the page instead of linking out to INEP a second time.
+test('L001: the INEP source is shown as a resource, so the note points to it on the page', () => {
   const practice = resolveGuide('enem').find((s) => s.id === 'pratique')!;
-  assert.equal(sourceShownAsResource('inep-provas-gabaritos', practice.resources), undefined);
+  assert.equal(sourceShownAsResource('inep-provas-gabaritos', practice.resources)?.id, 'inep-enem-provas-gabaritos');
 });

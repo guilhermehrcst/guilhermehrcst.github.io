@@ -7,12 +7,14 @@ import { publishedResources } from '../src/lib/learning-resources.ts';
 const SPEC = [
   ['comecar-a-programar', ['cs50x', 'cs50p', 'fb-python']],
   ['ciencia-da-computacao', ['cs50x', 'mit-6006', 'mit-6042j', 'mit-1806']],
-  ['desenvolvimento-web', ['cs50w', 'fb-web']],
+  ['desenvolvimento-web', ['cs50w', 'fb-web', 'odin-foundations']],
   ['python', ['cs50p', 'mit-6100l', 'fb-python']],
   ['inteligencia-artificial', ['cs50ai', 'fluencia']],
   ['dados', ['fgv-datasci', 'mit-60002', 'cs50sql']],
   ['seguranca-e-privacidade', ['cisco-cyber', 'fgv-security', 'fgv-privacy']],
   ['git-e-github', []],
+  // L001: the cloud track exists once its one resource is published.
+  ['computacao-em-nuvem', ['ms-learn-cloud-concepts']],
 ];
 
 test('the tracks and their resources are exactly the spec', () => {
@@ -35,7 +37,7 @@ test('a published track is never empty; a planned one is never shown', () => {
   }
   assert.equal(techTracks.find((t) => t.id === 'git-e-github')!.status, 'planned');
   assert.ok(!publishedTracks().some((t) => t.id === 'git-e-github'));
-  assert.equal(publishedTracks().length, 7);
+  assert.equal(publishedTracks().length, 8);
 });
 
 test('no published technology resource is left out of every track', () => {
