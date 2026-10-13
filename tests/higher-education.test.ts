@@ -15,8 +15,8 @@ test('the groups follow the plan order; none is empty; the two V0.3 groups keep 
   for (const id of ['matematica', 'computacao']) assert.ok(shown.find((g) => g.id === id)!.resources.length >= 2, id);
 });
 
-test('staging today: exactly the two V0.3 groups are shown (no Gate B course is published yet)', () => {
-  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao']);
+test('L001: the two V0.3 groups and Psicologia are shown (yale-psyc-110; mit-1801sc joins Matemática)', () => {
+  assert.deepEqual(HIGHER_EDUCATION_GROUPS.map((g) => g.id), ['matematica', 'computacao', 'psicologia']);
 });
 
 test('every course is published, unique, and published by a university', () => {
@@ -32,10 +32,9 @@ test('an unknown id fails the build instead of leaving a gap', async () => {
   assert.throws(() => resolveGroups([{ id: 'matematica', label: 'x', why: 'x', resourceIds: ['nope'] }]));
 });
 
-test('staging today: the Superior summary is the released V0.3 text, in the menu and on the Home', async () => {
+test('L001: the Superior summary names the three fields shown, in the menu and on the Home', async () => {
   const copy = await import('../src/lib/superior-copy.ts') as Record<string, any>;
-  const { pt } = await import('../src/i18n/pt.ts');
-  assert.equal(copy.objectiveSummaryFor?.('ensino-superior'), pt.home.objectives.items['ensino-superior']);
+  assert.equal(copy.objectiveSummaryFor?.('ensino-superior'), 'Materiais gratuitos de nível superior em Matemática, Computação e Psicologia.');
 });
 
 test('the "Explorar" menu reads the path summaries from the shared source, not the fixed text', async () => {
