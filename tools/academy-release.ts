@@ -193,16 +193,26 @@ switch (command) {
     const file = `${lot.lot}.json`;
     if (arg!.split('/').pop() !== file) die(`the file must be named ${file}`);
     const release = readJson(RELEASE_JSON);
-    // A registered lot is never rewritten, and a rolled-back one is not applied again: its decisions go to a
-    // new lot (docs/academy/operacao-publicacao-incremental.md, section 10).
-    if (report.registeredAlready) die(`${lot.lot} is already registered; an applied or rolled-back lot is never rewritten nor applied again — record its decisions in a new lot`);
+    // Applied or rolled-back manifests stay pinned and immutable. A pending registered editorial
+    // lot may be applied after its on-disk manifest receives explicit human authorization, but
+    // a second file cannot overwrite it. The exact authorized on-disk digest is pinned below.
+    if (release.ledger.some((pin: { lot: string }) => pin.lot === lot.lot) ||
+        release.applied.some((pin: { lot: string }) => pin.lot === lot.lot)) {
+      die(`${lot.lot} is already registered; an applied or rolled-back lot is never rewritten nor applied again — record its decisions in a new lot`);
+    }
+    const registeredFile = new URL(file, LOTS_DIR);
+    if (report.registeredAlready && digestOf(readJson(registeredFile)) !== digestOf(lot)) {
+      die(`${lot.lot} differs from the registered manifest: review the pending file in the repository before applying; nothing was changed`);
+    }
     transact(() => {
-      copyFileSync(arg!, new URL(file, LOTS_DIR));
-      fault('after-manifest');
-      const files = lotFiles();
-      writeFileSync(LOTS_TS, renderLots(files));
-      fault('after-lots');
-      const manifests = files.map((f) => readJson(new URL(f, LOTS_DIR)));
+      if (!report.registeredAlready) {
+        copyFileSync(arg!, registeredFile);
+        fault('after-manifest');
+        const files = lotFiles();
+        writeFileSync(LOTS_TS, renderLots(files));
+        fault('after-lots');
+      }
+      const manifests = lotFiles().map((f) => readJson(new URL(f, LOTS_DIR)));
       const pin = { lot: lot.lot, digest: digestOf(lot) };
       const next = { ...release, applied: [...release.applied, pin], ledger: [...release.ledger, pin] };
       writeJson(RELEASE_JSON, { ...next, inventory: projectedInventory(manifests, { ...next, inventory: [] }) });
