@@ -34,6 +34,7 @@ test('the editorial course-page design is shared by study routes but not the hom
 test('editorial cards retain a single authentic accessible outbound source link', () => {
   const item = read('src/components/ResourceItem.astro');
   assert.match(item, /class="resource-poster" aria-hidden="true"/);
+  assert.match(item, /src="\/icon-192\.png" alt=""/, 'the brand poster seal must reuse the official app icon');
   assert.match(item, /<ProviderMark name=\{r\.provider\}/);
   assert.match(item, /data-poster-format=\{r\.format\}/);
   assert.equal((item.match(/<a\s/g) ?? []).length, 1);

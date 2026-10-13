@@ -8,7 +8,7 @@
 - Cabeçalho horizontal leve, preservando a marca oficial Pexis Academy.
 - Hero amplo: título sans-serif de escala editorial com barra inclinada ("/") e lead curto em coluna adjacente. Layout empilhado no celular.
 - Seções em grade divididas por linhas, títulos amplos com a barra, descrições compactas e navegação real por âncoras.
-- Recursos verdadeiramente publicados em cards: painel visual autoral, autoria/instituição, nome exato do recurso, formato, informações comprovadas de acesso e um único link externo com CTA vermelho Pexis.
+- Recursos verdadeiramente publicados em cards: painel visual autoral com o ícone oficial da Academy, autoria/instituição, nome exato do recurso, formato, informações comprovadas de acesso e um único link externo com CTA vermelho Pexis.
 - Grid de uma coluna em telefones pequenos, duas em tablets e três em telas amplas; acessibilidade com alvo mínimo de 44 px, navegação por teclado e redução de movimento.
 - Fechamento editorial com nome PEXIS ACADEMY em fonte grande. Não copia marca GitHub Universe.
 
