@@ -1,5 +1,27 @@
 # Lançamento da Academy: Lote 01 preparado e ensaiado
 
+> **Estado atual (12/10/2026, 23h40 BRT):** este README preserva os ensaios históricos da V0.4
+> (37 recursos antes do L001). A `main` publica **43 recursos**, com **L001-plano-b** aplicado.
+> O manifesto `L002-ita-pre-militar` está registrado com aprovação **editorial** individual,
+> mas `authorization: null`. Os PRs [#55](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/55)
+> e [#56](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/56) continuam em draft;
+> o [#57](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/57) já foi integrado **somente**
+> na branch do #56. Pré-Militar e Fundamental continuam `preparing`. Não houve autorização
+> de ativação, aplicação do L002, merge na `main` nem deploy.
+>
+> **Não use `rehearse.sh plan-a|plan-b` como ensaio do L002.** Ele reproduz a etapa histórica
+> que partia de 37 recursos. O ensaio de projeção 43 → 44 do ITA está em
+> `tests/incremental-release/l002-ita-only-preflight.test.ts` e o patch inerte em
+> `docs/academy/launch/l002-ita-activation.patch`. Eles não liberam a publicação.
+>
+> **Fluxo futuro, somente após autorizações distintas:** registrar `authorization.by/on` no manifesto
+> L002 pendente (preservando o conteúdo editorial exato); aplicar em uma branch de release
+> o patch de ativação; executar `tools/academy-release.ts check` e `apply` com o manifesto
+> já registrado; atualizar os testes que fixam a identidade 43 e rodar QA/CI.
+> O comando `apply` aceita esse manifesto **somente** se ainda não estiver no ledger,
+> tiver autorização válida e for idêntico ao arquivo registrado; ele não altera o manifesto
+> nem dispara deploy. Merge para `main` e deploy exigem autorização posterior.
+
 **Estado:** engenharia pronta, **nenhuma decisão editorial e nenhuma publicação**. O catálogo público continua
 com os 37 recursos da V0.4 (`release.json`: `production`, `applied: []`, `ledger: []`). Tudo aqui foi
 medido em cópias descartáveis com lotes marcados `SIMULAÇÃO`.
