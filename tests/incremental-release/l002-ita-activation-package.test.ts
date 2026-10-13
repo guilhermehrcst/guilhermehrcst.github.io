@@ -58,11 +58,22 @@ test('the patch changes only the ITA-only status and its independent build verif
   assert.equal((patch.match(/^\+  'vestibular\.ita\.br',\s*$/gm) ?? []).length, 1);
   const additions = patch.split('\n').filter(line => line.startsWith('+') && !line.startsWith('+++ '));
   const deletions = patch.split('\n').filter(line => line.startsWith('-') && !line.startsWith('--- '));
-  assert.equal(additions.length, 4, 'scope is four added lines');
+  assert.equal(additions.length, 5, 'scope is five added lines, including Home objective mapping');
   assert.equal(deletions.length, 3, 'scope is three removed lines');
   assert.ok(additions.some(line => line.includes("'/pre-militar/'") && line.includes("'/ensino-superior/'")), 'pre-militar becomes canonical');
   assert.ok(!additions.some(line => /'ensino-fundamental': 'active'/.test(line)), 'Fundamental must remain preparing');
   assert.match(patch, /vestibular\.ita\.br/);
+});
+
+test('the activation patch mirrors the Home objective path counter for Pré-Militar', () => {
+  // verify-dist compares visible Home path counters against PATH_PAGES keys.
+  // Without this addition, a correctly activated /pre-militar/ causes
+  // verify-dist to reject the future 44-resource site.
+  const required = "+    '/pre-militar/': ['/pre-militar/'],";
+  assert.ok(
+    patch.split('\n').includes(required),
+    'active Pré-Militar must be reflected in the independent PATH_PAGES verifier map',
+  );
 });
 
 test('git can apply the package to the exact branch, but CI never applies it', () => {
