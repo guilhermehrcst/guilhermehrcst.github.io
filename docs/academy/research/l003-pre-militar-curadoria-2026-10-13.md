@@ -10,8 +10,8 @@
 |---|---|---|---|
 | `cecierj-aprovarj` | [AprovaRJ: preparação para concursos militares](https://extensao.cecierj.edu.br/cursos/aprovarj/) · Fundação Cecierj | `course` | fonte anteriormente verificada, aguardando decisão editorial |
 | `pm-poti-material-matematica` | [POTI: material didático de Matemática Olímpica](https://poti.impa.br/index.php/site/material) · IMPA / POTI | `lessons` | página identificada, verificação individual pendente |
-| `pm-obmep-matematica-1em` | [Portal OBMEP: Matemática do 1º ano do Ensino Médio](https://portaldaobmep.impa.br/index.php/modulo/lista?serie=5) · IMPA / Portal OBMEP | `lessons` | página identificada, verificação individual pendente |
-| `pm-obmep-matematica-2em` | [Portal OBMEP: Matemática do 2º ano do Ensino Médio](https://portaldaobmep.impa.br/index.php/modulo/lista?serie=6) · IMPA / Portal OBMEP | `lessons` | página identificada, verificação individual pendente |
+| `pm-obmep-matematica-1em` | [Portal OBMEP: Matemática e Física do 1º ano do Ensino Médio](https://portaldaobmep.impa.br/index.php/modulo/lista?serie=5) · IMPA / Portal OBMEP | `lessons` | página identificada, verificação individual pendente |
+| `pm-obmep-matematica-2em` | [Portal OBMEP: Matemática e Física do 2º ano do Ensino Médio](https://portaldaobmep.impa.br/index.php/modulo/lista?serie=6) · IMPA / Portal OBMEP | `lessons` | página identificada, verificação individual pendente |
 | `pm-obmep-apostilas` | [OBMEP: apostilas de Aritmética e Geometria](https://www.obmep.org.br/apostilas.htm) · IMPA / OBMEP | `reference` | página identificada, verificação individual pendente |
 | `pm-obmep-banco-questoes` | [OBMEP: Banco de Questões por edição](https://www.obmep.org.br/banco.htm) · IMPA / OBMEP | `practice` | página identificada, verificação individual pendente |
 | `pm-bbc-six-minute-english` | [BBC Learning English: 6 Minute English](https://www.bbc.co.uk/learningenglish/english/features/6-minute-english) · BBC Learning English | `lessons` | página identificada, verificação individual pendente |
@@ -52,3 +52,12 @@
 5. Validar testes, contagem de inventário, `verify-dist` / allowlist, responsividade e acessibilidade antes de qualquer merge/deploy. O Fundamental permanece em preparação.
 
 Dados estruturados: [CSV dos vinte candidatos](./l003-pre-militar-20-candidatos-2026-10-13.csv). Este PR entrega **curadoria em staging, não publicação**.
+
+
+## Segunda auditoria, 13/10/2026
+
+**Resultado:** 11 candidatos recomendados para deliberação editorial, com ressalvas, e 9 candidatos retidos até checagem manual. Recomendação não é aprovação. Foram amostradas duas páginas de módulo do POTI, módulos do Portal OBMEP, um episódio com áudio e transcrição da BBC e páginas individuais de vídeos das cinco playlists do YouTube. Não foram reproduzidas integralmente todas as aulas ou testados todos os dispositivos.
+
+Oito cadernos oficiais continuam candidatos. Somente o PDF da EEAR abriu novamente nesta rodada. Os documentos da Marinha, FAB, ESA e IME tiveram bloqueio/indisponibilidade ao robô; isto não comprova link quebrado, mas exige validação no navegador antes de publicar. As apostilas e o Banco de Questões da OBMEP também aguardam abertura de PDFs completos.
+
+A matriz individual está em [l003-pre-militar-auditoria-evidencias-2026-10-13.json](./l003-pre-militar-auditoria-evidencias-2026-10-13.json). O [plano L003](../launch/l003-pre-militar-release-plan.json) permanece com todas as autorizações fechadas. A interface passa a agrupar **somente conteúdos já publicados** em cursos e videoaulas, exercícios e simulados, provas oficiais anteriores e materiais de apoio. Grupos vazios não serão exibidos.

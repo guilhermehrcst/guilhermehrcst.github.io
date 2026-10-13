@@ -70,3 +70,23 @@ test('candidate CSV represents every item exactly once and classifies it correct
     assert.match(row[6]!, /aguardando|pendente/);
   }
 });
+
+
+test('editorial evidence and L003 release plan have zero approvals or deployment permission', async () => {
+  const { default: audit } = await import('../docs/academy/research/l003-pre-militar-auditoria-evidencias-2026-10-13.json', { with: { type: 'json' } });
+  const { default: plan } = await import('../docs/academy/launch/l003-pre-militar-release-plan.json', { with: { type: 'json' } });
+  assert.equal(audit.resources.length, 20);
+  assert.equal(audit.totals.recommended, 11);
+  assert.equal(audit.totals.manualHolds, 9);
+  assert.deepEqual(audit.resources.map(r => r.id).sort(), [...ids].sort());
+  assert.equal(audit.resources.filter(r => r.category === 'provas').length, 8);
+  assert.ok(audit.resources.every(r => r.sampleURLs.length > 0 && r.nextCheck.length > 15));
+  assert.equal(plan.baseline.resources, 44);
+  assert.deepEqual(plan.humanEditorialApproval.approvedIds, []);
+  assert.equal(plan.humanEditorialApproval.status, 'pending');
+  assert.equal(plan.application.authorization, null);
+  assert.equal(plan.application.applied, false);
+  assert.equal(plan.application.manifestCreated, false);
+  assert.equal(plan.production.mainMergeAuthorized, false);
+  assert.equal(plan.production.deployAuthorized, false);
+});

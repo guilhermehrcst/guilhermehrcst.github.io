@@ -40,7 +40,7 @@ const plan = anchorPlan(page, stages.map((group) => group.resources));
             <ResourceList resources={group.resources} headingLevel={4} anchored={plan[i]} />
           </div>
         ))
-      : <ResourceGroups resources={resources} headingLevel={3} page={page} />}
+      : <ResourceGroups resources={resources} headingLevel={3} page={page} military={path === 'pre-militar'} />}
   </TrackSection>
 )}
 

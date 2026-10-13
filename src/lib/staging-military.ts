@@ -23,7 +23,7 @@ export const MILITARY_L003_CANDIDATES: readonly LearningResource[] = [
   },
   {
     "id": "pm-obmep-matematica-1em",
-    "title": "Portal OBMEP: Matemática do 1º ano do Ensino Médio",
+    "title": "Portal OBMEP: Matemática e Física do 1º ano do Ensino Médio",
     "provider": "IMPA / Portal OBMEP",
     "subject": "matematica",
     "format": "lessons",
@@ -39,7 +39,7 @@ export const MILITARY_L003_CANDIDATES: readonly LearningResource[] = [
   },
   {
     "id": "pm-obmep-matematica-2em",
-    "title": "Portal OBMEP: Matemática do 2º ano do Ensino Médio",
+    "title": "Portal OBMEP: Matemática e Física do 2º ano do Ensino Médio",
     "provider": "IMPA / Portal OBMEP",
     "subject": "matematica",
     "format": "lessons",
