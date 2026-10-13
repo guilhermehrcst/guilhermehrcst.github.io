@@ -29,6 +29,13 @@ const { overview, access } = resourceDisplayFacts(r, l, compact);
   data-paths={r.paths.join(' ')}
   data-exams={r.exams?.join(' ')}
 >
+
+  <!-- Authored Academy illustration. Never a third-party photograph or an invented course cover. -->
+  <div class="resource-poster" aria-hidden="true" data-resource-poster data-poster-format={r.format}>
+    <span class="poster-top"><span class="poster-seal"><img src="/icon-192.png" alt="" width="24" height="24" loading="lazy" /></span> PEXIS ACADEMY <span class="poster-plus">+</span></span>
+    <span class="poster-center"><ProviderMark name={r.provider} /></span>
+    <span class="poster-bottom"><span>{l.formats[r.format]}</span><span>↗</span></span>
+  </div>
   {!compact && <p class="provider"><ProviderMark name={r.provider} /></p>}
   <Heading class="title">
     <a href={r.url} target="_blank" rel="noopener noreferrer">
@@ -44,6 +51,7 @@ const { overview, access } = resourceDisplayFacts(r, l, compact);
 </li>
 
 <style>
+  .resource-poster { display: none; }
   .resource {
     display: flex;
     flex-direction: column;

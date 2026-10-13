@@ -152,7 +152,7 @@ export const pt: Dict = {
         practice: {
           title: 'Pratique com provas oficiais',
           text: 'Provas anteriores publicadas pela própria instituição, conferidas na fonte. Elas não substituem o edital mais recente.',
-          link: 'Ver os materiais oficiais',
+          link: 'Ver os materiais publicados',
         },
       },
     },
@@ -161,8 +161,8 @@ export const pt: Dict = {
       { title: 'Entenda o processo seletivo', text: 'Cada escola e academia tem etapas, matérias e requisitos próprios. Comece pela instituição que você pretende prestar.' },
       { title: 'Consulte o edital vigente', text: 'Requisitos, datas e matérias valem sempre pelo edital publicado na página oficial da instituição.' },
     ],
-    materialsTitle: 'Materiais oficiais',
-    materialsWhy: 'Provas anteriores e materiais gratuitos, publicados por quem os produz e conferidos na fonte.',
+    materialsTitle: 'Materiais para estudar e praticar',
+    materialsWhy: 'Cursos, aulas, exercícios, materiais de apoio e provas anteriores aparecem conforme são verificados e publicados. Conteúdo de professores independentes é identificado separadamente das provas oficiais.',
     processesTitle: 'Instituições e processos',
     processesWhy: 'Cada escola e academia tem o próprio processo seletivo, com etapas, matérias e requisitos definidos no edital. Nenhum deles é resumido aqui antes de ser conferido na fonte oficial.',
     branches: [

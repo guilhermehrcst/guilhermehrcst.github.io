@@ -5,15 +5,16 @@
 // With `page`, the resources whose home is that page carry their own anchor (#recurso-<id>).
 import ResourceList from './ResourceList.astro';
 import { isPractice, type PublishedLearningResource } from '../lib/learning-resources';
+import { militaryMaterialGroups } from '../lib/military-resource-groups';
 import { anchorPlan } from '../lib/search-index';
 import { pt as t } from '../i18n/pt';
 
-interface Props { resources: readonly PublishedLearningResource[]; headingLevel?: 2 | 3; anchors?: boolean; page?: string | undefined }
-const { resources, headingLevel = 2, anchors = false, page } = Astro.props;
+interface Props { resources: readonly PublishedLearningResource[]; headingLevel?: 2 | 3; anchors?: boolean; page?: string | undefined; military?: boolean }
+const { resources, headingLevel = 2, anchors = false, page, military = false } = Astro.props;
 const Heading = `h${headingLevel}` as 'h2' | 'h3';
 const itemLevel = (headingLevel + 1) as 3 | 4;
 const isReference = (r: PublishedLearningResource) => r.format === 'reference';
-const groups = [
+const groups = military ? militaryMaterialGroups(resources) : [
   { id: 'conteudo', label: t.subject.content, resources: resources.filter((r) => !isPractice(r) && !isReference(r)) },
   { id: 'pratique', label: t.subject.practice, resources: resources.filter(isPractice) },
   { id: 'consulta', label: t.subject.reference, resources: resources.filter(isReference) },

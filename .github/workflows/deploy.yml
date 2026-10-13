@@ -39,6 +39,15 @@ jobs:
         run: npx astro check
       - name: Build and verify dist invariants
         run: npm run build
+      # Browser QA on pull requests: bundle exactly the built static site, never deploy it.
+      - name: Archive PR preview for local browser QA
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: academy-pr-preview
+          path: dist/
+          retention-days: 3
+          if-no-files-found: error
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:

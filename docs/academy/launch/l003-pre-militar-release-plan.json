@@ -1,0 +1,77 @@
+{
+  "schema": "academy-l003-release-plan/v1",
+  "lot": "L003-pre-militar",
+  "status": "preparation_only",
+  "baseline": {
+    "resources": 44,
+    "appliedLots": [
+      "L001-plano-b",
+      "L002-ita-pre-militar"
+    ],
+    "preMilitar": "active",
+    "fundamental": "preparing"
+  },
+  "proposal": {
+    "candidateIds": [
+      "cecierj-aprovarj",
+      "pm-afa-provas",
+      "pm-bbc-six-minute-english",
+      "pm-cn-provas",
+      "pm-eam-provas",
+      "pm-eear-provas",
+      "pm-en-provas",
+      "pm-epcar-provas",
+      "pm-esa-provas-2026",
+      "pm-ime-provas",
+      "pm-obmep-apostilas",
+      "pm-obmep-banco-questoes",
+      "pm-obmep-matematica-1em",
+      "pm-obmep-matematica-2em",
+      "pm-poti-material-matematica",
+      "pm-yt-boaro-fisica-do-zero",
+      "pm-yt-ferretto-matematica-basica",
+      "pm-yt-ferretto-resolve",
+      "pm-yt-noslen-classe-palavras",
+      "pm-yt-renato-brito-mecanica"
+    ],
+    "total": 20,
+    "study": 12,
+    "officialExamPapers": 8,
+    "potentialInventoryIfAllApproved": 64,
+    "recommendedForReview": 12,
+    "needsManualChecks": 8,
+    "hypotheticalInventoryIfTwelveReviewedAndApproved": 56,
+    "reviewQueueFile": "docs/academy/launch/l003-editorial-decision-queue.json",
+    "verifiedByDirectSource": 1,
+    "remainingUnverifiedNewRecords": 10
+  },
+  "humanEditorialApproval": {
+    "status": "pending",
+    "approvedIds": [],
+    "signedBy": null,
+    "signedAt": null
+  },
+  "application": {
+    "manifestCreated": false,
+    "authorization": null,
+    "applied": false
+  },
+  "production": {
+    "mainMergeAuthorized": false,
+    "deployAuthorized": false
+  },
+  "interface": {
+    "draftGroupingReady": true,
+    "onlyPublishedVisible": true
+  },
+  "gates": [
+    "Revalidate actual student-facing download/access on archives, especially ZIP files and bot-blocked PDFs, before any past-exam publication.",
+    "Verify incomplete PDFs and full free-access samples and drop failures",
+    "Human editorial decision for every record",
+    "Create exact digested L003 manifest with authorization null",
+    "Separately authorize L003 application",
+    "Run full CI and 390/1280px browser QA",
+    "Separately authorize merge and deploy",
+    "Multidisciplinary Portal OBMEP modules must use subject:null instead of a false Mathematics-only facet."
+  ]
+}

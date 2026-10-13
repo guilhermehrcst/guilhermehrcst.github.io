@@ -15,6 +15,7 @@ import { catalogue, LEGACY_VERIFIED, LEGACY_VERIFIED_IDS, legacyVerified, VERIFI
 
 export { catalogue, LEGACY_VERIFIED, LEGACY_VERIFIED_IDS, legacyVerified, VERIFIED_ON };
 import { GATEB_NEW_RESOURCES } from './staging-gateb.ts';
+import { MILITARY_L003_CANDIDATES } from './staging-military.ts';
 
 export type LearningSubjectId = SubjectId;
 /** What a resource really is (spec §4.3): a past exam, a single lesson or an atlas is never a course.
@@ -205,7 +206,7 @@ if (new Set(catalogue.map((resource) => resource.id)).size !== catalogue.length)
  *  Any mismatch between a record and its decision fails the build (src/lib/release/engine.ts). */
 export const RELEASE = projectRelease({
   catalogue,
-  pool: [...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES],
+  pool: [...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES, ...MILITARY_L003_CANDIDATES],
   baseline: RELEASE_BASELINE,
   lots: LOT_MANIFESTS,
   release: RELEASE_MANIFEST,

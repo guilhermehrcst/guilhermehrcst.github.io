@@ -27,7 +27,7 @@ const [practiceAnchors, ...deepenAnchors] = anchorPlan(routes.objective('enem'),
 const practiceSource = sourceShownAsResource('inep-provas-gabaritos', practice?.resources ?? []);
 const practiceSourceAnchor = practiceSource && practiceAnchors?.has(practiceSource.id) ? `recurso-${practiceSource.id}` : undefined;
 ---
-<Base title={c.title} description={c.description}>
+<Base title={c.title} description={c.description} courseEdition>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} crumbs={[{ label: OBJECTIVES.vestibulares.label, href: routes.objective('vestibulares') }]} />
 
   <TrackSection id="entenda" title={g.entenda.title}>

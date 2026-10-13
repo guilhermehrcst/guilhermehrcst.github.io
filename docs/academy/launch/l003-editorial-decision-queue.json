@@ -1,0 +1,200 @@
+{
+  "schema": "academy-l003-editorial-decision-queue/1",
+  "status": "awaiting_exact_human_editorial_approval",
+  "preparedOn": "2026-10-13",
+  "scope": "pre-militar-only",
+  "candidateRecords": [
+    {
+      "id": "pm-eear-provas",
+      "title": "EEAR CFS 1/2024: prova, código 02",
+      "url": "https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf",
+      "format": "past-exam",
+      "category": "provas",
+      "evidenceLevel": "current_pdf_text",
+      "remainingCheck": "Testar URL oficial, TLS e PDF num navegador comum e no celular.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "cecierj-aprovarj",
+      "title": "AprovaRJ: preparação para concursos militares",
+      "url": "https://extensao.cecierj.edu.br/cursos/aprovarj/",
+      "format": "course",
+      "category": "estudo",
+      "evidenceLevel": "official_program",
+      "remainingCheck": "Conferir aulas reais dentro da sala virtual.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-poti-material-matematica",
+      "title": "POTI: material didático de Matemática Olímpica",
+      "url": "https://poti.impa.br/index.php/site/material",
+      "format": "lessons",
+      "category": "estudo",
+      "evidenceLevel": "two_module_samples",
+      "remainingCheck": "Confirmar reprodução de vídeos e acesso mobile ao material.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-obmep-matematica-1em",
+      "title": "Portal OBMEP: Matemática e Física do 1º ano do Ensino Médio",
+      "url": "https://portaldaobmep.impa.br/index.php/modulo/lista?serie=5",
+      "format": "lessons",
+      "category": "estudo",
+      "evidenceLevel": "module_sample",
+      "remainingCheck": "Testar uma atividade e o acesso móvel sem cadastro.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-obmep-matematica-2em",
+      "title": "Portal OBMEP: Matemática e Física do 2º ano do Ensino Médio",
+      "url": "https://portaldaobmep.impa.br/index.php/modulo/lista?serie=6",
+      "format": "lessons",
+      "category": "estudo",
+      "evidenceLevel": "module_sample",
+      "remainingCheck": "Testar uma atividade completa no dispositivo móvel.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-obmep-apostilas",
+      "title": "OBMEP: apostilas de Aritmética e Geometria",
+      "url": "https://www.obmep.org.br/apostilas.htm",
+      "format": "reference",
+      "category": "estudo",
+      "evidenceLevel": "three_official_complete_pdf_texts_extracted",
+      "remainingCheck": "Testar em aparelho móvel visualização dos três PDFs, zoom, leitor de tela real e eventual necessidade de download ou aplicativo.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": true
+    },
+    {
+      "id": "pm-bbc-six-minute-english",
+      "title": "BBC Learning English: 6 Minute English",
+      "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english",
+      "format": "lessons",
+      "category": "estudo",
+      "evidenceLevel": "lesson_with_audio_transcript_links",
+      "remainingCheck": "Confirmar reprodução do áudio e PDF no celular.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-yt-ferretto-matematica-basica",
+      "title": "Matemática Básica: curso em videoaulas",
+      "url": "https://www.youtube.com/playlist?list=PLTPg64KdGgYhYpS5nXdFgdqEZDOS5lARB",
+      "format": "playlist",
+      "category": "estudo",
+      "evidenceLevel": "playlist_two_video_pages",
+      "remainingCheck": "Testar reprodução completa, legendas e gratuidade anônima.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-yt-ferretto-resolve",
+      "title": "Ferretto Resolve: questões de Matemática",
+      "url": "https://www.youtube.com/playlist?list=PLTPg64KdGgYhZXVdJhFeWne8_oI5ib0YV",
+      "format": "playlist",
+      "category": "estudo",
+      "evidenceLevel": "playlist_one_video_page",
+      "remainingCheck": "Confirmar a segunda amostra e que não há paywall para os vídeos.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-yt-boaro-fisica-do-zero",
+      "title": "Física Básica: Física do Zero",
+      "url": "https://www.youtube.com/playlist?list=PLzjR7HXQnrcf84SMs9pE7XycU--cRAls4",
+      "format": "playlist",
+      "category": "estudo",
+      "evidenceLevel": "playlist_two_video_pages",
+      "remainingCheck": "Assistir aula completa, verificar legendas e acesso gratuito ao vídeo.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-yt-noslen-classe-palavras",
+      "title": "Classe de Palavras: Professor Noslen",
+      "url": "https://www.youtube.com/playlist?list=PLVyIxkvuIqxp1vpXrdsOzpL25V5srrynk",
+      "format": "playlist",
+      "category": "estudo",
+      "evidenceLevel": "playlist_two_video_pages",
+      "remainingCheck": "Checar reprodução e legendas para uma amostra.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    },
+    {
+      "id": "pm-yt-renato-brito-mecanica",
+      "title": "Física: Mecânica, seleção de videoaulas",
+      "url": "https://www.youtube.com/playlist?list=PLrbN1orI9RVBCnuYPewidJhI8N4H6a0Ks",
+      "format": "playlist",
+      "category": "estudo",
+      "evidenceLevel": "playlist_two_video_pages",
+      "remainingCheck": "Não confundir playlist grátis com curso comercial; testar vídeo.",
+      "recommendationOnly": true,
+      "approved": false,
+      "sourceVerified": false
+    }
+  ],
+  "excludedOnHold": [
+    {
+      "id": "pm-cn-provas",
+      "reason": "Reabrir prova de 2025 e conferir gabarito no portal SSPM.",
+      "officialIndex": "https://www.marinha.mil.br/sspm/colegionaval/a-cn-provag"
+    },
+    {
+      "id": "pm-en-provas",
+      "reason": "Conferir edição e gabarito na página oficial por ano.",
+      "officialIndex": "https://www.marinha.mil.br/sspm/node/95"
+    },
+    {
+      "id": "pm-eam-provas",
+      "reason": "Verificar documento e gabarito no site SSPM.",
+      "officialIndex": "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag"
+    },
+    {
+      "id": "pm-afa-provas",
+      "reason": "Reabrir versão A e gabarito no índice da FAB.",
+      "officialIndex": "https://www.fab.mil.br/ingresso/afa/afa2025.html"
+    },
+    {
+      "id": "pm-epcar-provas",
+      "reason": "Conferir ano, versão e gabarito no portal FAB.",
+      "officialIndex": "https://www.fab.mil.br/ingresso/cpcar/cpcar2026.html"
+    },
+    {
+      "id": "pm-esa-provas-2026",
+      "reason": "Reabrir PDF oficial e validar tipo/ano da prova.",
+      "officialIndex": "https://concursocfgs.esa.eb.mil.br/"
+    },
+    {
+      "id": "pm-ime-provas",
+      "reason": "Reabrir caderno exato e gabarito da edição no site IME.",
+      "officialIndex": "https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg"
+    },
+    {
+      "id": "pm-obmep-banco-questoes",
+      "reason": "Verificar o PDF de 2020 sem cadastro e inspecionar exercícios/resoluções integralmente; se houver bloqueio, escolher outra edição diretamente acessível.",
+      "officialIndex": null
+    }
+  ],
+  "authorization": {
+    "editorialApprovedBy": null,
+    "editorialApprovedAt": null,
+    "lotApplicationAuthorization": null,
+    "publicationAuthorization": null
+  }
+}

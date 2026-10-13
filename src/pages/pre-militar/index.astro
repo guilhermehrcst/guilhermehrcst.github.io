@@ -32,7 +32,7 @@ const steps = [
   { ...s.practice, href: hasMaterials ? '#materiais' : routes.objective('ensino-medio') },
 ];
 ---
-<Base title={c.title} description={s.description} noindex={preparing}>
+<Base title={c.title} description={s.description} noindex={preparing} courseEdition>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={s.lead} />
   {preparing && <PreparingNote />}
 

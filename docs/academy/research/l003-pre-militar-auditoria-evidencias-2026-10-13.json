@@ -1,0 +1,370 @@
+{
+  "schema": "academy-l003-audit/v1",
+  "auditedOn": "2026-10-13",
+  "status": "editorial_recommendations_no_human_approval",
+  "scope": "pre-militar",
+  "startingPublicResources": 44,
+  "totals": {
+    "all": 20,
+    "study": 12,
+    "exams": 8,
+    "recommended": 12,
+    "manualHolds": 8,
+    "sourceVerifiedTypedCandidates": 1,
+    "unverifiedTypedCandidates": 10
+  },
+  "limitations": [
+    "YouTube sample video pages and titles were inspected; full playback and caption availability were not verified.",
+    "A PDF rejecting a crawler is not necessarily broken for students.",
+    "Individual editorial approval and publication permission have not been granted.",
+    "Marinha CPACN/CPAEN 2025 official index links are ZIP archives, not PDF; do not promise a direct PDF download.",
+    "Source verification proves three publicly readable OBMEP PDFs, not that all books in the institution's collection are accessible or that mobile screen reader testing was completed."
+  ],
+  "resources": [
+    {
+      "id": "pm-cn-provas",
+      "title": "CPACN 2025: Matemática e Inglês, 1º dia",
+      "format": "past-exam",
+      "sourceURL": "https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPACN%201DIA%20AMARELO.pdf",
+      "category": "provas",
+      "decision": "manual_hold",
+      "evidenceLevel": "previous_pdf_review",
+      "finding": "Caderno CPACN foi inspecionado anteriormente; acesso direto ao PDF foi bloqueado nesta rodada.",
+      "nextCheck": "Reabrir prova de 2025 e conferir gabarito no portal SSPM.",
+      "sampleURLs": [
+        "https://www.marinha.mil.br/sspm/colegionaval/a-cn-provag"
+      ],
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.marinha.mil.br/sspm/colegionaval/a-cn-provag",
+      "archiveEvidence": "O índice oficial SSPM, atualizado em agosto de 2026, oferece CPACN 2025 em arquivo ZIP (3,1 MB), e o gabarito 2025 aparece em página própria. O PDF direto do staging não abriu.",
+      "downloadFormatCaveat": "2025 ZIP at source index; direct PDF unverified",
+      "alternateOfficialResource": "https://www.marinha.mil.br/sspm/gabarito/cn"
+    },
+    {
+      "id": "pm-en-provas",
+      "title": "CPAEN 2025: Matemática e Inglês, 1º dia",
+      "format": "past-exam",
+      "sourceURL": "https://www.inscricao.marinha.mil.br/marinha/CPAEN%20D1%20Amarela.pdf?id_file=8961",
+      "category": "provas",
+      "decision": "manual_hold",
+      "evidenceLevel": "previous_pdf_review",
+      "finding": "Prova Escola Naval 2025 1º dia inspecionada anteriormente; acesso atual bloqueado.",
+      "nextCheck": "Conferir edição e gabarito na página oficial por ano.",
+      "sampleURLs": [
+        "https://www.marinha.mil.br/sspm/node/95"
+      ],
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.marinha.mil.br/sspm/node/95",
+      "archiveEvidence": "O índice da Escola Naval, atualizado em setembro de 2026, oferece provas 2025 em ZIP (2,18 MB), com página separada de gabaritos. O PDF 1º dia do staging não foi reaberto.",
+      "downloadFormatCaveat": "2025 ZIP at source index; direct PDF unverified",
+      "alternateOfficialResource": "https://www.marinha.mil.br/sspm/node/90"
+    },
+    {
+      "id": "pm-eear-provas",
+      "title": "EEAR CFS 1/2024: prova, código 02",
+      "format": "past-exam",
+      "sourceURL": "https://ingresso.eear.fab.mil.br/SOO/escolaridade/CFS%201%202024/prova_cfs%201%202024_cod_02_03%2007%202023%2010%2013%2002.pdf",
+      "category": "provas",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "current_pdf_text",
+      "finding": "PDF CFS 1/2024 código 02 abriu e contém prova e gabarito oficial; houve redirecionamento para IP numérico.",
+      "nextCheck": "Testar URL oficial, TLS e PDF num navegador comum e no celular.",
+      "sampleURLs": [
+        "https://ingresso.eear.fab.mil.br/SOO/home/provas_anteriores.php?sigla_conc=%25"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-eam-provas",
+      "title": "CPAEAM 2023: prova amarela",
+      "format": "past-exam",
+      "sourceURL": "https://assets.marinha.mil.br/sspm/sites/www.marinha.mil.br.sspm/files/provas/CPAEAM-2023-PROVA%20AMARELA.pdf",
+      "category": "provas",
+      "decision": "manual_hold",
+      "evidenceLevel": "previous_pdf_review",
+      "finding": "Prova CPAEAM 2023 foi inspecionada anteriormente, mas não reabriu nesta rodada.",
+      "nextCheck": "Verificar documento e gabarito no site SSPM.",
+      "sampleURLs": [
+        "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag"
+      ],
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag",
+      "archiveEvidence": "Índice oficial de EAM relaciona caderno 2023 e anos adicionais; página principal também fornece gabaritos. O PDF direto do estágio sofreu erro na consulta, logo não afirmar download validado.",
+      "downloadFormatCaveat": "PDF linked on official index; direct PDF unverified",
+      "alternateOfficialResource": "https://www.marinha.mil.br/sspm/escola-aprendizes/eam_princ"
+    },
+    {
+      "id": "pm-afa-provas",
+      "title": "AFA 2025: prova versão A",
+      "format": "past-exam",
+      "sourceURL": "https://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf",
+      "category": "provas",
+      "decision": "manual_hold",
+      "evidenceLevel": "previous_pdf_review",
+      "finding": "Prova AFA 2025 versão A previamente inspecionada; PDF atual indisponível para o robô.",
+      "nextCheck": "Reabrir versão A e gabarito no índice da FAB.",
+      "sampleURLs": [
+        "https://www.fab.mil.br/ingresso/provas.html",
+        "https://www.fab.mil.br/ingresso/afa/afa2025.html"
+      ],
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.fab.mil.br/ingresso/afa/afa2025.html",
+      "archiveEvidence": "O histórico público da FAB para AFA 2025 identifica Prova Aplicada Versão A (27/08/2024) e Gabarito Oficial (23/12/2024). Download individual do PDF não pôde ser repetido.",
+      "downloadFormatCaveat": "official exam-specific index; PDF unverified",
+      "alternateOfficialResource": "https://www.fab.mil.br/ingresso/provas.html"
+    },
+    {
+      "id": "pm-epcar-provas",
+      "title": "EPCAR 2026: prova versão A",
+      "format": "past-exam",
+      "sourceURL": "https://www.fab.mil.br/ingresso/arquivos/2025/cpcar/cpcar-2026-08-05-2025-P1-vers%C3%A3o-A.pdf",
+      "category": "provas",
+      "decision": "manual_hold",
+      "evidenceLevel": "previous_pdf_review",
+      "finding": "Prova EPCAR 2026 versão A inspecionada antes; consulta atual bloqueada.",
+      "nextCheck": "Conferir ano, versão e gabarito no portal FAB.",
+      "sampleURLs": [
+        "https://www.fab.mil.br/ingresso/provas.html",
+        "https://www.fab.mil.br/ingresso/cpcar/cpcar2026.html"
+      ],
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.fab.mil.br/ingresso/cpcar/cpcar2026.html",
+      "archiveEvidence": "O histórico oficial da FAB para CPCAR 2026 identifica Prova Aplicada Versão A e Gabarito Oficial; PDF do estágio não abriu nesta rodada.",
+      "downloadFormatCaveat": "official exam-specific index; PDF unverified",
+      "alternateOfficialResource": "https://www.fab.mil.br/ingresso/provas.html"
+    },
+    {
+      "id": "cecierj-aprovarj",
+      "title": "AprovaRJ: preparação para concursos militares",
+      "format": "course",
+      "sourceURL": "https://extensao.cecierj.edu.br/cursos/aprovarj/",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "official_program",
+      "finding": "Site Cecierj descreve curso gratuito com videoaulas, exercícios, simulados e cadastro; sem certificado nem tutoria.",
+      "nextCheck": "Conferir aulas reais dentro da sala virtual.",
+      "sampleURLs": [
+        "https://extensao.cecierj.edu.br/cursos/aprovarj/"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-esa-provas-2026",
+      "title": "ESA, concurso 2026: prova Geral, tipo A",
+      "format": "past-exam",
+      "sourceURL": "https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf",
+      "category": "provas",
+      "decision": "manual_hold",
+      "evidenceLevel": "previous_pdf_review",
+      "finding": "Prova ESA Geral 2026 tipo A inspecionada antes; o documento não retornou texto nesta rodada.",
+      "nextCheck": "Reabrir PDF oficial e validar tipo/ano da prova.",
+      "sampleURLs": [
+        "https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf",
+        "https://concursocfgs.esa.eb.mil.br/"
+      ],
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://concursocfgs.esa.eb.mil.br/",
+      "archiveEvidence": "O PDF ESA Geral 2026 continua aguardando confirmação em acesso anônimo. O portal de concursos pode rejeitar requisições automatizadas; nenhuma nova abertura afirmada.",
+      "downloadFormatCaveat": "no reliable downloadable alternative verified"
+    },
+    {
+      "id": "pm-ime-provas",
+      "title": "IME CFG 2024/2025: prova objetiva",
+      "format": "past-exam",
+      "sourceURL": "https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/CFG_Objetiva_24_25.pdf",
+      "category": "provas",
+      "decision": "manual_hold",
+      "evidenceLevel": "previous_pdf_review_with_current_official_index",
+      "finding": "Índice IME mostrou Prova/Gabarito por edição, mas o PDF específico de 2024/2025 não reabriu agora.",
+      "nextCheck": "Reabrir caderno exato e gabarito da edição no site IME.",
+      "sampleURLs": [
+        "https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg"
+      ],
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg",
+      "archiveEvidence": "O índice oficial do IME contém links EXATOS para CFG_Objetiva_24_25.pdf e GabaritoFINAL20242025.pdf, além de outras edições. Links individuais não abriram nesta rodada e ainda precisam do teste de download.",
+      "downloadFormatCaveat": "exact official PDF and matching answer-key URLs observed; content unverified",
+      "alternateOfficialResource": "https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/GabaritoFINAL20242025.pdf"
+    },
+    {
+      "id": "pm-poti-material-matematica",
+      "title": "POTI: material didático de Matemática Olímpica",
+      "format": "lessons",
+      "sourceURL": "https://poti.impa.br/index.php/site/material",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "two_module_samples",
+      "finding": "POTI exibiu aulas, exercícios e material teórico em Paridade e Divisão Euclidiana; alguns módulos anunciam conteúdo em breve.",
+      "nextCheck": "Confirmar reprodução de vídeos e acesso mobile ao material.",
+      "sampleURLs": [
+        "https://poti.impa.br/index.php/modulo/ver?modulo=1",
+        "https://poti.impa.br/index.php/modulo/ver?modulo=3"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-obmep-matematica-1em",
+      "title": "Portal OBMEP: Matemática e Física do 1º ano do Ensino Médio",
+      "format": "lessons",
+      "sourceURL": "https://portaldaobmep.impa.br/index.php/modulo/lista?serie=5",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "module_sample",
+      "finding": "Portal OBMEP oferece Matemática e Física no 1º ano; Movimento Uniforme teve conteúdo com videoaulas.",
+      "nextCheck": "Testar uma atividade e o acesso móvel sem cadastro.",
+      "sampleURLs": [
+        "https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=138"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-obmep-matematica-2em",
+      "title": "Portal OBMEP: Matemática e Física do 2º ano do Ensino Médio",
+      "format": "lessons",
+      "sourceURL": "https://portaldaobmep.impa.br/index.php/modulo/lista?serie=6",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "module_sample",
+      "finding": "Portal OBMEP cobre Matemática e Física no 2º ano; Óptica Geométrica teve videoaulas e exercícios.",
+      "nextCheck": "Testar uma atividade completa no dispositivo móvel.",
+      "sampleURLs": [
+        "https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=111"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-obmep-apostilas",
+      "title": "OBMEP: apostilas de Aritmética e Geometria",
+      "format": "reference",
+      "sourceURL": "https://www.obmep.org.br/apostilas.htm",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "three_official_complete_pdf_texts_extracted",
+      "finding": "Os três PDFs oficiais foram abertos em 13/10/2026: Iniciação à Aritmética (135 páginas), Métodos de Contagem e Probabilidade (97 páginas), Teorema de Pitágoras e Áreas (94 páginas). Sumários e capítulos estão extraíveis em texto, mas isso NÃO equivale a auditoria de visualização ou acessibilidade com leitor de tela.",
+      "nextCheck": "Testar em aparelho móvel visualização dos três PDFs, zoom, leitor de tela real e eventual necessidade de download ou aplicativo.",
+      "sampleURLs": [
+        "https://www.obmep.org.br/docs/apostila1.pdf",
+        "https://www.obmep.org.br/docs/apostila2.pdf",
+        "https://www.obmep.org.br/docs/apostila3.pdf"
+      ],
+      "checkedOn": "2026-10-13",
+      "linkFormat": "pdf_collection_with_verified_samples",
+      "verifiedInCandidateRecord": true,
+      "verifiedMethod": "official-page",
+      "verifiedOn": "2026-10-13",
+      "verifiedEvidenceURL": "https://www.obmep.org.br/apostilas.htm"
+    },
+    {
+      "id": "pm-obmep-banco-questoes",
+      "title": "OBMEP: Banco de Questões por edição",
+      "format": "practice",
+      "sourceURL": "https://www.obmep.org.br/banco.htm",
+      "category": "estudo",
+      "decision": "manual_hold",
+      "evidenceLevel": "official_index_only",
+      "finding": "O índice oficial exibe volumes de 2006 a 2020, com a edição 2020 apontando para um arquivo Google Drive público intitulado bq2020.pdf. O visualizador mostrou opção de login e não forneceu o texto integral nesta sessão; não declarar PDF/gratuidade integral verificados.",
+      "nextCheck": "Verificar o PDF de 2020 sem cadastro e inspecionar exercícios/resoluções integralmente; se houver bloqueio, escolher outra edição diretamente acessível.",
+      "sampleURLs": [
+        "https://www.obmep.org.br/banco.htm",
+        "https://drive.google.com/file/d/1aSDz7zRIIF6LcV3No6fBS52BosKPjwPA/view"
+      ],
+      "checkedOn": "2026-10-13",
+      "linkFormat": "google-drive-viewer_needs_anon_access_check"
+    },
+    {
+      "id": "pm-bbc-six-minute-english",
+      "title": "BBC Learning English: 6 Minute English",
+      "format": "lessons",
+      "sourceURL": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "lesson_with_audio_transcript_links",
+      "finding": "Episódio inclui vocabulário, pergunta e links de áudio MP3 e transcrição PDF; inglês geral intermediário.",
+      "nextCheck": "Confirmar reprodução do áudio e PDF no celular.",
+      "sampleURLs": [
+        "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english/ep-211230"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-yt-ferretto-matematica-basica",
+      "title": "Matemática Básica: curso em videoaulas",
+      "format": "playlist",
+      "sourceURL": "https://www.youtube.com/playlist?list=PLTPg64KdGgYhYpS5nXdFgdqEZDOS5lARB",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "playlist_two_video_pages",
+      "finding": "Playlists e duas páginas de aula sobre operações básicas atribuídas ao Professor Ferretto; vídeo não assistido por inteiro.",
+      "nextCheck": "Testar reprodução completa, legendas e gratuidade anônima.",
+      "sampleURLs": [
+        "https://www.youtube.com/watch?v=e78_5WIssSU",
+        "https://www.youtube.com/watch?v=0UGJRHq2PS4"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-yt-ferretto-resolve",
+      "title": "Ferretto Resolve: questões de Matemática",
+      "format": "playlist",
+      "sourceURL": "https://www.youtube.com/playlist?list=PLTPg64KdGgYhZXVdJhFeWne8_oI5ib0YV",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "playlist_one_video_page",
+      "finding": "Resolução de questão de Análise Combinatória identificada; a segunda página consultada expirou por timeout.",
+      "nextCheck": "Confirmar a segunda amostra e que não há paywall para os vídeos.",
+      "sampleURLs": [
+        "https://www.youtube.com/watch?v=Y2WFhe6yo3Y"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-yt-boaro-fisica-do-zero",
+      "title": "Física Básica: Física do Zero",
+      "format": "playlist",
+      "sourceURL": "https://www.youtube.com/playlist?list=PLzjR7HXQnrcf84SMs9pE7XycU--cRAls4",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "playlist_two_video_pages",
+      "finding": "Boaro: páginas das aulas 1 e 2 de velocidade média identificadas; descrições divulgam plataforma paga em separado.",
+      "nextCheck": "Assistir aula completa, verificar legendas e acesso gratuito ao vídeo.",
+      "sampleURLs": [
+        "https://www.youtube.com/watch?v=wlTa_yTElGM",
+        "https://www.youtube.com/watch?v=1oElVNKSMOE"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-yt-noslen-classe-palavras",
+      "title": "Classe de Palavras: Professor Noslen",
+      "format": "playlist",
+      "sourceURL": "https://www.youtube.com/playlist?list=PLVyIxkvuIqxp1vpXrdsOzpL25V5srrynk",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "playlist_two_video_pages",
+      "finding": "Introdução a Classes de Palavras e vídeo sobre Substantivo identificados; canal oferece associação paga opcional.",
+      "nextCheck": "Checar reprodução e legendas para uma amostra.",
+      "sampleURLs": [
+        "https://www.youtube.com/watch?v=s8a6eXncWY8",
+        "https://www.youtube.com/watch?v=8iXiBgCnGv4"
+      ],
+      "checkedOn": "2026-10-13"
+    },
+    {
+      "id": "pm-yt-renato-brito-mecanica",
+      "title": "Física: Mecânica, seleção de videoaulas",
+      "format": "playlist",
+      "sourceURL": "https://www.youtube.com/playlist?list=PLrbN1orI9RVBCnuYPewidJhI8N4H6a0Ks",
+      "category": "estudo",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "playlist_two_video_pages",
+      "finding": "Vídeos sobre forças da natureza e ação/reação identificados; material completo pago anunciado separadamente.",
+      "nextCheck": "Não confundir playlist grátis com curso comercial; testar vídeo.",
+      "sampleURLs": [
+        "https://www.youtube.com/watch?v=69LEWTVHdUg",
+        "https://www.youtube.com/watch?v=aZCopgBL7K8"
+      ],
+      "checkedOn": "2026-10-13"
+    }
+  ],
+  "auditUpdate": "2026-10-13: fully text-readable 3 official OBMEP apostilas promoted for human editorial consideration; archives of CN, EN, EAM, AFA, EPCAR, IME confirmed at official indices without claiming their individual PDF downloads were revalidated."
+}
