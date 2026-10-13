@@ -9,13 +9,16 @@
     "study": 12,
     "exams": 8,
     "recommended": 12,
-    "manualHolds": 8
+    "manualHolds": 8,
+    "sourceVerifiedTypedCandidates": 1,
+    "unverifiedTypedCandidates": 10
   },
   "limitations": [
     "YouTube sample video pages and titles were inspected; full playback and caption availability were not verified.",
     "A PDF rejecting a crawler is not necessarily broken for students.",
     "Individual editorial approval and publication permission have not been granted.",
-    "Marinha CPACN/CPAEN 2025 official index links are ZIP archives, not PDF; do not promise a direct PDF download."
+    "Marinha CPACN/CPAEN 2025 official index links are ZIP archives, not PDF; do not promise a direct PDF download.",
+    "Source verification proves three publicly readable OBMEP PDFs, not that all books in the institution's collection are accessible or that mobile screen reader testing was completed."
   ],
   "resources": [
     {
@@ -245,7 +248,11 @@
         "https://www.obmep.org.br/docs/apostila3.pdf"
       ],
       "checkedOn": "2026-10-13",
-      "linkFormat": "pdf_collection_with_verified_samples"
+      "linkFormat": "pdf_collection_with_verified_samples",
+      "verifiedInCandidateRecord": true,
+      "verifiedMethod": "official-page",
+      "verifiedOn": "2026-10-13",
+      "verifiedEvidenceURL": "https://www.obmep.org.br/apostilas.htm"
     },
     {
       "id": "pm-obmep-banco-questoes",

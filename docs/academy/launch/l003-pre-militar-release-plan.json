@@ -41,7 +41,9 @@
     "recommendedForReview": 12,
     "needsManualChecks": 8,
     "hypotheticalInventoryIfTwelveReviewedAndApproved": 56,
-    "reviewQueueFile": "docs/academy/launch/l003-editorial-decision-queue.json"
+    "reviewQueueFile": "docs/academy/launch/l003-editorial-decision-queue.json",
+    "verifiedByDirectSource": 1,
+    "remainingUnverifiedNewRecords": 10
   },
   "humanEditorialApproval": {
     "status": "pending",
@@ -69,6 +71,7 @@
     "Create exact digested L003 manifest with authorization null",
     "Separately authorize L003 application",
     "Run full CI and 390/1280px browser QA",
-    "Separately authorize merge and deploy"
+    "Separately authorize merge and deploy",
+    "Multidisciplinary Portal OBMEP modules must use subject:null instead of a false Mathematics-only facet."
   ]
 }

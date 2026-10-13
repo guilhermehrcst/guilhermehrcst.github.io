@@ -13,7 +13,8 @@
       "evidenceLevel": "current_pdf_text",
       "remainingCheck": "Testar URL oficial, TLS e PDF num navegador comum e no celular.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "cecierj-aprovarj",
@@ -24,7 +25,8 @@
       "evidenceLevel": "official_program",
       "remainingCheck": "Conferir aulas reais dentro da sala virtual.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-poti-material-matematica",
@@ -35,7 +37,8 @@
       "evidenceLevel": "two_module_samples",
       "remainingCheck": "Confirmar reprodução de vídeos e acesso mobile ao material.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-obmep-matematica-1em",
@@ -46,7 +49,8 @@
       "evidenceLevel": "module_sample",
       "remainingCheck": "Testar uma atividade e o acesso móvel sem cadastro.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-obmep-matematica-2em",
@@ -57,7 +61,8 @@
       "evidenceLevel": "module_sample",
       "remainingCheck": "Testar uma atividade completa no dispositivo móvel.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-obmep-apostilas",
@@ -68,7 +73,8 @@
       "evidenceLevel": "three_official_complete_pdf_texts_extracted",
       "remainingCheck": "Testar em aparelho móvel visualização dos três PDFs, zoom, leitor de tela real e eventual necessidade de download ou aplicativo.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": true
     },
     {
       "id": "pm-bbc-six-minute-english",
@@ -79,7 +85,8 @@
       "evidenceLevel": "lesson_with_audio_transcript_links",
       "remainingCheck": "Confirmar reprodução do áudio e PDF no celular.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-yt-ferretto-matematica-basica",
@@ -90,7 +97,8 @@
       "evidenceLevel": "playlist_two_video_pages",
       "remainingCheck": "Testar reprodução completa, legendas e gratuidade anônima.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-yt-ferretto-resolve",
@@ -101,7 +109,8 @@
       "evidenceLevel": "playlist_one_video_page",
       "remainingCheck": "Confirmar a segunda amostra e que não há paywall para os vídeos.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-yt-boaro-fisica-do-zero",
@@ -112,7 +121,8 @@
       "evidenceLevel": "playlist_two_video_pages",
       "remainingCheck": "Assistir aula completa, verificar legendas e acesso gratuito ao vídeo.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-yt-noslen-classe-palavras",
@@ -123,7 +133,8 @@
       "evidenceLevel": "playlist_two_video_pages",
       "remainingCheck": "Checar reprodução e legendas para uma amostra.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     },
     {
       "id": "pm-yt-renato-brito-mecanica",
@@ -134,7 +145,8 @@
       "evidenceLevel": "playlist_two_video_pages",
       "remainingCheck": "Não confundir playlist grátis com curso comercial; testar vídeo.",
       "recommendationOnly": true,
-      "approved": false
+      "approved": false,
+      "sourceVerified": false
     }
   ],
   "excludedOnHold": [

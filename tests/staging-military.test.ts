@@ -26,7 +26,7 @@ test('L003 proposes exactly 12 study/exercise records and 8 official past-exam r
   assert.ok(all.every(r => r.paths.length === 1 && r.paths[0] === 'pre-militar'));
 });
 
-test('new records remain individual unverified candidates, structurally valid and without duplicates', () => {
+test('new records remain candidates; only directly accessed OBMEP PDFs can be source verified', () => {
   assert.equal(MILITARY_L003_AUTHORIZES_PUBLICATION, false);
   const legacy = [...catalogue, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES];
   const existingIDs = new Set(legacy.map(r => r.id));
@@ -35,7 +35,15 @@ test('new records remain individual unverified candidates, structurally valid an
     assert.ok(r.url?.startsWith('https://'), r.id);
     assert.ok(!existingIDs.has(r.id), r.id);
     assert.ok(!existingURLs.has(r.url), r.id);
-    assert.equal(r.verified, undefined, 'opened index != verified content');
+    if (r.id === 'pm-obmep-apostilas') {
+      assert.equal(r.verified?.by, 'official-page');
+      assert.equal(r.verified?.on, '2026-10-13');
+      assert.equal(r.verified?.freeAccess, true);
+      assert.deepEqual(r.verified?.evidence?.checked, ['free', 'scope', 'language', 'format', 'path']);
+      assert.ok(r.verified?.evidence?.note.includes('apostila3.pdf'));
+    } else {
+      assert.equal(r.verified, undefined, 'opened index != verified content');
+    }
     assert.equal(r.registration, 'unconfirmed');
     assert.equal(r.certificate, 'unconfirmed');
     assert.ok((r.review?.length ?? 0) >= 40, r.id);
@@ -89,6 +97,14 @@ test('editorial evidence and L003 release plan have zero approvals or deployment
   assert.equal(plan.application.manifestCreated, false);
   assert.equal(plan.production.mainMergeAuthorized, false);
   assert.equal(plan.production.deployAuthorized, false);
+  assert.equal(plan.proposal.verifiedByDirectSource, 1);
+  const obmep = MILITARY_L003_CANDIDATES.find(r => r.id === 'pm-obmep-apostilas');
+  assert.equal(obmep?.verified?.by, 'official-page');
+  assert.equal(RELEASE.states.get('pm-obmep-apostilas'), 'candidate');
+  for (const id of ['pm-obmep-matematica-1em', 'pm-obmep-matematica-2em']) {
+    const item = MILITARY_L003_CANDIDATES.find(r => r.id === id);
+    assert.equal(item?.subject, null, id + ': multidisciplinary modules must not be incorrectly classified');
+  }
   const { default: queue } = await import('../docs/academy/launch/l003-editorial-decision-queue.json', { with: { type: 'json' } });
   assert.equal(queue.candidateRecords.length, 12);
   assert.equal(queue.excludedOnHold.length, 8);

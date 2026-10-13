@@ -25,7 +25,7 @@ export const MILITARY_L003_CANDIDATES: readonly LearningResource[] = [
     "id": "pm-obmep-matematica-1em",
     "title": "Portal OBMEP: Matemática e Física do 1º ano do Ensino Médio",
     "provider": "IMPA / Portal OBMEP",
-    "subject": "matematica",
+    "subject": null,
     "format": "lessons",
     "paths": [
       "pre-militar"
@@ -35,13 +35,13 @@ export const MILITARY_L003_CANDIDATES: readonly LearningResource[] = [
     "url": "https://portaldaobmep.impa.br/index.php/modulo/lista?serie=5",
     "registration": "unconfirmed",
     "certificate": "unconfirmed",
-    "review": "Índice oficial de módulos do 1º ano disponível. Abrir aulas individuais e conferir cadastro, atividades e mobile."
+    "review": "Esta coleção reúne Matemática e Física do Ensino Médio, logo não pertence exclusivamente a uma matéria. Índice oficial de módulos do 1º ano disponível. Abrir aulas individuais e conferir cadastro, atividades e mobile."
   },
   {
     "id": "pm-obmep-matematica-2em",
     "title": "Portal OBMEP: Matemática e Física do 2º ano do Ensino Médio",
     "provider": "IMPA / Portal OBMEP",
-    "subject": "matematica",
+    "subject": null,
     "format": "lessons",
     "paths": [
       "pre-militar"
@@ -51,7 +51,7 @@ export const MILITARY_L003_CANDIDATES: readonly LearningResource[] = [
     "url": "https://portaldaobmep.impa.br/index.php/modulo/lista?serie=6",
     "registration": "unconfirmed",
     "certificate": "unconfirmed",
-    "review": "Índice oficial de módulos do 2º ano disponível. Abrir aulas e verificar conteúdo distinto do 1º ano."
+    "review": "Esta coleção reúne Matemática e Física do Ensino Médio, logo não pertence exclusivamente a uma matéria. Índice oficial de módulos do 2º ano disponível. Abrir aulas e verificar conteúdo distinto do 1º ano."
   },
   {
     "id": "pm-obmep-apostilas",
@@ -67,7 +67,23 @@ export const MILITARY_L003_CANDIDATES: readonly LearningResource[] = [
     "url": "https://www.obmep.org.br/apostilas.htm",
     "registration": "unconfirmed",
     "certificate": "unconfirmed",
-    "review": "Índice oficial da OBMEP e três apostilas completas abertas em 13/10/2026 (Aritmética, Contagem e Pitágoras); ainda pendem zoom e leitor de tela real no celular."
+    "review": "Três apostilas reais e gratuitas verificadas diretamente em 13/10/2026; resta conferir ergonomia no celular e leitor de tela real. É um acervo de referência, não curso preparatório militar.",
+    "verified": {
+      "on": "2026-10-13",
+      "by": "official-page",
+      "freeAccess": true,
+      "evidence": {
+        "url": "https://www.obmep.org.br/apostilas.htm",
+        "checked": [
+          "free",
+          "scope",
+          "language",
+          "format",
+          "path"
+        ],
+        "note": "Página oficial aberta e três PDFs didáticos baixados/inspecionados em 13/10/2026: apostila1.pdf (Iniciação à Aritmética, 135 páginas), apostila2.pdf (Métodos de Contagem e Probabilidade, 97 páginas), apostila3.pdf (Teorema de Pitágoras e Áreas, 94 páginas). Acesso público ao conteúdo e classificação como apostilas confirmados; não foram certificadas acessibilidade por leitor de tela, ergonomia no celular ou todas as outras obras do índice."
+      }
+    }
   },
   {
     "id": "pm-obmep-banco-questoes",
