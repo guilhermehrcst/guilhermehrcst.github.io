@@ -67,3 +67,10 @@ test('only the public L001/L002 records enter the edited layout', () => {
   const ita = buildSearchIndex().find(entry => entry.id === 'recurso:ita-provas-anteriores');
   assert.equal(ita?.url, '/pre-militar/#recurso-ita-provas-anteriores');
 });
+
+test('responsive grids and card layout outrank Astro component-scoped defaults', () => {
+  const css = read('src/styles/global.css');
+  assert.match(css, /\.course-edition \.resources\[data-resource-list\]/);
+  assert.match(css, /\.course-edition \.resource\[data-resource-id\]/);
+  assert.match(css, /\.course-edition \.track\.track \+ \.track\.track > \.head\.head/);
+});

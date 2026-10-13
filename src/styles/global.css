@@ -192,8 +192,8 @@ a:hover { color: var(--action); }
 .course-edition .part-title { font-family:var(--sans); letter-spacing:-0.04em; font-size:clamp(1.3rem, 1.1rem + 1vw, 2rem); padding-block:var(--space-3); border-bottom:1px solid var(--edition-line); }
 /* Single outbound link per educational card. The link expands across the tile via
    an overlay, so the visibly prominent action at its bottom is genuinely clickable. */
-.course-edition .resources { grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-4); }
-.course-edition .resource {
+.course-edition .resources[data-resource-list] { grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-4); }
+.course-edition .resource[data-resource-id] {
   position:relative; min-width:0; height:100%; display:flex; flex-direction:column; gap:var(--space-2);
   background:var(--edition-card); border:1px solid var(--edition-line);
   padding:var(--space-3) var(--space-3) calc(3.25rem + var(--space-3) * 2);
@@ -282,12 +282,15 @@ a:hover { color: var(--action); }
 .course-edition-page .site-footer .grid, .course-edition-page .site-footer .legal { border-color:var(--edition-line); }
 .course-edition-page .site-footer a:hover { color:var(--action); }
 .course-edition-page .site-footer :focus-visible { outline-color:var(--action); }
-@media(min-width:1120px) { .course-edition .resources { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(min-width:1120px) { .course-edition .resources[data-resource-list] { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 @media(max-width:767px) {
   .course-edition .band .intro { grid-template-columns:minmax(0,1fr); padding-block:var(--space-6) var(--space-7); }
   .course-edition .band .lead { grid-column:1; }
   .course-edition .track > .head { grid-template-columns:minmax(0,1fr); }
-  .course-edition .resources { grid-template-columns:minmax(0,1fr); }
+  .course-edition .resources[data-resource-list] { grid-template-columns:minmax(0,1fr); }
 }
-@media(min-width:540px) and (max-width:767px) { .course-edition .resources { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(min-width:540px) and (max-width:767px) { .course-edition .resources[data-resource-list] { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(prefers-reduced-motion: reduce) { .course-edition .resource .source-action { transition:none; } }
+
+/* Outrank component-scoped sibling styles without global !important. */
+.course-edition .track.track + .track.track > .head.head { border-top:1px solid var(--edition-line); padding-top:var(--space-7); }
