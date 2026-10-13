@@ -23,11 +23,20 @@ test('states: the transitions are the documented ones, and nothing reaches publi
   assert.equal(canTransition('held', 'published'), false);
 });
 
-test('production today: no lot applied, the 37 of V0.4 exactly, every staged record unpublished', () => {
+const L001_IDS = [
+  'inep-enem-provas-gabaritos', 'fuvest-acervo-2026', 'mit-1801sc',
+  'yale-psyc-110', 'odin-foundations', 'ms-learn-cloud-concepts',
+];
+const L001_SET = new Set(L001_IDS);
+
+test('production after L001: exactly the 37 baseline and six authorized resource IDs are published', () => {
   assert.deepEqual(RELEASE.problems, []);
-  assert.equal(publishedResources.length, 37);
-  assert.deepEqual(publishedResources.map((r) => r.id).sort(), [...LEGACY_IDS].sort());
-  for (const r of POOL) assert.equal(RELEASE.states.get(r.id), 'candidate', r.id);
+  assert.equal(publishedResources.length, 43);
+  const expected = [...LEGACY_IDS, ...L001_IDS].sort();
+  assert.deepEqual(publishedResources.map((r) => r.id).sort(), expected);
+  for (const r of POOL) {
+    assert.equal(RELEASE.states.get(r.id), L001_SET.has(r.id) ? 'published' : 'candidate', r.id);
+  }
   assert.equal(RELEASE.suspended.size, 0);
 });
 
@@ -217,9 +226,11 @@ test('8. a suspended resource leaves the projection, a V0.4 one included, and re
   assert.ok(ids(q).includes('google-mlcc'));
 });
 
-test('14. the repository release applies nothing and the staging records stay where they were', () => {
-  assert.equal(RELEASE.published.length, 37);
-  for (const r of POOL) assert.ok(!RELEASE.published.some((p) => p.id === r.id), r.id);
+test('14. the repository release includes only L001 from the staging pool, not any other candidate', () => {
+  assert.equal(RELEASE.published.length, 43);
+  for (const r of POOL) {
+    assert.equal(RELEASE.published.some((p) => p.id === r.id), L001_SET.has(r.id), r.id);
+  }
 });
 
 test('15. rollback: removing the last lot from the release restores the earlier projection exactly', () => {
