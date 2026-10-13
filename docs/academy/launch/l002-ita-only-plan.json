@@ -1,9 +1,9 @@
 {
   "schema": "pexis-academy-launch-preview/1",
-  "lot": "L002-ita-pre-militar-only",
+  "lot": "L002-ita-pre-militar",
   "basedOnApplied": "L001-plano-b",
   "previewOnly": true,
-  "editorialApproval": "pending",
+  "editorialApproval": "approved",
   "activationApproval": "pending",
   "publicationAuthorization": "pending",
   "expectedPublishedBefore": 43,
@@ -43,5 +43,9 @@
       "Complete mobile PDF ergonomics and assistive technology support remain unverified."
     ]
   },
-  "scope": "preflight-only; no changes to production PATH_STATUS, catalogue, release manifests or public site"
+  "scope": "Only editorial approval of the single official ITA past-exam archive. No activation of pre-militar, no new applied release lot, no change to production inventory, no main merge or deployment authorized.",
+  "editorialApprovedBy": "Guilherme Henrique",
+  "editorialApprovedOn": "2026-10-12",
+  "editorialManifest": "src/data/academy-release/lots/L002-ita-pre-militar.json",
+  "editorialRecordDigest": "sha256:a71c1b26943b23648d12a77e98219ec3a909a761e8cb9090e2d691189da96827"
 }
