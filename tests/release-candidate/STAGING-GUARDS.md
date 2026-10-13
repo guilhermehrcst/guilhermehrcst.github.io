@@ -32,9 +32,9 @@ Kinds: **A** guards against publication or activation (they must flip only with 
 | `gateb-selection-preview.test.ts` | T2: draft uses the original catalogue and two staging sets, never duplicates data | A |
 | `gateb-selection-preview.test.ts` | T2: all sixty provisional candidates obey P4 and the existing featured gate | A |
 | `gateb-selection-preview.test.ts` | T2: all nine previously missing destinations have conditional routes without public activation | A |
-| `gateb-selection-preview.test.ts` | T2: Fundamental and Pré-Militar remain preparing until a separately approved release | A |
+| `gateb-selection-preview.test.ts` | T2: L002 activates only Pré-Militar, without releasing highlights or the Gate B selection | A |
 | `gateb-typed-staging.test.ts` | Gate B: reuse 23 published and 23 typed staging records, add exactly 14 without duplicates | A |
-| `gateb-typed-staging.test.ts` | Gate B: publication remains disabled and all earlier partial attempts remain historical | A |
+| `gateb-typed-staging.test.ts` | Gate B draft remains unpublished even after the independently authorized ITA L002 | A |
 | `higher-education.test.ts` | L001: the two V0.3 groups and Psicologia are shown (yale-psyc-110; mit-1801sc joins Matemática) | A |
 | `home-sources.test.ts` | L001: every institution keeps its link and count; MIT spans two areas and opens the search | A |
 | `learning-axes.test.ts` | a technology resource serves Tecnologia and never Ensino Médio by inheritance | B |
@@ -43,18 +43,18 @@ Kinds: **A** guards against publication or activation (they must flip only with 
 | `learning-library.test.ts` | objectiveFacts counts what each path really holds | B |
 | `learning-library.test.ts` | institutions lists only providers that publish, with their resources in catalogue order | B |
 | `learning-resources.test.ts` | the catalogue is exactly the 40 records of the snapshot, field by field | B |
-| `learning-resources.test.ts` | 43 published (37 of V0.4 + 6 of L001), 3 held back with a review note | B |
+| `learning-resources.test.ts` | 44 published (37 baseline + 6 L001 + 1 L002 ITA), 3 baseline records held back | B |
 | `path-status.test.ts` | P2: one status per path; PREPARING_PATHS is derived from it | A |
 | `placement.test.ts` | P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged) | B |
 | `placement.test.ts` | P1: no destination on a page in preparation; a published resource without a destination fails | A |
-| `routes.test.ts` | the 22 canonical routes, exactly and in a stable order | B |
+| `routes.test.ts` | the 23 canonical routes, exactly and in a stable order | B |
 | `routes.test.ts` | the paths in preparation have pages but are not canonical (noindex, out of the sitemap) | A |
 | `search-filter.test.ts` | facet options: only values some resource has, in the taxonomy order, each with its label | B |
 | `search-index.test.ts` | one entry per objective, area, subject, published track and published resource | B |
 | `staging-lote03.test.ts` | Lote 03: the three military collections stay partial: recorded, never staged as ready, never in the draft | A |
 | `staging.test.ts` | reuse: the published ids are re-verified, never duplicated | A |
 | `staging.test.ts` | staged records are not published: not in the catalogue, not imported by any page or component | A |
-| `staging.test.ts` | nothing is released or activated by this lot | A |
+| `staging.test.ts` | the Gate B selection remains staging-only even though ITA L002 activated Pré-Militar | A |
 | `taxonomy.test.ts` | the paths in preparation are named, and are paths | A |
 | `tech-tracks.test.ts` | the tracks and their resources are exactly the spec | B |
 | `tech-tracks.test.ts` | a published track is never empty; a planned one is never shown | B |

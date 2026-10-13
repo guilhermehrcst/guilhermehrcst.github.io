@@ -39,6 +39,14 @@ const scratch = (): string => {
     ledger: [],
     inventory: Object.keys(baseline.records).sort(),
   }, null, 2)}\n`);
+  // The historical V0.4 scratch catalogue has no military resource. Restore its
+  // corresponding path state as well, or path-status correctly refuses a fake
+  // "active but empty" branch during independent release-tool tests.
+  const taxonomyFile = `${dir}src/lib/taxonomy.ts`;
+  const taxonomy = readFileSync(taxonomyFile, 'utf8');
+  const active = "'pre-militar': 'active'";
+  assert.ok(taxonomy.includes(active), 'real branch should keep Pré-Militar active');
+  writeFileSync(taxonomyFile, taxonomy.replace(active, "'pre-militar': 'preparing'"));
   return dir;
 };
 const cleanup = (dir: string) => execFileSync('rm', ['-rf', dir], { encoding: 'utf8' });

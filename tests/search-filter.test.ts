@@ -56,8 +56,8 @@ test('resource entries carry their facets; other entries carry none', () => {
 test('facet options: only values some resource has, in the taxonomy order, each with its label', () => {
   const options = facetOptions(publishedResources);
   assert.deepEqual(Object.keys(options), ['caminho', 'materia', 'instituicao', 'idioma', 'formato']);
-  assert.deepEqual(options.caminho.map((o: { value: string }) => o.value), ['ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia']);
-  assert.deepEqual(options.caminho.map((o: { label: string }) => o.label), ['Ensino Médio', 'Vestibular', 'Ensino Superior', 'Tecnologia']);
+  assert.deepEqual(options.caminho.map((o: { value: string }) => o.value), ['ensino-medio', 'vestibulares', 'pre-militar', 'ensino-superior', 'tecnologia']);
+  assert.deepEqual(options.caminho.map((o: { label: string }) => o.label), ['Ensino Médio', 'Vestibular', 'Pré-Militar', 'Ensino Superior', 'Tecnologia']);
   assert.deepEqual(options.idioma.map((o: { value: string }) => o.value), ['pt', 'en']);
   assert.deepEqual(options.formato.map((o: { value: string }) => o.value), ['course', 'track', 'practice', 'past-exam']);
   assert.equal(options.materia.length, 13);
