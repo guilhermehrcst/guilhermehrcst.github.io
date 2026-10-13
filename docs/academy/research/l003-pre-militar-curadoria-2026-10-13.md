@@ -61,3 +61,14 @@ Dados estruturados: [CSV dos vinte candidatos](./l003-pre-militar-20-candidatos-
 Oito cadernos oficiais continuam candidatos. Somente o PDF da EEAR abriu novamente nesta rodada. Os documentos da Marinha, FAB, ESA e IME tiveram bloqueio/indisponibilidade ao robô; isto não comprova link quebrado, mas exige validação no navegador antes de publicar. As apostilas e o Banco de Questões da OBMEP também aguardam abertura de PDFs completos.
 
 A matriz individual está em [l003-pre-militar-auditoria-evidencias-2026-10-13.json](./l003-pre-militar-auditoria-evidencias-2026-10-13.json). O [plano L003](../launch/l003-pre-militar-release-plan.json) permanece com todas as autorizações fechadas. A interface passa a agrupar **somente conteúdos já publicados** em cursos e videoaulas, exercícios e simulados, provas oficiais anteriores e materiais de apoio. Grupos vazios não serão exibidos.
+
+
+## Terceira auditoria: apostilas completas e páginas oficiais de provas (13/10/2026)
+
+**Progresso verificável:** a matriz passa a ter **12 recursos recomendados para decisão editorial** e **8 retidos**, não 11/9. Foram efetivamente abertas em PDF, com capítulos/sumário extraíveis, as três apostilas oficiais [Iniciação à Aritmética](https://www.obmep.org.br/docs/apostila1.pdf) (**135 páginas**), [Métodos de Contagem e Probabilidade](https://www.obmep.org.br/docs/apostila2.pdf) (**97 páginas**) e [Teorema de Pitágoras e Áreas](https://www.obmep.org.br/docs/apostila3.pdf) (**94 páginas**). Isso valida a existência e o conteúdo didático, mas não assegura conformidade com leitor de tela nem UX em dispositivos reais.
+
+**Arquivos militares:** os índices oficiais de [Colégio Naval](https://www.marinha.mil.br/sspm/colegionaval/a-cn-provag) e [Escola Naval](https://www.marinha.mil.br/sspm/node/95) confirmam edições 2025 em **ZIP**, não PDF; os gabaritos estão em páginas separadas. [EAM](https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag), [AFA](https://www.fab.mil.br/ingresso/afa/afa2025.html), [EPCAR](https://www.fab.mil.br/ingresso/cpcar/cpcar2026.html) e [IME](https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg) oferecem índices oficiais com suas provas e gabaritos. **Não houve confirmação nova de download integral dos PDFs individuais**: estes recursos permanecem retidos. O arquivo ESA continua com dificuldade de acesso e não deve ser promovido.
+
+O **Banco de Questões da OBMEP** mostra um link oficial para o arquivo 2020 no Google Drive, mas a visualização exibiu uma opção de login; requer teste anônimo do PDF/soluções antes da aprovação.
+
+A [fila de decisão editorial](../launch/l003-editorial-decision-queue.json) contém os **12 candidatos recomendados**, todos inicialmente `approved: false`, e os oito bloqueados. Esta fila serve à revisão humana: **não é manifesto de publicação**. O público mantém 44 recursos, e o L003 não está autorizado para aplicação, merge nem deploy.

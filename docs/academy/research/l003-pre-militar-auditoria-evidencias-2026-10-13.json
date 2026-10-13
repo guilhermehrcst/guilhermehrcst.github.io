@@ -8,13 +8,14 @@
     "all": 20,
     "study": 12,
     "exams": 8,
-    "recommended": 11,
-    "manualHolds": 9
+    "recommended": 12,
+    "manualHolds": 8
   },
   "limitations": [
     "YouTube sample video pages and titles were inspected; full playback and caption availability were not verified.",
     "A PDF rejecting a crawler is not necessarily broken for students.",
-    "Individual editorial approval and publication permission have not been granted."
+    "Individual editorial approval and publication permission have not been granted.",
+    "Marinha CPACN/CPAEN 2025 official index links are ZIP archives, not PDF; do not promise a direct PDF download."
   ],
   "resources": [
     {
@@ -30,7 +31,11 @@
       "sampleURLs": [
         "https://www.marinha.mil.br/sspm/colegionaval/a-cn-provag"
       ],
-      "checkedOn": "2026-10-12"
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.marinha.mil.br/sspm/colegionaval/a-cn-provag",
+      "archiveEvidence": "O índice oficial SSPM, atualizado em agosto de 2026, oferece CPACN 2025 em arquivo ZIP (3,1 MB), e o gabarito 2025 aparece em página própria. O PDF direto do staging não abriu.",
+      "downloadFormatCaveat": "2025 ZIP at source index; direct PDF unverified",
+      "alternateOfficialResource": "https://www.marinha.mil.br/sspm/gabarito/cn"
     },
     {
       "id": "pm-en-provas",
@@ -45,7 +50,11 @@
       "sampleURLs": [
         "https://www.marinha.mil.br/sspm/node/95"
       ],
-      "checkedOn": "2026-10-12"
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.marinha.mil.br/sspm/node/95",
+      "archiveEvidence": "O índice da Escola Naval, atualizado em setembro de 2026, oferece provas 2025 em ZIP (2,18 MB), com página separada de gabaritos. O PDF 1º dia do staging não foi reaberto.",
+      "downloadFormatCaveat": "2025 ZIP at source index; direct PDF unverified",
+      "alternateOfficialResource": "https://www.marinha.mil.br/sspm/node/90"
     },
     {
       "id": "pm-eear-provas",
@@ -75,7 +84,11 @@
       "sampleURLs": [
         "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag"
       ],
-      "checkedOn": "2026-10-12"
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.marinha.mil.br/sspm/escola-aprendizes/a-eam-provag",
+      "archiveEvidence": "Índice oficial de EAM relaciona caderno 2023 e anos adicionais; página principal também fornece gabaritos. O PDF direto do estágio sofreu erro na consulta, logo não afirmar download validado.",
+      "downloadFormatCaveat": "PDF linked on official index; direct PDF unverified",
+      "alternateOfficialResource": "https://www.marinha.mil.br/sspm/escola-aprendizes/eam_princ"
     },
     {
       "id": "pm-afa-provas",
@@ -88,9 +101,14 @@
       "finding": "Prova AFA 2025 versão A previamente inspecionada; PDF atual indisponível para o robô.",
       "nextCheck": "Reabrir versão A e gabarito no índice da FAB.",
       "sampleURLs": [
-        "https://www.fab.mil.br/ingresso/provas.html"
+        "https://www.fab.mil.br/ingresso/provas.html",
+        "https://www.fab.mil.br/ingresso/afa/afa2025.html"
       ],
-      "checkedOn": "2026-10-12"
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.fab.mil.br/ingresso/afa/afa2025.html",
+      "archiveEvidence": "O histórico público da FAB para AFA 2025 identifica Prova Aplicada Versão A (27/08/2024) e Gabarito Oficial (23/12/2024). Download individual do PDF não pôde ser repetido.",
+      "downloadFormatCaveat": "official exam-specific index; PDF unverified",
+      "alternateOfficialResource": "https://www.fab.mil.br/ingresso/provas.html"
     },
     {
       "id": "pm-epcar-provas",
@@ -103,9 +121,14 @@
       "finding": "Prova EPCAR 2026 versão A inspecionada antes; consulta atual bloqueada.",
       "nextCheck": "Conferir ano, versão e gabarito no portal FAB.",
       "sampleURLs": [
-        "https://www.fab.mil.br/ingresso/provas.html"
+        "https://www.fab.mil.br/ingresso/provas.html",
+        "https://www.fab.mil.br/ingresso/cpcar/cpcar2026.html"
       ],
-      "checkedOn": "2026-10-12"
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.fab.mil.br/ingresso/cpcar/cpcar2026.html",
+      "archiveEvidence": "O histórico oficial da FAB para CPCAR 2026 identifica Prova Aplicada Versão A e Gabarito Oficial; PDF do estágio não abriu nesta rodada.",
+      "downloadFormatCaveat": "official exam-specific index; PDF unverified",
+      "alternateOfficialResource": "https://www.fab.mil.br/ingresso/provas.html"
     },
     {
       "id": "cecierj-aprovarj",
@@ -133,9 +156,13 @@
       "finding": "Prova ESA Geral 2026 tipo A inspecionada antes; o documento não retornou texto nesta rodada.",
       "nextCheck": "Reabrir PDF oficial e validar tipo/ano da prova.",
       "sampleURLs": [
-        "https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf"
+        "https://esa.eb.mil.br/images/SCA/Prova-Geral_2026.pdf",
+        "https://concursocfgs.esa.eb.mil.br/"
       ],
-      "checkedOn": "2026-10-12"
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://concursocfgs.esa.eb.mil.br/",
+      "archiveEvidence": "O PDF ESA Geral 2026 continua aguardando confirmação em acesso anônimo. O portal de concursos pode rejeitar requisições automatizadas; nenhuma nova abertura afirmada.",
+      "downloadFormatCaveat": "no reliable downloadable alternative verified"
     },
     {
       "id": "pm-ime-provas",
@@ -150,7 +177,11 @@
       "sampleURLs": [
         "https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg"
       ],
-      "checkedOn": "2026-10-12"
+      "checkedOn": "2026-10-12",
+      "officialArchiveIndex": "https://www.ime.eb.mil.br/vestibular-e-concursos/cfg-ensino-medio/provas-anteriores-cfg",
+      "archiveEvidence": "O índice oficial do IME contém links EXATOS para CFG_Objetiva_24_25.pdf e GabaritoFINAL20242025.pdf, além de outras edições. Links individuais não abriram nesta rodada e ainda precisam do teste de download.",
+      "downloadFormatCaveat": "exact official PDF and matching answer-key URLs observed; content unverified",
+      "alternateOfficialResource": "https://www.ime.eb.mil.br/images/arquivos/admissao/cfg/provas-anteriores/2024-2025/GabaritoFINAL20242025.pdf"
     },
     {
       "id": "pm-poti-material-matematica",
@@ -204,14 +235,17 @@
       "format": "reference",
       "sourceURL": "https://www.obmep.org.br/apostilas.htm",
       "category": "estudo",
-      "decision": "manual_hold",
-      "evidenceLevel": "official_index_only",
-      "finding": "Página oficial listou apostilas, mas dois PDFs individuais não puderam ser abertos na auditoria.",
-      "nextCheck": "Abrir PDFs integrais, conferir acessibilidade e mobile.",
+      "decision": "recommend_for_review",
+      "evidenceLevel": "three_official_complete_pdf_texts_extracted",
+      "finding": "Os três PDFs oficiais foram abertos em 13/10/2026: Iniciação à Aritmética (135 páginas), Métodos de Contagem e Probabilidade (97 páginas), Teorema de Pitágoras e Áreas (94 páginas). Sumários e capítulos estão extraíveis em texto, mas isso NÃO equivale a auditoria de visualização ou acessibilidade com leitor de tela.",
+      "nextCheck": "Testar em aparelho móvel visualização dos três PDFs, zoom, leitor de tela real e eventual necessidade de download ou aplicativo.",
       "sampleURLs": [
-        "https://www.obmep.org.br/apostilas.htm"
+        "https://www.obmep.org.br/docs/apostila1.pdf",
+        "https://www.obmep.org.br/docs/apostila2.pdf",
+        "https://www.obmep.org.br/docs/apostila3.pdf"
       ],
-      "checkedOn": "2026-10-13"
+      "checkedOn": "2026-10-13",
+      "linkFormat": "pdf_collection_with_verified_samples"
     },
     {
       "id": "pm-obmep-banco-questoes",
@@ -221,12 +255,14 @@
       "category": "estudo",
       "decision": "manual_hold",
       "evidenceLevel": "official_index_only",
-      "finding": "Índice dos bancos de questões e erratas aberto; um volume com respostas não foi testado por completo.",
-      "nextCheck": "Abrir questões e soluções de ao menos um volume.",
+      "finding": "O índice oficial exibe volumes de 2006 a 2020, com a edição 2020 apontando para um arquivo Google Drive público intitulado bq2020.pdf. O visualizador mostrou opção de login e não forneceu o texto integral nesta sessão; não declarar PDF/gratuidade integral verificados.",
+      "nextCheck": "Verificar o PDF de 2020 sem cadastro e inspecionar exercícios/resoluções integralmente; se houver bloqueio, escolher outra edição diretamente acessível.",
       "sampleURLs": [
-        "https://www.obmep.org.br/banco.htm"
+        "https://www.obmep.org.br/banco.htm",
+        "https://drive.google.com/file/d/1aSDz7zRIIF6LcV3No6fBS52BosKPjwPA/view"
       ],
-      "checkedOn": "2026-10-13"
+      "checkedOn": "2026-10-13",
+      "linkFormat": "google-drive-viewer_needs_anon_access_check"
     },
     {
       "id": "pm-bbc-six-minute-english",
@@ -322,5 +358,6 @@
       ],
       "checkedOn": "2026-10-13"
     }
-  ]
+  ],
+  "auditUpdate": "2026-10-13: fully text-readable 3 official OBMEP apostilas promoted for human editorial consideration; archives of CN, EN, EAM, AFA, EPCAR, IME confirmed at official indices without claiming their individual PDF downloads were revalidated."
 }

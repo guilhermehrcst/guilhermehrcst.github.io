@@ -67,7 +67,7 @@ export const MILITARY_L003_CANDIDATES: readonly LearningResource[] = [
     "url": "https://www.obmep.org.br/apostilas.htm",
     "registration": "unconfirmed",
     "certificate": "unconfirmed",
-    "review": "Índice de apostilas publicado pela OBMEP. Abrir PDFs completos e verificar gratuidade e legibilidade."
+    "review": "Índice oficial da OBMEP e três apostilas completas abertas em 13/10/2026 (Aritmética, Contagem e Pitágoras); ainda pendem zoom e leitor de tela real no celular."
   },
   {
     "id": "pm-obmep-banco-questoes",

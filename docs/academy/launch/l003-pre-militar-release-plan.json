@@ -38,8 +38,10 @@
     "study": 12,
     "officialExamPapers": 8,
     "potentialInventoryIfAllApproved": 64,
-    "recommendedForReview": 11,
-    "needsManualChecks": 9
+    "recommendedForReview": 12,
+    "needsManualChecks": 8,
+    "hypotheticalInventoryIfTwelveReviewedAndApproved": 56,
+    "reviewQueueFile": "docs/academy/launch/l003-editorial-decision-queue.json"
   },
   "humanEditorialApproval": {
     "status": "pending",
@@ -61,6 +63,7 @@
     "onlyPublishedVisible": true
   },
   "gates": [
+    "Revalidate actual student-facing download/access on archives, especially ZIP files and bot-blocked PDFs, before any past-exam publication.",
     "Verify incomplete PDFs and full free-access samples and drop failures",
     "Human editorial decision for every record",
     "Create exact digested L003 manifest with authorization null",

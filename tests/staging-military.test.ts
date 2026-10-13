@@ -76,8 +76,8 @@ test('editorial evidence and L003 release plan have zero approvals or deployment
   const { default: audit } = await import('../docs/academy/research/l003-pre-militar-auditoria-evidencias-2026-10-13.json', { with: { type: 'json' } });
   const { default: plan } = await import('../docs/academy/launch/l003-pre-militar-release-plan.json', { with: { type: 'json' } });
   assert.equal(audit.resources.length, 20);
-  assert.equal(audit.totals.recommended, 11);
-  assert.equal(audit.totals.manualHolds, 9);
+  assert.equal(audit.totals.recommended, 12);
+  assert.equal(audit.totals.manualHolds, 8);
   assert.deepEqual(audit.resources.map(r => r.id).sort(), [...ids].sort());
   assert.equal(audit.resources.filter(r => r.category === 'provas').length, 8);
   assert.ok(audit.resources.every(r => r.sampleURLs.length > 0 && r.nextCheck.length > 15));
@@ -89,4 +89,15 @@ test('editorial evidence and L003 release plan have zero approvals or deployment
   assert.equal(plan.application.manifestCreated, false);
   assert.equal(plan.production.mainMergeAuthorized, false);
   assert.equal(plan.production.deployAuthorized, false);
+  const { default: queue } = await import('../docs/academy/launch/l003-editorial-decision-queue.json', { with: { type: 'json' } });
+  assert.equal(queue.candidateRecords.length, 12);
+  assert.equal(queue.excludedOnHold.length, 8);
+  assert.ok(queue.candidateRecords.every(r => r.approved === false && r.recommendationOnly === true));
+  assert.deepEqual(queue.candidateRecords.map(r => r.id).sort(), audit.resources.filter(r => r.decision === 'recommend_for_review').map(r => r.id).sort());
+  assert.ok(queue.excludedOnHold.some(r => r.id === 'pm-ime-provas'));
+  assert.equal(queue.authorization.lotApplicationAuthorization, null);
+  assert.equal(queue.authorization.publicationAuthorization, null);
+  const pdf = audit.resources.find(r => r.id === 'pm-obmep-apostilas');
+  assert.equal(pdf?.decision, 'recommend_for_review');
+  assert.equal(pdf?.sampleURLs.length, 3);
 });
