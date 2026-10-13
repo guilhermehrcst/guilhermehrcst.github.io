@@ -1,6 +1,7 @@
-// A rehearsal on the *already published* L001 inventory (43). It never writes manifests,
-// PATH_STATUS or a site page. Every L002 "approval" below is explicitly SIMULAÇÃO,
-// supplied by fixtures and rejected by a production-mode release.
+// Historical three-resource L002 rehearsal, preserved after the independent ITA
+// editorial approval. This combined plan remains pending and is NEVER published.
+// The real pending ITA manifest belongs to production-state tests; this simulation
+// starts from the publicly applied L001 lot and rejects fictional human approvals.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -27,10 +28,13 @@ const hypothetical = {
   ledger: [...actual.ledger, pin],
   inventory: [...actual.inventory, ...IDS].sort(),
 };
+// Exclude the genuine pending ITA lot ONLY from this historical three-resource
+// simulation: otherwise a fixture attempts to decide the same ITA record twice.
+const appliedOnly = LOT_MANIFESTS.filter(lot => actual.applied.some(pin => pin.lot === (lot as { lot: string }).lot));
 const simulate = (release: unknown = hypothetical, manifest: unknown = experiment) =>
-  project({ lots: [...LOT_MANIFESTS, manifest], release });
+  project({ lots: [...appliedOnly, manifest], release });
 
-test('L002 plan is explicitly pending; main and its one authentic L001 lot are untouched', () => {
+test('combined three-resource L002 is still blocked; the public L001 inventory remains untouched', () => {
   assert.equal(plan.previewOnly, true);
   assert.equal(plan.editorialApproval, 'pending');
   assert.equal(plan.activationApproval, 'pending');
@@ -43,7 +47,7 @@ test('L002 plan is explicitly pending; main and its one authentic L001 lot are u
   assert.deepEqual(actual.ledger.map(lot => lot.lot), ['L001-plano-b']);
   assert.equal(actual.inventory.length, 43);
   assert.equal(publishedResources.length, 43);
-  assert.equal(LOT_MANIFESTS.length, 1);
+  assert.deepEqual(LOT_MANIFESTS.map(lot => (lot as { lot: string }).lot), ['L001-plano-b', 'L002-ita-pre-militar']);
   for (const id of IDS) assert.ok(!publishedResources.some(r => r.id === id), id);
   for (const id of ACTIVATE) assert.equal(PATH_STATUS[id], 'preparing', id);
   for (const path of Object.keys(FEATURED_RELEASE)) {
@@ -52,7 +56,7 @@ test('L002 plan is explicitly pending; main and its one authentic L001 lot are u
   }
 });
 
-test('technical editorial blockers remain recommendations, never human approvals or authorization', () => {
+test('the combined Fundamental plus ITA proposal still has no collective approval or activation', () => {
   assert.equal(plan.reviewReadiness, 'blocked-pending-editorial-recuration');
   assert.equal(plan.reviewRecommendationsOnly, true);
   assert.equal(plan.reviewReport, 'docs/academy/launch/l002-editorial-review-2026-10-12.md');
