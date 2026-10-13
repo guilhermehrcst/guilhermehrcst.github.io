@@ -52,6 +52,24 @@ test('L002 plan is explicitly pending; main and its one authentic L001 lot are u
   }
 });
 
+test('technical editorial blockers remain recommendations, never human approvals or authorization', () => {
+  assert.equal(plan.reviewReadiness, 'blocked-pending-editorial-recuration');
+  assert.equal(plan.reviewRecommendationsOnly, true);
+  assert.equal(plan.reviewReport, 'docs/academy/launch/l002-editorial-review-2026-10-12.md');
+  assert.deepEqual(plan.resources.map(resource => resource.technicalRecommendation), [
+    'recurate-before-human-approval',
+    'recurate-before-human-approval',
+    'eligible-for-human-editorial-decision',
+  ]);
+  for (const resource of plan.resources.slice(0, 2)) {
+    assert.equal(resource.proposedAlternative?.status, 'not-audited-for-release', resource.id);
+    assert.equal(resource.proposedAlternative?.newDigestRequired, true, resource.id);
+  }
+  assert.equal(plan.editorialApproval, 'pending');
+  assert.equal(plan.activationApproval, 'pending');
+  assert.equal(plan.publicationAuthorization, 'pending');
+});
+
 test('SIMULAÇÃO: L001 remains pinned; a later L002 can project 43 → 46 without touching baseline', () => {
   assert.equal(experiment.simulation, true);
   assert.match(experiment.authorization?.by ?? '', /^SIMULAÇÃO/);
