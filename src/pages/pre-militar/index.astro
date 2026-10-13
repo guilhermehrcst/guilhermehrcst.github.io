@@ -1,9 +1,12 @@
 ---
-// /pre-militar/ (V0.3): a path in preparation. It names the selection processes it will organise, by
-// their official names only: no requirement, subject, date or link, because no edital could be checked
-// at its official source yet. No physical or medical training, no simulated exam. noindex and out of
-// the sitemap until it has published, verified material. V0.4 Gate B: its state comes from PATH_STATUS
-// (isPreparing), never from a literal; src/lib/path-status.ts refuses an inconsistent one.
+// /pre-militar/ (V0.3): the selection processes of military schools and academies, named by their official
+// names only: no requirement, subject, date or link of their own, because each one is valid only by its
+// current edital at the official source. No physical or medical training, no simulated exam.
+// Order: presentation, how to start, the official materials published here, the institutions.
+// V0.4 Gate B: the state comes from PATH_STATUS (isPreparing), never from a literal, and src/lib/path-status.ts
+// refuses an inconsistent one. In preparation the page is noindex, says so and lists no resource.
+// What is available comes only from the published catalogue (placedOnPath): the materials section, the link
+// of the last step and a school's "available" mark appear only when a published record is placed here.
 import Base from '../../layouts/Base.astro';
 import PageIntro from '../../components/PageIntro.astro';
 import PreparingNote from '../../components/PreparingNote.astro';
@@ -12,6 +15,7 @@ import PathResources from '../../components/PathResources.astro';
 import TrackSection from '../../components/TrackSection.astro';
 import { routes } from '../../lib/routes';
 import { isPreparing } from '../../lib/path-status';
+import { placedOnPath } from '../../lib/placement';
 import { pt as t } from '../../i18n/pt';
 
 const c = t.pages['pre-militar'];
@@ -19,57 +23,80 @@ const m = t.preMilitar;
 const preparing = isPreparing('pre-militar');
 // The copy follows the state (description and lead included): an active page never speaks of preparation.
 const s = m.byState[preparing ? 'preparing' : 'active'];
+// The published records placed on this page: the only source of what is available here.
+const placed = new Set(placedOnPath('pre-militar').map((r) => r.id));
+const hasMaterials = placed.size > 0;
+// The last step links to the materials below only when they are rendered; otherwise to Ensino Médio.
+const steps = [
+  ...m.start,
+  { ...s.practice, href: hasMaterials ? '#materiais' : routes.objective('ensino-medio') },
+];
 ---
 <Base title={c.title} description={s.description} noindex={preparing}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={s.lead} />
   {preparing && <PreparingNote />}
-  <FeaturedResources path="pre-militar" />
-  <PathResources path="pre-militar" id="materiais" title={t.pathResources.general.title} why={t.pathResources.general.why} />
 
-  <TrackSection id="processos" title={s.processesTitle} why={m.processesWhy}>
+  <TrackSection id="como-comecar" title={m.startTitle}>
+    <ol class="steps" role="list">
+      {steps.map((step, i) => (
+        <li class="step">
+          <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+          {'href' in step && (
+            <a class="more" href={step.href}>{step.link}{' '}<span aria-hidden="true">{step.href.startsWith('#') ? '↓' : '→'}</span></a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </TrackSection>
+
+  <FeaturedResources path="pre-militar" />
+  <PathResources path="pre-militar" id="materiais" title={m.materialsTitle} why={m.materialsWhy} />
+
+  <TrackSection id="processos" title={m.processesTitle} why={m.processesWhy}>
     <div class="forces">
       {m.branches.map((branch) => (
         <section class="force" aria-label={branch.force}>
           <p class="force-name">{branch.force}</p>
           <ul role="list">
-            {branch.schools.map((school) => (
-              <li>
-                <span class="acronym" translate="no">{school.acronym}</span>
-                <span class="name">{school.name}</span>
-                <span class="state">{m.status}</span>
-              </li>
-            ))}
+            {branch.schools.map((school) => {
+              const available = school.resourceId !== undefined && placed.has(school.resourceId);
+              return (
+                <li data-school={school.acronym}>
+                  <span class="acronym" translate="no">{school.acronym}</span>
+                  <span class="name">{school.name}</span>
+                  {available && (
+                    <a class="available" href={`#recurso-${school.resourceId}`}><span class="dot" aria-hidden="true"></span>{m.available}</a>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </section>
       ))}
     </div>
-  </TrackSection>
-
-  <TrackSection id="como" title={s.howTitle}>
-    <ol class="how" role="list">
-      {s.how.map((item, i) => <li><span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span><span>{item}</span></li>)}
-    </ol>
     <p class="scope">{m.scope}</p>
   </TrackSection>
-
-  {preparing && (
-    <TrackSection id="enquanto-isso" title={t.preparing.meanwhile}>
-      <p><a class="more" href={routes.objective('ensino-medio')}>{m.medio}{' '}<span aria-hidden="true">→</span></a></p>
-    </TrackSection>
-  )}
 </Base>
 
 <style>
+  .steps { display: grid; gap: var(--space-5); border-top: 1px solid var(--rule-strong); padding-top: var(--space-5); }
+  @media (min-width: 768px) { .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); } }
+  .step { display: grid; align-content: start; gap: var(--space-2); }
+  .step .n { font-family: var(--serif); font-size: 1.75rem; line-height: 1; color: var(--action); font-variant-numeric: tabular-nums; }
+  .step h3 { font-size: var(--fs-h3); font-weight: 600; }
+  .step p { max-width: var(--measure); color: var(--muted); }
+  /* Inline, so a wrapped label keeps its arrow after the last word; the padding keeps a 44px target. */
+  .more { display: inline-block; padding-block: 10px; font-weight: 560; }
+
   .forces { display: grid; gap: var(--space-6); }
   @media (min-width: 900px) { .forces { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .force-name { padding-bottom: var(--space-2); border-bottom: 1px solid var(--rule-strong); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-  .force li { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: var(--space-3); padding-block: var(--space-3); border-bottom: 1px solid var(--rule); }
-  .acronym { grid-row: span 2; font-family: var(--serif); font-size: 1.25rem; font-weight: 500; }
+  .force li { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); align-items: baseline; column-gap: var(--space-3); padding-block: var(--space-3); border-bottom: 1px solid var(--rule); }
+  .acronym { font-family: var(--serif); font-size: 1.25rem; font-weight: 500; }
   .name { font-weight: 500; }
-  .state { font-size: 0.75rem; color: var(--muted); }
-  .how { display: grid; border-top: 1px solid var(--rule-strong); max-width: 48rem; }
-  .how li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); padding-block: var(--space-3); border-bottom: 1px solid var(--rule); }
-  .how .n { font-size: var(--fs-small); color: var(--muted); font-variant-numeric: tabular-nums; line-height: 1.7; }
-  .scope { margin-top: var(--space-5); max-width: var(--measure); color: var(--muted); }
-  .more { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+  .available { grid-column: 2; display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; font-size: var(--fs-small); font-weight: 560; color: var(--action); }
+  .available .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--action); }
+  .scope { margin-top: var(--space-6); max-width: var(--measure); color: var(--muted); }
 </style>

@@ -105,11 +105,43 @@ test('P2: the real state today is consistent', () => {
 });
 
 
-test('Pré-Militar names Escola Naval under Marinha, as structure only: edital in verification, no link', async () => {
+test('Pré-Militar names Escola Naval under Marinha, as structure only: no date, link or requirement', async () => {
   const { pt } = await import('../src/i18n/pt.ts');
   const marinha = pt.preMilitar.branches.find((b) => b.force === 'Marinha');
   assert.deepEqual(marinha?.schools.map((s) => s.acronym), ['CN', 'EN']);
   assert.equal(marinha?.schools.find((s) => s.acronym === 'EN')?.name, 'Escola Naval');
-  assert.equal(pt.preMilitar.status, 'Edital em verificação');
-  for (const school of marinha?.schools ?? []) assert.deepEqual(Object.keys(school).sort(), ['acronym', 'name'], 'no date, link or requirement');
+  // The general orientation (processesWhy) replaces a status repeated on every school (owner, PR review).
+  assert.ok(!('status' in pt.preMilitar), 'no repeated per-school status');
+  assert.match(pt.preMilitar.processesWhy, /conferido na fonte oficial/);
+  // A school carries, at most, the typed id of a catalogue record: never a URL, a date or a requirement.
+  for (const school of pt.preMilitar.branches.flatMap((b) => b.schools)) {
+    for (const key of Object.keys(school)) assert.ok(['acronym', 'name', 'resourceId'].includes(key), `${school.acronym}: ${key}`);
+    for (const value of Object.values(school)) assert.doesNotMatch(String(value), /https?:|\/\//, `${school.acronym}: no link in the copy`);
+  }
+});
+
+test('Pré-Militar: a school resourceId names a typed Pré-Militar record of that school; ITA names its past exams', async () => {
+  const { pt } = await import('../src/i18n/pt.ts');
+  const { catalogue } = await import('../src/lib/learning-resources.ts');
+  const { STAGED_RESOURCES } = await import('../src/lib/staging.ts');
+  const { GATEB_NEW_RESOURCES } = await import('../src/lib/staging-gateb.ts');
+  const records = new Map([...catalogue, ...STAGED_RESOURCES, ...GATEB_NEW_RESOURCES].map((r) => [r.id, r]));
+  const linked = pt.preMilitar.branches.flatMap((b) => b.schools).filter((s) => s.resourceId !== undefined);
+  assert.deepEqual(linked.map((s) => [s.acronym, s.resourceId]), [['ITA', 'ita-provas-anteriores']]);
+  for (const school of linked) {
+    const record = records.get(school.resourceId!);
+    assert.ok(record, `${school.acronym}: ${school.resourceId} is not a typed record`);
+    assert.ok(record!.paths.includes('pre-militar'), `${school.resourceId}: not a Pré-Militar record`);
+    assert.equal(record!.provider, school.acronym, `${school.resourceId}: published by ${record!.provider}`);
+  }
+});
+
+test('Pré-Militar page: availability, the materials section and the step link come from the placed catalogue only', async () => {
+  const { readFileSync } = await import('node:fs');
+  const page = readFileSync(new URL('../src/pages/pre-militar/index.astro', import.meta.url), 'utf8');
+  assert.match(page, /placedOnPath\('pre-militar'\)/, 'availability is read from the placed catalogue');
+  assert.match(page, /school\.resourceId !== undefined && placed\.has\(school\.resourceId\)/, 'a school is available only when its record is placed here');
+  assert.match(page, /hasMaterials \? '#materiais' : routes\.objective\('ensino-medio'\)/, 'no link to an anchor that is not rendered');
+  assert.doesNotMatch(page, /https?:\/\//, 'no URL written in the page');
+  assert.doesNotMatch(page, /ita-provas-anteriores/, 'no resource id written in the page');
 });
