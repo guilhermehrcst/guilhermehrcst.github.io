@@ -40,7 +40,7 @@ diff --git a/scripts/verify-dist.mjs b/scripts/verify-dist.mjs
  ];
  const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
  const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
-@@ -753,9 +753,10 @@
+@@ -753,8 +753,9 @@
  {
    const PATH_PAGES = {
      '/ensino-medio/': ['/ensino-medio/'],
