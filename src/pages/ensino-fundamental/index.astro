@@ -19,7 +19,7 @@ const preparing = isPreparing('ensino-fundamental');
 // The copy follows the state (description and lead included): an active page never speaks of preparation.
 const s = f.byState[preparing ? 'preparing' : 'active'];
 ---
-<Base title={c.title} description={s.description} noindex={preparing}>
+<Base title={c.title} description={s.description} noindex={preparing} courseEdition>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={s.lead} />
   {preparing && <PreparingNote />}
   <FeaturedResources path="ensino-fundamental" />
