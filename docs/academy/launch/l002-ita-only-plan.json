@@ -1,0 +1,47 @@
+{
+  "schema": "pexis-academy-launch-preview/1",
+  "lot": "L002-ita-pre-militar-only",
+  "basedOnApplied": "L001-plano-b",
+  "previewOnly": true,
+  "editorialApproval": "pending",
+  "activationApproval": "pending",
+  "publicationAuthorization": "pending",
+  "expectedPublishedBefore": 43,
+  "expectedPublishedAfter": 44,
+  "activate": [
+    "pre-militar"
+  ],
+  "keepPreparing": [
+    "ensino-fundamental"
+  ],
+  "featuredReleased": false,
+  "resource": {
+    "id": "ita-provas-anteriores",
+    "path": "pre-militar",
+    "format": "past-exam",
+    "source": "https://vestibular.ita.br/provas.htm",
+    "storedRegistration": "not-required",
+    "technicalRecommendation": "eligible-for-human-editorial-decision",
+    "sourceAudit": "docs/academy/launch/ita-2025-source-qa.md",
+    "auditSample": {
+      "year": 2025,
+      "exam": "https://vestibular.ita.br/provas/2025_fase1.pdf",
+      "answerKey": "https://vestibular.ita.br/provas/gabarito_2025.pdf",
+      "examPages": 28,
+      "answerKeyPages": 1,
+      "questionCount": 48,
+      "cancelledQuestionNumbers": [
+        9,
+        18
+      ],
+      "mobileViewport390": "not-verified",
+      "screenReader": "not-verified"
+    },
+    "qualifications": [
+      "Official archive of past exams and answer keys, not a course.",
+      "Past papers do not replace latest ITA admissions notice.",
+      "Complete mobile PDF ergonomics and assistive technology support remain unverified."
+    ]
+  },
+  "scope": "preflight-only; no changes to production PATH_STATUS, catalogue, release manifests or public site"
+}
