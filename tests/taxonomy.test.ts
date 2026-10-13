@@ -16,7 +16,7 @@ test('ENEM and UERJ are exams inside Vestibular, not paths', () => {
 });
 
 test('the paths in preparation are named, and are paths', () => {
-  assert.deepEqual(PREPARING_PATHS, ['ensino-fundamental', 'pre-militar']);
+  assert.deepEqual(PREPARING_PATHS, ['ensino-fundamental']);
   for (const id of PREPARING_PATHS) assert.ok(PATH_ORDER.includes(id), id);
 });
 

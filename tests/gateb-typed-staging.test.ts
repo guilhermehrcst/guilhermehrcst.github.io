@@ -172,7 +172,7 @@ test('Gate B: incomplete or misleading source evidence fails closed', () => {
   assert.match(resourceProblems(sample, new Date('2026-10-11T23:59:59Z')).join('\n'), /verified in the future/);
 });
 
-test('Gate B: publication remains disabled and all earlier partial attempts remain historical', () => {
+test('Gate B draft remains unpublished even after the independently authorized ITA L002', () => {
   assert.equal(GATEB_ADDITIONS_AUTHORIZE_PUBLICATION, false);
   assert.equal(audit.featured_release_authorized, false);
   assert.deepEqual(PARTIAL_VERIFICATIONS.map((p) => p.id).sort(), ['pm-cn-provas', 'pm-eear-provas', 'pm-en-provas']);
@@ -182,7 +182,7 @@ test('Gate B: publication remains disabled and all earlier partial attempts rema
     assert.equal(FEATURED_RELEASE[path], 'staging', path);
   }
   assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
+  assert.equal(PATH_STATUS['pre-militar'], 'active');
 
   const walk = (dir: string): string[] => readdirSync(new URL(`../${dir}`, import.meta.url))
     .flatMap((name) => statSync(new URL(`../${dir}/${name}`, import.meta.url)).isDirectory()

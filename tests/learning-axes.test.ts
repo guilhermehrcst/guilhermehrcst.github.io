@@ -66,7 +66,7 @@ test('every count is the number of distinct published resources of that path or 
   assert.deepEqual(objectiveFacts('ensino-fundamental'), { resources: 0 });
   assert.deepEqual(objectiveFacts('ensino-medio'), { resources: 12 });
   assert.deepEqual(objectiveFacts('vestibulares'), { resources: 22 });
-  assert.deepEqual(objectiveFacts('pre-militar'), { resources: 0 });
+  assert.deepEqual(objectiveFacts('pre-militar'), { resources: 1 });
   assert.deepEqual(objectiveFacts('ensino-superior'), { resources: 8 });
   assert.deepEqual(objectiveFacts('tecnologia'), { resources: 19, tracks: 8 });
   assert.deepEqual(objectiveFacts('enem'), { resources: 14 });

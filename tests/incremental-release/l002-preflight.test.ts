@@ -1,7 +1,8 @@
 // Historical three-resource L002 rehearsal, preserved after the independent ITA
 // editorial approval. This combined plan remains pending and is NEVER published.
-// The real pending ITA manifest belongs to production-state tests; this simulation
-// starts from the publicly applied L001 lot and rejects fictional human approvals.
+// The real ITA-only L002 is now applied in the separate release branch; this historical
+// three-resource proposal remains unapproved. Reconstruct the former L001 snapshot solely
+// for an isolated simulation, never changing or mixing with the real authorized ITA.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -21,20 +22,26 @@ const ACTIVATE = ['ensino-fundamental', 'pre-militar'] as const;
 const STATES = { ...PATH_STATUS, 'ensino-fundamental': 'active' as const, 'pre-militar': 'active' as const };
 const experiment = lotOf('L002-ativacao-ensaio', IDS.map(id => entryFor(id)));
 const pin = { lot: experiment.lot, digest: lotDigest(experiment) };
-const hypothetical = {
+const beforeITA = {
   ...actual,
+  applied: actual.applied.filter(pin => pin.lot === 'L001-plano-b'),
+  ledger: actual.ledger.filter(pin => pin.lot === 'L001-plano-b'),
+  inventory: actual.inventory.filter(id => id !== 'ita-provas-anteriores'),
+};
+const hypothetical = {
+  ...beforeITA,
   mode: 'simulation' as const,
-  applied: [...actual.applied, pin],
-  ledger: [...actual.ledger, pin],
-  inventory: [...actual.inventory, ...IDS].sort(),
+  applied: [...beforeITA.applied, pin],
+  ledger: [...beforeITA.ledger, pin],
+  inventory: [...beforeITA.inventory, ...IDS].sort(),
 };
 // Exclude the genuine pending ITA lot ONLY from this historical three-resource
 // simulation: otherwise a fixture attempts to decide the same ITA record twice.
-const appliedOnly = LOT_MANIFESTS.filter(lot => actual.applied.some(pin => pin.lot === (lot as { lot: string }).lot));
+const appliedOnly = LOT_MANIFESTS.filter(lot => beforeITA.applied.some(pin => pin.lot === (lot as { lot: string }).lot));
 const simulate = (release: unknown = hypothetical, manifest: unknown = experiment) =>
   project({ lots: [...appliedOnly, manifest], release });
 
-test('combined three-resource L002 is still blocked; the public L001 inventory remains untouched', () => {
+test('historic three-resource plan is still blocked; real ITA-only L002 is applied separately', () => {
   assert.equal(plan.previewOnly, true);
   assert.equal(plan.editorialApproval, 'pending');
   assert.equal(plan.activationApproval, 'pending');
@@ -43,13 +50,16 @@ test('combined three-resource L002 is still blocked; the public L001 inventory r
   assert.deepEqual(plan.activate, [...ACTIVATE]);
   assert.equal(plan.expectedPublishedBefore, 43);
   assert.equal(plan.expectedPublishedAfter, 46);
-  assert.deepEqual(actual.applied.map(lot => lot.lot), ['L001-plano-b']);
-  assert.deepEqual(actual.ledger.map(lot => lot.lot), ['L001-plano-b']);
-  assert.equal(actual.inventory.length, 43);
-  assert.equal(publishedResources.length, 43);
+  assert.deepEqual(actual.applied.map(lot => lot.lot), ['L001-plano-b', 'L002-ita-pre-militar']);
+  assert.deepEqual(actual.ledger, actual.applied);
+  assert.equal(actual.inventory.length, 44);
+  assert.equal(publishedResources.length, 44);
+  assert.equal(beforeITA.inventory.length, 43, 'historical snapshot excludes only ITA');
   assert.deepEqual(LOT_MANIFESTS.map(lot => (lot as { lot: string }).lot), ['L001-plano-b', 'L002-ita-pre-militar']);
-  for (const id of IDS) assert.ok(!publishedResources.some(r => r.id === id), id);
-  for (const id of ACTIVATE) assert.equal(PATH_STATUS[id], 'preparing', id);
+  for (const id of IDS.slice(0, 2)) assert.ok(!publishedResources.some(r => r.id === id), id);
+  assert.ok(publishedResources.some(r => r.id === 'ita-provas-anteriores'));
+  assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
+  assert.equal(PATH_STATUS['pre-militar'], 'active');
   for (const path of Object.keys(FEATURED_RELEASE)) {
     assert.equal(FEATURED_RELEASE[path as keyof typeof FEATURED_RELEASE], 'staging', path);
     assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH[path as keyof typeof FEATURED_RESOURCE_IDS_BY_PATH], [], path);
@@ -78,23 +88,23 @@ test('SIMULAÇÃO: L001 remains pinned; a later L002 can project 43 → 46 witho
   assert.equal(experiment.simulation, true);
   assert.match(experiment.authorization?.by ?? '', /^SIMULAÇÃO/);
   assert.ok(experiment.entries.every(entry => entry.decidedBy.startsWith('SIMULAÇÃO')));
-  assert.deepEqual(hypothetical.applied.slice(0, 1), actual.applied);
-  assert.deepEqual(hypothetical.ledger.slice(0, 1), actual.ledger);
+  assert.deepEqual(hypothetical.applied.slice(0, 1), beforeITA.applied);
+  assert.deepEqual(hypothetical.ledger.slice(0, 1), beforeITA.ledger);
   const result = simulate();
   assert.deepEqual(result.problems, []);
   assert.equal(result.published.length, 46);
   const next = result.published.map(r => r.id);
   assert.deepEqual([...next].sort(), hypothetical.inventory);
-  assert.ok(actual.inventory.every(id => next.includes(id)), 'all 43 current records remain published');
+  assert.ok(beforeITA.inventory.every(id => next.includes(id)), 'all 43 historical records remain included');
   for (const id of IDS) assert.equal(result.states.get(id), 'published', id);
 });
 
 test('SIMULAÇÃO: the two path activations and three resources must arrive together', () => {
   const result = simulate();
   assert.deepEqual(result.problems, []);
-  const pendingGaps = placementProblems(result.published, PATH_STATUS);
+  const pendingGaps = placementProblems(result.published, { ...PATH_STATUS, 'pre-militar': 'preparing' });
   for (const id of IDS) {
-    assert.ok(pendingGaps.some(problem => problem.includes(id)), `without activation ${id} must have no destination`);
+    assert.ok(pendingGaps.some(problem => problem.includes(id)), `in the fully preparing historical state, ${id} has no destination`);
   }
   assert.deepEqual(placementProblems(result.published, STATES), []);
   const expected = {
@@ -135,8 +145,8 @@ test('SIMULAÇÃO: changing the record digest breaks the hypothetical L002 proje
   const newPin = { lot: changed.lot, digest: lotDigest(changed) };
   const modifiedRelease = {
     ...hypothetical,
-    applied: [...actual.applied, newPin],
-    ledger: [...actual.ledger, newPin],
+    applied: [...beforeITA.applied, newPin],
+    ledger: [...beforeITA.ledger, newPin],
   };
   const result = simulate(modifiedRelease, changed);
   assert.match(result.problems.join('\n'), /record changed after its approval/);

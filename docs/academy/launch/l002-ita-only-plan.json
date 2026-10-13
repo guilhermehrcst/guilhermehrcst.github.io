@@ -2,13 +2,13 @@
   "schema": "pexis-academy-launch-preview/1",
   "lot": "L002-ita-pre-militar",
   "basedOnApplied": "L001-plano-b",
-  "previewOnly": true,
+  "previewOnly": false,
   "editorialApproval": "approved",
   "activationApproval": "approved",
   "activationApprovalScope": "release-branch-only",
   "activationApprovedBy": "Guilherme Henrique",
   "activationApprovedOn": "2026-10-12",
-  "activationExecution": "awaiting-l002-authorization",
+  "activationExecution": "applied-in-release-branch",
   "publicationAuthorization": "pending",
   "expectedPublishedBefore": 43,
   "expectedPublishedAfter": 44,
@@ -47,13 +47,13 @@
       "Complete mobile PDF ergonomics and assistive technology support remain unverified."
     ]
   },
-  "scope": "Human approval to activate pre-militar is recorded for an isolated release branch only. Activating the real path requires an atomic change with a separately authorized L002 release; until then the patch stays unapplied and the site remains in preparing. No L002 application, main merge or deployment is authorized, and ensino-fundamental stays preparing.",
+  "scope": "Owner approved L002 ITA-only application and pre-militar activation on release/academy-l002-ita-activation-v01 only. The 44-resource inventory is pinned and pre-militar active; ensino-fundamental stays preparing. No merge to main, public deployment or GitHub Pages publication has been authorized. publicationAuthorization remains pending.",
   "editorialApprovedBy": "Guilherme Henrique",
   "editorialApprovedOn": "2026-10-12",
   "editorialManifest": "src/data/academy-release/lots/L002-ita-pre-militar.json",
   "editorialRecordDigest": "sha256:a71c1b26943b23648d12a77e98219ec3a909a761e8cb9090e2d691189da96827",
   "activationPreparation": {
-    "status": "patch-ready-for-review",
+    "status": "patch-applied-in-release-branch",
     "preparedFor": [
       "pre-militar"
     ],
@@ -66,6 +66,11 @@
       "scripts/verify-dist.mjs"
     ],
     "preparedOn": "2026-10-12",
-    "notes": "The branch-only category activation was approved by the owner on 2026-10-12, but this patch remains unapplied. Applying it alone without a separately authorized L002 release must fail activation checks. Apply the exact authorized L002 and the patch atomically on the isolated release branch, then update the release identity tests and run build/browser QA. Production merge and deploy require another authorization."
-  }
+    "notes": "The reviewed ITA activation patch and exact authorized L002 lot are applied together in the isolated release branch. The patch file remains a historical reversible record; its scope is limited to the state and independent verifier. CI and browser QA must pass before requesting a separate main merge/deploy approval."
+  },
+  "lotApplicationApproval": "approved",
+  "lotApplicationScope": "release-branch-only",
+  "lotApplicationApprovedBy": "Guilherme Henrique",
+  "lotApplicationApprovedOn": "2026-10-12",
+  "appliedManifestDigest": "sha256:9f321eb961547b98ac0b883faa5e1cddd314830e3d0759bfb2bb65a882563594"
 }

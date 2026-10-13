@@ -5,12 +5,20 @@
     {
       "lot": "L001-plano-b",
       "digest": "sha256:ce7770fbf67599579767fa457baffeb7af99a6e9dd41f3c96b0b750355db59f1"
+    },
+    {
+      "lot": "L002-ita-pre-militar",
+      "digest": "sha256:9f321eb961547b98ac0b883faa5e1cddd314830e3d0759bfb2bb65a882563594"
     }
   ],
   "ledger": [
     {
       "lot": "L001-plano-b",
       "digest": "sha256:ce7770fbf67599579767fa457baffeb7af99a6e9dd41f3c96b0b750355db59f1"
+    },
+    {
+      "lot": "L002-ita-pre-militar",
+      "digest": "sha256:9f321eb961547b98ac0b883faa5e1cddd314830e3d0759bfb2bb65a882563594"
     }
   ],
   "inventory": [
@@ -29,6 +37,7 @@
     "fuvest-acervo-2026",
     "inep-enem-provas-gabaritos",
     "inep-writing-2026",
+    "ita-provas-anteriores",
     "kultivi-biology-enem",
     "kultivi-chemistry-enem",
     "kultivi-english-enem",

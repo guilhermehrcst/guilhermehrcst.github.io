@@ -1,28 +1,33 @@
-# Lançamento da Academy: Lote 01 preparado e ensaiado
+# Pexis Academy | lançamento incremental e histórico de ensaios
 
-> **Estado atual (12/10/2026, 23h40 BRT):** este README preserva os ensaios históricos da V0.4
-> (37 recursos antes do L001). A `main` publica **43 recursos**, com **L001-plano-b** aplicado.
-> O manifesto `L002-ita-pre-militar` está registrado com aprovação **editorial** individual
-> e aprovação de ativação da categoria apenas na branch isolada,
-> mas `authorization: null` e `publicationAuthorization: pending`. Os PRs [#55](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/55)
-> e [#56](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/56) continuam em draft;
-> o [#57](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/57) já foi integrado **somente**
-> na branch do #56. Pré-Militar e Fundamental seguem `preparing` até a mudança atômica
-> com o lote L002. A ativação restrita à branch de lançamento foi aprovada em 12/10/2026;
-> **não** há autorização para aplicar L002, fazer merge na `main` ou deploy.
+> **Estado na branch isolada de lançamento (L002):** o lote exato `L002-ita-pre-militar` foi
+> autorizado pelo proprietário em 12/10/2026 (BRT), em decisão separada da ativação,
+> e aplicado junto com o patch `l002-ita-activation.patch`. O inventário desta branch
+> passa de **43 para 44 recursos**, incluindo somente `ita-provas-anteriores`, classificado
+> corretamente como **acervo de provas anteriores**, não curso. Pré-Militar fica `active`;
+> Ensino Fundamental permanece `preparing`. O registro do lote e o release ficam presos
+> ao digest do manifesto autorizado; as duas aulas do Fundamental não foram aprovadas.
 >
-> **Não use `rehearse.sh plan-a|plan-b` como ensaio do L002.** Ele reproduz a etapa histórica
-> que partia de 37 recursos. O ensaio de projeção 43 → 44 do ITA está em
-> `tests/incremental-release/l002-ita-only-preflight.test.ts` e o patch inerte em
-> `docs/academy/launch/l002-ita-activation.patch`. Eles não liberam a publicação.
+> **A `main` continua com 43 recursos (somente L001 aplicado).** Os PRs
+> [#55](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/55),
+> [#56](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/56) e
+> [#59](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/59)
+> não representam autorização de merge na `main` nem de deploy. O
+> `publicationAuthorization` permanece `pending`. GitHub Pages não pode ser
+> acionado a partir do PR; CI de pull request só constrói e verifica `dist`.
 >
-> **Fluxo futuro, após autorização independente da aplicação L002:** registrar `authorization.by/on` no manifesto
-> L002 pendente (preservando o conteúdo editorial exato); aplicar em uma branch de release
-> o patch de ativação; executar `tools/academy-release.ts check` e `apply` com o manifesto
-> já registrado; atualizar os testes que fixam a identidade 43 e rodar QA/CI.
-> O comando `apply` aceita esse manifesto **somente** se ainda não estiver no ledger,
-> tiver autorização válida e for idêntico ao arquivo registrado; ele não altera o manifesto
-> nem dispara deploy. Merge para `main` e deploy exigem autorização posterior.
+> **Próximo gate:** validar `npm test`, `npx astro check`, `npm run build`
+> (inclui `verify-dist`) e QA visual/acessibilidade no navegador nas larguras
+> 390px e 1280px, conferindo busca, âncora, sitemap e noindex. O teste de PDF
+> com leitor de tela real permanece pendente: não afirmar acessibilidade completa.
+> Somente após revisão solicitar autorização **distinta** para merge na `main`
+> e publicação do site.
+>
+> **Ensaios históricos:** `rehearse.sh plan-a|plan-b` foi escrito para a V0.4
+> pré-L001 de 37 recursos e não valida o L002 atual. Os cenários do ITA 43→44
+> foram mantidos como testes históricos isolados; a release real 44 é verificada
+> pelos testes de identidade/rota e pelo verificador independente.
+
 
 **Registro histórico pré-L001:** naquele momento não havia decisões editoriais nem publicação incremental. O catálogo
 continha os 37 recursos da V0.4 (`release.json`: `production`, `applied: []`, `ledger: []`). Tudo aqui foi

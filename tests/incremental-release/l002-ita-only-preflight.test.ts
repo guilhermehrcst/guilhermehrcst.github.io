@@ -1,7 +1,6 @@
-// Isolated, simulation-only rehearsal on the REAL published L001 inventory.
-// The recorded L002 approval is real, but only its APPLICATION remains hypothetical.
-// Category activation has separate human approval for an isolated branch; tests never enact it,
-// apply the L002 manifest, or authorize publication/deploy.
+// The ITA-only L002 is genuinely applied in the isolated branch. These tests pin that fact
+// and preserve an independent historical 43-to-44 rehearsal from L001 for rollback reasoning.
+// This branch is NOT a public deployment and cannot authorize a merge to main.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -20,24 +19,30 @@ import { entryFor, lotOf, project, record } from './fixtures.ts';
 
 const ID = 'ita-provas-anteriores';
 const simulation = lotOf('L002-ita-only-ensaiado', [entryFor(ID)]);
+// Historical L001-only projection: keep the prior test fixture separate from the actual
+// L002-applied branch so the synthetic lot never decides the ITA resource twice.
+const historicalRelease = {
+  ...release,
+  applied: release.applied.filter((pin) => pin.lot === 'L001-plano-b'),
+  ledger: release.ledger.filter((pin) => pin.lot === 'L001-plano-b'),
+  inventory: release.inventory.filter((id) => id !== ID),
+};
 const simulatedPin = { lot: simulation.lot, digest: lotDigest(simulation) };
 const hypothetical = {
-  ...release,
+  ...historicalRelease,
   mode: 'simulation' as const,
-  applied: [...release.applied, simulatedPin],
-  ledger: [...release.ledger, simulatedPin],
-  inventory: [...release.inventory, ID].sort(),
+  applied: [...historicalRelease.applied, simulatedPin],
+  ledger: [...historicalRelease.ledger, simulatedPin],
+  inventory: [...historicalRelease.inventory, ID].sort(),
 };
 const states = { ...PATH_STATUS, 'pre-militar': 'active' as const };
-// This is a controlled historical simulation from the real applied L001 state.
- // Do not replay the genuine pending ITA approval and a synthetic approval of the
- // same ID in one projection; the production-state test below checks L002 separately.
-const appliedOnly = LOT_MANIFESTS.filter(lot => release.applied.some(pin => pin.lot === (lot as { lot: string }).lot));
+// The historical fixture replays L001 plus its simulated L002, never the real L002.
+const appliedOnly = LOT_MANIFESTS.filter(lot => historicalRelease.applied.some(pin => pin.lot === (lot as { lot: string }).lot));
 const run = (r: unknown = hypothetical, lot: unknown = simulation) =>
   project({ lots: [...appliedOnly, lot], release: r });
 
-test('ITA editorial and release-branch category approvals are recorded; publishing remains unauthorized', () => {
-  assert.equal(plan.previewOnly, true);
+test('ITA L002 is authorized for an isolated release branch; merging and deploying remain unauthorized', () => {
+  assert.equal(plan.previewOnly, false);
   assert.equal(plan.editorialApproval, 'approved');
   assert.equal(plan.editorialApprovedBy, 'Guilherme Henrique');
   assert.equal(plan.editorialApprovedOn, '2026-10-12');
@@ -48,7 +53,11 @@ test('ITA editorial and release-branch category approvals are recorded; publishi
   assert.equal(plan.activationApprovalScope, 'release-branch-only');
   assert.equal(plan.activationApprovedBy, 'Guilherme Henrique');
   assert.equal(plan.activationApprovedOn, '2026-10-12');
-  assert.equal(plan.activationExecution, 'awaiting-l002-authorization');
+  assert.equal(plan.activationExecution, 'applied-in-release-branch');
+  assert.equal(plan.lotApplicationApproval, 'approved');
+  assert.equal(plan.lotApplicationScope, 'release-branch-only');
+  assert.equal(plan.lotApplicationApprovedBy, 'Guilherme Henrique');
+  assert.equal(plan.lotApplicationApprovedOn, '2026-10-12');
   assert.equal(plan.publicationAuthorization, 'pending');
   assert.deepEqual(plan.activate, ['pre-militar']);
   assert.deepEqual(plan.keepPreparing, ['ensino-fundamental']);
@@ -80,27 +89,30 @@ test('ITA editorial and release-branch category approvals are recorded; publishi
   assert.equal(entry.evidence.url, record(ID).verified?.evidence?.url);
   assert.equal(entry.evidence.observed, record(ID).verified?.evidence?.note);
   assert.deepEqual(l002.hosts, [{ host: 'vestibular.ita.br', institution: 'ITA' }]);
-  assert.equal(l002.authorization, null, 'publication permission was not given');
+  assert.deepEqual(l002.authorization, { by: 'Guilherme Henrique', on: '2026-10-12' });
+  assert.equal(plan.appliedManifestDigest, digestOf(l002));
 });
 
-test('L002 is registered but still pending: 43 resources, only L001 in the public ledger', () => {
+test('L002 release branch contains 44 resources, both pinned lots and only Pré-Militar activated', () => {
   assert.equal(release.mode, 'production');
-  assert.equal(release.inventory.length, 43);
-  assert.equal(publishedResources.length, 43);
-  assert.deepEqual(release.applied.map(lot => lot.lot), ['L001-plano-b']);
-  assert.deepEqual(release.ledger.map(lot => lot.lot), ['L001-plano-b']);
+  assert.equal(release.inventory.length, 44);
+  assert.equal(publishedResources.length, 44);
+  assert.deepEqual(release.applied.map(pin => pin.lot), ['L001-plano-b', 'L002-ita-pre-militar']);
+  assert.deepEqual(release.ledger, release.applied, 'both original manifests remain pinned');
   assert.deepEqual(LOT_MANIFESTS.map(lot => (lot as { lot: string }).lot), ['L001-plano-b', 'L002-ita-pre-militar']);
-  assert.equal(RELEASE.problems.length, 0);
-  assert.equal(RELEASE.states.get(ID), 'candidate');
-  assert.equal(RELEASE.ifApplied.get(ID), 'published', 'a pending decision never publishes');
-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
+  assert.equal(release.applied[1]?.digest, digestOf(l002));
+  assert.deepEqual(RELEASE.problems, []);
+  assert.equal(RELEASE.states.get(ID), 'published');
+  assert.equal(RELEASE.ifApplied.has(ID), false);
+  assert.equal(PATH_STATUS['pre-militar'], 'active');
   assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
   assert.equal(FEATURED_RELEASE['pre-militar'], 'staging');
   assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH['pre-militar'], []);
-  assert.ok(!publishedResources.some(resource => resource.id === ID));
+  assert.ok(publishedResources.some(resource => resource.id === ID && resource.format === 'past-exam'));
+  assert.ok(release.inventory.includes(ID));
 });
 
-test('SIMULAÇÃO projects 43 to 44 without changing the L001 pin or published records', () => {
+test('historical SIMULAÇÃO from L001 still projects 43 to 44 with exact approved ITA content', () => {
   assert.equal(simulation.simulation, true);
   assert.match(simulation.authorization?.by ?? '', /^SIMULAÇÃO/);
   assert.ok(simulation.entries.every(entry => entry.decidedBy.startsWith('SIMULAÇÃO')));
@@ -112,7 +124,7 @@ test('SIMULAÇÃO projects 43 to 44 without changing the L001 pin or published r
   assert.deepEqual(result.published.map(resource => resource.id).sort(), hypothetical.inventory);
   assert.equal(new Set(hypothetical.inventory).size, 44);
   assert.equal(result.states.get(ID), 'published');
-  for (const oldId of release.inventory) assert.ok(result.published.some(x => x.id === oldId), oldId);
+  for (const oldId of historicalRelease.inventory) assert.ok(result.published.some(x => x.id === oldId), oldId);
 });
 
 test('SIMULAÇÃO activates only pre-militar when its one official archive is published', () => {
@@ -120,7 +132,7 @@ test('SIMULAÇÃO activates only pre-militar when its one official archive is pu
   assert.deepEqual(result.problems, []);
   const resource = result.published.find(x => x.id === ID);
   if (!resource) throw new Error('simulated ITA resource not found');
-  assert.ok(placementProblems(result.published, PATH_STATUS).some(issue => issue.includes(ID)));
+  assert.ok(placementProblems(result.published, { ...PATH_STATUS, 'pre-militar': 'preparing' }).some(issue => issue.includes(ID)));
   assert.deepEqual(placementProblems(result.published, states), []);
   assert.equal(placementOf(resource, states, result.published)?.page, '/pre-militar/');
   assert.equal(placementOf(resource, states, result.published)?.anchor, `recurso-${ID}`);
@@ -148,6 +160,6 @@ test('SIMULAÇÃO: a changed ITA record digest cannot pass verification', () => 
     entries: [{ ...simulation.entries[0]!, digest: 'sha256:' + '0'.repeat(64) }],
   };
   const forged = { lot: invalid.lot, digest: lotDigest(invalid) };
-  const r = { ...hypothetical, applied: [...release.applied, forged], ledger: [...release.ledger, forged] };
+  const r = { ...hypothetical, applied: [...historicalRelease.applied, forged], ledger: [...historicalRelease.ledger, forged] };
   assert.match(run(r, invalid).problems.join('\n'), /record changed after its approval/);
 });

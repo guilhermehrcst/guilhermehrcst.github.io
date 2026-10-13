@@ -19,6 +19,8 @@ const resource = (over: Record<string, unknown>) => ({
 });
 const ACTIVE = { 'ensino-fundamental': 'active', 'ensino-medio': 'active', vestibulares: 'active', 'pre-militar': 'active', 'ensino-superior': 'active', tecnologia: 'active' };
 const TODAY = { ...ACTIVE, 'ensino-fundamental': 'preparing', 'pre-militar': 'preparing' };
+// Historical negative scenarios use TODAY; the real branch has now activated only Pré-Militar.
+const REAL_AFTER_L002 = { ...TODAY, 'pre-militar': 'active' };
 
 /* P2: one source for a path's state; activation only with homologated content shown, atomically. */
 
@@ -26,7 +28,7 @@ test('P2: one status per path; PREPARING_PATHS is derived from it', () => {
   const status = taxonomy.PATH_STATUS as Record<string, string> | undefined;
   assert.ok(status, 'PATH_STATUS is not defined');
   assert.deepEqual(Object.entries(status ?? {}).filter(([, s]) => s === 'preparing').map(([p]) => p), [...taxonomy.PREPARING_PATHS]);
-  assert.deepEqual(status, TODAY, 'today: Fundamental and Pré-Militar in preparation');
+  assert.deepEqual(status, REAL_AFTER_L002, 'L002: Pré-Militar active, Fundamental still preparing');
 });
 
 test('P2: the path pages read noindex and the preparing note from the status, not from literals', async () => {

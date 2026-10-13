@@ -27,12 +27,12 @@ const L001_IDS = [
   'inep-enem-provas-gabaritos', 'fuvest-acervo-2026', 'mit-1801sc',
   'yale-psyc-110', 'odin-foundations', 'ms-learn-cloud-concepts',
 ];
-const L001_SET = new Set(L001_IDS);
+const L001_SET = new Set([...L001_IDS, 'ita-provas-anteriores']);
 
-test('production after L001: exactly the 37 baseline and six authorized resource IDs are published', () => {
+test('release branch after L002: exactly 37 baseline and seven individually authorized resource IDs', () => {
   assert.deepEqual(RELEASE.problems, []);
-  assert.equal(publishedResources.length, 43);
-  const expected = [...LEGACY_IDS, ...L001_IDS].sort();
+  assert.equal(publishedResources.length, 44);
+  const expected = [...LEGACY_IDS, ...L001_IDS, 'ita-provas-anteriores'].sort();
   assert.deepEqual(publishedResources.map((r) => r.id).sort(), expected);
   for (const r of POOL) {
     assert.equal(RELEASE.states.get(r.id), L001_SET.has(r.id) ? 'published' : 'candidate', r.id);
@@ -226,8 +226,8 @@ test('8. a suspended resource leaves the projection, a V0.4 one included, and re
   assert.ok(ids(q).includes('google-mlcc'));
 });
 
-test('14. the repository release includes only L001 from the staging pool, not any other candidate', () => {
-  assert.equal(RELEASE.published.length, 43);
+test('14. the repository release includes only L001 plus ITA L002 from the staging pool', () => {
+  assert.equal(RELEASE.published.length, 44);
   for (const r of POOL) {
     assert.equal(RELEASE.published.some((p) => p.id === r.id), L001_SET.has(r.id), r.id);
   }

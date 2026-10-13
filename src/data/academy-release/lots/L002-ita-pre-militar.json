@@ -30,5 +30,8 @@
     }
   ],
   "suspensions": [],
-  "authorization": null
+  "authorization": {
+    "by": "Guilherme Henrique",
+    "on": "2026-10-12"
+  }
 }

@@ -1,5 +1,6 @@
-// This is the INERT activation package. It must stay safe in the GitHub PR and
-// only become effective in the separate, explicitly authorized L002 release PR.
+// The original ITA activation patch was applied atomically with the human-authorized L002
+// on this isolated release branch. This suite verifies the exact scope, release pin and
+// absence of accidental Fundamental activation, but never authorizes merge to main/deploy.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
@@ -21,17 +22,22 @@ const ROOT = new URL('../../', import.meta.url).pathname;
 const FILE = 'docs/academy/launch/l002-ita-activation.patch';
 const patch = readFileSync(new URL('../../' + FILE, import.meta.url), 'utf8');
 
-test('branch-scoped category activation approval cannot apply L002 or publish the site', () => {
-  assert.equal(plan.previewOnly, true);
+test('branch-only activation and L002 application were separately authorized; public deploy is pending', () => {
+  assert.equal(plan.previewOnly, false);
   assert.equal(plan.lot, 'L002-ita-pre-militar');
   assert.equal(plan.editorialApproval, 'approved');
   assert.equal(plan.activationApproval, 'approved');
   assert.equal(plan.activationApprovalScope, 'release-branch-only');
   assert.equal(plan.activationApprovedBy, 'Guilherme Henrique');
   assert.equal(plan.activationApprovedOn, '2026-10-12');
-  assert.equal(plan.activationExecution, 'awaiting-l002-authorization');
+  assert.equal(plan.activationExecution, 'applied-in-release-branch');
+  assert.equal(plan.lotApplicationApproval, 'approved');
+  assert.equal(plan.lotApplicationScope, 'release-branch-only');
+  assert.equal(plan.lotApplicationApprovedBy, 'Guilherme Henrique');
+  assert.equal(plan.lotApplicationApprovedOn, '2026-10-12');
+  assert.equal(plan.appliedManifestDigest, digestOf(lot));
   assert.equal(plan.publicationAuthorization, 'pending');
-  assert.equal(plan.activationPreparation.status, 'patch-ready-for-review');
+  assert.equal(plan.activationPreparation.status, 'patch-applied-in-release-branch');
   assert.equal(plan.activationPreparation.patch, FILE);
   assert.deepEqual(plan.activationPreparation.preparedFor, ['pre-militar']);
   assert.deepEqual(plan.activationPreparation.keepPreparing, ['ensino-fundamental']);
@@ -46,7 +52,7 @@ test('branch-scoped category activation approval cannot apply L002 or publish th
   assert.equal(lot.entries[0]?.id, 'ita-provas-anteriores');
   assert.equal(lot.entries[0]?.decision, 'approved');
   assert.equal(lot.entries[0]?.digest, digestOf(record('ita-provas-anteriores')));
-  assert.equal(lot.authorization, null);
+  assert.deepEqual(lot.authorization, { by: 'Guilherme Henrique', on: '2026-10-12' });
 });
 
 test('the patch changes only the ITA-only status and its independent build verifier', () => {
@@ -80,40 +86,44 @@ test('the activation patch mirrors the Home objective path counter for Pré-Mili
   );
 });
 
-test('git can apply the package to the exact branch, but CI never applies it', () => {
-  const result = execFileSync('git', ['apply', '--check', FILE], { cwd: ROOT, encoding: 'utf8' });
-  assert.equal(result, '');
+test('the applied package is exactly reverse-applicable and only scoped files changed', () => {
+  // Reversing must succeed without changing files; the historic patch was applied once.
+  assert.equal(execFileSync('git', ['apply', '--reverse', '--check', FILE], { cwd: ROOT, encoding: 'utf8' }), '');
   const taxonomy = readFileSync(new URL('../../src/lib/taxonomy.ts', import.meta.url), 'utf8');
   const verifier = readFileSync(new URL('../../scripts/verify-dist.mjs', import.meta.url), 'utf8');
-  assert.match(taxonomy, /'pre-militar': 'preparing'/);
-  assert.match(verifier, /const PREPARING = \['\/ensino-fundamental\/', '\/pre-militar\/'\];/);
-  assert.doesNotMatch(verifier, /\n  'vestibular\.ita\.br',/);
+  assert.match(taxonomy, /'pre-militar': 'active'/);
+  assert.match(taxonomy, /'ensino-fundamental': 'preparing'/);
+  assert.match(verifier, /const PREPARING = \['\/ensino-fundamental\/'\];/);
+  assert.match(verifier, /\n  'vestibular\.ita\.br',/);
+  assert.match(verifier, /'\/pre-militar\/': \['\/pre-militar\/'\]/);
 });
 
-test('current public and staged release stay 43 with only L001 applied', () => {
+test('isolated branch now has the exact L001 and L002 pins, 44 resources and active Pré-Militar', () => {
   assert.equal(release.mode, 'production');
-  assert.equal(release.inventory.length, 43);
-  assert.equal(publishedResources.length, 43);
-  assert.deepEqual(release.applied.map(pin => pin.lot), ['L001-plano-b']);
-  assert.deepEqual(release.ledger.map(pin => pin.lot), ['L001-plano-b']);
+  assert.equal(release.inventory.length, 44);
+  assert.equal(publishedResources.length, 44);
+  assert.deepEqual(release.applied.map(pin => pin.lot), ['L001-plano-b', 'L002-ita-pre-militar']);
+  assert.deepEqual(release.ledger, release.applied);
+  assert.equal(release.applied[1]?.digest, digestOf(lot));
   assert.deepEqual(LOT_MANIFESTS.map(x => (x as { lot: string }).lot), ['L001-plano-b','L002-ita-pre-militar']);
   assert.deepEqual(RELEASE.problems, []);
-  assert.equal(RELEASE.states.get('ita-provas-anteriores'), 'candidate');
-  assert.equal(RELEASE.ifApplied.get('ita-provas-anteriores'), 'published');
-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
+  assert.equal(RELEASE.states.get('ita-provas-anteriores'), 'published');
+  assert.equal(RELEASE.ifApplied.has('ita-provas-anteriores'), false);
+  assert.equal(PATH_STATUS['pre-militar'], 'active');
   assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
-  assert.deepEqual(PREPARING_PATHS, ['ensino-fundamental','pre-militar']);
-  assert.deepEqual(preparingPaths(), ['/ensino-fundamental/','/pre-militar/']);
-  assert.ok(!canonicalPaths().includes('/pre-militar/'));
-  assert.ok(!release.inventory.includes('ita-provas-anteriores'));
+  assert.deepEqual(PREPARING_PATHS, ['ensino-fundamental']);
+  assert.deepEqual(preparingPaths(), ['/ensino-fundamental/']);
+  assert.ok(canonicalPaths().includes('/pre-militar/'));
+  assert.ok(release.inventory.includes('ita-provas-anteriores'));
   assert.equal(FEATURED_RELEASE['pre-militar'], 'staging');
   assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH['pre-militar'], []);
 });
 
-test('activation on its own is rejected until the authorized ITA resource is published', () => {
-  const hypotheticalStatus = { ...PATH_STATUS, 'pre-militar': 'active' as const };
-  const issues = activationProblems(hypotheticalStatus, FEATURED_RESOURCE_IDS_BY_PATH, publishedResources, FEATURED_RELEASE);
+test('removing the ITA record from an active path is rejected before build, and Fundamental stays gated', () => {
+  const withoutITA = publishedResources.filter(r => r.id !== 'ita-provas-anteriores');
+  const issues = activationProblems(PATH_STATUS, FEATURED_RESOURCE_IDS_BY_PATH, withoutITA, FEATURED_RELEASE);
   assert.ok(issues.some(issue => issue.includes('pre-militar: active without a page')), issues.join('\n'));
   assert.ok(issues.some(issue => issue.includes('pre-militar: active with no published resource')), issues.join('\n'));
-  assert.equal(hypotheticalStatus['ensino-fundamental'], 'preparing');
+  assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
+  assert.deepEqual(activationProblems(), [], 'the actual authorized branch is consistent');
 });
