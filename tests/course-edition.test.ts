@@ -74,3 +74,15 @@ test('responsive grids and card layout outrank Astro component-scoped defaults',
   assert.match(css, /\.course-edition \.resource\[data-resource-id\]/);
   assert.match(css, /\.course-edition \.track\.track \+ \.track\.track > \.head\.head/);
 });
+
+
+test('browser QA guard: course header, footer, links and hero defeat later Astro-scoped wine styles', () => {
+  const css = read('src/styles/global.css');
+  assert.match(css, /body\.course-edition-page > header\.site-header/);
+  assert.match(css, /body\.course-edition-page > footer\.site-footer/);
+  assert.match(css, /\.course-edition \.band\.band/);
+  assert.match(css, /body\.course-edition-page footer\.site-footer \.legal a/);
+  assert.match(css, /body\.course-edition-page footer\.site-footer \.sub a/);
+  assert.match(css, /@media \(min-width: 760px\) and \(max-width: 899px\)/);
+  assert.match(css, /body\.course-edition-page \.site-header \.desktop \{ display: block; \}/);
+});

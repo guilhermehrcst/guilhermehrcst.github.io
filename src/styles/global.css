@@ -294,3 +294,53 @@ a:hover { color: var(--action); }
 
 /* Outrank component-scoped sibling styles without global !important. */
 .course-edition .track.track + .track.track > .head.head { border-top:1px solid var(--edition-line); padding-top:var(--space-7); }
+
+/* Visual QA correction (13/10/2026): Astro's component styles are emitted after
+   this global sheet. Stronger scoped qualifications keep the light course theme
+   from inheriting the old wine header/footer and unreadable footer links. */
+body.course-edition-page > header.site-header,
+body.course-edition-page > footer.site-footer {
+  background: var(--edition-ground);
+  color: var(--ink);
+  border-color: var(--edition-line);
+}
+.course-edition .band.band {
+  background: var(--edition-ground);
+  border-bottom-color: var(--edition-line);
+}
+body.course-edition-page .site-header .link[aria-current='page'],
+body.course-edition-page .site-header .in-section,
+body.course-edition-page .site-header .mobile summary {
+  color: var(--ink);
+}
+body.course-edition-page .site-footer .label,
+body.course-edition-page .site-footer .sub,
+body.course-edition-page .site-footer .legal {
+  border-color: var(--edition-line);
+}
+body.course-edition-page .site-header .brand img,
+body.course-edition-page .site-footer .brand img { filter: brightness(0); }
+body.course-edition-page footer.site-footer nav a,
+body.course-edition-page footer.site-footer .sub a,
+body.course-edition-page footer.site-footer .legal a {
+  color: var(--ink);
+}
+body.course-edition-page footer.site-footer a:hover,
+body.course-edition-page footer.site-footer a:focus-visible { color: var(--action); }
+@media (min-width: 760px) and (max-width: 899px) {
+  /* Keep the full navigation visible on iPad-width screens, as in the reference. */
+  body.course-edition-page .site-header .desktop { display: block; }
+  body.course-edition-page .site-header .mobile { display: none; }
+  body.course-edition-page .site-header .bar { gap: var(--space-2); }
+  body.course-edition-page .site-header .brand img { height: 38px; }
+  body.course-edition-page .site-header .link,
+  body.course-edition-page .site-header .desktop summary {
+    font-size: 0.8125rem;
+    padding-inline: 0.5rem;
+  }
+}
+@media (min-width: 760px) {
+  body.course-edition-page .site-header .desktop .top > li + li {
+    border-left: 1px solid var(--edition-line);
+  }
+}
