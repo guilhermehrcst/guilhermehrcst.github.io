@@ -10,11 +10,12 @@ import { homeSources } from '../src/lib/home-sources.ts';
 const lib = { homeSources } as Record<string, any>;
 const PROVIDERS = ['Harvard University', 'MIT OpenCourseWare', 'FGV', 'Cisco Networking Academy', 'Fundação Bradesco', 'Fundação Bradesco + Microsoft'];
 
-test('staging today: every institution keeps its single-page link and count, exactly as before', () => {
+// L001: mit-1801sc adds Matemática (Ensino Superior) to MIT, so its line opens the search filtered by MIT.
+test('L001: every institution keeps its link and count; MIT spans two areas and opens the search', () => {
   const sources = lib.homeSources(PROVIDERS, publishedResources, publishedTracksFor(publishedResources));
   assert.deepEqual(sources.map((s: any) => [s.provider, s.count, s.areas, s.href]), [
     ['Harvard University', 5, ['Tecnologia'], '/tecnologia/#comecar-a-programar'],
-    ['MIT OpenCourseWare', 5, ['Tecnologia'], '/tecnologia/#python'],
+    ['MIT OpenCourseWare', 6, ['Tecnologia', 'Matemática'], '/buscar/?instituicao=mit-opencourseware'],
     ['FGV', 3, ['Tecnologia'], '/tecnologia/#dados'],
     ['Cisco Networking Academy', 1, ['Tecnologia'], '/tecnologia/#seguranca-e-privacidade'],
     ['Fundação Bradesco', 2, ['Tecnologia'], '/tecnologia/#comecar-a-programar'],
