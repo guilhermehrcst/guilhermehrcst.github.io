@@ -14,7 +14,7 @@ import plan from '../../docs/academy/launch/l002-ita-only-plan.json' with { type
 test('L002 activates the ITA-only path with a discoverable, internal, anchored search result', () => {
   const id = 'ita-provas-anteriores';
   const r = publishedResources.find(resource => resource.id === id);
-  assert.ok(r, 'authorized ITA resource must actually be in the published catalogue');
+  if (!r) throw new Error('authorized ITA resource must actually be in the published catalogue');
   assert.equal(r.format, 'past-exam', 'official past papers must not be called a course');
   assert.deepEqual(r.paths, ['pre-militar']);
   assert.equal(r.url, 'https://vestibular.ita.br/provas.htm');
