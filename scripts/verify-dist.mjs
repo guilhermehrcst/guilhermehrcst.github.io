@@ -11,7 +11,7 @@ const SITE = 'https://guilhermehrcst.github.io';
 
 /** The indexable pages (V0.3: each ready path, Vestibular's exams after it). */
 const CANONICAL = [
-  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
+  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/pre-militar/', '/ensino-superior/', '/tecnologia/', '/materias/',
   '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
@@ -22,7 +22,7 @@ const CANONICAL = [
 /** The six paths, in the approved order (V0.3), and the paths still in preparation: built and linked, but
  *  noindex, out of the sitemap, and listing no resource. */
 const PATHS = ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/pre-militar/', '/ensino-superior/', '/tecnologia/'];
-const PREPARING = ['/ensino-fundamental/', '/pre-militar/'];
+const PREPARING = ['/ensino-fundamental/'];
 
 /** The fields of Ensino Superior, in page order (V0.4 QA P1-RC2): Matemática and Computação since V0.3, then
  *  the fields planned for the Gate B university courses. A field is shown only with a published course. */
@@ -77,6 +77,7 @@ const COURSE_HOSTS = [
   'oyc.yale.edu',
   'www.theodinproject.com',
   'learn.microsoft.com',
+  'vestibular.ita.br',
 ];
 const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
 const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
@@ -754,6 +755,7 @@ for (const path of SECTION_NAV_PAGES) {
   const PATH_PAGES = {
     '/ensino-medio/': ['/ensino-medio/'],
     '/vestibulares/': ['/vestibulares/', '/enem/', '/uerj/'],
+    '/pre-militar/': ['/pre-militar/'],
     '/ensino-superior/': ['/ensino-superior/'],
     '/tecnologia/': ['/tecnologia/'],
   };

@@ -39,6 +39,14 @@ const scratch = (): string => {
     ledger: [],
     inventory: Object.keys(baseline.records).sort(),
   }, null, 2)}\n`);
+  // The historical V0.4 scratch catalogue has no military resource. Restore its
+  // corresponding path state as well, or path-status correctly refuses a fake
+  // "active but empty" branch during independent release-tool tests.
+  const taxonomyFile = `${dir}src/lib/taxonomy.ts`;
+  const taxonomy = readFileSync(taxonomyFile, 'utf8');
+  const active = "'pre-militar': 'active'";
+  assert.ok(taxonomy.includes(active), 'real branch should keep Pré-Militar active');
+  writeFileSync(taxonomyFile, taxonomy.replace(active, "'pre-militar': 'preparing'"));
   return dir;
 };
 const cleanup = (dir: string) => execFileSync('rm', ['-rf', dir], { encoding: 'utf8' });
@@ -67,6 +75,82 @@ const filled = (dir: string, name: string, ids: string[]): string => {
   writeFileSync(path, JSON.stringify({ ...draft, title: 'Teste', createdOn: '2026-10-12', simulation: true, authorization: { by: BY, on: '2026-10-12' } }, null, 2));
   return path;
 };
+
+/** Register a simulated lot as pending in the disposable copy: this mirrors the real L002 staging state. */
+const registerPending = (dir: string, source: string, authorized: boolean): string => {
+  const manifest = JSON.parse(readFileSync(source, 'utf8'));
+  const path = `${dir}src/data/academy-release/lots/${manifest.lot}.json`;
+  writeFileSync(path, `${JSON.stringify({ ...manifest, authorization: authorized ? manifest.authorization : null }, null, 2)}\n`);
+  const registry = `${dir}src/lib/release/lots.ts`;
+  const comments = readFileSync(registry, 'utf8').split('\n').filter((line) => line.startsWith('//')).join('\n');
+  writeFileSync(registry,
+    `${comments}\nimport lot0 from '../../data/academy-release/lots/${manifest.lot}.json' with { type: 'json' };\nexport const LOT_MANIFESTS: readonly unknown[] = [lot0];\n`);
+  return path;
+};
+
+test('a registered pending lot stays inert until authorization and can then be applied without rewriting its manifest', () => {
+  const dir = scratch();
+  simulationMode(dir);
+  const source = filled(dir, 'L999-ensaio', pick(dir).slice(0, 1));
+  const registered = registerPending(dir, source, false);
+  const pending = snapshot(dir);
+  const refused = run(dir, 'apply', registered);
+  assert.equal(refused.ok, false);
+  assert.match(refused.out, /no authorization/);
+  assert.deepEqual(snapshot(dir), pending, 'a pending lot remains unchanged');
+
+  // An operator manually records authorization in the pending copy (SIMULAÇÃO, never a real signature).
+  const manifest = JSON.parse(readFileSync(registered, 'utf8'));
+  const approved = JSON.parse(readFileSync(source, 'utf8'));
+  writeFileSync(registered, `${JSON.stringify({ ...manifest, authorization: approved.authorization }, null, 2)}\n`);
+  const exact = readFileSync(registered, 'utf8');
+  const registry = readFileSync(`${dir}src/lib/release/lots.ts`, 'utf8');
+  const count = releaseOf(dir).inventory.length;
+  const report = JSON.parse(run(dir, 'check', registered).out);
+  assert.equal(report.registeredAlready, true);
+  assert.deepEqual(report.problems, []);
+
+  const applied = run(dir, 'apply', registered);
+  assert.ok(applied.ok, applied.out);
+  assert.equal(releaseOf(dir).inventory.length, count + 1);
+  assert.equal(releaseOf(dir).applied.at(-1).lot, 'L999-ensaio');
+  assert.equal(releaseOf(dir).applied.at(-1).digest, run(dir, 'lot-digest', registered).out.trim());
+  assert.equal(readFileSync(registered, 'utf8'), exact, 'never rewrite a registered manifest');
+  assert.equal(readFileSync(`${dir}src/lib/release/lots.ts`, 'utf8'), registry, 'do not rewrite a registered lot index');
+
+  const again = run(dir, 'apply', registered);
+  assert.equal(again.ok, false);
+  assert.match(again.out, /never rewritten nor applied again/);
+  assert.ok(run(dir, 'rollback', 'L999-ensaio').ok);
+  const afterRollback = run(dir, 'apply', registered);
+  assert.equal(afterRollback.ok, false);
+  assert.match(afterRollback.out, /never rewritten nor applied again/);
+  cleanup(dir);
+});
+
+test('a registered pending lot refuses external mismatched content and restores on a failed release write', () => {
+  const dir = scratch();
+  simulationMode(dir);
+  const source = filled(dir, 'L999-ensaio', pick(dir).slice(0, 1));
+  const registered = registerPending(dir, source, true);
+  const alternate = JSON.parse(readFileSync(source, 'utf8'));
+  writeFileSync(source, JSON.stringify({ ...alternate, title: 'A different lot with the same ID' }));
+  const before = snapshot(dir);
+  const registeredBytes = readFileSync(registered, 'utf8');
+
+  const substituted = run(dir, 'apply', source);
+  assert.equal(substituted.ok, false);
+  assert.match(substituted.out, /differs from the registered manifest/);
+  assert.deepEqual(snapshot(dir), before, 'external input must never overwrite the registered lot');
+  assert.equal(readFileSync(registered, 'utf8'), registeredBytes);
+
+  const fault = runWith({ ACADEMY_RELEASE_FAULT: 'after-release' }, dir, 'apply', registered);
+  assert.equal(fault.ok, false);
+  assert.match(fault.out, /nothing was changed/);
+  assert.deepEqual(snapshot(dir), before, 'registered-lot release write must roll back');
+  assert.equal(readFileSync(registered, 'utf8'), registeredBytes);
+  cleanup(dir);
+});
 
 test('draft prints a manifest the schema refuses until people decide, and apply refuses it without writing', () => {
   const dir = scratch();

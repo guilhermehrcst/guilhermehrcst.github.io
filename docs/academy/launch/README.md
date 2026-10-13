@@ -1,7 +1,35 @@
-# Lançamento da Academy: Lote 01 preparado e ensaiado
+# Pexis Academy | lançamento incremental e histórico de ensaios
 
-**Estado:** engenharia pronta, **nenhuma decisão editorial e nenhuma publicação**. O catálogo público continua
-com os 37 recursos da V0.4 (`release.json`: `production`, `applied: []`, `ledger: []`). Tudo aqui foi
+> **L002 ITA (13/10/2026):** esta release publica **44 recursos** (43 anteriores + somente
+> `ita-provas-anteriores`, um **acervo oficial de provas e gabaritos**, não um curso).
+> Ativa apenas a rota `/pre-militar/`; Ensino Fundamental continua `preparing`,
+> sem conteúdos pendentes promovidos. Os destaques continuam em `staging`.
+> O manifesto L002 foi autorizado e pinado com digest verificável no release ledger.
+>
+> **Autorização de produção registrada em decisão humana separada:** em 13/10/2026,
+> o proprietário orientou avançar **até a publicação do site**, restrita a este
+> escopo. A decisão está em `l002-ita-only-plan.json` sob `publicationAuthorization:
+> approved` e `publicationScope: main-and-github-pages-l002-ita-only`.
+> A autorização não substitui CI aprovado, revisão de PR ou verificação real
+> do deploy. O merge e a implantação efetiva são confirmados somente nos
+> eventos do GitHub Actions e na página pública, não neste documento.
+>
+> **QA de release:** `345/345` testes, `astro check` com zero erros e `verify-dist`
+> aprovado no HEAD da branch isolada `89a5760`. O QA anterior do frontend
+> ativo, em ensaio isolado, contemplou 360, 390, 768 e 1280 px (38 verificações,
+> zero falhas), com capturas em `docs/superpowers/qa/2026-10-13-pre-militar-frontend/`.
+> O QA dos PDFs oficiais em leitor de tela real e gestos móveis permanece
+> não verificado e não deve ser anunciado como acessível sem teste.
+> Para liberação, evidências e reversão, veja
+> `l002-production-checklist-2026-10-13.md`.
+>
+> **Histórico:** `rehearse.sh plan-a|plan-b` partia da V0.4 (37 recursos) e
+> não é o ensaio do L002 atual. Os testes históricos estão isolados e
+> não devem alterar a release autorizada 43 → 44.
+
+
+**Registro histórico pré-L001:** naquele momento não havia decisões editoriais nem publicação incremental. O catálogo
+continha os 37 recursos da V0.4 (`release.json`: `production`, `applied: []`, `ledger: []`). Tudo aqui foi
 medido em cópias descartáveis com lotes marcados `SIMULAÇÃO`.
 
 ## O que está pronto

@@ -71,7 +71,7 @@ test('objectiveFacts counts what each path really holds', async () => {
   // Vestibular holds its exams: an exam's resources declare its parent path.
   assert.deepEqual(objectiveFacts('vestibulares'), { resources: onPath('vestibulares') });
   assert.equal(objectiveFacts('vestibulares').resources, 22);
-  assert.deepEqual(objectiveFacts('pre-militar'), { resources: 0 });
+  assert.deepEqual(objectiveFacts('pre-militar'), { resources: 1 });
   assert.deepEqual(objectiveFacts('ensino-superior'), { resources: higherEducation().flatMap((g) => g.resources).length });
   assert.deepEqual(objectiveFacts('tecnologia'), { resources: 19, tracks: 8 });
   assert.deepEqual(objectiveFacts('enem'), { resources: forExam('enem') });

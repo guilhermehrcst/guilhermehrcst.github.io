@@ -1,0 +1,62 @@
+{
+  "schema": "pexis-academy-launch-preview/1",
+  "lot": "L002-fundamental-pre-militar",
+  "basedOnApplied": "L001-plano-b",
+  "previewOnly": true,
+  "editorialApproval": "pending",
+  "activationApproval": "pending",
+  "publicationAuthorization": "pending",
+  "expectedPublishedBefore": 43,
+  "expectedPublishedAfter": 46,
+  "activate": [
+    "ensino-fundamental",
+    "pre-militar"
+  ],
+  "featuredReleased": false,
+  "resources": [
+    {
+      "id": "ef-sme-alfabeto-1",
+      "path": "ensino-fundamental",
+      "source": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/lingua-portuguesa-nosso-alfabeto/",
+      "coreAccess": "public-html-without-login-observed",
+      "storedRegistration": "unconfirmed",
+      "reviewNote": "1st grade; public exercises visible. External Wordwall and Drive attachments not exhaustively verified; third-party privacy for minors must be assessed. Intro text oversimplifies the history of Latin alphabet; editorial accuracy review.",
+      "technicalRecommendation": "recurate-before-human-approval",
+      "nextReviewAction": "Review or replace the first-grade source; do not pass through the Latin-alphabet origin claim unqualified. Validate all essential image-dependent exercises and optional third-party services.",
+      "proposedAlternative": {
+        "url": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/parlendas-alfabeto/",
+        "status": "not-audited-for-release",
+        "newDigestRequired": true
+      }
+    },
+    {
+      "id": "ef-sme-funcoes-9",
+      "path": "ensino-fundamental",
+      "source": "https://sme.goiania.go.gov.br/conexaoescola/ensino_fundamental/matematica-funcao-de-1o-e-de-2o-grau/",
+      "coreAccess": "public-html-without-login-observed",
+      "storedRegistration": "unconfirmed",
+      "reviewNote": "9th grade; explanation and exercises public. Optional YouTube media not fully reproduced; Google Docs /copy attachments may require Google sign-in; preserve this caveat for students.",
+      "technicalRecommendation": "recurate-before-human-approval",
+      "nextReviewAction": "Replace or flag source misconception affine versus linear; audit grade-year alignment and Google /copy login. Do not claim the supplemental PDFs are universally no-registration.",
+      "proposedAlternative": {
+        "url": "https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=35",
+        "status": "not-audited-for-release",
+        "newDigestRequired": true,
+        "note": "Module covers affine functions but not quadratic; an official ninth-grade worksheet has an internal 212 versus 272 F typo."
+      }
+    },
+    {
+      "id": "ita-provas-anteriores",
+      "path": "pre-militar",
+      "source": "https://vestibular.ita.br/provas.htm",
+      "coreAccess": "public-index-without-login-observed",
+      "storedRegistration": "not-required",
+      "reviewNote": "Official ITA past exams and answer keys listed, including 2026 PDFs. It is an exam archive, not a course. Complete mobile PDF usability and accessibility need human review.",
+      "technicalRecommendation": "eligible-for-human-editorial-decision",
+      "nextReviewAction": "Archive of past exams, not a course. Verify a matching exam and answer key on mobile, PDF readability, and accessibility before publication."
+    }
+  ],
+  "reviewReadiness": "blocked-pending-editorial-recuration",
+  "reviewReport": "docs/academy/launch/l002-editorial-review-2026-10-12.md",
+  "reviewRecommendationsOnly": true
+}

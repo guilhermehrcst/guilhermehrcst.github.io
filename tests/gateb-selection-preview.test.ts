@@ -108,11 +108,11 @@ test('T2: all nine previously missing destinations have conditional routes witho
   assert.equal(gatebSelectedResources().filter((r) => placementOf(r, states, future) !== null).length, 60);
 });
 
-test('T2: Fundamental and Pré-Militar remain preparing until a separately approved release', () => {
+test('T2: L002 activates only Pré-Militar, without releasing highlights or the Gate B selection', () => {
   assert.equal(GATEB_SELECTION_AUTHORIZES_PUBLICATION, false);
   assert.equal(manifest.featured_release_authorized, false);
   assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
+  assert.equal(PATH_STATUS['pre-militar'], 'active');
   for (const path of PATH_ORDER) {
     assert.equal(FEATURED_RELEASE[path], 'staging', path);
     assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH[path], [], path);

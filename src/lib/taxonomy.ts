@@ -52,7 +52,7 @@ export const PATH_STATUS: Readonly<Record<PathId, PathState>> = {
   'ensino-fundamental': 'preparing',
   'ensino-medio': 'active',
   vestibulares: 'active',
-  'pre-militar': 'preparing',
+  'pre-militar': 'active',
   'ensino-superior': 'active',
   tecnologia: 'active',
 };

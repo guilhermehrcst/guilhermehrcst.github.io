@@ -111,13 +111,13 @@ test('staged records are not published: not in the catalogue, not imported by an
   }
 });
 
-test('nothing is released or activated by this lot', () => {
+test('the Gate B selection remains staging-only even though ITA L002 activated Pré-Militar', () => {
   for (const path of PATH_ORDER) {
     assert.deepEqual(FEATURED_RESOURCE_IDS_BY_PATH[path], [], path);
     assert.equal(FEATURED_RELEASE[path], 'staging', path);
   }
   assert.equal(PATH_STATUS['ensino-fundamental'], 'preparing');
-  assert.equal(PATH_STATUS['pre-militar'], 'preparing');
+  assert.equal(PATH_STATUS['pre-militar'], 'active');
 });
 
 test('each staged record has a destination once its page is active, or a declared placement step (P1)', () => {

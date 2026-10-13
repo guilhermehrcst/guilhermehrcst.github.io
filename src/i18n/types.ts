@@ -65,12 +65,21 @@ export interface Dict {
   };
   preMilitar: {
     /** The copy that follows PATH_STATUS: the page picks it with isPreparing. */
-    byState: Record<'preparing' | 'active', StatePageCopy & { processesTitle: string; howTitle: string; how: string[] }>;
+    /** Only what changes with the state: the third step of "Como começar" (practice now, or the base
+     *  subjects while the page is in preparation). */
+    byState: Record<'preparing' | 'active', StatePageCopy & { practice: { title: string; text: string; link: string } }>;
+    startTitle: string;
+    /** The first steps of "Como começar", the same in both states. */
+    start: { title: string; text: string }[];
+    materialsTitle: string;
+    materialsWhy: string;
+    processesTitle: string;
     processesWhy: string;
-    branches: { force: string; schools: { acronym: string; name: string }[] }[];
-    status: string;
+    /** resourceId: the typed id of a catalogue record from this school. The page shows it as available,
+     *  linked to its anchor, only once that record is published and placed on this page (never a URL). */
+    branches: { force: string; schools: { acronym: string; name: string; resourceId?: string }[] }[];
+    available: string;
     scope: string;
-    medio: string;
   };
   explore: { paths: string; areas: string };
   superior: {

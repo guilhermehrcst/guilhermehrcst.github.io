@@ -1,0 +1,87 @@
+{
+  "schema": "pexis-academy-launch-preview/1",
+  "lot": "L002-ita-pre-militar",
+  "basedOnApplied": "L001-plano-b",
+  "previewOnly": false,
+  "editorialApproval": "approved",
+  "activationApproval": "approved",
+  "activationApprovalScope": "release-branch-only",
+  "activationApprovedBy": "Guilherme Henrique",
+  "activationApprovedOn": "2026-10-12",
+  "activationExecution": "applied-in-release-branch",
+  "publicationAuthorization": "approved",
+  "expectedPublishedBefore": 43,
+  "expectedPublishedAfter": 44,
+  "activate": [
+    "pre-militar"
+  ],
+  "keepPreparing": [
+    "ensino-fundamental"
+  ],
+  "featuredReleased": false,
+  "resource": {
+    "id": "ita-provas-anteriores",
+    "path": "pre-militar",
+    "format": "past-exam",
+    "source": "https://vestibular.ita.br/provas.htm",
+    "storedRegistration": "not-required",
+    "technicalRecommendation": "eligible-for-human-editorial-decision",
+    "sourceAudit": "docs/academy/launch/ita-2025-source-qa.md",
+    "auditSample": {
+      "year": 2025,
+      "exam": "https://vestibular.ita.br/provas/2025_fase1.pdf",
+      "answerKey": "https://vestibular.ita.br/provas/gabarito_2025.pdf",
+      "examPages": 28,
+      "answerKeyPages": 1,
+      "questionCount": 48,
+      "cancelledQuestionNumbers": [
+        9,
+        18
+      ],
+      "mobileViewport390": "not-verified",
+      "screenReader": "not-verified"
+    },
+    "qualifications": [
+      "Official archive of past exams and answer keys, not a course.",
+      "Past papers do not replace latest ITA admissions notice.",
+      "Complete mobile PDF ergonomics and assistive technology support remain unverified."
+    ]
+  },
+  "scope": "Owner gave separate authorization on 2026-10-13 to advance the reviewed ITA-only release all the way to public GitHub Pages publication. Approval is exclusively for L002 ITA past-exam + Pré-Militar activation, not the historical combined L002 Fundamental proposal, Gate B candidates or unreviewed resources. Merge to main and deploy may proceed only after quality gates. Record and verify GitHub Pages production outcome; failure requires safe rollback, not silent claims of success.",
+  "editorialApprovedBy": "Guilherme Henrique",
+  "editorialApprovedOn": "2026-10-12",
+  "editorialManifest": "src/data/academy-release/lots/L002-ita-pre-militar.json",
+  "editorialRecordDigest": "sha256:a71c1b26943b23648d12a77e98219ec3a909a761e8cb9090e2d691189da96827",
+  "activationPreparation": {
+    "status": "patch-applied-in-release-branch",
+    "preparedFor": [
+      "pre-militar"
+    ],
+    "keepPreparing": [
+      "ensino-fundamental"
+    ],
+    "patch": "docs/academy/launch/l002-ita-activation.patch",
+    "patchScope": [
+      "src/lib/taxonomy.ts",
+      "scripts/verify-dist.mjs"
+    ],
+    "preparedOn": "2026-10-12",
+    "notes": "The reviewed ITA activation patch and exact authorized L002 lot are applied together in the isolated release branch. The patch file remains a historical reversible record; its scope is limited to the state and independent verifier. CI and browser QA must pass before requesting a separate main merge/deploy approval."
+  },
+  "lotApplicationApproval": "approved",
+  "lotApplicationScope": "release-branch-only",
+  "lotApplicationApprovedBy": "Guilherme Henrique",
+  "lotApplicationApprovedOn": "2026-10-12",
+  "appliedManifestDigest": "sha256:9f321eb961547b98ac0b883faa5e1cddd314830e3d0759bfb2bb65a882563594",
+  "publicationScope": "main-and-github-pages-l002-ita-only",
+  "publicationApprovedBy": "Guilherme Henrique",
+  "publicationApprovedOn": "2026-10-13",
+  "publicationAuthorizationEvidence": "2026-10-13 owner instruction in chat: Vms avançando até chegar na publicação do site",
+  "publicationPreconditions": [
+    "CI green on final reviewed main-target PR head",
+    "ITA-only L002 manifest digest unchanged",
+    "ensino-fundamental remains preparing",
+    "no extra Gate B resources",
+    "GitHub Pages production check after deployment"
+  ]
+}
