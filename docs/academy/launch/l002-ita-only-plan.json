@@ -43,9 +43,25 @@
       "Complete mobile PDF ergonomics and assistive technology support remain unverified."
     ]
   },
-  "scope": "Only editorial approval of the single official ITA past-exam archive. No activation of pre-militar, no new applied release lot, no change to production inventory, no main merge or deployment authorized.",
+  "scope": "Technical preparation of pre-militar-only activation patch. Editorial approval was recorded, but activationApproval and publicationAuthorization remain pending. No release application, main merge, activation or deploy is authorized.",
   "editorialApprovedBy": "Guilherme Henrique",
   "editorialApprovedOn": "2026-10-12",
   "editorialManifest": "src/data/academy-release/lots/L002-ita-pre-militar.json",
-  "editorialRecordDigest": "sha256:a71c1b26943b23648d12a77e98219ec3a909a761e8cb9090e2d691189da96827"
+  "editorialRecordDigest": "sha256:a71c1b26943b23648d12a77e98219ec3a909a761e8cb9090e2d691189da96827",
+  "activationPreparation": {
+    "status": "patch-ready-for-review",
+    "preparedFor": [
+      "pre-militar"
+    ],
+    "keepPreparing": [
+      "ensino-fundamental"
+    ],
+    "patch": "docs/academy/launch/l002-ita-activation.patch",
+    "patchScope": [
+      "src/lib/taxonomy.ts",
+      "scripts/verify-dist.mjs"
+    ],
+    "preparedOn": "2026-10-12",
+    "notes": "Patch changes only the pre-militar path status and the independent verifier's route, preparing list and ITA host; it remains unapplied. Applying it alone without a matching authorized release must fail activation checks. A real activation requires the separate approved L002 release + updated release identity tests and QA before merge/deploy."
+  }
 }
