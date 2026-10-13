@@ -39,6 +39,80 @@ jobs:
         run: npx astro check
       - name: Build and verify dist invariants
         run: npm run build
+      # Temporary isolated QA: this edit exists only in PR #51, never main.
+      - name: Install temporary browser QA dependencies
+        run: |
+          npm install --no-save --no-package-lock --ignore-scripts playwright@1.56.1 axe-core@4.10.3
+          npx playwright install --with-deps chromium
+      - name: Derive the six placements from the typed release
+        run: |
+          node --experimental-strip-types --no-warnings --input-type=module <<'JS' > plan-placement.json
+          import { readFileSync } from 'node:fs';
+          import { publishedResources } from './src/lib/learning-resources.ts';
+          import { placementOf } from './src/lib/placement.ts';
+          const plan = JSON.parse(readFileSync('docs/academy/launch/plans.json', 'utf8'))['plan-b'];
+          const rows = plan.ids.map(id => {
+            const r = publishedResources.find(x => x.id === id);
+            if (!r || !r.url) throw new Error('Not published: ' + id);
+            const place = placementOf(r);
+            if (!place || !place.page) throw new Error('No public placement: ' + id);
+            return [id, { url: r.url, page: place.page }];
+          });
+          if (publishedResources.length !== 43 || rows.length !== 6) throw new Error('Unexpected release size');
+          console.log(JSON.stringify(Object.fromEntries(rows), null, 2));
+          JS
+      - name: Browser QA: navigation, search, anchors, mobile and desktop, accessibility
+        run: |
+          python3 -m http.server 4702 --directory dist --bind 127.0.0.1 > /tmp/academy-l001-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:4702/ -o /dev/null; then break; fi
+            sleep 1
+          done
+          node docs/academy/launch/qa.mjs http://127.0.0.1:4702 . plan-b .
+          node --input-type=module <<'JS'
+          import { chromium } from 'playwright';
+          import axe from 'axe-core';
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const BASE = 'http://127.0.0.1:4702';
+          const sitemap = readFileSync('dist/sitemap.xml', 'utf8');
+          const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(x => new URL(x[1]).pathname);
+          const browser = await chromium.launch();
+          const issues = [];
+          let scans = 0;
+          for (const width of [360, 1280]) {
+            const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+            const page = await context.newPage();
+            for (const path of paths) {
+              const response = await page.goto(BASE + path, { waitUntil: 'load' });
+              if (!response || response.status() !== 200) throw new Error('Accessibility route unavailable: ' + path);
+              await page.addScriptTag({ content: axe.source });
+              const result = await page.evaluate(async () => await window.axe.run(document, {
+                runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] }
+              }));
+              scans++;
+              for (const v of result.violations) {
+                issues.push({ width, path, id: v.id, impact: v.impact, nodes: v.nodes.length });
+              }
+            }
+            await context.close();
+          }
+          await browser.close();
+          const report = { source: 'PR #50 release source, no deployment', scans, pages: paths.length, widths: [360,1280], violations: issues };
+          writeFileSync('axe-plan-b.json', JSON.stringify(report, null, 2) + '\n');
+          console.log('axe: scanned', scans, 'page/viewport pairs;', issues.length, 'WCAG 2.1 A/AA rule violations');
+          for (const issue of issues.slice(0, 25)) console.log('AXE', JSON.stringify(issue));
+          if (issues.length) process.exitCode = 1;
+          JS
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: academy-l001-browser-report
+          path: |
+            qa-plan-b.json
+            axe-plan-b.json
+          if-no-files-found: warn
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
