@@ -1,0 +1,64 @@
+12:43:21 [vite] Re-optimizing dependencies because vite config has changed
+12:43:22 [types] Generated 570ms
+12:43:22 [build] output: "static"
+12:43:22 [build] mode: "static"
+12:43:22 [build] directory: /tmp/claude-0/qa/wt-rc/dist/
+12:43:22 [build] Collecting build info...
+12:43:22 [build] ✓ Completed in 656ms.
+12:43:22 [build] Building static entrypoints...
+12:43:23 [vite] ✓ built in 742ms
+12:43:23 [vite] ✓ built in 58ms
+12:43:23 [build] Rearranging server assets...
+
+ generating static routes 
+12:43:23   ├─ /404.html (+20ms) 
+12:43:23   ├─ /buscar/index.html (+20ms) 
+12:43:23   ├─ /courses/enem/index.html (+2ms) 
+12:43:23   ├─ /courses/uerj/index.html (+1ms) 
+12:43:23   ├─ /courses/index.html (+1ms) 
+12:43:23   ├─ /enem/index.html (+10ms) 
+12:43:23   ├─ /ensino-fundamental/index.html (+9ms) 
+12:43:23   ├─ /ensino-medio/index.html (+8ms) 
+12:43:23   ├─ /ensino-superior/index.html (+11ms) 
+12:43:23   ├─ /materias/matematica/index.html (+5ms) 
+12:43:23   ├─ /materias/portugues/index.html (+3ms) 
+12:43:23   ├─ /materias/redacao/index.html (+6ms) 
+12:43:23   ├─ /materias/fisica/index.html (+3ms) 
+12:43:23   ├─ /materias/quimica/index.html (+3ms) 
+12:43:23   ├─ /materias/biologia/index.html (+2ms) 
+12:43:23   ├─ /materias/historia/index.html (+2ms) 
+12:43:23   ├─ /materias/geografia/index.html (+2ms) 
+12:43:23   ├─ /materias/filosofia/index.html (+2ms) 
+12:43:23   ├─ /materias/sociologia/index.html (+4ms) 
+12:43:23   ├─ /materias/ingles/index.html (+2ms) 
+12:43:23   ├─ /materias/espanhol/index.html (+2ms) 
+12:43:23   ├─ /materias/index.html (+4ms) 
+12:43:23   ├─ /pre-militar/index.html (+4ms) 
+12:43:23   ├─ /pt/cursos/enem/index.html (+1ms) 
+12:43:23   ├─ /pt/cursos/uerj/index.html (+1ms) 
+12:43:23   ├─ /pt/cursos/index.html (+1ms) 
+12:43:23   ├─ /pt/index.html (+1ms) 
+12:43:23   ├─ /sitemap.xml (+2ms) 
+12:43:23   ├─ /sobre/index.html (+2ms) 
+12:43:23   ├─ /tecnologia/index.html (+10ms) 
+12:43:23   ├─ /uerj/index.html (+3ms) 
+12:43:23   ├─ /vestibulares/index.html (+6ms) 
+12:43:23   ├─ /index.html12:43:23 [ERROR] Error: OfficialSources: MIT OpenCourseWare spans pages; say where
+    at file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/index_B-Gp841r.mjs:150:65
+    at Array.map (<anonymous>)
+    at file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/index_B-Gp841r.mjs:144:56
+    at AstroComponentInstance.OfficialSources [as factory] (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/Base_DW_1z6e0.mjs:18:10)
+    at AstroComponentInstance.init (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/console_DBjOj70v.mjs:1558:27)
+    at renderStreaming (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/console_DBjOj70v.mjs:1770:29)
+    at renderStreamToString (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/console_DBjOj70v.mjs:1810:8)
+    at async renderToString (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/console_DBjOj70v.mjs:1962:9)
+    at async renderPage (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/console_DBjOj70v.mjs:2448:16)
+    at async handlePages (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/prerender-entry.DADrRv05.mjs:2966:16)
+12:43:23 [ERROR] [build] Caught error rendering /: Error: OfficialSources: MIT OpenCourseWare spans pages; say where
+OfficialSources: MIT OpenCourseWare spans pages; say where
+  Stack trace:
+    at file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/index_B-Gp841r.mjs:150:65
+    at file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/index_B-Gp841r.mjs:144:56
+    at AstroComponentInstance.init (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/console_DBjOj70v.mjs:1558:27)
+    at renderStreamToString (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/console_DBjOj70v.mjs:1810:8)
+    at async renderPage (file:///tmp/claude-0/qa/wt-rc/dist/.prerender/chunks/console_DBjOj70v.mjs:2448:16)

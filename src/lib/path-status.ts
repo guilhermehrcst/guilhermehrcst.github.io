@@ -1,12 +1,14 @@
 // The consistency of the paths' publication state (V0.4 Gate B, P2). PATH_STATUS (taxonomy) is the one
 // source; this module refuses any state in which status, highlights and catalogue disagree, so a path is
 // never active without its content shown, nor indexed while in preparation:
-//   - Fundamental and Pré-Militar are active only with their ten homologated highlights released and a
-//     page that shows their resources (placement puts at least one there);
+//   - Fundamental and Pré-Militar are active only with a published resource on their own page (placement
+//     puts at least one there): one shown on a subject or exam page does not count;
 //   - a released selection on a path in preparation is refused (highlights would sit under noindex);
 //   - every active path shows at least one published resource;
-//   - a path's highlights are released only when active.
-// Ten ids filled in staging authorise nothing. The four paths active since V0.3 need no highlights.
+//   - a path's highlights are released only when active, and only with all ten valid.
+// Activating a path and releasing its highlights are separate decisions (Academy incremental release,
+// proposal §5): no path waits for ten highlights to show what is published. Ten ids filled in staging
+// authorise nothing, and a released selection that is not complete fails the build.
 // No asset imports: this module runs under Node's test runner.
 import { FEATURED_RELEASE, FEATURED_RESOURCE_IDS_BY_PATH, featuredReady, type FeaturedRelease } from './featured.ts';
 import { publishedResources, type PublishedLearningResource } from './learning-resources.ts';
@@ -16,7 +18,7 @@ import { isPreparing, PATH_ORDER, PATH_STATUS, type PathId, type PathState } fro
 
 export { isPreparing };
 
-/** The paths that leave preparation only with their ten highlights released. */
+/** The paths that leave preparation only with a published resource on their own page. */
 export const GATED_PATHS: readonly PathId[] = ['ensino-fundamental', 'pre-militar'];
 
 export const activationProblems = (
@@ -34,9 +36,6 @@ export const activationProblems = (
     if (released && !active) problems.push(`${path}: released but still in preparation`);
     if (released && !featuredReady(path, selection, resources)) problems.push(`${path}: released without ten valid highlights`);
     if (!active) continue;
-    if (GATED_PATHS.includes(path) && !(released && featuredReady(path, selection, resources))) {
-      problems.push(`${path}: active without its ten homologated highlights released`);
-    }
     if (GATED_PATHS.includes(path) && !resources.some((r) => placementOf(r, states)?.page === routes.objective(path))) {
       problems.push(`${path}: active without a page that shows its resources`);
     }

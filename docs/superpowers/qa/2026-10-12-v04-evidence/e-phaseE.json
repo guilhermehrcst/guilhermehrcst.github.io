@@ -1,0 +1,4362 @@
+[
+ {
+  "n": "E1 no horizontal overflow 320 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /",
+  "ok": false,
+  "d": "[[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /ensino-medio/",
+  "ok": false,
+  "d": "[{\"t\":\"Tudo sobre Matemática →\",\"w\":217.5625,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Português →\",\"w\":203.453125,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Redação →\",\"w\":189.734375,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Física →\",\"w\":164.359375,\"h\":22,\"inline\":null}]"
+ },
+ {
+  "n": "E5 text contrast AA 320 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /vestibulares/",
+  "ok": false,
+  "d": "[{\"t\":\"Tudo sobre Matemática →\",\"w\":217.5625,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Português →\",\"w\":203.453125,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Redação →\",\"w\":189.734375,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Física →\",\"w\":164.359375,\"h\":22,\"inline\":null}]"
+ },
+ {
+  "n": "E5 text contrast AA 320 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/",
+  "ok": false,
+  "d": "[[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /buscar/",
+  "ok": false,
+  "d": "[{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false}]"
+ },
+ {
+  "n": "E5 text contrast AA 320 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 320 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 320 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 320 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 320 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 320 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E10 no external requests at 320",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E11 no console/page errors at 320",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /",
+  "ok": false,
+  "d": "[[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /ensino-medio/",
+  "ok": false,
+  "d": "[{\"t\":\"Tudo sobre Matemática →\",\"w\":217.5625,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Português →\",\"w\":203.453125,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Redação →\",\"w\":189.734375,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Física →\",\"w\":164.359375,\"h\":22,\"inline\":null}]"
+ },
+ {
+  "n": "E5 text contrast AA 360 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /vestibulares/",
+  "ok": false,
+  "d": "[{\"t\":\"Tudo sobre Matemática →\",\"w\":217.5625,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Português →\",\"w\":203.453125,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Redação →\",\"w\":189.734375,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Física →\",\"w\":164.359375,\"h\":22,\"inline\":null}]"
+ },
+ {
+  "n": "E5 text contrast AA 360 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/",
+  "ok": false,
+  "d": "[[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /buscar/",
+  "ok": false,
+  "d": "[{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false}]"
+ },
+ {
+  "n": "E5 text contrast AA 360 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 360 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 360 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 360 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 360 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 360 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E10 no external requests at 360",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E11 no console/page errors at 360",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /",
+  "ok": false,
+  "d": "[[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /ensino-medio/",
+  "ok": false,
+  "d": "[{\"t\":\"Tudo sobre Matemática →\",\"w\":217.5625,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Português →\",\"w\":203.453125,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Redação →\",\"w\":189.734375,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Física →\",\"w\":164.359375,\"h\":22,\"inline\":null}]"
+ },
+ {
+  "n": "E5 text contrast AA 390 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /vestibulares/",
+  "ok": false,
+  "d": "[{\"t\":\"Tudo sobre Matemática →\",\"w\":217.5625,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Português →\",\"w\":203.453125,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Redação →\",\"w\":189.734375,\"h\":22,\"inline\":null},{\"t\":\"Tudo sobre Física →\",\"w\":164.359375,\"h\":22,\"inline\":null}]"
+ },
+ {
+  "n": "E5 text contrast AA 390 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/",
+  "ok": false,
+  "d": "[[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /buscar/",
+  "ok": false,
+  "d": "[{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false}]"
+ },
+ {
+  "n": "E5 text contrast AA 390 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 390 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 390 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 390 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 390 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 390 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E10 no external requests at 390",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E11 no console/page errors at 390",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /",
+  "ok": false,
+  "d": "[[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /ensino-medio/",
+  "ok": false,
+  "d": "[{\"t\":\"Tudo sobre Matemática →\",\"w\":230.640625,\"h\":23,\"inline\":null},{\"t\":\"Tudo sobre Português →\",\"w\":215.6875,\"h\":23,\"inline\":null},{\"t\":\"Tudo sobre Redação →\",\"w\":201.15625,\"h\":23,\"inline\":null},{\"t\":\"Tudo sobre Física →\",\"w\":174.25,\"h\":23,\"inline\":null}]"
+ },
+ {
+  "n": "E5 text contrast AA 768 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /vestibulares/",
+  "ok": false,
+  "d": "[{\"t\":\"Tudo sobre Matemática →\",\"w\":230.640625,\"h\":23,\"inline\":null},{\"t\":\"Tudo sobre Português →\",\"w\":215.6875,\"h\":23,\"inline\":null},{\"t\":\"Tudo sobre Redação →\",\"w\":201.15625,\"h\":23,\"inline\":null},{\"t\":\"Tudo sobre Física →\",\"w\":174.25,\"h\":23,\"inline\":null}]"
+ },
+ {
+  "n": "E5 text contrast AA 768 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/",
+  "ok": false,
+  "d": "[[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /buscar/",
+  "ok": false,
+  "d": "[{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false}]"
+ },
+ {
+  "n": "E5 text contrast AA 768 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 768 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 768 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 768 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 768 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 768 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E10 no external requests at 768",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E11 no console/page errors at 768",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /",
+  "ok": false,
+  "d": "[[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/",
+  "ok": false,
+  "d": "[[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /buscar/",
+  "ok": false,
+  "d": "[{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false}]"
+ },
+ {
+  "n": "E5 text contrast AA 1024 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1024 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1024 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1024 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1024 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1024 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E10 no external requests at 1024",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E11 no console/page errors at 1024",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /",
+  "ok": false,
+  "d": "[[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"/\",\"rgb(207, 200, 187)\",\"rgb(255, 253, 249)\",\"1.64\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E6 status /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /ensino-medio/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /vestibulares/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /enem/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /uerj/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/",
+  "ok": false,
+  "d": "[[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"],[\"→\",\"rgb(207, 200, 187)\",\"rgb(250, 248, 244)\",\"1.57\"]]"
+ },
+ {
+  "n": "E6 status /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/matematica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/portugues/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/redacao/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/fisica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/quimica/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/biologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/historia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/geografia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/filosofia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/sociologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/ingles/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /materias/espanhol/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /buscar/",
+  "ok": false,
+  "d": "[{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false},{\"t\":\"caminho\",\"w\":20,\"h\":20,\"inline\":false}]"
+ },
+ {
+  "n": "E5 text contrast AA 1440 /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E8 robots /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /sobre/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /ensino-fundamental/",
+  "ok": false,
+  "d": "null"
+ },
+ {
+  "n": "E8 robots /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /ensino-fundamental/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E7 canonical /pre-militar/",
+  "ok": false,
+  "d": "null"
+ },
+ {
+  "n": "E8 robots /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E9 sitemap /pre-militar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E1 no horizontal overflow 1440 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E2 one h1, lang=pt-BR 1440 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E3 images have alt 1440 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E4 targets ≥24×24 (WCAG 2.5.8) 1440 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E5 text contrast AA 1440 /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E6 status /nao-existe/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E10 no external requests at 1440",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E11 no console/page errors at 1440",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E12 focus visible on 25 tab stops /",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E12 focus visible on 25 tab stops /buscar/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E12 focus visible on 25 tab stops /ensino-superior/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E12 focus visible on 25 tab stops /tecnologia/",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E13 first tab stop is a skip link",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E14 no-JS: search shows the full directory",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E15 no-JS: Home renders main content",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E16 no-JS: mobile menu is native details",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E17 reduced motion: no animations/transitions",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E17b reduced motion: no smooth scroll",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E18 81 internal links resolve",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E19 external links are https",
+  "ok": true,
+  "d": ""
+ },
+ {
+  "n": "E20 target=_blank links carry rel=noopener",
+  "ok": true,
+  "d": ""
+ }
+]

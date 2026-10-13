@@ -19,6 +19,7 @@ if (root && form && input && status && empty && emptyFiltered && filters && acti
   const items = [...root.querySelectorAll<HTMLElement>('[data-search-entry]')];
   const groups = [...root.querySelectorAll<HTMLElement>('[data-search-group]')];
   const boxes = [...form.querySelectorAll<HTMLInputElement>('[data-facet-option]')];
+  const disclosures = [...form.querySelectorAll<HTMLDetailsElement>('[data-facet-disclosure]')];
   const clears = [...root.querySelectorAll<HTMLButtonElement>('[data-filter-clear]')];
   const facetsOf = (li: HTMLElement): Facets | undefined => {
     if (li.dataset['facetCaminho'] === undefined) return undefined;
@@ -33,7 +34,17 @@ if (root && form && input && status && empty && emptyFiltered && filters && acti
   const selected = (): Selection =>
     Object.fromEntries(FACETS.map((facet) => [facet, boxes.filter((b) => b.name === facet && b.checked).map((b) => b.value)]));
 
+  const updateFacetSummaries = () => {
+    for (const disclosure of disclosures) {
+      const count = disclosure.querySelectorAll<HTMLInputElement>('[data-facet-option]:checked').length;
+      disclosure.dataset['hasSelection'] = count > 0 ? 'true' : 'false';
+      const counter = disclosure.querySelector<HTMLElement>('[data-facet-count]');
+      if (counter) counter.textContent = count > 0 ? String(count) : '';
+    }
+  };
+
   const apply = () => {
+    updateFacetSummaries();
     const query = input.value;
     const selection = selected();
     const active = boxes.filter((b) => b.checked).length;
@@ -60,7 +71,12 @@ if (root && form && input && status && empty && emptyFiltered && filters && acti
   input.value = params.get('q') ?? '';
   const initial = parseSelection(params, options);
   for (const box of boxes) box.checked = initial[box.name as FacetId]?.includes(box.value) ?? false;
-  if (boxes.some((b) => b.checked)) filters.open = true;
+  if (boxes.some((b) => b.checked)) {
+    filters.open = true;
+    for (const disclosure of disclosures) {
+      if (disclosure.querySelector('[data-facet-option]:checked')) disclosure.open = true;
+    }
+  }
   apply();
   input.addEventListener('input', apply);
   form.addEventListener('change', apply);

@@ -188,6 +188,19 @@ export const pt: Dict = {
   superior: {
     note: 'Por enquanto, Matemática e Computação: são as áreas em que já verificamos cursos universitários gratuitos. Outras áreas do conhecimento entram à medida que verificarmos cursos na fonte.',
     groupsTitle: 'Áreas',
+    byAreas: (labels) => {
+      const join = (items: readonly string[]) =>
+        items.length <= 1 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} e ${items[items.length - 1]}`;
+      const full = join(labels);
+      const short = labels.length > 3
+        ? `${labels.slice(0, 2).join(', ')} e mais ${labels.length - 2} áreas`
+        : full;
+      return {
+        description: `Materiais gratuitos de nível superior em ${short}, verificados na fonte e disponibilizados pelas instituições responsáveis.`,
+        note: `As áreas com materiais gratuitos verificados no catálogo são ${full}. A Academy organiza recursos de estudo, mas não oferece matrícula ou diploma acadêmico.`,
+        objective: `Materiais gratuitos de nível superior em ${short}.`,
+      };
+    },
   },
   home: {
     hero: {
@@ -264,6 +277,7 @@ export const pt: Dict = {
       lead: 'Universidades e instituições que publicam cursos gratuitos. Indicamos o que cada uma oferece e levamos você à página de quem publica.',
       independence: 'A Pexis Academy é independente. Nenhuma destas instituições produz, revisa ou financia a Academy; os nomes e as marcas são delas.',
       count: (resources, page) => `${resources} ${resources === 1 ? 'curso' : 'cursos'} em ${page}`,
+      countAreas: (resources, areas) => `${resources} ${resources === 1 ? 'curso' : 'cursos'} em ${areas.length > 1 ? `${areas.slice(0, -1).join(', ')} e ${areas.at(-1)}` : areas[0]}`,
       exams: 'Para as provas, a fonte é quem as aplica:',
       examLinks: { enem: 'INEP, no guia do ENEM', uerj: 'Vestibular Estadual UERJ, no guia da UERJ' },
       pending: 'Outras instituições entram à medida que verificamos, na página delas, um curso gratuito.',
@@ -404,10 +418,12 @@ export const pt: Dict = {
   }),
   notFound: { home: 'Página inicial', subjects: 'Explorar as matérias', search: 'Buscar' },
   resource: {
+    openSource: 'Abrir na fonte',
+    accessLabel: 'Acesso',
     formats: { course: 'Curso', track: 'Trilha', playlist: 'Playlist', lessons: 'Aulas', lesson: 'Aula', practice: 'Prática', 'past-exam': 'Prova anterior', simulator: 'Simulado', reference: 'Material de referência' },
     languages: { pt: 'Em português', en: 'Em inglês', es: 'Em espanhol' },
     registration: { required: 'Conta gratuita necessária', 'not-required': 'Sem cadastro' },
-    certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', available: 'Certificado disponível' },
+    certificates: { none: 'Sem certificado', statement: 'Declaração de conclusão', participation: 'Declaração de participação', available: 'Certificado disponível' },
     units: { hours: 'h', weeks: 'semanas' },
     schoolYears: (years) => {
       const ord = years.map((y) => `${y}º`);

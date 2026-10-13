@@ -23,9 +23,23 @@ declare module 'node:fs' {
   export function existsSync(path: URL | string): boolean;
   export function readdirSync(path: URL | string): string[];
   export function statSync(path: URL | string): { isDirectory(): boolean };
+  export function writeFileSync(path: URL | string, text: string): void;
+  export function copyFileSync(from: URL | string, to: URL | string): void;
+  export function unlinkSync(path: URL | string): void;
 }
 declare module 'node:crypto' {
   export function createHash(algorithm: 'sha256'): {
     update(data: { toString(): string }): { digest(encoding: 'hex'): string };
   };
 }
+declare module 'node:child_process' {
+  export function execFileSync(file: string, args: readonly string[], options: { encoding: 'utf8'; cwd?: URL | string; stdio?: readonly string[]; env?: Readonly<Record<string, string | undefined>> }): string;
+}
+declare const process: {
+  readonly argv: readonly string[];
+  readonly execPath: string;
+  readonly env: Readonly<Record<string, string | undefined>>;
+  readonly stdout: { write(text: string): boolean };
+  readonly stderr: { write(text: string): boolean };
+  exit(code?: number): never;
+};

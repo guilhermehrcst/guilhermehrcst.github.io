@@ -11,9 +11,9 @@
 // published without a page that shows it. No asset imports: this module runs under Node's test runner.
 import { publishedResources, type LearningResource, type PublishedLearningResource } from './learning-resources.ts';
 import { guideShows } from './exam-guides.ts';
-import { HIGHER_EDUCATION_GROUPS } from './higher-education.ts';
+import { higherEducationGroupsFor } from './higher-education.ts';
 import { routes } from './routes.ts';
-import { publishedTracks } from './tech-tracks.ts';
+import { publishedTracksFor } from './tech-tracks.ts';
 import { ACADEMIC_SUBJECTS, EXAM_ORDER, PATH_ORDER, PATH_STATUS, type ExamId, type PathId, type PathState, type SubjectId } from './taxonomy.ts';
 
 export type PathStates = Readonly<Record<PathId, PathState>>;
@@ -40,13 +40,22 @@ export const subjectPageShows = (r: Placeable, subject: SubjectId): boolean =>
 const generalPage = (r: Placeable, states: PathStates): PathId | undefined =>
   PATH_ORDER.find((path) => GENERAL_SECTION_PATHS.includes(path) && states[path] === 'active' && (r.paths ?? []).includes(path));
 
-export const placementOf = (r: Placeable, states: PathStates = currentStates()): Placement | null => {
+/** Context is the actually published catalogue in production. A dry-run may pass a
+ *  fully verified candidate set explicitly, but that never publishes or renders it. */
+export type PlacementContextResource = Pick<LearningResource, 'id' | 'paths' | 'subject'>;
+
+export const placementOf = (
+  r: Placeable,
+  states: PathStates = currentStates(),
+  context: readonly PlacementContextResource[] = publishedResources,
+): Placement | null => {
   const at = (page: string): Placement => ({ page, anchor: `recurso-${r.id}` });
-  if (publishedTracks().some((track) => track.resourceIds.includes(r.id))) return at(routes.objective('tecnologia'));
+  if (r.subject === 'tecnologia' && (r.paths ?? []).includes('tecnologia') &&
+      publishedTracksFor(context).some((track) => track.resourceIds.includes(r.id))) return at(routes.objective('tecnologia'));
   if (r.subject !== null && subjectPageShows(r, r.subject)) return at(routes.subject(r.subject));
   const exam = EXAM_ORDER.find((id) => guideShows(id, r));
   if (exam) return at(routes.objective(exam));
-  if (HIGHER_EDUCATION_GROUPS.some((group) => group.resourceIds.includes(r.id))) return at(routes.objective('ensino-superior'));
+  if ((r.paths ?? []).includes('ensino-superior') && higherEducationGroupsFor(context).some((group) => group.resourceIds.includes(r.id))) return at(routes.objective('ensino-superior'));
   const path = generalPage(r, states);
   return path ? at(routes.objective(path)) : null;
 };

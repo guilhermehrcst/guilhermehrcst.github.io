@@ -1,0 +1,44 @@
+const root = process.argv[2];
+const lr = await import(`${root}/src/lib/learning-resources.ts`);
+const pv = await import(`${root}/src/lib/gateb-selection-preview.ts`);
+const fe = await import(`${root}/src/lib/featured.ts`);
+const pl = await import(`${root}/src/lib/placement.ts`);
+const NOW = new Date('2026-10-12T23:59:59Z');
+const all = pv.gatebSelectedResources(); const sel = pv.GATEB_DRAFT_SELECTION;
+const by = (id) => structuredClone(all.find((r) => r.id === id));
+const rows = []; const expectReject = (name, problems) => rows.push({ name, rejected: problems.length > 0, sample: problems[0] ?? '' });
+const rp = (r) => lr.resourceProblems(r, NOW);
+let r;
+r = by('pm-afa-provas'); r.verified.on = '2026-12-01'; expectReject('A1 future verification date', rp(r));
+r = by('pm-afa-provas'); r.verified.on = '2026-02-30'; expectReject('A2 impossible date', rp(r));
+r = by('pm-afa-provas'); r.verified.by = 'search-index'; expectReject('A3 search-index method', rp(r));
+r = by('pm-afa-provas'); delete r.verified.by; expectReject('A4 missing method', rp(r));
+r = by('pm-afa-provas'); r.verified.evidence.url = 'https://example.com/afa.pdf'; expectReject('A5 evidence on another host', rp(r));
+r = by('pm-afa-provas'); delete r.verified.evidence; expectReject('A6 no evidence (not legacy)', rp(r));
+r = by('pm-afa-provas'); r.url = r.url.replace('https:', 'http:'); r.verified.evidence.url = r.url; expectReject('A7 plain HTTP', rp(r));
+r = by('pm-afa-provas'); r.verified.evidence.checked = r.verified.evidence.checked.filter((c) => c !== 'scope'); expectReject('A8 scope not checked', rp(r));
+r = by('cecierj-aprovarj'); r.verified.evidence.checked = r.verified.evidence.checked.filter((c) => c !== 'registration'); expectReject('A9 registration claimed without check', rp(r));
+r = by('pm-afa-provas'); r.schoolYears = [9]; expectReject('A10 school year outside Fundamental', rp(r));
+r = by('ef-sme-alfabeto-1'); r.verified.evidence.checked = r.verified.evidence.checked.filter((c) => c !== 'grade'); expectReject('A11 school year without grade evidence', rp(r));
+r = by('ef-sme-alfabeto-1'); r.schoolYears = [2, 1]; expectReject('A12 unordered school years', rp(r));
+r = by('ef-sme-alfabeto-1'); r.schoolYears = [10]; expectReject('A13 school year 10', rp(r));
+r = by('pm-afa-provas'); r.exams = ['enem']; expectReject('A14 exam outside its parent path', rp(r));
+r = by('pm-afa-provas'); r.paths = []; expectReject('A15 no path', rp(r));
+const withSel = (mut) => { const s = structuredClone(sel); mut(s); return fe.featuredProblems(s, 'final', all); };
+expectReject('A16 nine in one path (final)', withSel((s) => s['pre-militar'].pop()));
+expectReject('A17 eleven in one path', withSel((s) => s['pre-militar'].push('cs50sql')));
+expectReject('A18 same ID in two paths', withSel((s) => { s['tecnologia'][9] = 'mit-6006'; }));
+expectReject('A19 ID listed twice', withSel((s) => { s['tecnologia'][9] = 'cs50x'; }));
+expectReject('A20 unknown ID', withSel((s) => { s['pre-militar'][8] = 'pm-espcex-provas'; }));
+expectReject('A21 ID in a path it does not declare', withSel((s) => { const t = s['tecnologia'][0]; s['tecnologia'][0] = s['ensino-superior'][6]; s['ensino-superior'][6] = t; }));
+expectReject('A22 staged candidate against the real published catalogue', fe.featuredProblems(sel, 'final'));
+// placement: preparing path must hide its resources
+const states = Object.fromEntries(['ensino-fundamental','ensino-medio','vestibulares','pre-militar','ensino-superior','tecnologia'].map((p) => [p, 'active']));
+states['pre-militar'] = 'preparing';
+expectReject('A23 military exam while Pré-Militar is preparing has no destination', pl.placementOf(by('pm-afa-provas'), states, all) === null ? ['no placement'] : []);
+for (const x of rows) console.log(x.rejected ? 'REJECTED' : 'ACCEPTED!!', x.name, '|', String(x.sample).slice(0, 110));
+console.log(`${rows.filter((x) => x.rejected).length}/${rows.length} rejected`);
+// A21 (corrected): cs50x and mit-6100l both declare Superior and Tecnologia, so that swap is legitimately valid.
+// Use a pair that does not cross: a Fundamental lesson into Tecnologia.
+const a21 = withSel((s) => { const t = s['tecnologia'][0]; s['tecnologia'][0] = s['ensino-fundamental'][0]; s['ensino-fundamental'][0] = t; });
+console.log(a21.length ? 'REJECTED' : 'ACCEPTED!!', 'A21b Fundamental lesson featured in Tecnologia |', a21[0]);

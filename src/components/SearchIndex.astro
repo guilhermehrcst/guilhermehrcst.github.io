@@ -25,14 +25,20 @@ const groups = kinds.map((kind) => ({ kind, label: t.search.groups[kind], entrie
       <p class="note">{f.note}</p>
       <div class="facets">
         {FACETS.map((facet) => (
-          <fieldset data-facet={facet}>
-            <legend>{f.facets[facet]}</legend>
-            <ul role="list">
-              {options[facet].map((option) => (
-                <li><label><input type="checkbox" name={facet} value={option.value} data-facet-option={facet}><span>{option.label}</span></label></li>
-              ))}
-            </ul>
-          </fieldset>
+          <details class="facet" data-facet-disclosure={facet}>
+            <summary class="facet-summary">
+              <span>{f.facets[facet]}</span>
+              <span class="facet-count" data-facet-count></span>
+            </summary>
+            <fieldset data-facet={facet}>
+              <legend class="sr-only">{f.facets[facet]}</legend>
+              <ul role="list">
+                {options[facet].map((option) => (
+                  <li><label><input type="checkbox" name={facet} value={option.value} data-facet-option={facet}><span>{option.label}</span></label></li>
+                ))}
+              </ul>
+            </fieldset>
+          </details>
         ))}
       </div>
     </details>
@@ -91,11 +97,29 @@ const groups = kinds.map((kind) => ({ kind, label: t.search.groups[kind], entrie
   .filters summary:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
   .active { font-size: var(--fs-small); font-weight: 500; color: var(--action); }
   .filters .note { margin-bottom: var(--space-4); font-size: var(--fs-small); color: var(--muted); }
-  .facets { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-5) var(--space-6); padding-bottom: var(--space-5); }
+  /* Native, keyboard-accessible disclosures keep long filter groups compact on a phone. */
+  .facets { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-2) var(--space-5); padding-bottom: var(--space-5); }
   @media (min-width: 640px) { .facets { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 1024px) { .facets { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-  fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
-  legend { padding: 0; margin-bottom: var(--space-1); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .facet { min-width: 0; border-bottom: 1px solid var(--rule); }
+  .facet-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    min-height: 48px;
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--fs-small);
+  }
+  .facet-summary::-webkit-details-marker { display: none; }
+  .facet-summary::after { content: ''; display: block; flex: none; width: 0.5rem; height: 0.5rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); margin: 0 var(--space-1); }
+  .facet[open] > .facet-summary::after { transform: rotate(-135deg) translateY(-1px); }
+  .facet-summary:hover, .facet[data-has-selection='true'] > .facet-summary { color: var(--action); }
+  .facet-count { margin-left: auto; min-width: 1.3rem; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .facet-summary:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+  fieldset { min-width: 0; margin: 0; padding: 0 0 var(--space-3); border: 0; }
   fieldset ul { display: grid; grid-template-columns: minmax(0, 1fr); }
   fieldset li { border-top: 0; }
   fieldset label { display: flex; align-items: flex-start; gap: var(--space-3); min-height: 44px; padding-block: 0.6rem; line-height: 1.3; font-weight: 400; cursor: pointer; }

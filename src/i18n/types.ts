@@ -73,7 +73,12 @@ export interface Dict {
     medio: string;
   };
   explore: { paths: string; areas: string };
-  superior: { note: string; groupsTitle: string };
+  superior: {
+    note: string;
+    groupsTitle: string;
+    /** Copy for the fields that have actually published resources, never staging candidates. */
+    byAreas: (labels: readonly string[]) => { description: string; note: string; objective: string };
+  };
   home: {
     hero: {
       eyebrow: string;
@@ -91,6 +96,8 @@ export interface Dict {
       lead: string;
       independence: string;
       count: (resources: number, page: string) => string;
+      /** An institution whose courses span pages: every area, in catalogue order. */
+      countAreas: (resources: number, areas: readonly string[]) => string;
       exams: string;
       examLinks: { enem: string; uerj: string };
       pending: string;
@@ -162,6 +169,8 @@ export interface Dict {
   subject: { map: string; eyebrow: string; content: string; practice: string; reference: string; objectives: string; objectivesLead: (subject: string) => string };
   notFound: { home: string; subjects: string; search: string };
   resource: {
+    openSource: string;
+    accessLabel: string;
     formats: Record<LearningFormatId, string>;
     languages: Record<LearningLanguageId, string>;
     /** Only confirmed values have a label: 'unconfirmed' is never shown as a fact (V0.4 Gate B, P4). */

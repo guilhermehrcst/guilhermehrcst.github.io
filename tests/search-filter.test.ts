@@ -59,7 +59,7 @@ test('facet options: only values some resource has, in the taxonomy order, each 
   assert.deepEqual(options.caminho.map((o: { value: string }) => o.value), ['ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia']);
   assert.deepEqual(options.caminho.map((o: { label: string }) => o.label), ['Ensino Médio', 'Vestibular', 'Ensino Superior', 'Tecnologia']);
   assert.deepEqual(options.idioma.map((o: { value: string }) => o.value), ['pt', 'en']);
-  assert.deepEqual(options.formato.map((o: { value: string }) => o.value), ['course', 'practice']);
+  assert.deepEqual(options.formato.map((o: { value: string }) => o.value), ['course', 'track', 'practice', 'past-exam']);
   assert.equal(options.materia.length, 13);
   assert.ok(options.instituicao.some((o: { value: string; label: string }) => o.label === 'Harvard University' && o.value === 'harvard-university'));
   for (const facet of Object.values(options) as { value: string }[][]) {

@@ -1,0 +1,9 @@
+REJECTED external link to an unreviewed host | /ensino-fundamental/: external link to a host that is not allowed: https://evil.example.org/conexaoescola/ensino_fundame
+REJECTED http (not https) resource link | /pre-militar/: external link not https: http://www.fab.mil.br/ingresso/arquivos/2024/afa/afa2025_prova_versao_a.pdf
+REJECTED #fontes filter that does not exist | /: #fontes leads to a search filter the search page does not offer (yale)
+REJECTED Superior field emptied | /ensino-superior/: group biologia lists 0 courses
+REJECTED nine highlights on a path | /tecnologia/: featured holds 9 (9 distinct), not ten
+REJECTED ENEM note pointing nowhere | /enem/: #pratique: source note must link an official page
+REJECTED anchor duplicated | /pre-militar/: duplicate id "recurso-pm-epcar-provas"
+REJECTED target=_blank without noopener | /ensino-superior/: external link without rel="noopener noreferrer": https://ocw.mit.edu/courses/18-01sc-single-variable-
+restored: verify-dist: 24 pages, 0 in preparation, 7 redirects, 404, 85 files — all invariants hold.

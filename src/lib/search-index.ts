@@ -6,10 +6,10 @@
 import { areaOf, publishedResources } from './learning-resources.ts';
 import { routes } from './routes.ts';
 import { normalize } from './search-normalize.ts';
-import { publishedTracks } from './tech-tracks.ts';
-import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf } from './taxonomy.ts';
+import { publishedTracks, publishedTracksFor } from './tech-tracks.ts';
+import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PATH_STATUS, PREPARING_PATHS, SUBJECT_ORDER, SUBJECTS, subjectsOf } from './taxonomy.ts';
 import { resourceFacets, type Facets } from './search-filter.ts';
-import { placementOf, type Placeable } from './placement.ts';
+import { placementOf, type Placeable, type PlacementContextResource } from './placement.ts';
 
 export type SearchKind = 'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso';
 
@@ -33,12 +33,18 @@ export const resourceAnchor = (id: string): string => `recurso-${id}`;
 /** Where a resource is shown: its canonical page (src/lib/placement.ts, the rules the pages render by), and on
  *  /tecnologia/ the first track that holds it. No page shows it: the build fails rather than send the
  *  student somewhere it is not. */
-export const resourceHome = (resource: Placeable): string => {
-  const at = placementOf(resource);
+export const resourceHome = (
+  resource: Placeable,
+  context: readonly PlacementContextResource[] = publishedResources,
+): string => {
+  // Default to the real published catalogue. A Gate B test may opt into an explicit
+  // candidate context without changing the actual routes or indexable content.
+  const at = placementOf(resource, PATH_STATUS, context);
   if (!at) throw new Error(`search-index: ${resource.id}: no page shows it yet`);
   if (at.page !== routes.objective('tecnologia')) return at.page;
-  const track = publishedTracks().find((t) => t.resourceIds.includes(resource.id));
-  return `${at.page}#${track!.id}`;
+  const track = publishedTracksFor(context).find((t) => t.resourceIds.includes(resource.id));
+  if (!track) throw new Error(`search-index: ${resource.id}: no published track shows it`);
+  return `${at.page}#${track.id}`;
 };
 
 /** Which resources of a page's lists carry their anchor: those whose home is this page, at their first
@@ -46,12 +52,13 @@ export const resourceHome = (resource: Placeable): string => {
 export const anchorPlan = (
   page: string,
   lists: readonly (readonly Placeable[])[],
+  context: readonly PlacementContextResource[] = publishedResources,
 ): Set<string>[] => {
   const done = new Set<string>();
   return lists.map((list) => {
     const anchored = new Set<string>();
     for (const resource of list) {
-      if (done.has(resource.id) || resourceHome(resource).split('#')[0] !== page) continue;
+      if (done.has(resource.id) || resourceHome(resource, context).split('#')[0] !== page) continue;
       anchored.add(resource.id);
       done.add(resource.id);
     }

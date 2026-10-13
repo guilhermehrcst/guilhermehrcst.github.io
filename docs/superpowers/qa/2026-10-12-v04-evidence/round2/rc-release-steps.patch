@@ -1,0 +1,231 @@
+diff --git a/scripts/verify-dist.mjs b/scripts/verify-dist.mjs
+index 2540c00..3446e21 100644
+--- a/scripts/verify-dist.mjs
++++ b/scripts/verify-dist.mjs
+@@ -11,7 +11,7 @@ const SITE = 'https://guilhermehrcst.github.io';
+ 
+ /** The indexable pages (V0.3: each ready path, Vestibular's exams after it). */
+ const CANONICAL = [
+-  '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
++  '/', '/ensino-fundamental/', '/pre-militar/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/ensino-superior/', '/tecnologia/', '/materias/',
+   '/materias/matematica/', '/materias/portugues/', '/materias/redacao/',
+   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
+   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
+@@ -22,7 +22,7 @@ const CANONICAL = [
+ /** The six paths, in the approved order (V0.3), and the paths still in preparation: built and linked, but
+  *  noindex, out of the sitemap, and listing no resource. */
+ const PATHS = ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/pre-militar/', '/ensino-superior/', '/tecnologia/'];
+-const PREPARING = ['/ensino-fundamental/', '/pre-militar/'];
++const PREPARING = []; // RC SIMULATION
+ 
+ /** The fields of Ensino Superior, in page order (V0.4 QA P1-RC2): Matemática and Computação since V0.3, then
+  *  the fields planned for the Gate B university courses. A field is shown only with a published course. */
+@@ -72,6 +72,24 @@ const COURSE_HOSTS = [
+   'kultivi.com',
+   'www.gov.br',
+   'www.revista.vestibular.uerj.br',
++  // RC SIMULATION: the 17 Gate B hosts
++  'assets.marinha.mil.br',
++  'canal.cecierj.edu.br',
++  'developers.google.com',
++  'esa.eb.mil.br',
++  'extensao.cecierj.edu.br',
++  'ingresso.eear.fab.mil.br',
++  'learn.microsoft.com',
++  'oyc.yale.edu',
++  'portaldaobmep.impa.br',
++  'sme.goiania.go.gov.br',
++  'vestibular.ita.br',
++  'www.fab.mil.br',
++  'www.fuvest.br',
++  'www.ime.eb.mil.br',
++  'www.inscricao.marinha.mil.br',
++  'www.open.edu',
++  'www.theodinproject.com',
+ ];
+ const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
+ const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
+@@ -465,7 +483,7 @@ function checkAbout(path, html) {
+   if (!footerDate || pageDate !== footerDate) fail(path, `verification date ${pageDate} must match the footer's ${footerDate}`);
+ }
+ 
+-const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-medio/', '/vestibulares/', '/tecnologia/'];
++const OBJECTIVE_PATHS = ['/enem/', '/uerj/', '/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/pre-militar/', '/ensino-superior/', '/tecnologia/']; // RC SIMULATION
+ /** The formats a student practises with (V0.4 §4.3). Mirrors PRACTICE_FORMATS; a test keeps them equal. */
+ const PRACTICE_FORMATS = ['practice', 'past-exam', 'simulator'];
+ const PRACTICE_ATTR = new RegExp(`data-format="(?:${PRACTICE_FORMATS.join('|')})"`);
+@@ -633,7 +651,7 @@ function checkProduct(path, html) {
+   }
+   if (path === '/tecnologia/') {
+     const tracks = [...html.matchAll(/<section\b[^>]*\sdata-track="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)];
+-    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade'];
++    const order = ['comecar-a-programar', 'ciencia-da-computacao', 'desenvolvimento-web', 'python', 'inteligencia-artificial', 'dados', 'seguranca-e-privacidade', 'computacao-em-nuvem']; // RC SIMULATION
+     if (JSON.stringify(tracks.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `tracks ${tracks.map((m) => m[1]).join(',')}`);
+     for (const [, id, body] of tracks) if (!/\sdata-resource-id="/.test(body)) fail(path, `track ${id} is empty`);
+   }
+@@ -746,7 +764,9 @@ for (const path of SECTION_NAV_PAGES) {
+ /* Every count the Home prints for a path is the number of distinct resources that path's pages render:
+    Vestibular holds its exams' pages too (V0.4 §5.3). Counted from the DOM, never from the data module. */
+ {
+-  const PATH_PAGES = {
++  const PATH_PAGES = { // RC SIMULATION
++    '/ensino-fundamental/': ['/ensino-fundamental/'],
++    '/pre-militar/': ['/pre-militar/'],
+     '/ensino-medio/': ['/ensino-medio/'],
+     '/vestibulares/': ['/vestibulares/', '/enem/', '/uerj/'],
+     '/ensino-superior/': ['/ensino-superior/'],
+diff --git a/src/lib/featured.ts b/src/lib/featured.ts
+index 3571b9b..3c18094 100644
+--- a/src/lib/featured.ts
++++ b/src/lib/featured.ts
+@@ -16,23 +16,89 @@ export const FEATURED_PER_PATH = 10;
+  *  fails the build. */
+ export type FeaturedRelease = 'staging' | 'released';
+ export const FEATURED_RELEASE: Readonly<Record<PathId, FeaturedRelease>> = {
+-  'ensino-fundamental': 'staging',
+-  'ensino-medio': 'staging',
+-  vestibulares: 'staging',
+-  'pre-militar': 'staging',
+-  'ensino-superior': 'staging',
+-  tecnologia: 'staging',
++  'ensino-fundamental': 'released',
++  'ensino-medio': 'released',
++  'vestibulares': 'released',
++  'pre-militar': 'released',
++  'ensino-superior': 'released',
++  'tecnologia': 'released',
+ };
+ /** 'final' only when every path is released. Derived, never typed. */
+ export const FEATURED_STATE: FeaturedState = PATH_ORDER.every((path) => FEATURED_RELEASE[path] === 'released') ? 'final' : 'staging';
+ 
+ export const FEATURED_RESOURCE_IDS_BY_PATH: Readonly<Record<PathId, readonly string[]>> = {
+-  'ensino-fundamental': [],
+-  'ensino-medio': [],
+-  vestibulares: [],
+-  'pre-militar': [],
+-  'ensino-superior': [],
+-  tecnologia: [],
++  "ensino-fundamental": [
++    "ef-sme-alfabeto-1",
++    "sme-goiania-letras-e-palavras",
++    "ef-sme-vegetacao-3",
++    "ef-sme-municipio-4",
++    "ef-sme-vestigios-5",
++    "sme-goiania-leitura-em-foco",
++    "ef-obmep-fracoes-6",
++    "ef-sme-tecnologia-vida-7",
++    "ef-obmep-potenciacao-8",
++    "ef-sme-funcoes-9"
++  ],
++  "ensino-medio": [
++    "kultivi-math-enem",
++    "kultivi-portuguese-enem",
++    "kultivi-physics-enem",
++    "kultivi-chemistry-enem",
++    "kultivi-biology-enem",
++    "kultivi-history-enem",
++    "kultivi-geography-enem",
++    "kultivi-philosophy-enem",
++    "kultivi-sociology-enem",
++    "kultivi-english-enem"
++  ],
++  "vestibulares": [
++    "kultivi-enem-completo",
++    "kultivi-writing-enem",
++    "inep-enem-provas-gabaritos",
++    "fuvest-acervo-2026",
++    "inep-writing-2026",
++    "cecierj-pvs-portugues-v1",
++    "cecierj-pvs-matematica-mod1",
++    "cecierj-pvs-historia-mod2",
++    "cecierj-pvs-geografia-mod1",
++    "cecierj-pvs-fisica-v1"
++  ],
++  "pre-militar": [
++    "ita-provas-anteriores",
++    "pm-cn-provas",
++    "pm-en-provas",
++    "pm-eear-provas",
++    "pm-eam-provas",
++    "pm-afa-provas",
++    "pm-epcar-provas",
++    "cecierj-aprovarj",
++    "pm-esa-provas-2026",
++    "pm-ime-provas"
++  ],
++  "ensino-superior": [
++    "mit-1801sc",
++    "mit-801sc",
++    "mit-7012",
++    "yale-psyc-110",
++    "yale-econ-252",
++    "ou-environment-treading-lightly",
++    "mit-6100l",
++    "mit-60002",
++    "mit-6006",
++    "mit-6042j"
++  ],
++  "tecnologia": [
++    "cs50x",
++    "cs50p",
++    "odin-foundations",
++    "google-mlcc",
++    "ms-learn-cloud-concepts",
++    "fb-python",
++    "fb-web",
++    "cs50w",
++    "cs50ai",
++    "cs50sql"
++  ]
+ };
+ 
+ /** Everything wrong with a selection, one line each; empty when it holds. Staging accepts fewer than ten
+diff --git a/src/lib/learning-resources.ts b/src/lib/learning-resources.ts
+index 1632d25..46f7c41 100644
+--- a/src/lib/learning-resources.ts
++++ b/src/lib/learning-resources.ts
+@@ -4,6 +4,8 @@
+ // only source of the area (spec §6.1). No asset imports: this module runs under Node's test runner.
+ // V0.4 (spec §5.1): three separate axes, each declared on the resource and never inherited from a helper:
+ // the paths it serves (who it is for), the exams it prepares for (only with evidence) and its subject.
++import { STAGED_RESOURCES } from './staging.ts';
++import { GATEB_NEW_RESOURCES } from './staging-gateb.ts';
+ import { EXAM_ORDER, EXAM_PARENT, PATH_ORDER, SUBJECTS, type AreaId, type ExamId, type PathId, type SubjectId } from './taxonomy.ts';
+ 
+ export type LearningSubjectId = SubjectId;
+@@ -168,6 +170,8 @@ const tech = (
+   ...(resource.url && !resource.verified ? { verified: legacyVerified(resource.id) } : {}),
+ });
+ 
++// RC SIMULATION ONLY: staging entries not in this exact editorial selection stay unpublished.
++const RELEASE_CANDIDATE_SELECTED_IDS: ReadonlySet<string> = new Set(["ef-sme-alfabeto-1", "sme-goiania-letras-e-palavras", "ef-sme-vegetacao-3", "ef-sme-municipio-4", "ef-sme-vestigios-5", "sme-goiania-leitura-em-foco", "ef-obmep-fracoes-6", "ef-sme-tecnologia-vida-7", "ef-obmep-potenciacao-8", "ef-sme-funcoes-9", "kultivi-math-enem", "kultivi-portuguese-enem", "kultivi-physics-enem", "kultivi-chemistry-enem", "kultivi-biology-enem", "kultivi-history-enem", "kultivi-geography-enem", "kultivi-philosophy-enem", "kultivi-sociology-enem", "kultivi-english-enem", "kultivi-enem-completo", "kultivi-writing-enem", "inep-enem-provas-gabaritos", "fuvest-acervo-2026", "inep-writing-2026", "cecierj-pvs-portugues-v1", "cecierj-pvs-matematica-mod1", "cecierj-pvs-historia-mod2", "cecierj-pvs-geografia-mod1", "cecierj-pvs-fisica-v1", "ita-provas-anteriores", "pm-cn-provas", "pm-en-provas", "pm-eear-provas", "pm-eam-provas", "pm-afa-provas", "pm-epcar-provas", "cecierj-aprovarj", "pm-esa-provas-2026", "pm-ime-provas", "mit-1801sc", "mit-801sc", "mit-7012", "yale-psyc-110", "yale-econ-252", "ou-environment-treading-lightly", "mit-6100l", "mit-60002", "mit-6006", "mit-6042j", "cs50x", "cs50p", "odin-foundations", "google-mlcc", "ms-learn-cloud-concepts", "fb-python", "fb-web", "cs50w", "cs50ai", "cs50sql"]);
+ export const catalogue: LearningResource[] = [
+   tech({ id: 'cs50x', paths: ['tecnologia', 'ensino-superior'], title: 'CS50x: Introduction to Computer Science', provider: 'Harvard University', level: 'beginner', language: 'en', url: 'https://cs50.harvard.edu/x/', duration: { value: 11, unit: 'weeks' }, technology: { section: 'build', topic: 'cs' }, curated: { plate: 'CS50x', image: { id: 'cs50x', alt: 'cs50x', layout: 'opening', kind: 'photo', position: '50% 39%', priority: true } } }),
+   tech({ id: 'cs50p', paths: ['tecnologia'], title: 'CS50’s Introduction to Programming with Python', provider: 'Harvard University', level: 'beginner', language: 'en', url: 'https://cs50.harvard.edu/python/', duration: { value: 10, unit: 'weeks' }, technology: { section: 'build', topic: 'python' }, curated: { plate: 'CS50P', image: { id: 'cs50p', alt: 'cs50p', layout: 'media-right', kind: 'photo', position: '82% 50%' } } }),
+@@ -214,6 +218,9 @@ export const catalogue: LearningResource[] = [
+   { id: 'uerj-geography-practice', title: 'Questões de Geografia', provider: 'Revista do Vestibular UERJ', subject: 'geografia', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=6', verified: legacyVerified('uerj-geography-practice'), registration: 'not-required', certificate: 'none' },
+   { id: 'uerj-spanish-practice', title: 'Questões de Espanhol', provider: 'Revista do Vestibular UERJ', subject: 'espanhol', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aseq_disciplina=2', verified: legacyVerified('uerj-spanish-practice'), registration: 'not-required', certificate: 'none' },
+   { id: 'uerj-physics-practice', title: 'Questões de Física', provider: 'Revista do Vestibular UERJ', subject: 'fisica', format: 'practice', paths: ['vestibulares'], exams: ['uerj'], language: 'pt', level: 'vestibular', url: 'https://www.revista.vestibular.uerj.br/questao/busca-questao-imprimir.php?aano=&anivel=dificil&aseq_area=&aseq_disciplina=8&aseq_etapa=&sb=Buscar', verified: legacyVerified('uerj-physics-practice'), registration: 'not-required', certificate: 'none' },
++  // Only actually selected IDs may enter the simulated catalogue.
++  ...STAGED_RESOURCES.filter((r) => RELEASE_CANDIDATE_SELECTED_IDS.has(r.id)),
++  ...GATEB_NEW_RESOURCES.filter((r) => RELEASE_CANDIDATE_SELECTED_IDS.has(r.id)),
+ ];
+ 
+ export const isPublishedResource = (resource: LearningResource): resource is PublishedLearningResource =>
+diff --git a/src/lib/taxonomy.ts b/src/lib/taxonomy.ts
+index f91883e..35a0299 100644
+--- a/src/lib/taxonomy.ts
++++ b/src/lib/taxonomy.ts
+@@ -47,10 +47,10 @@ export type PathState = 'preparing' | 'active';
+  *  their ten homologated highlights released and a page that shows their resources (src/lib/path-status.ts
+  *  fails the build otherwise); scripts/verify-dist.mjs keeps its own, independent list. */
+ export const PATH_STATUS: Readonly<Record<PathId, PathState>> = {
+-  'ensino-fundamental': 'preparing',
++  'ensino-fundamental': 'active',
+   'ensino-medio': 'active',
+   vestibulares: 'active',
+-  'pre-militar': 'preparing',
++  'pre-militar': 'active',
+   'ensino-superior': 'active',
+   tecnologia: 'active',
+ };
