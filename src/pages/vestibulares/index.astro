@@ -34,7 +34,7 @@ const nav = [
   ...(placedOnPath('vestibulares').length ? [{ id: 'outras-provas', label: t.pathResources.other.title }] : []),
 ];
 ---
-<Base title={c.title} description={c.description} courseEdition>
+<Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
   <SectionNav id="vestibular-nav" title={t.sectionNav.page} items={nav} />
   <FeaturedResources path="vestibulares" />

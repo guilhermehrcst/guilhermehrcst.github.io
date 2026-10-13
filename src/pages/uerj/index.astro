@@ -18,7 +18,7 @@ const g = t.guides.uerj;
 const exams = resolveGuide('uerj').find((s) => s.id === 'provas');
 const [examAnchors] = anchorPlan(routes.objective('uerj'), [exams?.resources ?? []]);
 ---
-<Base title={c.title} description={c.description} courseEdition>
+<Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} crumbs={[{ label: OBJECTIVES.vestibulares.label, href: routes.objective('vestibulares') }]} />
 
   <TrackSection id="entenda" title={g.entenda.title}>

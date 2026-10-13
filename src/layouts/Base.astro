@@ -17,11 +17,9 @@ interface Props {
   description: string;
   /** The 404 and nothing else: not indexed, no canonical. */
   noindex?: boolean;
-  /** Opt-in editorial directory layout for study pages. */
-  courseEdition?: boolean;
 }
 
-const { title, description, noindex = false, courseEdition = false } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 const site = Astro.site ?? new URL('https://guilhermehrcst.github.io');
 const canonical = new URL(Astro.url.pathname, site).href;
 ---
@@ -48,10 +46,10 @@ const canonical = new URL(Astro.url.pathname, site).href;
   <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
-<body class:list={[courseEdition && 'course-edition-page']}>
+<body>
   <a class="skip" href="#main">{t.skip}</a>
   <SiteHeader />
-  <main id="main" class:list={[courseEdition && "course-edition"]}>
+  <main id="main">
     <slot />
   </main>
   <SiteFooter />
