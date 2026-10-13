@@ -55,7 +55,7 @@ test('resourcesByIds fails closed on an unknown id', () => {
 
 test('objectivesFor derives, in the Home order, the objectives a subject has resources for', async () => {
   const { objectivesFor } = await import('../src/lib/learning-library.ts');
-  assert.deepEqual(objectivesFor('matematica'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
+  assert.deepEqual(objectivesFor('matematica'), ['enem', 'uerj', 'ensino-medio', 'vestibulares', 'ensino-superior']);
   assert.deepEqual(objectivesFor('quimica'), ['enem', 'ensino-medio', 'vestibulares']);
   assert.deepEqual(objectivesFor('redacao'), ['enem', 'uerj', 'ensino-medio', 'vestibulares']);
 });
@@ -70,10 +70,10 @@ test('objectiveFacts counts what each path really holds', async () => {
   assert.deepEqual(objectiveFacts('ensino-medio'), { resources: onPath('ensino-medio') });
   // Vestibular holds its exams: an exam's resources declare its parent path.
   assert.deepEqual(objectiveFacts('vestibulares'), { resources: onPath('vestibulares') });
-  assert.equal(objectiveFacts('vestibulares').resources, 20);
+  assert.equal(objectiveFacts('vestibulares').resources, 22);
   assert.deepEqual(objectiveFacts('pre-militar'), { resources: 0 });
   assert.deepEqual(objectiveFacts('ensino-superior'), { resources: higherEducation().flatMap((g) => g.resources).length });
-  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 17, tracks: 7 });
+  assert.deepEqual(objectiveFacts('tecnologia'), { resources: 19, tracks: 8 });
   assert.deepEqual(objectiveFacts('enem'), { resources: forExam('enem') });
   assert.deepEqual(objectiveFacts('uerj'), { resources: 7 });
 });
@@ -81,8 +81,8 @@ test('objectiveFacts counts what each path really holds', async () => {
 test('institutions lists only providers that publish, with their resources in catalogue order', async () => {
   const { institutions } = await import('../src/lib/learning-library.ts');
   const { publishedResources } = await import('../src/lib/learning-resources.ts');
-  const list = institutions(['Harvard University', 'Microsoft Learn', 'FGV']);
-  // Microsoft Learn has no published resource: it is left out, never shown empty.
+  const list = institutions(['Harvard University', 'Google', 'FGV']);
+  // Google has no published resource: it is left out, never shown empty.
   assert.deepEqual(list.map((i) => i.provider), ['Harvard University', 'FGV']);
   const harvard = publishedResources.filter((r) => r.provider === 'Harvard University').map((r) => r.id);
   assert.deepEqual(list[0]?.resources.map((r) => r.id), harvard);
