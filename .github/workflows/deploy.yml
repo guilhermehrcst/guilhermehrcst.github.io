@@ -61,7 +61,7 @@ jobs:
           if (publishedResources.length !== 43 || rows.length !== 6) throw new Error('Unexpected release size');
           console.log(JSON.stringify(Object.fromEntries(rows), null, 2));
           JS
-      - name: Browser QA: navigation, search, anchors, mobile and desktop, accessibility
+      - name: Browser QA - navigation, search, anchors, mobile and desktop, accessibility
         run: |
           python3 -m http.server 4702 --directory dist --bind 127.0.0.1 > /tmp/academy-l001-http.log 2>&1 &
           SERVER_PID=$!
