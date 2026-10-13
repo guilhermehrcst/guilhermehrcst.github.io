@@ -1,6 +1,6 @@
 // The original ITA activation patch was applied atomically with the human-authorized L002
 // on this isolated release branch. This suite verifies the exact scope, release pin and
-// absence of accidental Fundamental activation, but never authorizes merge to main/deploy.
+// absence of accidental Fundamental activation. Production approval is recorded separately.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
@@ -22,7 +22,7 @@ const ROOT = new URL('../../', import.meta.url).pathname;
 const FILE = 'docs/academy/launch/l002-ita-activation.patch';
 const patch = readFileSync(new URL('../../' + FILE, import.meta.url), 'utf8');
 
-test('branch-only activation and L002 application were separately authorized; public deploy is pending', () => {
+test('separate authorizations cover category, L002 application and scoped production release', () => {
   assert.equal(plan.previewOnly, false);
   assert.equal(plan.lot, 'L002-ita-pre-militar');
   assert.equal(plan.editorialApproval, 'approved');
@@ -36,7 +36,10 @@ test('branch-only activation and L002 application were separately authorized; pu
   assert.equal(plan.lotApplicationApprovedBy, 'Guilherme Henrique');
   assert.equal(plan.lotApplicationApprovedOn, '2026-10-12');
   assert.equal(plan.appliedManifestDigest, digestOf(lot));
-  assert.equal(plan.publicationAuthorization, 'pending');
+  assert.equal(plan.publicationAuthorization, 'approved');
+  assert.equal(plan.publicationScope, 'main-and-github-pages-l002-ita-only');
+  assert.equal(plan.publicationApprovedBy, 'Guilherme Henrique');
+  assert.equal(plan.publicationApprovedOn, '2026-10-13');
   assert.equal(plan.activationPreparation.status, 'patch-applied-in-release-branch');
   assert.equal(plan.activationPreparation.patch, FILE);
   assert.deepEqual(plan.activationPreparation.preparedFor, ['pre-militar']);

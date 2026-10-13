@@ -9,7 +9,7 @@
   "activationApprovedBy": "Guilherme Henrique",
   "activationApprovedOn": "2026-10-12",
   "activationExecution": "applied-in-release-branch",
-  "publicationAuthorization": "pending",
+  "publicationAuthorization": "approved",
   "expectedPublishedBefore": 43,
   "expectedPublishedAfter": 44,
   "activate": [
@@ -47,7 +47,7 @@
       "Complete mobile PDF ergonomics and assistive technology support remain unverified."
     ]
   },
-  "scope": "Owner approved L002 ITA-only application and pre-militar activation on release/academy-l002-ita-activation-v01 only. The 44-resource inventory is pinned and pre-militar active; ensino-fundamental stays preparing. No merge to main, public deployment or GitHub Pages publication has been authorized. publicationAuthorization remains pending.",
+  "scope": "Owner gave separate authorization on 2026-10-13 to advance the reviewed ITA-only release all the way to public GitHub Pages publication. Approval is exclusively for L002 ITA past-exam + Pré-Militar activation, not the historical combined L002 Fundamental proposal, Gate B candidates or unreviewed resources. Merge to main and deploy may proceed only after quality gates. Record and verify GitHub Pages production outcome; failure requires safe rollback, not silent claims of success.",
   "editorialApprovedBy": "Guilherme Henrique",
   "editorialApprovedOn": "2026-10-12",
   "editorialManifest": "src/data/academy-release/lots/L002-ita-pre-militar.json",
@@ -72,5 +72,16 @@
   "lotApplicationScope": "release-branch-only",
   "lotApplicationApprovedBy": "Guilherme Henrique",
   "lotApplicationApprovedOn": "2026-10-12",
-  "appliedManifestDigest": "sha256:9f321eb961547b98ac0b883faa5e1cddd314830e3d0759bfb2bb65a882563594"
+  "appliedManifestDigest": "sha256:9f321eb961547b98ac0b883faa5e1cddd314830e3d0759bfb2bb65a882563594",
+  "publicationScope": "main-and-github-pages-l002-ita-only",
+  "publicationApprovedBy": "Guilherme Henrique",
+  "publicationApprovedOn": "2026-10-13",
+  "publicationAuthorizationEvidence": "2026-10-13 owner instruction in chat: Vms avançando até chegar na publicação do site",
+  "publicationPreconditions": [
+    "CI green on final reviewed main-target PR head",
+    "ITA-only L002 manifest digest unchanged",
+    "ensino-fundamental remains preparing",
+    "no extra Gate B resources",
+    "GitHub Pages production check after deployment"
+  ]
 }

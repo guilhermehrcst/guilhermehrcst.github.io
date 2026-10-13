@@ -1,32 +1,31 @@
 # Pexis Academy | lançamento incremental e histórico de ensaios
 
-> **Estado na branch isolada de lançamento (L002):** o lote exato `L002-ita-pre-militar` foi
-> autorizado pelo proprietário em 12/10/2026 (BRT), em decisão separada da ativação,
-> e aplicado junto com o patch `l002-ita-activation.patch`. O inventário desta branch
-> passa de **43 para 44 recursos**, incluindo somente `ita-provas-anteriores`, classificado
-> corretamente como **acervo de provas anteriores**, não curso. Pré-Militar fica `active`;
-> Ensino Fundamental permanece `preparing`. O registro do lote e o release ficam presos
-> ao digest do manifesto autorizado; as duas aulas do Fundamental não foram aprovadas.
+> **L002 ITA (13/10/2026):** esta release publica **44 recursos** (43 anteriores + somente
+> `ita-provas-anteriores`, um **acervo oficial de provas e gabaritos**, não um curso).
+> Ativa apenas a rota `/pre-militar/`; Ensino Fundamental continua `preparing`,
+> sem conteúdos pendentes promovidos. Os destaques continuam em `staging`.
+> O manifesto L002 foi autorizado e pinado com digest verificável no release ledger.
 >
-> **A `main` continua com 43 recursos (somente L001 aplicado).** Os PRs
-> [#55](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/55),
-> [#56](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/56) e
-> [#59](https://github.com/guilhermehrcst/guilhermehrcst.github.io/pull/59)
-> não representam autorização de merge na `main` nem de deploy. O
-> `publicationAuthorization` permanece `pending`. GitHub Pages não pode ser
-> acionado a partir do PR; CI de pull request só constrói e verifica `dist`.
+> **Autorização de produção registrada em decisão humana separada:** em 13/10/2026,
+> o proprietário orientou avançar **até a publicação do site**, restrita a este
+> escopo. A decisão está em `l002-ita-only-plan.json` sob `publicationAuthorization:
+> approved` e `publicationScope: main-and-github-pages-l002-ita-only`.
+> A autorização não substitui CI aprovado, revisão de PR ou verificação real
+> do deploy. O merge e a implantação efetiva são confirmados somente nos
+> eventos do GitHub Actions e na página pública, não neste documento.
 >
-> **Próximo gate:** validar `npm test`, `npx astro check`, `npm run build`
-> (inclui `verify-dist`) e QA visual/acessibilidade no navegador nas larguras
-> 390px e 1280px, conferindo busca, âncora, sitemap e noindex. O teste de PDF
-> com leitor de tela real permanece pendente: não afirmar acessibilidade completa.
-> Somente após revisão solicitar autorização **distinta** para merge na `main`
-> e publicação do site.
+> **QA de release:** `345/345` testes, `astro check` com zero erros e `verify-dist`
+> aprovado no HEAD da branch isolada `89a5760`. O QA anterior do frontend
+> ativo, em ensaio isolado, contemplou 360, 390, 768 e 1280 px (38 verificações,
+> zero falhas), com capturas em `docs/superpowers/qa/2026-10-13-pre-militar-frontend/`.
+> O QA dos PDFs oficiais em leitor de tela real e gestos móveis permanece
+> não verificado e não deve ser anunciado como acessível sem teste.
+> Para liberação, evidências e reversão, veja
+> `l002-production-checklist-2026-10-13.md`.
 >
-> **Ensaios históricos:** `rehearse.sh plan-a|plan-b` foi escrito para a V0.4
-> pré-L001 de 37 recursos e não valida o L002 atual. Os cenários do ITA 43→44
-> foram mantidos como testes históricos isolados; a release real 44 é verificada
-> pelos testes de identidade/rota e pelo verificador independente.
+> **Histórico:** `rehearse.sh plan-a|plan-b` partia da V0.4 (37 recursos) e
+> não é o ensaio do L002 atual. Os testes históricos estão isolados e
+> não devem alterar a release autorizada 43 → 44.
 
 
 **Registro histórico pré-L001:** naquele momento não havia decisões editoriais nem publicação incremental. O catálogo

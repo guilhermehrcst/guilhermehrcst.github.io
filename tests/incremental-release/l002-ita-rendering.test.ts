@@ -1,5 +1,5 @@
 // Release-specific invariants that cross the registered lot, path placement, search index
-// and student-facing route. No endorsement of main merge or production deployment.
+// and student-facing route. The recorded production approval never skips CI or deploy verification.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { publishedResources } from '../../src/lib/learning-resources.ts';
@@ -28,11 +28,12 @@ test('L002 activates the ITA-only path with a discoverable, internal, anchored s
   assert.equal(isPreparing('pre-militar'), false);
 });
 
-test('isolation: precisely one ITA resource, no Fundamental activation, no highlights or deployment consent', () => {
+test('isolation: ITA-only release remains separate from Fundamental and unapproved highlights', () => {
   assert.equal(plan.activationApproval, 'approved');
   assert.equal(plan.lotApplicationApproval, 'approved');
   assert.equal(plan.lotApplicationScope, 'release-branch-only');
-  assert.equal(plan.publicationAuthorization, 'pending');
+  assert.equal(plan.publicationAuthorization, 'approved');
+  assert.equal(plan.publicationScope, 'main-and-github-pages-l002-ita-only');
   assert.equal(plan.previewOnly, false);
   assert.equal(l002.entries.length, 1);
   assert.equal(l002.entries[0]?.id, 'ita-provas-anteriores');

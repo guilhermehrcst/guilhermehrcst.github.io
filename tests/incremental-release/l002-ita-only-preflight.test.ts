@@ -1,6 +1,6 @@
 // The ITA-only L002 is genuinely applied in the isolated branch. These tests pin that fact
 // and preserve an independent historical 43-to-44 rehearsal from L001 for rollback reasoning.
-// This branch is NOT a public deployment and cannot authorize a merge to main.
+// The separate production authorization is recorded, but deployment must still be confirmed by GitHub Actions.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -41,7 +41,7 @@ const appliedOnly = LOT_MANIFESTS.filter(lot => historicalRelease.applied.some(p
 const run = (r: unknown = hypothetical, lot: unknown = simulation) =>
   project({ lots: [...appliedOnly, lot], release: r });
 
-test('ITA L002 is authorized for an isolated release branch; merging and deploying remain unauthorized', () => {
+test('ITA L002 is authorized for the isolated branch and has a separate production publishing approval', () => {
   assert.equal(plan.previewOnly, false);
   assert.equal(plan.editorialApproval, 'approved');
   assert.equal(plan.editorialApprovedBy, 'Guilherme Henrique');
@@ -58,7 +58,10 @@ test('ITA L002 is authorized for an isolated release branch; merging and deployi
   assert.equal(plan.lotApplicationScope, 'release-branch-only');
   assert.equal(plan.lotApplicationApprovedBy, 'Guilherme Henrique');
   assert.equal(plan.lotApplicationApprovedOn, '2026-10-12');
-  assert.equal(plan.publicationAuthorization, 'pending');
+  assert.equal(plan.publicationAuthorization, 'approved');
+  assert.equal(plan.publicationScope, 'main-and-github-pages-l002-ita-only');
+  assert.equal(plan.publicationApprovedBy, 'Guilherme Henrique');
+  assert.equal(plan.publicationApprovedOn, '2026-10-13');
   assert.deepEqual(plan.activate, ['pre-militar']);
   assert.deepEqual(plan.keepPreparing, ['ensino-fundamental']);
   assert.equal(plan.expectedPublishedBefore, 43);
