@@ -1,6 +1,6 @@
 // Every internal URL, derived from the taxonomy (spec §6.2). Pages never write an internal path by
 // hand: they ask here. URLs stay short and human; the technical grouping stays in the code.
-import { ACADEMIC_SUBJECTS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECTS, type ExamId, type ObjectiveId, type SubjectId } from './taxonomy.ts';
+import { ACADEMIC_SUBJECTS, EXAM_ORDER, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECTS, type ObjectiveId, type SubjectId } from './taxonomy.ts';
 
 const objective = (id: ObjectiveId): string => `/${id}/`;
 
@@ -22,6 +22,9 @@ export const routes = {
   topic,
   search: '/buscar/',
   about: '/sobre/',
+  /** The two libraries (header V0.5): every published resource, by what it is. */
+  courses: '/cursos/',
+  materials: '/materiais/',
 } as const;
 
 /** The indexable pages, in a stable order: each ready path, with Vestibular's exams right after it. */
@@ -31,6 +34,8 @@ export const canonicalPaths = (): string[] => [
     id === 'vestibulares' ? [objective(id), ...EXAM_ORDER.map(objective)] : [objective(id)]),
   routes.subjectIndex,
   ...ACADEMIC_SUBJECTS.map(subject),
+  routes.courses,
+  routes.materials,
   routes.search,
   routes.about,
 ];
@@ -49,26 +54,26 @@ export const LEGACY_REDIRECTS: Readonly<Record<string, string>> = {
   '/pt/cursos/uerj/': objective('uerj'),
 };
 
-/** The header's "Explorar" menu: the six paths in the approved order, then every subject. */
+/** The header (V0.5): Cursos and Materiais, the "Explorar" menu with the six paths, then search as an icon. */
+export const HEADER_NAV: readonly { label: string; href: string }[] = [
+  { label: 'Cursos', href: routes.courses },
+  { label: 'Materiais', href: routes.materials },
+];
+
+/** The header's "Explorar" menu: the six paths, in the approved order. Nothing else. */
 export const EXPLORE_MENU = {
   label: 'Explorar',
   items: PATH_ORDER.map((id) => ({ id, label: OBJECTIVES[id].label, href: objective(id) })),
-  all: { label: 'Todas as matérias', href: routes.subjectIndex },
 } as const;
 
-/** The header's direct links, after the menu (V0.3). The other paths are one step away, in Explorar. */
-export const HEADER_NAV: readonly { label: string; href: string }[] = [
-  { label: OBJECTIVES.vestibulares.label, href: objective('vestibulares') },
-  { label: OBJECTIVES['pre-militar'].label, href: objective('pre-militar') },
-  { label: OBJECTIVES.tecnologia.label, href: objective('tecnologia') },
-  { label: 'Buscar', href: routes.search },
-];
+export type HeaderSection = 'cursos' | 'materiais' | 'explorar' | 'buscar';
 
-/** The header item a page belongs to: itself, or the section that holds it (an exam is inside
- *  Vestibular, a subject inside Explorar). Null when no header item holds it. */
-export const sectionOf = (path: string): string | null => {
-  const exam = EXAM_ORDER.find((id) => objective(id) === path);
-  if (exam) return objective(EXAM_PARENT[exam as ExamId]);
-  if (path.startsWith(routes.subjectIndex)) return routes.subjectIndex;
-  return HEADER_NAV.some((item) => item.href === path) ? path : null;
+/** The header item a page belongs to: a library, search, or Explorar for the paths, the exams inside
+ *  Vestibular and the subjects (the /materias/ hub is Explorar's own page). Null when none holds it. */
+export const sectionOf = (path: string): HeaderSection | null => {
+  if (path === routes.courses) return 'cursos';
+  if (path === routes.materials) return 'materiais';
+  if (path === routes.search) return 'buscar';
+  if ([...PATH_ORDER, ...EXAM_ORDER].some((id) => objective(id) === path) || path.startsWith(routes.subjectIndex)) return 'explorar';
+  return null;
 };

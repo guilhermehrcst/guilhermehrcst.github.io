@@ -16,6 +16,7 @@ const CANONICAL = [
   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
   '/materias/ingles/', '/materias/espanhol/',
+  '/cursos/', '/materiais/',
   '/buscar/', '/sobre/',
 ];
 
@@ -42,8 +43,8 @@ const REDIRECTS = {
 /** Routes of the former personal site that are gone: they fall through to the 404 (spec §8.4, Q2). */
 const GONE = ['/resume/', '/pt/curriculo/'];
 
-/** The header navigation (V0.3): the "Explorar" menu (the six paths, then every subject), then four
- *  direct links, in this order. */
+/** The header navigation (V0.5): Cursos and Materiais, the "Explorar" menu (the six paths and nothing
+ *  else), then search, a magnifying glass named "Buscar" for assistive tech. In this order. */
 const EXPLORE_MENU = [
   ['/ensino-fundamental/', 'Ensino Fundamental'],
   ['/ensino-medio/', 'Ensino Médio'],
@@ -51,14 +52,17 @@ const EXPLORE_MENU = [
   ['/pre-militar/', 'Pré-Militar'],
   ['/ensino-superior/', 'Ensino Superior'],
   ['/tecnologia/', 'Tecnologia'],
-  ['/materias/', 'Todas as matérias'],
 ];
 const HEADER_NAV = [
-  ['/vestibulares/', 'Vestibular'],
-  ['/pre-militar/', 'Pré-Militar'],
-  ['/tecnologia/', 'Tecnologia'],
+  ['/cursos/', 'Cursos'],
+  ['/materiais/', 'Materiais'],
   ['/buscar/', 'Buscar'],
 ];
+/** The two libraries (V0.5): which formats each lists. A hand-written mirror of src/lib/libraries.ts. */
+const LIBRARIES = {
+  '/cursos/': ['course', 'track', 'playlist', 'lessons', 'lesson'],
+  '/materiais/': ['practice', 'simulator', 'past-exam', 'reference'],
+};
 
 /** Hosts a page may link out to: the providers of published resources and the official exam pages.
  *  Mirrors COURSE_HOSTS in src/lib/learning-resources.ts and OFFICIAL_HOSTS in src/lib/official-sources.ts
@@ -285,8 +289,16 @@ function checkShell(path, html) {
     .map((m) => [m[1], m[2].replace(/<span class="tag"[\s\S]*?<\/span>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/ →$/, '').trim()]);
   const menuHrefs = hrefsIn(menu);
   if (JSON.stringify(menuHrefs) !== JSON.stringify(EXPLORE_MENU.map((i) => i[0]))) fail(path, `Explorar menu ${menuHrefs.join(',')}`);
+  // The order of the line: Cursos, Materiais, Explorar, search.
+  const order = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"|<details\b[^>]*data-menu="explorar"/g)].filter((m) => !EXPLORE_MENU.some(([href]) => href === m[1])).map((m) => m[1] ?? 'explorar');
+  if (JSON.stringify(order) !== JSON.stringify(['/cursos/', '/materiais/', 'explorar', '/buscar/'])) fail(path, `header order ${order.join(',')}`);
   const direct = linkItems(nav.replace(/<details\b[\s\S]*?<\/details>/, ''));
   if (JSON.stringify(direct) !== JSON.stringify(HEADER_NAV)) fail(path, `header navigation ${JSON.stringify(direct)}`);
+  // Search is an icon: its name comes from text hidden for sight, never from the glyph.
+  for (const m of header.matchAll(/<a\b[^>]*\sdata-search-link[^>]*>([\s\S]*?)<\/a>/g)) {
+    if (!/<svg\b[^>]*aria-hidden="true"/.test(m[1]) || !/<span class="sr-only"[^>]*>Buscar<\/span>/.test(m[1])) fail(path, 'the search icon is decorative and its link is named "Buscar"');
+  }
+  if (!/<p class="panel-label"[^>]*>Escolha seu caminho<\/p>/.test(menu)) fail(path, 'the Explorar menu is titled "Escolha seu caminho"');
   for (const m of header.matchAll(/<a\b([^>]*)>/g)) {
     const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
     const current = /aria-current="page"/.test(m[1]);
@@ -294,8 +306,12 @@ function checkShell(path, html) {
   }
   const mobile = /<details\b[^>]*data-menu="mobile"[^>]*>([\s\S]*?)<\/details>/.exec(header)?.[1] ?? '';
   if (!/<summary\b/.test(mobile)) fail(path, 'the mobile menu is a <details> with a <summary>');
-  const mobileHrefs = new Set(hrefsIn(mobile));
-  for (const [href] of [...EXPLORE_MENU, ...HEADER_NAV]) if (!mobileHrefs.has(href)) fail(path, `the mobile menu does not reach ${href}`);
+  const mobileHrefs = hrefsIn(mobile);
+  const expected = ['/cursos/', '/materiais/', ...EXPLORE_MENU.map(([href]) => href)];
+  if (JSON.stringify(mobileHrefs) !== JSON.stringify(expected)) fail(path, `the mobile menu ${mobileHrefs.join(',')}`);
+  if (!/<details\b[^>]*data-menu="mobile-explorar"[^>]*>\s*<summary\b[^>]*>\s*Explorar caminhos/.test(mobile)) fail(path, 'the mobile menu holds the paths under "Explorar caminhos"');
+  // Search stays one tap away on a phone, outside the menu.
+  if ((header.match(/\sdata-search-link[\s>]/g) ?? []).length !== 2) fail(path, 'search is in the bar at every width');
 }
 
 /* Product rules: what each page promises. --------------------------------------------------------- */
@@ -661,6 +677,18 @@ function checkProduct(path, html) {
     if (!inOrder || ids[0] !== 'matematica' || ids[1] !== 'computacao') fail(path, `Ensino Superior groups ${ids.join(',')}`);
     for (const [id, n] of groups) if (n < (['matematica', 'computacao'].includes(id) ? 2 : 1)) fail(path, `group ${id} lists ${n} courses`);
   }
+  if (path in LIBRARIES) {
+    // A library is a view: each resource once, of one of its formats, grouped by format in order, and
+    // never the anchor a search result opens (that stays on the resource's own page).
+    const ids = resources.map((item) => resourceAttr(item, 'data-resource-id'));
+    if (new Set(ids).size !== ids.length) fail(path, 'a library lists each resource once');
+    if (ids.length === 0) fail(path, 'a library is never empty');
+    for (const item of resources) if (!LIBRARIES[path].includes(resourceAttr(item, 'data-format'))) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} is not of this library`);
+    if (/\sid="recurso-/.test(html)) fail(path, 'a library carries no resource anchor');
+    const groups = attrs(/<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '', /<section\b[^>]*\sid="formato-([^"]+)"/g);
+    const present = LIBRARIES[path].filter((f) => resources.some((item) => resourceAttr(item, 'data-format') === f));
+    if (JSON.stringify(groups) !== JSON.stringify(present)) fail(path, `library groups ${groups.join(',')}`);
+  }
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
 }
@@ -765,6 +793,15 @@ for (const path of SECTION_NAV_PAGES) {
     const rendered = new Set(pages.flatMap((page) => [...(PAGE_RESOURCE_IDS.get(page) ?? [])]));
     if (HOME_PATH_COUNTS.get(href) !== rendered.size) fail('/', `#objetivo says ${HOME_PATH_COUNTS.get(href)} for ${href}; its pages render ${rendered.size}`);
   }
+}
+
+/* The libraries together list exactly the resources the rest of the site renders: nothing more (no
+   resource without a home), nothing less (V0.5). */
+{
+  const elsewhere = new Set([...PAGE_RESOURCE_IDS].filter(([page]) => !(page in LIBRARIES)).flatMap(([, ids]) => [...ids]));
+  const listed = Object.keys(LIBRARIES).flatMap((page) => [...(PAGE_RESOURCE_IDS.get(page) ?? [])]);
+  if (new Set(listed).size !== listed.length) fail('/cursos/ /materiais/', 'a resource is in both libraries');
+  if (JSON.stringify([...new Set(listed)].sort()) !== JSON.stringify([...elsewhere].sort())) fail('/cursos/ /materiais/', `the libraries list ${listed.length}, the site renders ${elsewhere.size}`);
 }
 
 /* Resource anchors (V0.4 §5.4): every published resource has a search result, which opens the page that

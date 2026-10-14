@@ -31,14 +31,15 @@ test('filterEntries returns the visible ids and their count', () => {
 const index = buildSearchIndex();
 const count = (kind: string) => index.filter((e) => e.kind === kind).length;
 
-test('one entry per objective, area, subject, published track and published resource', () => {
+test('one entry per library, objective, area, subject, published track and published resource', () => {
+  assert.deepEqual(index.filter((e) => e.kind === 'biblioteca').map((e) => e.url), ['/cursos/', '/materiais/']);
   // Six paths and the two exams inside Vestibular.
   assert.equal(count('objetivo'), 8);
   assert.equal(count('area'), 6);
   assert.equal(count('materia'), 13);
   assert.equal(count('trilha'), 8);
   assert.equal(count('recurso'), publishedResources.length);
-  assert.equal(index.length, 8 + 6 + 13 + 8 + publishedResources.length);
+  assert.equal(index.length, 2 + 8 + 6 + 13 + 8 + publishedResources.length);
 });
 
 test('every entry leads to a page of the site, never outside', () => {

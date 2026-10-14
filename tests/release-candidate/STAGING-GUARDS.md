@@ -47,10 +47,10 @@ Kinds: **A** guards against publication or activation (they must flip only with 
 | `path-status.test.ts` | P2: one status per path; PREPARING_PATHS is derived from it | A |
 | `placement.test.ts` | P1: the 37 published resources keep exactly the page they live on at 5bc12a6 (ENEM/UERJ unchanged) | B |
 | `placement.test.ts` | P1: no destination on a page in preparation; a published resource without a destination fails | A |
-| `routes.test.ts` | the 23 canonical routes, exactly and in a stable order | B |
+| `routes.test.ts` | the 25 canonical routes, exactly and in a stable order | B |
 | `routes.test.ts` | the paths in preparation have pages but are not canonical (noindex, out of the sitemap) | A |
 | `search-filter.test.ts` | facet options: only values some resource has, in the taxonomy order, each with its label | B |
-| `search-index.test.ts` | one entry per objective, area, subject, published track and published resource | B |
+| `search-index.test.ts` | one entry per library, objective, area, subject, published track and published resource | B |
 | `staging-lote03.test.ts` | Lote 03: the three military collections stay partial: recorded, never staged as ready, never in the draft | A |
 | `staging.test.ts` | reuse: the published ids are re-verified, never duplicated | A |
 | `staging.test.ts` | staged records are not published: not in the catalogue, not imported by any page or component | A |

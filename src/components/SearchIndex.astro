@@ -13,7 +13,7 @@ import { pt as t } from '../i18n/pt';
 const index = buildSearchIndex();
 const options = facetOptions(publishedResources);
 const f = t.search.filters;
-const kinds: SearchKind[] = ['objetivo', 'area', 'materia', 'trilha', 'recurso'];
+const kinds: SearchKind[] = ['biblioteca', 'objetivo', 'area', 'materia', 'trilha', 'recurso'];
 const groups = kinds.map((kind) => ({ kind, label: t.search.groups[kind], entries: index.filter((e) => e.kind === kind) }));
 ---
 <div class="wrap search" data-search>
