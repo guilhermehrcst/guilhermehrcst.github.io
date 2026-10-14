@@ -399,7 +399,7 @@ const DEMO_RESOURCE_IDS = new Set();
 const PUBLISHED_RESOURCE_IDS = new Set();
 /** Each search result for a resource, and the page#anchor it opens (V0.4 M4). */
 const SEARCH_RESOURCE_TARGETS = new Map();
-/** Institution filters the Home's #fontes leads to (V0.4 QA P1-RC1); each must work on the built search. */
+/** Institution filters the Home's institutions (#curadoria, Home V1) lead to (V0.4 QA P1-RC1); each must work on the built search. */
 const HOME_SEARCH_FILTERS = new Set();
 /** The distinct resources each page renders, and the count the Home prints for each path (V0.4 §5.3). */
 const PAGE_RESOURCE_IDS = new Map();
@@ -407,30 +407,30 @@ const HOME_PATH_COUNTS = new Map();
 
 /** A product demo (a window that shows the real product) is decorative for assistive tech, holds nothing
  *  focusable, shows only real resources, and is captioned by a real link. */
-function checkProductWindow(path, figure) {
-  const hidden = (/<div\b[^>]*\saria-hidden="true"[^>]*>[\s\S]*/.exec(figure)?.[0] ?? '').split('<figcaption')[0];
-  if (!hidden) fail(path, 'a product window is aria-hidden');
-  if (/<(a|button|input|select|textarea)\b|tabindex=/.test(hidden)) fail(path, 'a product window holds nothing focusable');
-  if (/<h[1-6][\s>]/.test(hidden)) fail(path, 'a product window holds no headings (the page outline stays the page\'s)');
-  const ids = attrs(figure, /\sdata-demo-resource-id="([^"]+)"/g);
-  if (ids.length === 0) fail(path, 'a product window shows at least one real resource');
-  for (const id of ids) DEMO_RESOURCE_IDS.add(id);
-  const caption = /<figcaption\b[\s\S]*?<\/figcaption>/.exec(figure)?.[0] ?? '';
-  if (!/<a\b[^>]*href="\//.test(caption)) fail(path, 'a product window is captioned by a link to the real page');
-}
-
-/** The Home orients; it does not pour out content (spec §5.2). */
+/** The Home (Home V1) answers three questions fast: what can I learn here, where is the content, how do I start.
+ *  It orients; it lists courses only in #cursos, a small editorial sample of the published library. */
 function checkHome(path, html, resources) {
   const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
   const hero = main.slice(0, Math.max(0, main.search(/<section\b/)));
-  if (!hero.includes('href="#objetivo"') || !hero.includes('href="/materias/"')) fail(path, 'the hero offers "#objetivo" and "/materias/"');
-  const window = /<figure\b[^>]*\sdata-product-window[\s\S]*?<\/figure>/.exec(hero)?.[0];
-  if (!window) fail(path, 'the hero shows the product (figure[data-product-window])');
+  // The search is the site's own: a native GET form to /buscar/ with the field q, labelled, without script.
+  const form = /<form\b[^>]*\sdata-home-search[\s\S]*?<\/form>/.exec(hero)?.[0] ?? '';
+  if (!/\saction="\/buscar\/"/.test(form) || !/\smethod="get"/.test(form) || !/\srole="search"/.test(form)) fail(path, 'the hero search is a GET form to /buscar/ (role="search")');
+  const field = /<input\b[^>]*\sname="q"[^>]*>/.exec(form)?.[0] ?? '';
+  if (!field || !/placeholder="O que você quer aprender\?"/.test(field)) fail(path, 'the hero search field is q, "O que você quer aprender?"');
+  const fieldId = /\sid="([^"]+)"/.exec(field)?.[1];
+  if (!fieldId || !new RegExp(`<label\\b[^>]*for="${fieldId}"`).test(form)) fail(path, 'the hero search field has a label');
+  if (!/<button\b[^>]*type="submit"/.test(form)) fail(path, 'the hero search has a submit button');
+  if (!hero.includes('href="/cursos/"') || !hero.includes('href="#objetivo"')) fail(path, 'the hero offers the course library and the paths');
+  // The composition: real, published courses, decorative for assistive tech, captioned by a link to the library.
+  const figure = /<figure\b[^>]*\sdata-hero-courses[\s\S]*?<\/figure>/.exec(hero)?.[0];
+  if (!figure) fail(path, 'the hero shows real courses (figure[data-hero-courses])');
   else {
-    checkProductWindow(path, window);
-    // The hero's window shows a real route (V0.3): Vestibular, ENEM, Matemática, content, practice.
-    const route = attrs(window, /\sdata-route-step="([^"]+)"/g);
-    if (JSON.stringify(route) !== JSON.stringify(['caminho', 'prova', 'area', 'conteudo', 'pratica'])) fail(path, `hero route ${route.join(',')}`);
+    const hidden = (/<div\b[^>]*\saria-hidden="true"[^>]*>[\s\S]*/.exec(figure)?.[0] ?? '').split('<figcaption')[0];
+    if (!hidden || /<(a|button|input)\b|tabindex=|<h[1-6][\s>]/.test(hidden)) fail(path, 'the composition is decorative: hidden, nothing focusable, no heading');
+    const ids = attrs(figure, /\sdata-demo-resource-id="([^"]+)"/g);
+    if (ids.length < 1 || ids.length > 4) fail(path, `the composition shows ${ids.length} courses`);
+    for (const id of ids) DEMO_RESOURCE_IDS.add(id);
+    if (!/<figcaption\b[\s\S]*?href="\/cursos\/"/.test(figure)) fail(path, 'the composition is captioned by a link to /cursos/');
   }
   const objective = sectionOf(html, /<section\b[^>]*\sid="objetivo"/);
   if (!objective) fail(path, 'section#objetivo missing');
@@ -442,43 +442,22 @@ function checkHome(path, html, resources) {
       if (!new RegExp(`>${n} recursos?\\b`).test(body)) fail(path, `#objetivo ${href} prints a count other than ${n}`);
       HOME_PATH_COUNTS.set(href, Number(n));
     }
-  }
-  // The learning path: the five steps, in order, each a real thing. A step that has nothing published yet
-  // says so and links nowhere; the others lead to the page that holds them.
-  const path_ = sectionOf(html, /<section\b[^>]*\sid="caminho"/);
-  if (!path_) fail(path, 'section#caminho missing');
-  else {
-    const steps = [...path_.matchAll(/<li\b[^>]*\sdata-path-step="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
-    const order = ['objetivo', 'area', 'assunto', 'conteudo', 'pratica'];
-    if (JSON.stringify(steps.map((m) => m[1])) !== JSON.stringify(order)) fail(path, `#caminho steps ${steps.map((m) => m[1]).join(',')}`);
-    for (const [, step, body] of steps) {
-      const links = hrefsIn(body);
-      const pending = /\sdata-path-pending[\s>=]/.test(body);
-      if (pending ? links.length : links.length !== 1 || !links[0].startsWith('/')) fail(path, `#caminho step ${step} links ${links.join(',') || 'nowhere'}`);
-    }
-    for (const id of attrs(path_, /\sdata-demo-resource-id="([^"]+)"/g)) DEMO_RESOURCE_IDS.add(id);
-  }
-  // Official sources: institutions that publish free material here, each leading to that material on this
-  // site. Never a partner, a sponsor or an endorsement (docs/superpowers/research/2026-10-11-official-brands.md).
-  const sources = sectionOf(html, /<section\b[^>]*\sid="fontes"/);
-  if (!sources) fail(path, 'section#fontes missing');
-  else {
-    const cells = [...sources.matchAll(/<li\b[^>]*\sdata-institution="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
-    if (cells.length < 3) fail(path, `#fontes shows ${cells.length} institutions`);
-    for (const [, name, body] of cells) {
-      const links = hrefsIn(body);
-      // A track on one page, or (V0.4 QA P1-RC1) the search filtered by the institution when its courses
-      // span pages; that filter value is checked against the built search page below.
-      const filtered = /^\/buscar\/\?instituicao=([a-z0-9-]+)$/.exec(links[0] ?? '');
-      if (filtered) HOME_SEARCH_FILTERS.add(filtered[1]);
-      if (links.length !== 1 || !(/^\/[^#]*#[\w-]+$/.test(links[0]) || filtered)) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
+    for (const page of PREPARING) {
+      if (!new RegExp(`href="${page}"[^>]*>[\\s\\S]*?Em preparação[\\s\\S]*?</a>`).test(objective)) fail(path, `#objetivo marks ${page} as in preparation`);
     }
   }
+  // Featured courses: three or four published courses of the library, as its own cards, and the way to all.
+  const courses = sectionOf(html, /<section\b[^>]*\sid="cursos"/) ?? '';
+  const featured = [...courses.matchAll(/<li\b([^>]*\sdata-resource-id="[^"]+"[^>]*)>/g)];
+  if (featured.length < 3 || featured.length > 4) fail(path, `#cursos shows ${featured.length} courses (3 to 4)`);
+  for (const item of featured) if (!LIBRARIES['/cursos/'].includes(resourceAttr(item, 'data-format'))) fail(path, `#cursos ${resourceAttr(item, 'data-resource-id')} is not a course`);
+  if (!hrefsIn(courses).includes('/cursos/')) fail(path, '#cursos leads to the course library');
+  if (resources.length !== featured.length) fail(path, `the Home lists courses only in #cursos (found ${resources.length})`);
   // Featured paths: at most three, each a real guide or track with its steps, opened by one internal link.
-  const featured = sectionOf(html, /<section\b[^>]*\sid="trilhas"/);
-  if (!featured) fail(path, 'section#trilhas missing');
+  const paths = sectionOf(html, /<section\b[^>]*\sid="trilhas"/);
+  if (!paths) fail(path, 'section#trilhas missing');
   else {
-    const cards = [...featured.matchAll(/<article\b[^>]*\sdata-featured="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
+    const cards = [...paths.matchAll(/<article\b[^>]*\sdata-featured="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
     if (cards.length < 1 || cards.length > 3) fail(path, `#trilhas shows ${cards.length} paths (1 to 3)`);
     for (const [, id, body] of cards) {
       const links = hrefsIn(body);
@@ -486,18 +465,33 @@ function checkHome(path, html, resources) {
       if ((body.match(/<li\b/g) ?? []).length < 2) fail(path, `#trilhas ${id} lists fewer than two steps`);
     }
   }
+  const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
+  if (!areas) fail(path, 'section#areas missing');
+  else checkAreaGroups(path, areas);
+  // Commitments: the verification date, the rules (/sobre/), and the institutions, each leading to its courses
+  // on this site. Never a partner, a sponsor or an endorsement (docs/superpowers/research/2026-10-11-official-brands.md).
+  const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/) ?? '';
+  if (!hrefsIn(curation).includes('/sobre/')) fail(path, '#curadoria must lead to /sobre/');
+  if (!/<time datetime="\d{4}-\d{2}-\d{2}"/.test(curation)) fail(path, '#curadoria states the verification date');
+  const cells = [...curation.matchAll(/<li\b[^>]*\sdata-institution="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
+  if (cells.length < 3) fail(path, `#curadoria shows ${cells.length} institutions`);
+  for (const [, name, body] of cells) {
+    const links = hrefsIn(body);
+    const filtered = /^\/buscar\/\?instituicao=([a-z0-9-]+)$/.exec(links[0] ?? '');
+    if (filtered) HOME_SEARCH_FILTERS.add(filtered[1]);
+    if (links.length !== 1 || !(/^\/[^#]*#[\w-]+$/.test(links[0]) || filtered)) fail(path, `#curadoria ${name} links ${links.join(',') || 'nowhere'}`);
+  }
   const plain = main.replace(/<[^>]+>/g, ' ');
   // Nor a feature the product does not have (V0.2 brief): no tutor, no saved progress, no Academy certificate.
   const claim = /parceir|patrocin|apoiad|endoss|oficial da pexis|tutor|progresso salvo|salvamos|certificado da (pexis|academy)/i.exec(plain);
   if (claim) fail(path, `the Home claims an association ("${claim[0]}")`);
-  const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
-  if (!areas) fail(path, 'section#areas missing');
-  else checkAreaGroups(path, areas);
-  if (resources.length) fail(path, `the Home lists no resources (found ${resources.length})`);
+  // Nor a promise the catalogue does not keep: not every course is in Portuguese, not every source is official.
+  const overclaim = /em português · fontes oficiais|todos os cursos (são|estão) em português|apenas fontes oficiais/i.exec(plain);
+  if (overclaim) fail(path, `the Home overclaims ("${overclaim[0]}")`);
 
-  // The order is fixed and closed: no section joins without a written reason (spec §5.2, R9).
+  // The order is fixed and closed: no section joins without a written reason (Home V1).
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
-  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'caminho', 'fontes', 'areas', 'trilhas', 'curadoria', 'perguntas'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'cursos', 'trilhas', 'areas', 'curadoria', 'perguntas'])) fail(path, `Home sections ${sections.join(',')}`);
   if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
   if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
   // Questions as native disclosure (no JavaScript): each a <details> with its <summary>.
@@ -508,8 +502,6 @@ function checkHome(path, html, resources) {
     if (items.length < 4) fail(path, `#perguntas has ${items.length} questions`);
     for (const item of items) if (!/<summary\b[^>]*>[\s\S]*?\?[\s\S]*?<\/summary>/.test(item)) fail(path, 'a question is a <summary> ending in "?"');
   }
-  const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/);
-  if (curation && !hrefsIn(curation).includes('/sobre/')) fail(path, '#curadoria must lead to /sobre/');
 }
 
 /** The six areas, in order, each linking exactly its subjects (spec §5.2, item 3; §6.1). */
@@ -886,15 +878,15 @@ for (const path of CANONICAL) {
   }
 }
 
-/* A #fontes link to the search filtered by institution must be a filter the built search page offers, and
+/* An institution link (#curadoria) to the search filtered by institution must be a filter the built search page offers, and
    that filter must list results on more than one page (the reason it is used instead of a track link). */
 {
   const search = existsSync(fileFor('/buscar/')) ? readFileSync(fileFor('/buscar/'), 'utf8') : '';
   for (const value of HOME_SEARCH_FILTERS) {
-    if (!new RegExp(`<input\\b[^>]*\\sname="instituicao"[^>]*\\svalue="${value}"`).test(search)) fail('/', `#fontes leads to a search filter the search page does not offer (${value})`);
+    if (!new RegExp(`<input\\b[^>]*\\sname="instituicao"[^>]*\\svalue="${value}"`).test(search)) fail('/', `an institution leads to a search filter the search page does not offer (${value})`);
     const pages = new Set([...search.matchAll(/<li\b[^>]*\sdata-entry-id="recurso:[^"]+"[^>]*>[\s\S]*?<\/li>/g)]
       .map((m) => m[0]).filter((li) => new RegExp(`\\sdata-facet-instituicao="${value}"`).test(li)).map((li) => (hrefsIn(li)[0] ?? '').split('#')[0]));
-    if (pages.size < 2) fail('/', `#fontes filters the search by ${value}, whose results are on ${pages.size} page(s): link the track instead`);
+    if (pages.size < 2) fail('/', `an institution filters the search by ${value}, whose results are on ${pages.size} page(s): link the track instead`);
   }
 }
 

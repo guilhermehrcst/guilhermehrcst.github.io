@@ -1,13 +1,19 @@
 ---
-// The Home's opening: the promise on the left, the product itself on the right (a real page in a window).
-// From a tablet down the window follows the text, its sidebar folded away; the composition is re-set,
-// not shrunk. The page's one h1 lives here.
-import HeroDemo from './HeroDemo.astro';
+// The Home's opening (Home V1): the promise, a search that is the site's own search (/buscar/?q=, a native
+// GET form: it works without JavaScript), the two ways in (the course library, a path), and, beside them, a
+// composition of real course thumbnails from the library (src/lib/home-featured.ts). The composition is
+// decorative for assistive tech and captioned by a link to the library. On a phone the title, the search and
+// the actions come first; the composition follows. The page's one h1 lives here.
+import CourseThumb from './CourseThumb.astro';
+import MagnifyingGlassIcon from './icons/radix/MagnifyingGlassIcon.astro';
+import { heroCourses } from '../lib/home-featured';
+import { thumbLabelOf } from '../lib/course-library';
 import { routes } from '../lib/routes';
 import { pt as t } from '../i18n/pt';
 
 const h = t.home.hero;
 const c = t.pages.home;
+const courses = heroCourses();
 ---
 <header class="hero">
   <div class="wrap grid">
@@ -15,79 +21,167 @@ const c = t.pages.home;
       <p class="eyebrow">{h.eyebrow}</p>
       <h1>{c.heading}</h1>
       <p class="lead">{h.lead}</p>
+      <form class="search" action={routes.search} method="get" role="search" data-home-search>
+        <label class="sr-only" for="home-q">{h.searchLabel}</label>
+        <MagnifyingGlassIcon class="glass" width={20} height={20} />
+        <input id="home-q" name="q" type="search" placeholder={h.searchPlaceholder} autocomplete="off" enterkeyhint="search" />
+        <button type="submit">{h.searchSubmit}</button>
+      </form>
       <div class="actions">
-        <a class="primary" href="#objetivo">{h.primary}</a>
-        <a class="secondary" href={routes.subjectIndex}>{h.secondary}{' '}<span aria-hidden="true">→</span></a>
+        <a class="primary" href={routes.courses}>{h.primary}</a>
+        <a class="secondary" href="#objetivo">{h.secondary}{' '}<span aria-hidden="true">→</span></a>
       </div>
-      <p class="note">{h.note}</p>
     </div>
-    <div class="stage">
-      <div class="ground" aria-hidden="true"></div>
-      <HeroDemo />
-    </div>
+    <figure class="composition" data-hero-courses>
+      <div class="cards" aria-hidden="true">
+        {courses.map((r, i) => (
+          <div class:list={['card', `card-${i + 1}`]} data-demo-resource-id={r.id}>
+            <CourseThumb resource={r} label={thumbLabelOf(r)} eager={i === 0} sizes="(min-width: 1024px) 360px, 60vw" />
+            <div class="tag">
+              <span class="tag-title" translate="no">{r.title}</span>
+              <span class="tag-by" translate="no">{r.provider}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <figcaption>{h.compositionCaption}{' '}<a href={routes.courses}>{h.compositionLink}{' '}<span aria-hidden="true">→</span></a></figcaption>
+    </figure>
   </div>
 </header>
 
 <style>
-  .hero { padding-block: var(--space-7) var(--space-8); overflow: clip; }
-  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-7); align-items: center; }
+  .hero { padding-block: var(--space-6) var(--space-7); overflow: clip; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); align-items: center; }
   @media (min-width: 1024px) {
-    .grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2.5rem, 4vw, 4.5rem); }
-    .hero { padding-block: var(--space-8); }
+    .grid { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(2.5rem, 4vw, 4.5rem); }
+    .hero { padding-block: var(--space-7) var(--space-8); }
   }
 
-  .eyebrow { margin-bottom: var(--space-5); }
+  .eyebrow { margin-bottom: var(--space-4); }
   h1 {
-    /* Sized to its column so that balance sets two lines, "Aprenda / com direção.", at every width. */
-    font-size: min(var(--fs-hero), 12vw);
+    font-size: min(var(--fs-hero), 13vw);
     font-weight: 440;
     line-height: 0.98;
     letter-spacing: -0.035em;
   }
   @media (min-width: 1024px) { h1 { font-size: min(5rem, 6.3vw); } }
-  .lead { margin-top: var(--space-5); max-width: 34ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
+  .lead { margin-top: var(--space-4); max-width: 34ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
 
-  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); margin-top: var(--space-6); }
+  /* The search: one wide field on paper, the glass inside, the action at its end. */
+  .search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    max-width: 34rem;
+    margin-top: var(--space-6);
+    padding: 6px 6px 6px var(--space-4);
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    background: var(--raised);
+    box-shadow: 0 1px 0 rgb(29 33 37 / 0.03), 0 12px 32px -24px rgb(29 33 37 / 0.35);
+    transition: border-color var(--t-ui), box-shadow var(--t-ui);
+  }
+  .search:focus-within { border-color: var(--action); box-shadow: 0 0 0 3px var(--tint-brand); }
+  .search :global(.glass) { flex: none; color: var(--muted); }
+  .search input {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 1.0625rem;
+  }
+  .search input::placeholder { color: var(--muted); opacity: 1; }
+  .search input:focus { outline: none; }
+  .search button {
+    flex: none;
+    min-height: 44px;
+    padding-inline: var(--space-5);
+    border: 0;
+    border-radius: 999px;
+    background: var(--action);
+    color: var(--on-action);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--t-ui);
+  }
+  .search button:hover { background: var(--action-hover); }
+  .search button:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; }
+  /* A phone: the whole question must fit in the field. */
+  @media (max-width: 479px) {
+    .search { gap: 6px; padding-left: 12px; }
+    .search :global(.glass) { width: 18px; height: 18px; }
+    .search input { font-size: 1rem; }
+    .search button { padding-inline: var(--space-4); }
+  }
+
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); margin-top: var(--space-5); }
   .primary {
     display: inline-flex;
     align-items: center;
-    min-height: 52px;
-    padding-inline: var(--space-6);
+    min-height: 48px;
+    padding-inline: var(--space-5);
     border-radius: var(--radius);
-    background: var(--action);
-    color: var(--on-action);
+    background: var(--ink);
+    color: var(--paper);
     font-weight: 560;
     text-decoration: none;
     transition: background var(--t-ui);
   }
-  .primary:hover { background: var(--action-hover); color: var(--on-action); }
-  .secondary { display: inline-flex; align-items: center; gap: 0.35em; min-height: 52px; font-weight: 500; color: var(--ink); text-decoration: none; }
+  .primary:hover { background: var(--action); color: var(--on-action); }
+  .secondary { display: inline-flex; align-items: center; gap: 0.35em; min-height: 48px; font-weight: 560; color: var(--ink); text-decoration: none; }
   .secondary:hover { color: var(--action); }
   .secondary span { transition: transform var(--t-ui) var(--ease); }
   .secondary:hover span { transform: translateX(3px); }
-  .note { margin-top: var(--space-5); max-width: 40ch; font-size: var(--fs-small); color: var(--muted); }
 
-  /* The window sits on a quiet sand ground, offset, for depth without a heavy shadow. */
-  .stage { position: relative; isolation: isolate; }
-  /* It stops above the caption, which stays on paper. */
-  .ground {
+  /* The composition: three real thumbnails, overlapping, slightly turned, on a quiet sand ground. */
+  .composition { margin: 0; }
+  .cards { position: relative; aspect-ratio: 5 / 4; isolation: isolate; }
+  .cards::before {
+    content: '';
     position: absolute;
     z-index: -1;
-    top: 14%;
-    right: -6%;
-    bottom: 3.25rem;
-    left: 16%;
+    inset: 12% 2% 6% 10%;
     border-radius: 28px;
     background: var(--tint-sand);
   }
-  @media (max-width: 1023px) { .ground { top: 20%; right: -4%; bottom: 4.75rem; left: 12%; } }
+  /* A cascade: each card's tag stays clear of the card above it. */
+  .card { position: absolute; filter: drop-shadow(0 18px 28px rgb(29 33 37 / 0.18)); }
+  .card :global(.thumb) { border-radius: 14px; }
+  .card-1 { top: 0; left: 0; width: 60%; transform: rotate(-3deg); z-index: 2; }
+  .card-2 { top: 30%; right: 0; width: 56%; transform: rotate(2.5deg); z-index: 1; }
+  .card-3 { bottom: 0; left: 0; width: 46%; transform: rotate(-1.5deg); z-index: 3; }
+  .tag {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    display: grid;
+    gap: 1px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgb(255 253 249 / 0.92);
+    backdrop-filter: blur(6px);
+  }
+  .tag-title { font-size: 0.8125rem; font-weight: 600; line-height: 1.25; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tag-by { font-size: 0.6875rem; color: var(--muted); }
+  /* The duration badge would sit under the tag here: the tag already names the course. */
+  .card :global([data-duration]) { display: none; }
+  figcaption { margin-top: var(--space-4); font-size: var(--fs-small); color: var(--muted); }
+  figcaption a { font-weight: 560; white-space: nowrap; }
+  @media (max-width: 1023px) {
+    .composition { max-width: 36rem; }
+  }
 
   @media (prefers-reduced-motion: no-preference) {
-    .copy > * { animation: rise 700ms var(--ease) both; }
-    .copy > :nth-child(2) { animation-delay: 60ms; }
-    .copy > :nth-child(3) { animation-delay: 120ms; }
-    .copy > :nth-child(n + 4) { animation-delay: 180ms; }
-    .stage { animation: rise 900ms var(--ease) 160ms both; }
+    .copy > * { animation: rise 600ms var(--ease) both; }
+    .copy > :nth-child(2) { animation-delay: 50ms; }
+    .copy > :nth-child(n + 3) { animation-delay: 110ms; }
+    .composition { animation: rise 800ms var(--ease) 140ms both; }
   }
   @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 </style>

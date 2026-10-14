@@ -111,36 +111,24 @@ export interface Dict {
     hero: {
       eyebrow: string;
       lead: string;
+      searchLabel: string;
+      searchPlaceholder: string;
+      searchSubmit: string;
       primary: string;
       secondary: string;
-      note: string;
-      demoCaption: string;
-      demoLink: string;
-      demo: { study: string; practice: string; official: string; officialWhy: string; steps: { path: string; exam: string; area: string; content: string; practice: string } };
+      compositionCaption: string;
+      compositionLink: string;
     };
     objectives: { heading: string; lead: string; items: Record<PathId, string>; facts: (resources: number, tracks?: number) => string };
     sources: {
       heading: string;
-      lead: string;
-      independence: string;
       count: (resources: number, page: string) => string;
       /** An institution whose courses span pages: every area, in catalogue order. */
       countAreas: (resources: number, areas: readonly string[]) => string;
       exams: string;
       examLinks: { enem: string; uerj: string };
-      pending: string;
     };
-    path: {
-      heading: string;
-      lead: string;
-      route: string;
-      steps: Record<'objetivo' | 'area' | 'assunto' | 'conteudo' | 'pratica', string>;
-      vestMeta: string;
-      subjectMeta: (subject: string) => string;
-      pending: string;
-      topicNote: string;
-      links: { objective: string; area: string; subject: string; content: string; practice: string };
-    };
+    courses: { heading: string; lead: string; all: string };
     areas: { heading: string; lead: string; subjects: (n: number) => string };
     tracks: {
       heading: string;
@@ -149,9 +137,10 @@ export interface Dict {
       titles: { enem: string; uerj: string };
       why: { enem: string; uerj: string };
       steps: (n: number) => string;
+      more: (n: number) => string;
       links: { enem: string; uerj: string; track: string };
     };
-    curation: { heading: string; statement: string; verified: (date: string) => string; rules: { title: string; body: string }[]; more: string };
+    curation: { heading: string; lead: string; verified: (date: string) => string; commitments: { title: string; body: string }[]; more: string };
     faq: { heading: string; items: { q: string; a: string }[] };
   };
   about: {
