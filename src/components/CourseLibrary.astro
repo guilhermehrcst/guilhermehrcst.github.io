@@ -1,93 +1,105 @@
 ---
-// The course grid of /cursos/ (V0.6): path filters, then every published course as a card. The filters are
-// native radio buttons and the grid answers them in CSS (:has), so they work by touch, mouse and keyboard
-// with no JavaScript. Where :has is not supported, every course stays visible: the safe state. A filter is
-// offered only for a path that holds courses, so none comes back empty.
+// The course grid of /cursos/ (V0.7, the video library): a row of path chips under the header, then every
+// published course as a video-style card. The chips are native radio buttons and the grid answers them in
+// CSS (:has): touch, mouse and keyboard, no JavaScript. Where :has is not supported, every course stays
+// visible: the safe state. A path with no course yet keeps its chip and answers with an empty state.
 import CourseCard from './CourseCard.astro';
-import { courseCards, courseFilterPaths } from '../lib/course-library';
+import { COURSE_FILTER_ORDER, courseCards, emptyFilterPaths } from '../lib/course-library';
 import { OBJECTIVES } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
 const cards = courseCards();
-const paths = courseFilterPaths(cards);
+const empty = emptyFilterPaths(cards);
 const c = t.courseLibrary;
-const count = (path: string) => cards.filter((card) => (card.paths as string[]).includes(path)).length;
 ---
 {cards.length === 0 ? (
-  <p class="wrap empty" data-library-empty>{c.empty}</p>
+  <p class="none" data-library-empty>{c.empty}</p>
 ) : (
-  <section class="wrap library" aria-labelledby="catalogo-title" data-course-library>
+  <section class="library" aria-labelledby="catalogo-title" data-course-library>
     <h2 id="catalogo-title" class="sr-only">{c.catalogue}</h2>
     <fieldset class="filters" data-course-filters>
       <legend class="sr-only">{c.filterLegend}</legend>
       <span class="chip">
-        <input type="radio" name="caminho" id="caminho-todos" value="todos" checked />
-        <label for="caminho-todos">{c.all} <span class="n">{cards.length}</span></label>
+        <input type="radio" name="caminho" id="caminho-tudo" value="tudo" checked />
+        <label for="caminho-tudo">{c.all}</label>
       </span>
-      {paths.map((path) => (
+      {COURSE_FILTER_ORDER.map((path) => (
         <span class="chip">
           <input type="radio" name="caminho" id={`caminho-${path}`} value={path} />
-          <label for={`caminho-${path}`}>{OBJECTIVES[path].label} <span class="n">{count(path)}</span></label>
+          <label for={`caminho-${path}`}>{OBJECTIVES[path].label}</label>
         </span>
       ))}
     </fieldset>
     <ul class="grid" role="list" data-resource-list data-course-grid>
       {cards.map((card, i) => <CourseCard card={card} eager={i < 3} />)}
     </ul>
+    {empty.map((path) => (
+      <p class="empty" data-empty-for={path}>{c.emptyPath(OBJECTIVES[path].label)}</p>
+    ))}
   </section>
 )}
 
 <style>
-  .library { padding-bottom: var(--space-8); }
-  .empty { padding-block: var(--space-6) var(--space-8); color: var(--muted); }
+  .library { --side: var(--video-side, 12px); padding: 0 var(--side) var(--space-7); }
+  .none { padding: var(--space-6) 16px; color: var(--video-muted); }
 
-  /* The filters: a row of chips that scrolls sideways on a phone, wraps from a tablet up. */
+  /* The chips: one row under the header, sticky with it, scrolling sideways when it overflows. */
   .filters {
+    position: sticky;
+    top: 56px;
+    z-index: 20;
     display: flex;
-    gap: var(--space-2);
-    margin: 0 calc(-1 * var(--gutter)) var(--space-6);
-    padding: 2px var(--gutter) var(--space-2);
+    gap: 10px;
     min-width: 0;
+    margin: 0 calc(-1 * var(--side)) 0;
+    padding: 10px var(--side) 12px;
     border: 0;
+    background: var(--video-bg);
     overflow-x: auto;
     scrollbar-width: none;
   }
   .filters::-webkit-scrollbar { display: none; }
-  @media (min-width: 600px) { .filters { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding-inline: 0; } }
   .chip { position: relative; flex: none; }
-  /* The radio stays in the accessibility tree and takes focus; its label is the chip. */
-  .chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  /* The radio is the target: the chip's whole label, 44px tall for touch, over a 32px capsule. */
+  .chip input { position: absolute; inset: -7px 0; width: 100%; height: calc(100% + 14px); margin: 0; opacity: 0; cursor: pointer; }
   .chip label {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    min-height: 44px;
-    padding-inline: var(--space-4);
-    border: 1px solid var(--rule-strong);
-    border-radius: 999px;
-    background: var(--raised);
-    font-size: 0.9375rem;
-    font-weight: 560;
-    color: var(--ink);
+    height: 30px;
+    padding-inline: 11px;
+    border-radius: 8px;
+    background: var(--video-surface);
+    color: var(--video-ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
     white-space: nowrap;
-    transition: background var(--t-ui), color var(--t-ui), border-color var(--t-ui);
+    transition: background var(--t-ui), color var(--t-ui);
   }
-  .chip label .n { font-weight: 500; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .chip input:hover + label { border-color: var(--ink); }
-  .chip input:checked + label { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
-  .chip input:checked + label .n { color: var(--on-brand-muted); }
-  .chip input:focus-visible + label { outline: 2px solid var(--action); outline-offset: 3px; }
+  .chip input:hover + label { background: var(--video-surface-hover); }
+  .chip input:checked + label { background: var(--video-ink); color: var(--video-bg); }
+  .chip input:focus-visible + label { outline: 2px solid var(--video-ink); outline-offset: 2px; }
 
-  /* The grid: one column on a phone, two on a tablet, three on a desktop. */
-  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6) var(--space-5); }
-  @media (min-width: 600px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  /* The grid: the thumbnail spans its column; 1 column on a phone, 2 on a narrow tablet or an iPad held
+     upright, 3 on an iPad held sideways and a laptop, 4 on a large desktop. */
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px 10px; padding-top: 4px; }
+  @media (min-width: 560px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 10px; } }
+  @media (min-width: 1280px) { .grid { gap: 36px 16px; } }
+  @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1440px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
-  /* A chosen path hides the courses that do not serve it. */
+  .empty { display: none; padding: var(--space-6) 0; color: var(--video-muted); }
+
+  /* A chosen path hides the courses that do not serve it, and shows its empty state when it has none. */
   .library:has(#caminho-ensino-fundamental:checked) .grid > :global(li:not([data-paths~='ensino-fundamental'])),
   .library:has(#caminho-ensino-medio:checked) .grid > :global(li:not([data-paths~='ensino-medio'])),
   .library:has(#caminho-vestibulares:checked) .grid > :global(li:not([data-paths~='vestibulares'])),
-  .library:has(#caminho-pre-militar:checked) .grid > :global(li:not([data-paths~='pre-militar'])),
   .library:has(#caminho-ensino-superior:checked) .grid > :global(li:not([data-paths~='ensino-superior'])),
-  .library:has(#caminho-tecnologia:checked) .grid > :global(li:not([data-paths~='tecnologia'])) { display: none; }
+  .library:has(#caminho-tecnologia:checked) .grid > :global(li:not([data-paths~='tecnologia'])),
+  .library:has(#caminho-pre-militar:checked) .grid > :global(li:not([data-paths~='pre-militar'])) { display: none; }
+  .library:has(#caminho-ensino-fundamental:checked) .empty[data-empty-for='ensino-fundamental'],
+  .library:has(#caminho-ensino-medio:checked) .empty[data-empty-for='ensino-medio'],
+  .library:has(#caminho-vestibulares:checked) .empty[data-empty-for='vestibulares'],
+  .library:has(#caminho-ensino-superior:checked) .empty[data-empty-for='ensino-superior'],
+  .library:has(#caminho-tecnologia:checked) .empty[data-empty-for='tecnologia'],
+  .library:has(#caminho-pre-militar:checked) .empty[data-empty-for='pre-militar'] { display: block; }
 </style>

@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { courseCards, courseFilterPaths, libraryCourses, thumbLabelOf } from '../src/lib/course-library.ts';
+import { COURSE_FILTER_ORDER, courseCards, emptyFilterPaths, initialsOf, libraryCourses, thumbLabelOf } from '../src/lib/course-library.ts';
 import { COURSE_PRESENTATIONS, presentationProblems, type CoursePresentation } from '../src/lib/course-presentations.ts';
 import { libraryGroups } from '../src/lib/libraries.ts';
 import { publishedResources, type PublishedLearningResource } from '../src/lib/learning-resources.ts';
@@ -31,9 +31,8 @@ test('a card holds only the record\'s facts: its paths in the approved order, it
     assert.deepEqual(card.paths, PATH_ORDER.filter((p) => card.resource.paths.includes(p)));
     assert.ok(card.thumbLabel.length > 0);
   }
-  const card = read('src/components/CourseCard.astro');
+  const card = read('src/components/CourseCard.astro').replace(/^\s*\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
   assert.doesNotMatch(card, /rating|views|visualiza|avalia|aulas\b|lessons\.length/i, 'no invented statistic');
-  assert.match(card, /r\.duration \?/, 'a duration only when the record has one');
 });
 
 test('the fallback label is an existing grouping: a track, a subject or a path', () => {
@@ -42,14 +41,45 @@ test('the fallback label is an existing grouping: a track, a subject or a path',
   assert.equal(thumbLabelOf({ id: 'x', subject: null, paths: ['ensino-superior'] }), 'Ensino Superior');
 });
 
-test('a filter is offered only for a path that holds courses, and the CSS answers every path', () => {
-  const paths = courseFilterPaths(cards);
-  for (const path of paths) assert.ok(cards.some((c) => c.paths.includes(path)), path);
-  for (const path of PATH_ORDER.filter((p) => !paths.includes(p))) assert.ok(!cards.some((c) => c.paths.includes(path)), path);
-  assert.deepEqual(courseFilterPaths([]), []);
+test('the filters (V0.7): every path in the owner\'s order; an empty one answers with its empty state', () => {
+  assert.deepEqual([...COURSE_FILTER_ORDER], ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar']);
+  assert.deepEqual([...COURSE_FILTER_ORDER].sort(), [...PATH_ORDER].sort());
+  const empty = emptyFilterPaths(cards);
+  for (const path of COURSE_FILTER_ORDER) assert.equal(empty.includes(path), !cards.some((c) => c.paths.includes(path)), path);
+  assert.deepEqual(emptyFilterPaths([]), [...COURSE_FILTER_ORDER]);
   assert.deepEqual(libraryCourses([]), []);
-  const css = read('src/components/CourseLibrary.astro');
-  for (const path of PATH_ORDER) assert.match(css, new RegExp(`#caminho-${path}:checked\\) \\.grid > :global\\(li:not\\(\\[data-paths~='${path}'\\]\\)\\)`), path);
+  const library = read('src/components/CourseLibrary.astro');
+  for (const path of PATH_ORDER) {
+    assert.match(library, new RegExp(`#caminho-${path}:checked\\) \\.grid > :global\\(li:not\\(\\[data-paths~='${path}'\\]\\)\\)`), path);
+    assert.match(library, new RegExp(`#caminho-${path}:checked\\) \\.empty\\[data-empty-for='${path}'\\]`), path);
+  }
+  assert.doesNotMatch(library, /class="n"/, 'no counts in the chips');
+  assert.match(read('scripts/verify-dist.mjs'), /const COURSE_FILTERS = \['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar'\];/);
+});
+
+test('an avatar shows the official mark only when square, else the initials', () => {
+  assert.equal(initialsOf('MIT OpenCourseWare'), 'MIT');
+  assert.equal(initialsOf('FGV'), 'FGV');
+  assert.equal(initialsOf('Harvard University'), 'HU');
+  assert.equal(initialsOf('Fundação Bradesco + Microsoft'), 'FB');
+  assert.equal(initialsOf('The Odin Project'), 'OP');
+  assert.equal(initialsOf('Kultivi'), 'K');
+  assert.match(read('src/components/CourseAvatar.astro'), /r > 0\.8 && r < 1\.25/);
+});
+
+test('the dark theme and the bottom navigation belong to /cursos/ alone', () => {
+  assert.match(read('src/pages/cursos/index.astro'), /<Base [^>]*theme="dark" bottomNav>/);
+  for (const file of ['src/components/LibraryPage.astro', 'src/pages/index.astro', 'src/pages/materias/index.astro', 'src/pages/cursos/[id].astro']) {
+    assert.doesNotMatch(read(file), /theme="dark"|bottomNav/, file);
+  }
+  const header = read('src/components/SiteHeader.astro');
+  assert.ok(header.split(/\n/).filter((l) => /video-/.test(l)).every((l) => /html\[data-(theme='dark'|bottom-nav)\]|var\(--video-side/.test(l)), 'every dark rule is gated');
+});
+
+test('a duration appears on the thumbnail only when the record states it', () => {
+  const thumb = read('src/components/CourseThumb.astro');
+  assert.match(thumb, /const duration = r\.duration \?/);
+  assert.match(thumb, /\{duration && <span class="duration"/);
 });
 
 test('thumbnails are local: no third-party image, the supplied files or the Academy frame', () => {

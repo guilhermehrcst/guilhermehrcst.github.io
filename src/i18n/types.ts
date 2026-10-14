@@ -82,12 +82,15 @@ export interface Dict {
     scope: string;
   };
   explore: { paths: string; areas: string };
+  /** The video library's bottom navigation (V0.7). */
+  bottomNav: { label: string; home: string; courses: string; materials: string; explore: string; search: string };
   /** /cursos/ (V0.6): the course grid and a course's own page. */
   courseLibrary: {
     catalogue: string;
     filterLegend: string;
     all: string;
     empty: string;
+    emptyPath: (path: string) => string;
     search: string;
     page: { provider: string; facts: string; summary: string; modules: string; checked: (date: string) => string; open: string; watch: string; related: string; back: string };
   };

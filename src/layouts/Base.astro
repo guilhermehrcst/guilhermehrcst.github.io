@@ -10,6 +10,7 @@ import sansLatin from '@fontsource-variable/google-sans-flex/files/google-sans-f
 import serifLatin from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import BottomNav from '../components/BottomNav.astro';
 import { pt as t } from '../i18n/pt';
 
 interface Props {
@@ -17,21 +18,25 @@ interface Props {
   description: string;
   /** The 404 and nothing else: not indexed, no canonical. */
   noindex?: boolean;
+  /** The video library's dark ground (/cursos/, V0.7): header, footer and page follow html[data-theme]. */
+  theme?: 'dark';
+  /** The bottom navigation of the video library, below 1280px (/cursos/, V0.7). */
+  bottomNav?: boolean;
 }
 
-const { title, description, noindex = false } = Astro.props;
+const { title, description, noindex = false, theme, bottomNav = false } = Astro.props;
 const site = Astro.site ?? new URL('https://guilhermehrcst.github.io');
 const canonical = new URL(Astro.url.pathname, site).href;
 ---
 <!doctype html>
-<html lang={t.htmlLang}>
+<html lang={t.htmlLang} data-theme={theme} data-bottom-nav={bottomNav || undefined}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{title}</title>
   <meta name="description" content={description}>
   {noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
-  <meta name="theme-color" content="#faf8f4">
+  <meta name="theme-color" content={theme === 'dark' ? '#0f0f0f' : '#faf8f4'}>
   <meta property="og:type" content="website">
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
@@ -53,5 +58,6 @@ const canonical = new URL(Astro.url.pathname, site).href;
     <slot />
   </main>
   <SiteFooter />
+  {bottomNav && <BottomNav />}
 </body>
 </html>

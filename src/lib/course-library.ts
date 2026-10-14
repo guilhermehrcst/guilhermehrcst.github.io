@@ -35,7 +35,20 @@ export const courseCards = (resources: readonly PublishedLearningResource[] = pu
     thumbLabel: thumbLabelOf(resource),
   }));
 
-/** The path filters the library offers: only paths that hold at least one course, in the approved order.
- *  A filter never comes back empty. */
-export const courseFilterPaths = (cards: readonly CourseCardData[] = courseCards()): PathId[] =>
-  PATH_ORDER.filter((path) => cards.some((card) => card.paths.includes(path)));
+/** The filters of the library (V0.7), in the order the owner set: every path, after "Tudo". A path that holds
+ *  no course yet keeps its filter and answers with an empty state, never with a course it does not have. */
+export const COURSE_FILTER_ORDER: readonly PathId[] = ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar'];
+
+/** The paths whose filter has no course yet: they show the empty state. */
+export const emptyFilterPaths = (cards: readonly CourseCardData[] = courseCards()): PathId[] =>
+  COURSE_FILTER_ORDER.filter((path) => !cards.some((card) => card.paths.includes(path)));
+
+const MINOR = new Set(['de', 'da', 'do', 'das', 'dos', 'e', 'the', 'of', '+']);
+/** The initials of an institution, for its avatar when no official square mark exists: an acronym as it is
+ *  written (MIT, FGV), else the first letters of its first two significant words. */
+export const initialsOf = (provider: string): string => {
+  const words = provider.split(/\s+/).filter((w) => w && !MINOR.has(w.toLowerCase()));
+  const first = words[0] ?? '';
+  if (/^[A-Z0-9]{2,4}$/.test(first)) return first;
+  return words.slice(0, 2).map((w) => w[0]!.toUpperCase()).join('');
+};

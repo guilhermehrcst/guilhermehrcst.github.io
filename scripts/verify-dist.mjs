@@ -9,6 +9,9 @@ import { join, relative, sep } from 'node:path';
 const DIST = new URL('../dist/', import.meta.url).pathname;
 const SITE = 'https://guilhermehrcst.github.io';
 
+/** The course filters (V0.7), in the owner's order, after "Tudo". A hand-written mirror of
+ *  COURSE_FILTER_ORDER in src/lib/course-library.ts. */
+const COURSE_FILTERS = ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar'];
 /** Course pages (V0.6): /cursos/<id>/ for each course with a presentation. A hand-written mirror of
  *  COURSE_PRESENTATIONS in src/lib/course-presentations.ts; empty until a presentation is approved. */
 const COURSE_PAGES = [];
@@ -261,6 +264,10 @@ function checkUnique(list, what) {
 }
 
 function checkShell(path, html) {
+  // The dark video theme and the bottom navigation belong to /cursos/ alone (V0.7): no other page changes.
+  const dark = /<html\b[^>]*\sdata-theme="dark"/.test(html);
+  if (dark !== (path === '/cursos/')) fail(path, `dark theme ${dark ? 'outside' : 'missing on'} /cursos/`);
+  if (/\sdata-bottom-nav[\s>=]/.test(html) !== (path === '/cursos/')) fail(path, 'the bottom navigation belongs to /cursos/ alone');
   if (!/<header\b/.test(html) || !/<footer\b/.test(html)) fail(path, 'header or footer landmark missing');
   // An id names one element: a second one makes anchors and aria references ambiguous.
   const ids = attrs(html.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, ''), /<[a-z][^>]*\sid="([^"]+)"/g);
@@ -359,15 +366,22 @@ function checkCourseLibrary(path, html, resources) {
   const radios = [...fieldset.matchAll(/<input\b([^>]*)>/g)].map((m) => m[1]);
   const values = radios.map((a) => /\svalue="([^"]+)"/.exec(a)?.[1]);
   if (!radios.every((a) => /type="radio"/.test(a) && /name="caminho"/.test(a))) fail(path, 'the course filters are radios of one group');
-  if (values[0] !== 'todos' || !/\schecked/.test(radios[0] ?? '')) fail(path, '"Todos" comes first and is chosen');
-  if (radios.slice(1).some((a) => /\schecked/.test(a))) fail(path, 'only "Todos" starts chosen');
-  const served = PATHS.map((p) => p.slice(1, -1)).filter((p) => resources.some((item) => resourceAttr(item, 'data-paths').split(' ').includes(p)));
-  if (JSON.stringify(values.slice(1)) !== JSON.stringify(served)) fail(path, `course filters ${values.slice(1).join(',')} ≠ paths with courses ${served.join(',')}`);
-  for (const value of values) {
-    const label = new RegExp(`<label\\b[^>]*for="caminho-${value}"[^>]*>[\\s\\S]*?<span class="n"[^>]*>(\\d+)</span>`).exec(fieldset)?.[1];
-    const shown = value === 'todos' ? resources.length : resources.filter((item) => resourceAttr(item, 'data-paths').split(' ').includes(value)).length;
-    if (Number(label) !== shown) fail(path, `filter ${value} says ${label}, shows ${shown}`);
+  if (values[0] !== 'tudo' || !/\schecked/.test(radios[0] ?? '')) fail(path, '"Tudo" comes first and is chosen');
+  if (radios.slice(1).some((a) => /\schecked/.test(a))) fail(path, 'only "Tudo" starts chosen');
+  if (JSON.stringify(values.slice(1)) !== JSON.stringify(COURSE_FILTERS)) fail(path, `course filters ${values.slice(1).join(',')}`);
+  if (/class="n"/.test(fieldset)) fail(path, 'the course filters carry no counts (V0.7)');
+  // A path with no course answers with its empty state; a path with courses never shows one.
+  for (const value of COURSE_FILTERS) {
+    const shown = resources.filter((item) => resourceAttr(item, 'data-paths').split(' ').includes(value)).length;
+    const hasEmpty = new RegExp(`\\sdata-empty-for="${value}"`).test(html);
+    if (shown === 0 && !hasEmpty) fail(path, `filter ${value} has no course and no empty state`);
+    if (shown > 0 && hasEmpty) fail(path, `filter ${value} has courses and an empty state`);
   }
+  // The bottom navigation: five real places, in order, the current one marked.
+  const bottom = /<nav\b[^>]*\sdata-bottom-nav[\s\S]*?<\/nav>/.exec(html)?.[0] ?? '';
+  if (JSON.stringify(hrefsIn(bottom)) !== JSON.stringify(['/', '/cursos/', '/materiais/', '/materias/', '/buscar/'])) fail(path, `bottom navigation ${hrefsIn(bottom).join(',')}`);
+  const current = [...bottom.matchAll(/<a\b([^>]*)>/g)].filter((m) => /aria-current="page"/.test(m[1])).map((m) => /href="([^"]+)"/.exec(m[1])?.[1]);
+  if (JSON.stringify(current) !== JSON.stringify(['/cursos/'])) fail(path, `bottom navigation marks ${current.join(',')}`);
 }
 
 /** The hrefs of the links inside the first element matching `open`, up to its closing `tag`. */

@@ -1,0 +1,73 @@
+---
+// The video library's bottom navigation (V0.7), below 1280px: five real places of the Academy, icon over a
+// short label, the current one in white. Fixed to the bottom edge above the safe area (iPhone, iPad), and the
+// page reserves its height so it never covers content. From 1280px the header carries the same places and
+// this bar is hidden. Native links: no JavaScript.
+import HomeIcon from './icons/radix/HomeIcon.astro';
+import VideoIcon from './icons/radix/VideoIcon.astro';
+import ReaderIcon from './icons/radix/ReaderIcon.astro';
+import DashboardIcon from './icons/radix/DashboardIcon.astro';
+import MagnifyingGlassIcon from './icons/radix/MagnifyingGlassIcon.astro';
+import { routes } from '../lib/routes';
+import { pt as t } from '../i18n/pt';
+
+const path = Astro.url.pathname;
+const b = t.bottomNav;
+const items = [
+  { href: routes.home, label: b.home, Icon: HomeIcon },
+  { href: routes.courses, label: b.courses, Icon: VideoIcon },
+  { href: routes.materials, label: b.materials, Icon: ReaderIcon },
+  { href: routes.subjectIndex, label: b.explore, Icon: DashboardIcon },
+  { href: routes.search, label: b.search, Icon: MagnifyingGlassIcon },
+];
+---
+<nav class="bottom-nav" aria-label={b.label} data-bottom-nav>
+  <ul role="list">
+    {items.map(({ href, label, Icon }) => (
+      <li>
+        <a href={href} aria-current={href === path ? 'page' : undefined}>
+          <Icon width={22} height={22} />
+          <span>{label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--video-bg);
+    border-top: 1px solid var(--video-line);
+  }
+  ul { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); max-width: 40rem; margin-inline: auto; }
+  a {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 3px;
+    min-height: 56px;
+    padding-inline: 4px;
+    color: var(--video-muted);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: color var(--t-ui);
+  }
+  a :global(svg) { display: block; }
+  a:hover { color: var(--video-ink); }
+  a[aria-current='page'] { color: var(--video-ink); font-weight: 650; }
+  a:focus-visible { outline: 2px solid var(--video-ink); outline-offset: -4px; border-radius: 8px; }
+  /* The page keeps room for the bar, so the last row of courses and the footer stay readable. */
+  :global(html[data-bottom-nav]) :global(body) { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+  @media (min-width: 1280px) {
+    .bottom-nav { display: none; }
+    :global(html[data-bottom-nav]) :global(body) { padding-bottom: 0; }
+  }
+</style>

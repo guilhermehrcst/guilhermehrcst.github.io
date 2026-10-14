@@ -200,11 +200,13 @@ export const pt: Dict = {
     scope: 'Esta área não oferece treinamento físico, avaliação médica nem simulados.',
   },
   explore: { paths: 'Caminhos', areas: 'Áreas e matérias' },
+  bottomNav: { label: 'Seções da Academy', home: 'Início', courses: 'Cursos', materials: 'Materiais', explore: 'Explorar', search: 'Buscar' },
   courseLibrary: {
     catalogue: 'Catálogo de cursos',
     filterLegend: 'Filtrar por caminho',
-    all: 'Todos',
+    all: 'Tudo',
     empty: 'Ainda não há cursos publicados. Os primeiros chegam assim que forem verificados na fonte.',
+    emptyPath: (path) => `Ainda não há cursos de ${path} publicados. Eles entram aqui assim que forem verificados na fonte.`,
     search: 'Buscar nos cursos',
     page: {
       provider: 'Oferecido por',
