@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/verify-dist.mjs",
+    "build": "astro build && node scripts/verify-dist.mjs && node scripts/rebase-dist.mjs && node scripts/verify-project-base.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "test": "node --experimental-strip-types --test \"tests/**/*.test.{ts,mjs}\""

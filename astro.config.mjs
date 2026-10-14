@@ -2,9 +2,11 @@
 import { defineConfig } from 'astro/config';
 import { LEGACY_REDIRECTS } from './src/lib/routes.ts';
 
-// Served from the domain root, so no `base`. Output is fully static; GitHub Pages serves `dist/` as
-// uploaded by the deploy workflow. GitHub Pages cannot send HTTP redirects, so each former route
-// becomes a small page that refreshes to its destination (spec §8.4).
+// Author/root-relative paths are intentional: the independent historical verifier checks them
+// BEFORE scripts/rebase-dist.mjs prefixes the generated output for the GitHub Pages project
+// URL /pexis-academy/. A second independent verifier tests the prefixed artifact.
+// Do not set Astro `base` here without migrating those contracts and both build verifiers.
+// Legacy routes redirect via static refresh pages because Pages cannot issue HTTP redirects.
 export default defineConfig({
   site: 'https://guilhermehrcst.github.io',
   trailingSlash: 'always',
