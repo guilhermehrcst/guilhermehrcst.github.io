@@ -9,7 +9,9 @@ site (`npm run build`, served under `/pexis-academy/`), in Chromium (Playwright)
   Each path is a `<button popovertarget>` that opens a native popover. Escape, a click outside or opening another
   menu closes it. Following a link loads another document, which closes it too. Each menu holds Cursos, Livros
   and Provas, each with an icon, a line and its published count. A kind with nothing published says
-  "Em preparação" and is not a link. The menu ends with "Explorar [caminho]". There is no JavaScript.
+  "Em preparação" and is not a link. The menu ends with "Explorar [caminho]". The menus themselves are native and need no JavaScript.
+  (Placement hotfix, `../2026-10-14-academy-nav-menu-placement/`: one small script now places each panel under
+  its own button.)
 - **Compact menu.** Below 1024px, and in any browser without popovers, there is one "Menu" `<details>` sheet.
   It holds the six paths as an accordion (`<details name>`, one open at a time; the current path starts open),
   then "Todos os cursos" and "Todos os materiais". It respects the safe areas. At 320px the button keeps only

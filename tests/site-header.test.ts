@@ -1,6 +1,7 @@
 // The header (Global Navigation V1), read from its source: the Home's identity kept (official lockup, brand
 // wine, sticky, sans navigation), the six paths as buttons that open native popovers, a compact Menu of native
-// <details>, search as a named icon, and no JavaScript. The built HTML is checked by scripts/verify-dist.mjs.
+// <details>, search as a named icon, and one small progressive script that only places the popovers under their
+// buttons. The built HTML is checked by scripts/verify-dist.mjs.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -18,7 +19,9 @@ test('the identity of the Home: the official white lockup linked home, on the st
 });
 
 test('six buttons open six popovers; the menus come from the catalogue model, never typed', () => {
-  assert.doesNotMatch(header, /<script\b/);
+  // The menus work natively; the one script only places them (src/scripts/menu-placement.ts, tested apart).
+  assert.equal((header.match(/<script\b/g) ?? []).length, 1);
+  assert.match(header, /<script>\s*import '\.\.\/scripts\/menu-placement';\s*<\/script>/);
   assert.match(header, /const menus = globalNav\(\);/);
   assert.match(header, /<button\s+type="button"\s+class:list=\{\['trigger'[^>]*popovertarget=\{`menu-\$\{menu\.id\}`\}/);
   assert.match(header, /<div class="panel" id=\{`menu-\$\{menu\.id\}`\} popover /);

@@ -4,7 +4,9 @@
 // as a magnifying glass with its name for assistive tech.
 // Each path is a button that opens its menu (Cursos, Livros, Provas, then the path's own page): a native
 // popover, so a click opens it, Escape, a click outside or another menu closes it, and following a link
-// loads another document, which closes it too. No JavaScript (this page ships none). Every kind of content
+// loads another document, which closes it too. All of that is native: no JavaScript is needed to use the menus.
+// One small script (src/scripts/menu-placement.ts) only tells the stylesheet where each button is, so each
+// panel opens under its own button; without it the panel hangs from the right margin. Every kind of content
 // is counted from the published catalogue (src/lib/global-nav.ts); one with nothing published says
 // "Em preparação" and is not a link.
 // The line needs 1024px (an iPad held sideways and up), and a browser with popovers: below it, or without
@@ -47,9 +49,8 @@ const n = t.nav;
               popovertarget={`menu-${menu.id}`}
               aria-current={here === menu.id ? 'true' : undefined}
               data-path={menu.id}
-              style={`anchor-name: --nav-${menu.id}`}
             >{menu.label}<span class="chev" aria-hidden="true"></span></button>
-            <div class="panel" id={`menu-${menu.id}`} popover data-menu={menu.id} style={`position-anchor: --nav-${menu.id}`}>
+            <div class="panel" id={`menu-${menu.id}`} popover data-menu={menu.id}>
               <p class="panel-label">{menu.name}</p>
               <ul role="list" class="entries">
                 {menu.entries.map((entry) => {
@@ -143,6 +144,10 @@ const n = t.nav;
     </div>
   </div>
 </header>
+
+<script>
+  import '../scripts/menu-placement';
+</script>
 
 <style>
   .site-header {
@@ -247,15 +252,25 @@ const n = t.nav;
   details[open] > summary > .chev { transform: translateY(2px) rotate(-135deg); }
   .trigger:has(+ .panel:popover-open) > .chev { transform: translateY(2px) rotate(-135deg); }
 
-  /* A path's menu: a small paper panel under its button, never a mega menu. Where anchor positioning exists
-     it hangs from the button (and turns left near the edge); elsewhere, from the bar's right edge. */
+  /* A path's menu: a small paper panel under its button, never a mega menu. A popover sits in the top layer,
+     so it is placed against the viewport, not against its button. One mechanism places all six, in every
+     engine: the script below reads the button's box when the menu opens and hands it to the stylesheet
+     (--anchor-*, data-align); the stylesheet does the rest with plain `left`, `top` and clamp(), which keeps
+     the panel inside the viewport, clear of the side margins and the notch. CSS anchor positioning is not
+     used: engines disagree on how an unresolved anchor lays out a top-layer box, and a panel with every inset
+     `auto` has no position of its own to fall back on.
+     Without the script (or before it runs) the panel hangs from the right margin, under the header: still
+     inside the viewport, only not under its own button. */
   .panel {
+    --edge-l: max(var(--library-side, var(--gutter)), env(safe-area-inset-left));
+    --edge-r: max(var(--library-side, var(--gutter)), env(safe-area-inset-right));
+    --panel-w: min(24rem, calc(100% - var(--edge-l) - var(--edge-r)));
     position: fixed;
     inset: auto;
-    top: 72px;
-    right: var(--gutter);
-    width: min(24rem, calc(100vw - 2 * var(--gutter)));
-    max-height: calc(100dvh - 88px);
+    top: calc(var(--anchor-bottom, 64px) + 8px);
+    right: var(--edge-r);
+    width: var(--panel-w);
+    max-height: calc(100dvh - var(--anchor-bottom, 64px) - 24px);
     margin: 0;
     padding: var(--space-4) var(--space-3) var(--space-3);
     overflow-y: auto;
@@ -266,8 +281,15 @@ const n = t.nav;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-panel);
   }
-  @supports (position-area: block-end) {
-    .panel { top: auto; right: auto; position-area: block-end span-inline-end; margin-top: 8px; position-try-fallbacks: flip-inline; }
+  /* Placed by the script: a button in the left half of the page opens its panel from its own left edge, one in
+     the right half from its own right edge; either way the panel stays between the side margins. */
+  .panel[data-align='start'] {
+    right: auto;
+    left: clamp(var(--edge-l), var(--anchor-left), calc(100% - var(--panel-w) - var(--edge-r)));
+  }
+  .panel[data-align='end'] {
+    right: auto;
+    left: clamp(var(--edge-l), calc(var(--anchor-right) - var(--panel-w)), calc(100% - var(--panel-w) - var(--edge-r)));
   }
   /* It eases in, and leaves at once: two menus never show together while one gives way to the other. */
   @media (prefers-reduced-motion: no-preference) {
@@ -378,7 +400,6 @@ const n = t.nav;
 
   /* The course library (/cursos/): the bar spans the page and aligns with the grid's edge. */
   :global(html[data-bottom-nav]) .bar { max-width: none; padding-inline: max(var(--library-side, var(--gutter)), env(safe-area-inset-left)) max(var(--library-side, var(--gutter)), env(safe-area-inset-right)); }
-  :global(html[data-bottom-nav]) .panel { right: var(--library-side, var(--gutter)); }
   /* With the bottom navigation (below 1024px), it already offers search and the two libraries: the header
      keeps the lockup and the Menu, so nothing is offered twice, and the sheet stops above the bar. */
   @media (max-width: 1023px) {
