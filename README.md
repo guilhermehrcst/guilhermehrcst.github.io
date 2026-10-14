@@ -31,10 +31,16 @@ npm ci
 npm run dev       # http://localhost:4321
 npm test          # unit tests (tests/**/*.test.{ts,mjs}, Node's test runner)
 npx astro check   # types
-npm run build     # astro build + scripts/verify-dist.mjs
+npm run build     # astro build + original verifier + Pages base rewrite + independent final verifier
 ```
 
 CI (`.github/workflows/deploy.yml`) runs the same three steps; a push to `main` deploys `dist/` to GitHub Pages.
+
+### GitHub Pages project URL (repository `pexis-academy`)
+
+The live public URL is **https://guilhermehrcst.github.io/pexis-academy/**. The repository is a **project site**, not the account's root site. Local Astro routes intentionally remain `/`, `/buscar/`, etc. The existing strict `verify-dist.mjs` checks their original semantics and all **44 published** resources **before** deployment-path adaptation. Build then rebases the generated `dist/` HTML, CSS font/assets, canonical/Open Graph, sitemap, robots and legacy refresh redirects to `/pexis-academy/`. Finally, the **independent** `verify-project-base.mjs` fails the build on any unprefixed internal link, missing asset, broken SEO URL or missing sitemap page. The unit tests cover URL safety and idempotence.
+
+Do not remove either verifier, add a second Pages base prefix or rename the repo to fix the old `guilhermehrcst.github.io` URL. GitHub Pages' old account-root URL is **not** this project's current publication address. No resources are published by this fix; the L003 editorial approval gates remain unchanged.
 
 ## Content model
 
