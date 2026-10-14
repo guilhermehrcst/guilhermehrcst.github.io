@@ -67,13 +67,18 @@ test('an avatar shows the official mark only when square, else the initials', ()
   assert.match(read('src/components/CourseAvatar.astro'), /r > 0\.8 && r < 1\.25/);
 });
 
-test('the dark theme and the bottom navigation belong to /cursos/ alone', () => {
-  assert.match(read('src/pages/cursos/index.astro'), /<Base [^>]*theme="dark" bottomNav>/);
+test('one institutional theme: no dark mode, the bottom navigation on /cursos/ alone', () => {
+  assert.match(read('src/pages/cursos/index.astro'), /<Base title=\{c\.title\} description=\{c\.description\} bottomNav>/);
   for (const file of ['src/components/LibraryPage.astro', 'src/pages/index.astro', 'src/pages/materias/index.astro', 'src/pages/cursos/[id].astro']) {
-    assert.doesNotMatch(read(file), /theme="dark"|bottomNav/, file);
+    assert.doesNotMatch(read(file), /bottomNav/, file);
   }
-  const header = read('src/components/SiteHeader.astro');
-  assert.ok(header.split(/\n/).filter((l) => /video-/.test(l)).every((l) => /html\[data-(theme='dark'|bottom-nav)\]|var\(--video-side/.test(l)), 'every dark rule is gated');
+  for (const file of ['src/layouts/Base.astro', 'src/styles/global.css', 'src/components/SiteHeader.astro', 'src/components/SiteFooter.astro', 'src/components/BottomNav.astro', 'src/components/CourseLibrary.astro', 'src/components/CourseCard.astro', 'src/components/CourseThumb.astro', 'src/components/CourseAvatar.astro', 'src/pages/cursos/index.astro']) {
+    assert.doesNotMatch(read(file), /data-theme|--video-|prefers-color-scheme:\s*dark|color-scheme:\s*dark/, file);
+  }
+  assert.match(read('src/layouts/Base.astro'), /<meta name="theme-color" content="#faf8f4">/);
+  // The chosen chip is the brand red with white text; the bottom navigation marks its page in the brand red.
+  assert.match(read('src/components/CourseLibrary.astro'), /input:checked \+ label \{ background: var\(--brand\); color: var\(--on-brand\); \}/);
+  assert.match(read('src/components/BottomNav.astro'), /a\[aria-current='page'\] \{ color: var\(--brand\);/);
 });
 
 test('a duration appears on the thumbnail only when the record states it', () => {

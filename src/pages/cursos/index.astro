@@ -1,8 +1,8 @@
 ---
-// /cursos/ (V0.7): the course library as a video platform: the dark ground, the header without the wine band,
-// a row of path chips, the grid of thumbnails, and, below 1280px, the bottom navigation. The page's title and
-// breadcrumb stay for assistive tech and search engines, hidden from sight like the reference's chrome.
-// Only this page wears the dark theme (Base: html[data-theme='dark']); every other page is unchanged.
+// /cursos/ (V0.7): the course library laid out like a video platform, in the Academy's own identity: the
+// wine header, a row of path chips, the grid of thumbnails, and, below 1280px, the bottom navigation. The
+// page's title and breadcrumb stay for assistive tech and search engines, hidden from sight. There is one
+// theme, the institutional one: no dark mode, no switch.
 import Base from '../../layouts/Base.astro';
 import CourseLibrary from '../../components/CourseLibrary.astro';
 import { routes } from '../../lib/routes';
@@ -10,7 +10,7 @@ import { pt as t } from '../../i18n/pt';
 
 const c = t.pages.cursos;
 ---
-<Base title={c.title} description={c.description} theme="dark" bottomNav>
+<Base title={c.title} description={c.description} bottomNav>
   <div class="sr-only">
     <nav aria-label={t.breadcrumb.label} data-breadcrumb>
       <ol role="list"><li><a href={routes.home}>{t.breadcrumb.home}</a></li><li aria-current="page">{c.heading}</li></ol>
@@ -22,10 +22,7 @@ const c = t.pages.cursos;
 </Base>
 
 <style>
-  /* One side margin for the header, the chips and the grid: they align on the same edge, as in the reference. */
-  :global(html[data-theme='dark']) { color-scheme: dark; background: var(--video-bg); --video-side: 12px; }
-  @media (min-width: 1280px) { :global(html[data-theme='dark']) { --video-side: 24px; } }
-  :global(html[data-theme='dark'] body) { background: var(--video-bg); color: var(--video-ink); }
-  :global(html[data-theme='dark'] :focus-visible) { outline-color: var(--video-ink); }
-  :global(html[data-theme='dark'] .skip) { background: var(--video-ink); color: var(--video-bg); }
+  /* One side margin for the header bar, the chips and the grid: they align on the same edge. */
+  :global(html[data-bottom-nav]) { --library-side: 12px; }
+  @media (min-width: 1280px) { :global(html[data-bottom-nav]) { --library-side: 24px; } }
 </style>

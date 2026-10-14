@@ -25,13 +25,6 @@
   --tint-brand: #f6e9ea;
   --tint-sand: #efe7da;
   --rule-strong: #cfc8bb;
-  /* The video library (/cursos/, V0.7): a dark ground for thumbnails, scoped by html[data-theme='dark']. */
-  --video-bg: #0f0f0f;
-  --video-surface: #272727;
-  --video-surface-hover: #3f3f3f;
-  --video-ink: #f1f1f1;
-  --video-muted: #aaaaaa;
-  --video-line: #303030;
 
   --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   /* Newsreader (OFL-1.1, self-hosted): the academic voice of the display type. Body text stays sans. */

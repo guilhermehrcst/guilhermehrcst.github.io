@@ -220,27 +220,9 @@ const inSection = (href: string) => sectionOf(href) === section && section !== n
   .sheet-paths a:hover, .sheet-list > li > a:hover, .sheet-explore > summary:hover { color: var(--action); }
   .sheet-paths a[aria-current='page'] { color: var(--action); font-weight: 560; }
   .site-header .sheet :global(:focus-visible) { outline-color: var(--action); }
-  /* The video library (/cursos/, V0.7): the same header on the dark ground, without the wine band, 56px
-     tall like the grid's own chrome. Menus open on the dark surface. */
-  :global(html[data-theme='dark']) .site-header { background: var(--video-bg); border-bottom-color: var(--video-bg); }
-  :global(html[data-theme='dark']) .bar { min-height: 56px; max-width: none; padding-inline: var(--video-side, var(--gutter)); }
-  :global(html[data-theme='dark']) .panel { right: var(--video-side, var(--gutter)); }
-  :global(html[data-theme='dark']) .brand { padding-block: 5px; }
-  :global(html[data-theme='dark']) .link,
-  :global(html[data-theme='dark']) .explore > summary,
-  :global(html[data-theme='dark']) .mobile > summary { color: var(--video-ink); }
-  :global(html[data-theme='dark']) .link:hover,
-  :global(html[data-theme='dark']) .explore > summary:hover,
-  :global(html[data-theme='dark']) .explore[open] > summary { background: var(--video-surface); color: var(--video-ink); }
-  :global(html[data-theme='dark']) .site-header :global(:focus-visible) { outline-color: var(--video-ink); }
-  :global(html[data-theme='dark']) .panel { background: var(--video-surface); color: var(--video-ink); border-color: var(--video-line); }
-  :global(html[data-theme='dark']) .panel-label,
-  :global(html[data-theme='dark']) .what { color: var(--video-muted); }
-  :global(html[data-theme='dark']) .paths a { color: var(--video-ink); }
-  :global(html[data-theme='dark']) .paths a:hover { background: var(--video-surface-hover); }
-  :global(html[data-theme='dark']) .paths a:hover .name,
-  :global(html[data-theme='dark']) .tag { color: var(--video-ink); }
-  :global(html[data-theme='dark']) .site-header .panel :global(:focus-visible) { outline-color: var(--video-ink); }
+  /* The course library (/cursos/, V0.7): the bar spans the page and aligns with the grid's edge. */
+  :global(html[data-bottom-nav]) .bar { max-width: none; padding-inline: var(--library-side, var(--gutter)); }
+  :global(html[data-bottom-nav]) .panel { right: var(--library-side, var(--gutter)); }
   /* With the bottom navigation (below 1280px) the header keeps the lockup and search only: the bar
      below carries Cursos, Materiais and Explorar, so nothing is offered twice. */
   @media (max-width: 1279px) {

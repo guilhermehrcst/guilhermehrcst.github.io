@@ -29,9 +29,9 @@ const square = mark ? (() => { const [x0, y0, x1, y1] = mark.bbox; const r = (x1
     height: 30px;
     overflow: hidden;
     border-radius: 50%;
-    background: var(--video-surface);
+    background: var(--surface);
   }
-  .avatar[data-avatar='mark'] { background: var(--video-ink); padding: 3px; }
+  .avatar[data-avatar='mark'] { background: var(--raised); padding: 3px; box-shadow: inset 0 0 0 1px var(--rule); }
   .avatar :global(img) { display: block; width: 100%; height: 100%; object-fit: contain; }
-  .initials { font-size: 0.6875rem; font-weight: 650; letter-spacing: 0.02em; color: var(--video-ink); }
+  .initials { font-size: 0.6875rem; font-weight: 650; letter-spacing: 0.02em; color: var(--ink); }
 </style>

@@ -34,10 +34,8 @@ const pairs: [string, string, number][] = [
   // The menus open on paper panels under the wine header.
   ['ink', 'raised', 7], ['action', 'raised', 4.5],
   ['ink', 'tint-sand', 7], ['muted', 'tint-sand', 4.5],
-  // The video library (/cursos/, V0.7): text, metadata and chips on the dark ground and its surfaces.
-  ['video-ink', 'video-bg', 7], ['video-muted', 'video-bg', 4.5],
-  ['video-ink', 'video-surface', 7], ['video-muted', 'video-surface', 4.5],
-  ['video-ink', 'video-surface-hover', 4.5], ['video-bg', 'video-ink', 7],
+  // The course library (/cursos/, V0.7): chips and avatars on the surface, the chosen chip on the brand.
+  ['ink', 'surface', 7], ['muted', 'surface', 4.5], ['brand', 'raised', 7],
 ];
 for (const [fg, bg, min] of pairs) {
   test(`--${fg} on --${bg} is at least ${min}:1`, () => {
@@ -58,13 +56,6 @@ test('no hex colour outside :root, but the theme-color meta, which equals --pape
     if (theme) {
       assert.equal(theme[1]!.toLowerCase(), token('paper'), 'theme-color equals --paper');
       text = text.replace(theme[0], '');
-    }
-    // The video library's dark theme (V0.7): the theme colour follows the page, --video-bg or --paper.
-    const themed = /<meta name="theme-color" content=\{theme === 'dark' \? '(#[0-9a-f]{6})' : '(#[0-9a-f]{6})'\}>/i.exec(text);
-    if (themed) {
-      assert.equal(themed[1]!.toLowerCase(), token('video-bg'), 'the dark theme-color equals --video-bg');
-      assert.equal(themed[2]!.toLowerCase(), token('paper'), 'theme-color equals --paper');
-      text = text.replace(themed[0], '');
     }
     assert.ok(!/#[0-9a-f]{3,8}\b(?![\w-])/i.test(text.replace(/href="#[^"]*"|`#\$\{[^}]*\}`|'#[a-z-]*'/g, '')), `hex colour in ${path}`);
   }

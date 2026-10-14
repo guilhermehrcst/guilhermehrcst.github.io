@@ -102,20 +102,4 @@ const paths = PATH_ORDER.map((id) => ({
   .legal { display: grid; gap: var(--space-2); padding-block: var(--space-5) var(--space-6); border-top: 1px solid var(--brand-line); font-size: var(--fs-small); color: var(--on-brand-muted); }
   .legal a { color: var(--on-brand); text-decoration: underline; text-underline-offset: 0.2em; text-decoration-color: var(--brand-line); }
   .legal a:hover { text-decoration-color: currentColor; }
-  /* The video library (/cursos/, V0.7): the footer on the dark ground, its rules and second text neutral. */
-  :global(html[data-theme='dark']) .site-footer { background: var(--video-bg); border-top: 1px solid var(--video-line); }
-  :global(html[data-theme='dark']) .site-footer :global(.wrap) { max-width: none; padding-inline: var(--video-side, var(--gutter)); }
-  :global(html[data-theme='dark']) .site-footer :global(:focus-visible) { outline-color: var(--video-ink); }
-  :global(html[data-theme='dark']) .label,
-  :global(html[data-theme='dark']) .legal { border-color: var(--video-line); }
-  :global(html[data-theme='dark']) .sub { border-left-color: var(--video-line); }
-  :global(html[data-theme='dark']) .small,
-  :global(html[data-theme='dark']) .label,
-  :global(html[data-theme='dark']) .state,
-  :global(html[data-theme='dark']) .sub a,
-  :global(html[data-theme='dark']) .legal { color: var(--video-muted); }
-  :global(html[data-theme='dark']) li a,
-  :global(html[data-theme='dark']) .lead,
-  :global(html[data-theme='dark']) .legal a { color: var(--video-ink); }
-  :global(html[data-theme='dark']) .legal a { text-decoration-color: var(--video-line); }
 </style>

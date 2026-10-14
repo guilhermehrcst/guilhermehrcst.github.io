@@ -40,13 +40,13 @@ const c = t.courseLibrary;
 )}
 
 <style>
-  .library { --side: var(--video-side, 12px); padding: 0 var(--side) var(--space-7); }
-  .none { padding: var(--space-6) 16px; color: var(--video-muted); }
+  .library { --side: var(--library-side, 12px); padding: 0 var(--side) var(--space-7); }
+  .none { padding: var(--space-6) 16px; color: var(--muted); }
 
   /* The chips: one row under the header, sticky with it, scrolling sideways when it overflows. */
   .filters {
     position: sticky;
-    top: 56px;
+    top: 65px;
     z-index: 20;
     display: flex;
     gap: 10px;
@@ -54,7 +54,7 @@ const c = t.courseLibrary;
     margin: 0 calc(-1 * var(--side)) 0;
     padding: 10px var(--side) 12px;
     border: 0;
-    background: var(--video-bg);
+    background: var(--paper);
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -68,16 +68,16 @@ const c = t.courseLibrary;
     height: 30px;
     padding-inline: 11px;
     border-radius: 8px;
-    background: var(--video-surface);
-    color: var(--video-ink);
+    background: var(--surface);
+    color: var(--ink);
     font-size: 0.8125rem;
     font-weight: 600;
     white-space: nowrap;
     transition: background var(--t-ui), color var(--t-ui);
   }
-  .chip input:hover + label { background: var(--video-surface-hover); }
-  .chip input:checked + label { background: var(--video-ink); color: var(--video-bg); }
-  .chip input:focus-visible + label { outline: 2px solid var(--video-ink); outline-offset: 2px; }
+  .chip input:hover + label { background: var(--tint-sand); }
+  .chip input:checked + label { background: var(--brand); color: var(--on-brand); }
+  .chip input:focus-visible + label { outline: 2px solid var(--action); outline-offset: 2px; }
 
   /* The grid: the thumbnail spans its column; 1 column on a phone, 2 on a narrow tablet or an iPad held
      upright, 3 on an iPad held sideways and a laptop, 4 on a large desktop. */
@@ -87,7 +87,7 @@ const c = t.courseLibrary;
   @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @media (min-width: 1440px) { .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
-  .empty { display: none; padding: var(--space-6) 0; color: var(--video-muted); }
+  .empty { display: none; padding: var(--space-6) 0; color: var(--muted); }
 
   /* A chosen path hides the courses that do not serve it, and shows its empty state when it has none. */
   .library:has(#caminho-ensino-fundamental:checked) .grid > :global(li:not([data-paths~='ensino-fundamental'])),

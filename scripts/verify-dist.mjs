@@ -264,9 +264,9 @@ function checkUnique(list, what) {
 }
 
 function checkShell(path, html) {
-  // The dark video theme and the bottom navigation belong to /cursos/ alone (V0.7): no other page changes.
-  const dark = /<html\b[^>]*\sdata-theme="dark"/.test(html);
-  if (dark !== (path === '/cursos/')) fail(path, `dark theme ${dark ? 'outside' : 'missing on'} /cursos/`);
+  // One identity, the institutional one (V0.7): no page declares a theme of its own. The bottom navigation
+  // belongs to /cursos/ alone.
+  if (/<html\b[^>]*\sdata-theme=/.test(html)) fail(path, 'the Academy has one theme: no data-theme');
   if (/\sdata-bottom-nav[\s>=]/.test(html) !== (path === '/cursos/')) fail(path, 'the bottom navigation belongs to /cursos/ alone');
   if (!/<header\b/.test(html) || !/<footer\b/.test(html)) fail(path, 'header or footer landmark missing');
   // An id names one element: a second one makes anchors and aria references ambiguous.
