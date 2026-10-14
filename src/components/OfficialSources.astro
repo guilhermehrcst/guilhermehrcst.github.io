@@ -1,6 +1,6 @@
 ---
-// "Aprenda com fontes oficiais.": the institutions whose free courses the Academy points to, as their own
-// supplied marks (ProviderMark, unmodified), each leading to its courses on this site: the track that holds its
+// The institutions whose free courses the Academy points to (Home V1: a compact block of "Nossos
+// compromissos"), as their own supplied marks (ProviderMark, unmodified), each leading to its courses on this site: the track that holds its
 // first course, or, when its courses span pages, the search filtered by that institution (homeSources). Only providers
 // with published, verified resources appear (institutions()); the brands still being verified are recorded
 // in docs/superpowers/research/2026-10-11-official-brands.md and are not shown. Never a partner or a sponsor:
@@ -21,17 +21,8 @@ const list = homeSources(Object.keys(providerMarks), publishedResources, publish
   label: source.areas.length === 1 ? s.count(source.count, source.areas[0]!) : s.countAreas(source.count, source.areas),
 }));
 ---
-<div class="grid">
-  <div class="copy">
-    <p class="independence">{s.independence}</p>
-    <p class="exams">
-      {s.exams}{' '}
-      <a href={`${routes.objective('enem')}#pratique`}>{s.examLinks.enem}</a>
-      {' · '}
-      <a href={routes.objective('uerj')}>{s.examLinks.uerj}</a>
-    </p>
-    <p class="pending">{s.pending}</p>
-  </div>
+<div class="sources">
+  <h3>{s.heading}</h3>
   <ul class="marks" role="list">
     {list.map((item) => (
       <li data-institution={item.provider}>
@@ -42,52 +33,48 @@ const list = homeSources(Object.keys(providerMarks), publishedResources, publish
       </li>
     ))}
   </ul>
+  <p class="exams">
+    {s.exams}{' '}
+    <a href={`${routes.objective('enem')}#pratique`}>{s.examLinks.enem}</a>
+    {' · '}
+    <a href={routes.objective('uerj')}>{s.examLinks.uerj}</a>
+  </p>
 </div>
 
 <style>
-  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
-  @media (min-width: 1024px) { .grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-7); align-items: start; } }
-
-  .copy { display: grid; gap: var(--space-4); align-content: start; max-width: 44ch; }
-  .independence { padding-left: var(--space-4); border-left: 2px solid var(--action); color: var(--ink); }
-  .exams, .pending { font-size: var(--fs-small); color: var(--muted); }
-  .exams a { font-weight: 500; }
-
-  /* The marks sit in a quiet panel of equal cells: one height for every mark, so none reads larger. */
+  .sources { display: grid; gap: var(--space-4); }
+  h3 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  /* Equal cells, one height for every mark, so none reads larger. */
   .marks {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     background: var(--raised);
     border: 1px solid var(--rule);
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
-  @media (min-width: 640px) { .marks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1280px) { .marks { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  /* Marks at a size the cell can hold whole; a joint provider (two marks) needs more room per mark. */
-  .mark :global(.brand) { --bs: 0.82; }
-  .mark.joint :global(.brand) { --bs: 0.7; }
-  @media (max-width: 639px) { .mark :global(.brand) { --bs: 0.74; } .mark.joint :global(.brand) { --bs: 0.6; } }
+  @media (min-width: 900px) { .marks { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1280px) { .marks { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+  .mark :global(.brand) { --bs: 0.66; }
+  .mark.joint :global(.brand) { --bs: 0.5; }
   .marks li { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin: 0 -1px -1px 0; }
   .marks a {
     display: grid;
     grid-template-rows: 1fr auto;
-    gap: var(--space-4);
+    gap: var(--space-3);
     height: 100%;
-    min-height: 9rem;
-    padding: var(--space-5);
+    min-height: 6.5rem;
+    padding: var(--space-4);
     text-decoration: none;
     color: var(--ink);
     transition: background var(--t-ui);
   }
   .marks a:hover { background: var(--surface); }
   .mark { display: flex; align-items: center; min-width: 0; }
-  .count { font-size: 0.8125rem; color: var(--muted); }
+  .count { font-size: 0.75rem; line-height: 1.35; color: var(--muted); }
   .count span { display: inline-block; transition: transform var(--t-ui) var(--ease); }
   .marks a:hover .count { color: var(--action); }
   .marks a:hover .count span { transform: translateX(3px); }
-  /* Phone: one institution per row, its count under the mark (two columns, or side by side, would crowd a joint mark). */
-  @media (max-width: 639px) {
-    .marks { grid-template-columns: minmax(0, 1fr); }
-    .marks a { gap: var(--space-2); min-height: 0; padding: var(--space-4); }
-  }
+  .exams { font-size: var(--fs-small); color: var(--muted); }
+  .exams a { font-weight: 500; }
 </style>
