@@ -493,6 +493,9 @@ function checkHome(path, html, resources) {
   // Nor a promise the catalogue does not keep: not every course is in Portuguese, not every source is official.
   const overclaim = /em português · fontes oficiais|todos os cursos (são|estão) em português|apenas fontes oficiais/i.exec(plain);
   if (overclaim) fail(path, `the Home overclaims ("${overclaim[0]}")`);
+  // Nor a metric the Academy does not have (V2: the ART Course reference shows listeners and progress).
+  const metric = /ouvintes|inscritos|matriculad|visualizaç|avaliaç|estrelas|aulas? concluíd|\d+\s*%/i.exec(plain);
+  if (metric) fail(path, `the Home shows a metric the Academy does not have ("${metric[0]}")`);
 
   // The order is fixed and closed: no section joins without a written reason (Home V1; V2 restores #fontes).
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);

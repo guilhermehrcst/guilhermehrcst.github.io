@@ -9,7 +9,7 @@ import Base from '../layouts/Base.astro';
 import HomeHero from '../components/HomeHero.astro';
 import HomePaths from '../components/HomePaths.astro';
 import HomeAreas from '../components/HomeAreas.astro';
-import CourseCard from '../components/CourseCard.astro';
+import HomeCourseFeature from '../components/HomeCourseFeature.astro';
 import OfficialSources from '../components/OfficialSources.astro';
 import FeaturedPaths from '../components/FeaturedPaths.astro';
 import { courseCards } from '../lib/course-library';
@@ -37,15 +37,12 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
 
   <section class="block band" id="cursos" aria-labelledby="cursos-title">
     <div class="wrap">
-      <div class="head">
-        <div><p class="kicker">{t.home.courses.eyebrow}</p><h2 id="cursos-title">{t.home.courses.heading}</h2></div>
-        <div class="side">
-          <p class="lead">{t.home.courses.lead}</p>
-          <a class="all" href={routes.courses}>{t.home.courses.all}{' '}<span aria-hidden="true">→</span></a>
-        </div>
+      <div class="head head-art">
+        <div><p class="kicker">{t.home.courses.eyebrow}</p><h2 id="cursos-title">{t.home.courses.heading}</h2><p class="lead">{t.home.courses.lead}</p></div>
+        <a class="all" href={routes.courses}>{t.home.courses.all}{' '}<span aria-hidden="true">→</span></a>
       </div>
       <ul class="courses" role="list" data-resource-list>
-        {featured.map((card) => <CourseCard card={card} />)}
+        {featured.map((card, i) => <HomeCourseFeature card={card} index={i} />)}
       </ul>
     </div>
   </section>
@@ -124,12 +121,20 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
   .side { display: grid; gap: var(--space-3); justify-items: start; }
   @media (min-width: 1024px) { .head { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; } }
 
-  /* Featured courses: the library's cards; a sideways row on a phone, two columns on a tablet, four wide. */
-  .courses { display: grid; grid-auto-flow: column; grid-auto-columns: 82%; gap: var(--space-4); margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+  /* Featured courses (after ART Course): the title at the left, the way to all at the right; the cards in one
+     staggered row (the first and third lower, so the others read raised), sideways on a phone and a tablet. */
+  .head-art { grid-template-columns: minmax(0, 1fr); align-items: end; }
+  .head-art .lead { margin-top: var(--space-3); }
+  .head-art .all { justify-self: start; }
+  @media (min-width: 900px) { .head-art { grid-template-columns: minmax(0, 1fr) auto; } .head-art .all { justify-self: end; } }
+  .courses { display: grid; grid-auto-flow: column; grid-auto-columns: 76%; gap: var(--space-4); margin-inline: calc(-1 * var(--gutter)); padding: var(--space-2) var(--gutter) var(--space-4); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
   .courses::-webkit-scrollbar { display: none; }
   .courses > :global(li) { scroll-snap-align: start; }
-  @media (min-width: 600px) { .courses { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-4); margin-inline: 0; padding-inline: 0; overflow: visible; } }
-  @media (min-width: 1100px) { .courses { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); } }
+  @media (min-width: 600px) { .courses { grid-auto-columns: 42%; gap: var(--space-5); } }
+  @media (min-width: 1100px) {
+    .courses { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-inline: 0; padding: 0 0 var(--space-7); overflow: visible; }
+    .courses > :global(li:nth-child(odd)) { translate: 0 var(--space-7); }
+  }
   .all {
     display: inline-flex;
     align-items: center;

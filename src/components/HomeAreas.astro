@@ -1,57 +1,112 @@
 ---
-// "O que você quer estudar?" on the Home (V2): the six areas of the taxonomy as a typographic index, not as
-// cards, so it never repeats the paths above it (the paths answer "for what", the areas "what"). One ruled row
-// per area: its number, its name in a large serif, and its subjects as links to their real pages, in order.
-// /materias/ keeps its full list (AreaList.astro). verify-dist reads each [data-area] element: no nested div.
+// "O que você quer estudar?" on the Home (V2), after the Prolingo reference: the six areas of the taxonomy as
+// tall cards, slightly turned in turn, each over a field of the area's own signs (an original typographic
+// drawing: no photograph, no person), with a frosted panel at its foot holding the area's name and its
+// subjects as links to their real pages, in order. The paths above are wide cards that are links; these are
+// tall cards that hold links, so the two never read alike. /materias/ keeps its full list (AreaList.astro).
+// verify-dist reads each [data-area] element (an article): nothing inside it may be an article.
 import { routes } from '../lib/routes';
-import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf } from '../lib/taxonomy';
-
+import { AREA_SIGNS as SIGNS } from '../lib/area-signs';
+import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf, type AreaId } from '../lib/taxonomy';
+const TONE: Record<AreaId, string> = {
+  matematica: 'sky',
+  linguagens: 'blush',
+  natureza: 'sage',
+  humanas: 'cream',
+  idiomas: 'peach',
+  tecnologia: 'sand',
+};
 const areas = AREA_ORDER.map((id) => ({ id, label: AREAS[id].label, subjects: subjectsOf(id) }));
 ---
-<ol class="areas" role="list">
+<ul class="areas" role="list">
   {areas.map((area, i) => (
-    <li>
-      <div class="area" data-area={area.id}>
-        <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-        <h3 class="name">{area.label}</h3>
-        <ul class="subjects" role="list">
-          {area.subjects.map((id) => <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a></li>)}
-        </ul>
-      </div>
+    <li class:list={[`turn-${i % 3}`]}>
+      <article class:list={['area', `tone-${TONE[area.id]}`]} data-area={area.id}>
+        <div class="signs" aria-hidden="true">
+          {SIGNS[area.id].map((sign) => <span data-sign={sign}></span>)}
+        </div>
+        <div class="panel">
+          <h3 class="name">{area.label}</h3>
+          <ul class="subjects" role="list">
+            {area.subjects.map((id) => <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a></li>)}
+          </ul>
+        </div>
+      </article>
     </li>
   ))}
-</ol>
+</ul>
 
 <style>
-  .areas { border-top: 1px solid var(--rule-strong); }
-  .areas > li + li { border-top: 1px solid var(--rule); }
-  .area {
-    display: grid;
-    grid-template-columns: 2.25rem minmax(0, 1fr);
-    gap: var(--space-2) var(--space-3);
-    align-items: baseline;
-    padding-block: var(--space-4);
+  /* A phone: a sideways row of tall cards. A tablet and up: three columns, two rows. */
+  .areas { display: grid; grid-auto-flow: column; grid-auto-columns: 70%; gap: var(--space-4); margin-inline: calc(-1 * var(--gutter)); padding: var(--space-3) var(--gutter) var(--space-4); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+  .areas::-webkit-scrollbar { display: none; }
+  .areas > li { scroll-snap-align: start; }
+  @media (min-width: 640px) {
+    .areas { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6) var(--space-5); margin-inline: 0; padding: var(--space-2) 0 0; overflow: visible; }
   }
-  .n { font-size: 0.8125rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
-  .name { font-family: var(--serif); font-size: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem); font-weight: 420; line-height: 1.05; letter-spacing: -0.02em; transition: color var(--t-ui); }
-  .area:hover .name { color: var(--action); }
-  .subjects { grid-column: 2; display: flex; flex-wrap: wrap; gap: 0 var(--space-1); margin-left: calc(-1 * var(--space-3)); }
+
+  .tone-sky { --ground: var(--sky-deep); }
+  .tone-blush { --ground: var(--blush-deep); }
+  .tone-sage { --ground: var(--sage-deep); }
+  .tone-cream { --ground: var(--cream-deep); }
+  .tone-peach { --ground: var(--peach-deep); }
+  .tone-sand { --ground: var(--sand-deep); }
+
+  /* A card turned a little, the way the reference lays its photographs; it straightens under the pointer and
+     when a link inside it has focus. */
+  .area {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 24rem;
+    overflow: hidden;
+    border-radius: 28px;
+    background: var(--ground);
+    box-shadow: 0 18px 36px -28px rgb(29 33 37 / 0.55);
+    transition: rotate var(--t-ui) var(--ease), translate var(--t-ui) var(--ease);
+  }
+  /* Tall, as the reference's cards: a portrait proportion from the tablet up. */
+  @media (min-width: 640px) {
+    .area { aspect-ratio: 5 / 6; min-height: 0; }
+    .turn-0 .area { rotate: -1.5deg; }
+    .turn-2 .area { rotate: 1.5deg; }
+    .area:hover, .area:focus-within { rotate: 0deg; translate: 0 -3px; }
+  }
+  /* The field of signs: large serif glyphs in the paper colour, loosely scattered. */
+  /* The signs fill what the panel leaves above it, so a taller panel never covers them. */
+  .signs { flex: 1; min-height: 9rem; display: grid; grid-template-columns: repeat(3, 1fr); place-items: center; padding: var(--space-4); font-family: var(--serif); font-size: clamp(2rem, 1.6rem + 1.4vw, 3rem); line-height: 1; color: var(--raised); opacity: 0.85; }
+  /* Drawn as generated content: pure decoration, never text of the page. */
+  .signs span::before { content: attr(data-sign); }
+  .signs span:nth-child(3n + 2) { translate: 0 0.5em; }
+  .signs span:nth-child(even) { font-style: italic; opacity: 0.8; }
+  /* The frosted panel at the foot: the name, then the subjects. */
+  .panel {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-3);
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    border-radius: 20px;
+    background: rgb(255 253 249 / 0.84);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .name { font-family: var(--sans); font-size: 1.25rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.015em; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 0 var(--space-1); margin-left: calc(-1 * var(--space-2)); }
   .subjects a {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
-    padding-inline: var(--space-3);
+    min-height: 40px;
+    padding-inline: var(--space-2);
     border-radius: 999px;
     color: var(--ink);
     font-size: 0.9375rem;
     font-weight: 500;
-    text-decoration: none;
-    transition: background var(--t-ui), color var(--t-ui);
+    text-decoration: underline;
+    text-decoration-color: var(--rule-strong);
+    text-underline-offset: 0.25em;
+    transition: background var(--t-ui), color var(--t-ui), text-decoration-color var(--t-ui);
   }
-  .subjects a:hover { background: var(--surface); color: var(--action); }
-  /* A wide screen: the number, the name and the subjects on one line. */
-  @media (min-width: 900px) {
-    .area { grid-template-columns: 3rem minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: var(--space-5); padding-block: var(--space-5); }
-    .subjects { grid-column: auto; justify-content: flex-start; }
-  }
+  .subjects a:hover { color: var(--action); text-decoration-color: currentColor; }
 </style>

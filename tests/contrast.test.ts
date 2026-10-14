@@ -36,8 +36,8 @@ const pairs: [string, string, number][] = [
   ['ink', 'tint-sand', 7], ['muted', 'tint-sand', 4.5],
   // The course library (/cursos/, V0.7): chips and avatars on the surface, the chosen chip on the brand.
   ['ink', 'surface', 7], ['muted', 'surface', 4.5], ['brand', 'raised', 7],
-  // The Home's path cards (V2): the name, its line and its count on each soft ground.
-  ...(['sage', 'peach', 'sky', 'cream', 'blush', 'tint-sand'] as const).flatMap((bg): [string, string, number][] => [['ink', bg, 7], ['muted', bg, 4.5], ['action', bg, 4.5]]),
+  // The Home's path cards (V2): the name, its line and its count on each ground; ink on the deep tones.
+  ...(['sage', 'peach', 'sky', 'cream', 'blush', 'sand'] as const).flatMap((bg): [string, string, number][] => [['ink', bg, 7], ['muted', bg, 4.5], ['action', bg, 4.5], ['ink', `${bg}-deep`, 7]]),
 ];
 for (const [fg, bg, min] of pairs) {
   test(`--${fg} on --${bg} is at least ${min}:1`, () => {

@@ -6,11 +6,11 @@
 import { publishedResources, type PublishedLearningResource } from './learning-resources.ts';
 import { libraryOf } from './libraries.ts';
 
-/** The hero's composition (V2): the first is its large tile, so it must be a photograph; the second a
- *  supplied image. Each is named on the composition by its title and institution. */
-export const HERO_COURSE_IDS = ['cs50x', 'fgv-datasci'] as const;
+/** The hero's photograph (V2, after the McGill reference: one large picture): a course whose supplied image
+ *  is a photograph, named in the caption by its title and institution. */
+export const HERO_COURSE_IDS = ['cs50x'] as const;
 /** "Explore novas possibilidades": a small sample across paths, chosen by the editors. */
-export const FEATURED_COURSE_IDS = ['cs50p', 'kultivi-writing-enem', 'mit-1801sc', 'fluencia'] as const;
+export const FEATURED_COURSE_IDS = ['cs50p', 'kultivi-writing-enem', 'mit-1801sc', 'cs50ai'] as const;
 
 export const homeCourseProblems = (
   ids: readonly string[],
@@ -40,7 +40,7 @@ const resolve = (ids: readonly string[], needImage: boolean, what: string): Publ
 
 export const heroCourses = (): PublishedLearningResource[] => {
   const courses = resolve(HERO_COURSE_IDS, true, 'hero');
-  if (courses[0]?.curated?.image?.kind !== 'photo') throw new Error('home-featured (hero): the large tile must be a photograph');
+  if (courses[0]?.curated?.image?.kind !== 'photo') throw new Error('home-featured (hero): the hero shows a photograph');
   const shared = sharedHomeCourses();
   if (shared.length) throw new Error(`home-featured: ${shared.join(', ')} on the hero and in the featured row`);
   return courses;

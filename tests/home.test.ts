@@ -19,10 +19,22 @@ test('the Home courses are published courses of the library, three or four, with
   assert.deepEqual(heroCourses().map((r) => r.id), [...HERO_COURSE_IDS]);
   // The records themselves, not copies.
   for (const r of featuredCourses()) assert.equal(r, publishedResources.find((p) => p.id === r.id));
-  // V2: the large tile of the hero is a photograph, and no course is shown twice on the Home.
+  // V2 (McGill): the hero shows one photograph, and no course is shown twice on the Home.
+  assert.equal(heroCourses().length, 1);
   assert.equal(heroCourses()[0]!.curated?.image?.kind, 'photo');
   assert.deepEqual(sharedHomeCourses(), []);
   assert.deepEqual(sharedHomeCourses(['cs50x'], ['cs50x', 'fluencia']), ['cs50x']);
+});
+
+test('the featured cards cover only with a photograph and invent no metric; every area has its signs', async () => {
+  const feature = read('src/components/HomeCourseFeature.astro');
+  assert.match(feature, /r\.curated\?\.image\?\.kind === 'photo'/, 'a graphic with its own lettering is never covered');
+  assert.match(feature, /target="_blank" rel="noopener noreferrer"/);
+  assert.match(feature, /\.has-photo \{ background: var\(--ink\); \}/, 'white type keeps a dark ground if the photo fails');
+  assert.doesNotMatch(feature.replace(/^\/\/.*$/gm, ''), /listeners|ouvintes|progress|rating/i, 'no metric outside the comments');
+  const { AREA_SIGNS } = await import('../src/lib/area-signs.ts');
+  const { AREA_ORDER } = await import('../src/lib/taxonomy.ts');
+  for (const area of AREA_ORDER) assert.ok(AREA_SIGNS[area].length >= 6, area);
 });
 
 test('the path illustrations are original drawings: no image, no link, decorative, colours from tokens', () => {
@@ -57,6 +69,9 @@ test('the hero search is the site search: a native GET form to /buscar/ with q, 
 
 test('the Home keeps its promise: the lema, and no claim the catalogue does not keep', () => {
   assert.equal(pt.pages.home.heading, 'Aprenda com direção.');
+  // The hero sets the lema in two faces (serif, then sans bold): the two parts are the lema, word for word.
+  assert.equal(`${pt.home.hero.headingLead} ${pt.home.hero.headingStrong}`, pt.pages.home.heading);
+  assert.match(read('src/components/HomeHero.astro'), /<h1><span class="h-serif">\{h\.headingLead\}<\/span> <span class="h-strong">\{h\.headingStrong\}<\/span><\/h1>/);
   const copy = JSON.stringify(pt.home);
   assert.doesNotMatch(copy, /Em português · Fontes oficiais/i, 'not every course is in Portuguese nor every source official');
   assert.doesNotMatch(copy, /patroc[ií]n|parceir[oa]s? oficia|endoss/i);

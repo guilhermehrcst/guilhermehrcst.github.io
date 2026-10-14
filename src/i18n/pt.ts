@@ -249,13 +249,15 @@ export const pt: Dict = {
   home: {
     hero: {
       eyebrow: 'Gratuito para estudar · Conferido na fonte',
+      headingLead: 'Aprenda',
+      headingStrong: 'com direção.',
       lead: 'Encontre cursos e materiais gratuitos para aprender no seu ritmo.',
       searchLabel: 'Buscar na Pexis Academy',
       searchPlaceholder: 'O que você quer aprender?',
       searchSubmit: 'Buscar',
       primary: 'Explorar cursos',
       secondary: 'Escolher meu caminho',
-      compositionCaption: 'Cursos publicados na biblioteca da Academy.',
+      compositionCaption: 'Imagem do curso',
       compositionLink: 'Ver a biblioteca de cursos',
     },
     areas: {

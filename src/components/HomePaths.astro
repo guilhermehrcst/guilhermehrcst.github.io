@@ -1,10 +1,12 @@
 ---
-// "Escolha seu caminho" on the Home (V2): the six paths as expressive cards. Each: a soft ground of its own,
-// an original illustration (PathArt) in a panel of the deeper tone, the path in the serif, one line of what it
-// holds, and what it really holds today, counted from the published catalogue at build time (objectiveFacts),
-// never typed; a path in preparation says so instead. The whole card is the link. The panels alternate above
-// and below the text (a checkerboard on a grid of three, then of two), so six cards never read as six
-// identical boxes; on a phone a card is a compact row. /materias/ keeps its editorial index (ObjectiveList.astro).
+// "Escolha seu caminho" on the Home (V2), after the LabAcademy reference: the six paths as wide coloured cards.
+// Each: its own ground, an original illustration (PathArt) in a cut-corner panel of the deeper tone at the top
+// right, a white disc with an arrow at the top left, then an outlined pill with what the path really holds
+// today (counted from the published catalogue at build time, objectiveFacts, never typed; "Em preparação"
+// for a path in preparation), the path in the serif and one line of what it holds. The middle card of each
+// row is turned over (text above, panel below), as the reference does, so six cards never read as six
+// identical boxes. The whole card is the link. On a phone a card is a compact row. /materias/ keeps its
+// editorial index (ObjectiveList.astro).
 import PathArt from './PathArt.astro';
 import ArrowTopRightIcon from './icons/radix/ArrowTopRightIcon.astro';
 import { objectiveFacts } from '../lib/learning-library';
@@ -15,7 +17,7 @@ import { pt as t } from '../i18n/pt';
 
 const o = t.home.objectives;
 const superior = superiorCopyFor();
-/** The soft ground of each path: a colour, never a meaning. */
+/** The ground of each path: a colour, never a meaning. */
 const TONE: Record<PathId, string> = {
   'ensino-fundamental': 'peach',
   'ensino-medio': 'sky',
@@ -29,20 +31,19 @@ const TONE: Record<PathId, string> = {
   {PATH_ORDER.map((id, i) => {
     const facts = objectiveFacts(id);
     const preparing = PREPARING_PATHS.includes(id);
-    // The panel goes under the text on a checkerboard: on two columns, cards 2-3 of every four; on three,
-    // where row and column differ in parity.
-    const under2 = i % 4 === 1 || i % 4 === 2;
-    const under3 = (Math.floor(i / 3) + (i % 3)) % 2 === 1;
+    // Turned over: the middle card of each row (three columns), or cards 2-3 of every four (two columns).
+    const flip3 = i % 3 === 1;
+    const flip2 = i % 4 === 1 || i % 4 === 2;
     return (
-      <li class:list={[under2 && 'under-2', under3 && 'under-3']}>
+      <li class:list={[flip2 && 'flip-2', flip3 && 'flip-3']}>
         <a href={routes.objective(id)} data-path-count={preparing ? undefined : facts.resources} class:list={['card', `tone-${TONE[id]}`, preparing && 'preparing']}>
+          <span class="go" aria-hidden="true"><ArrowTopRightIcon width={18} height={18} /></span>
           <span class="art"><PathArt path={id} /></span>
           <span class="text">
+            <span class="pill">{preparing ? t.preparing.label : o.facts(facts.resources, facts.tracks)}</span>
             <span class="name">{OBJECTIVES[id].label}</span>
             <span class="what">{id === 'ensino-superior' ? superior.objective : o.items[id]}</span>
-            <span class="facts">{preparing ? <span class="tag">{t.preparing.label}</span> : o.facts(facts.resources, facts.tracks)}</span>
           </span>
-          <span class="go" aria-hidden="true"><ArrowTopRightIcon width={18} height={18} /></span>
         </a>
       </li>
     );
@@ -59,66 +60,100 @@ const TONE: Record<PathId, string> = {
   .tone-blush { --ground: var(--blush); --deep: var(--blush-deep); }
   .tone-cream { --ground: var(--cream); --deep: var(--cream-deep); }
   .tone-sage { --ground: var(--sage); --deep: var(--sage-deep); }
-  .tone-sand { --ground: var(--tint-sand); --deep: var(--sand-deep); }
+  .tone-sand { --ground: var(--sand); --deep: var(--sand-deep); }
 
-  /* A phone: a compact row, the text beside a small panel. */
+  /* A phone: a compact row, the text beside a small cut-corner panel. */
   .card {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 88px;
+    grid-template-columns: minmax(0, 1fr) 96px;
+    grid-template-areas: "text art";
     align-items: center;
     gap: var(--space-4);
     height: 100%;
-    padding: var(--space-4);
-    border-radius: 22px;
+    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-5);
+    border-radius: 24px;
     background: var(--ground);
     color: var(--ink);
     text-decoration: none;
     transition: transform var(--t-ui) var(--ease), box-shadow var(--t-ui) var(--ease);
   }
-  .art { order: 2; display: block; aspect-ratio: 1; padding: 8px; border-radius: 16px 16px 16px 34px; background: var(--deep); overflow: hidden; }
+  .art {
+    grid-area: art;
+    display: block;
+    aspect-ratio: 1;
+    padding: 10px;
+    border-radius: 18px;
+    background: var(--deep);
+    overflow: hidden;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 34% 100%, 0 66%);
+  }
   .art :global(.path-art) { transition: transform 400ms var(--ease); }
-  .text { display: grid; gap: var(--space-1); min-width: 0; }
-  .name { font-family: var(--serif); font-size: 1.375rem; font-weight: 460; line-height: 1.1; letter-spacing: -0.015em; }
+  .text { grid-area: text; display: grid; justify-items: start; gap: var(--space-1); min-width: 0; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: var(--space-1);
+    padding: 2px 10px;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .preparing .pill { border-color: var(--action); color: var(--action); }
+  .name { font-family: var(--serif); font-size: 1.5rem; font-weight: 440; line-height: 1.05; letter-spacing: -0.02em; }
   .what { font-size: var(--fs-small); line-height: 1.45; color: var(--muted); }
-  .facts { margin-top: var(--space-1); font-size: 0.8125rem; font-weight: 600; color: var(--ink); }
-  .tag { font-size: 0.6875rem; font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase; color: var(--action); }
   .go { display: none; }
 
-  .card:hover { box-shadow: 0 18px 36px -24px rgb(29 33 37 / 0.45); transform: translateY(-2px); }
-  .card:hover .art :global(.path-art) { transform: scale(1.04); }
-  .card:hover .name { color: var(--action); }
-  .card:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; border-radius: 22px; }
+  .card:hover { box-shadow: 0 22px 40px -28px rgb(29 33 37 / 0.5); transform: translateY(-3px); }
+  .card:hover .art :global(.path-art) { transform: scale(1.05); }
+  .card:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; border-radius: 24px; }
 
-  /* A tablet and up: a tall card, the panel wide, the arrow in a white disc at the top corner. */
+  /* A tablet and up: a wide card. The panel at the top right, cut at its lower left corner; the arrow disc at
+     the top left; the pill, the name and the line along the bottom. */
   @media (min-width: 640px) {
-    .card { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; align-items: stretch; gap: var(--space-5); padding: var(--space-4) var(--space-4) var(--space-5); border-radius: 26px; }
-    .art { order: 0; aspect-ratio: 16 / 10; padding: var(--space-4) var(--space-6); border-radius: 18px 18px 18px 56px; }
-    .text { align-content: start; gap: var(--space-2); padding-inline: var(--space-2); }
-    .name { font-size: clamp(1.5rem, 1.25rem + 0.7vw, 1.875rem); padding-right: 2.75rem; }
-    .facts { margin-top: var(--space-2); }
+    .card {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas: "go art" ". art" "text text";
+      align-items: start;
+      gap: var(--space-4) var(--space-4);
+      padding: var(--space-4) var(--space-4) var(--space-5) var(--space-5);
+      border-radius: 32px;
+    }
     .go {
-      position: absolute;
-      top: var(--space-5);
-      right: var(--space-5);
+      grid-area: go;
       display: grid;
       place-items: center;
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
+      margin-top: var(--space-1);
       border-radius: 50%;
       background: var(--raised);
       color: var(--ink);
       transition: background var(--t-ui), color var(--t-ui), transform var(--t-ui) var(--ease);
     }
     .card:hover .go { background: var(--action); color: var(--on-action); transform: translate(2px, -2px); }
-  }
-  /* The panel under the text, on a checkerboard of two columns, then of three. */
-  @media (min-width: 640px) and (max-width: 1023px) {
-    .under-2 .art { order: 2; border-radius: 18px 56px 18px 18px; }
-    .under-2 .card { grid-template-rows: 1fr auto; padding-top: var(--space-5); }
+    .art { aspect-ratio: 6 / 5; padding: var(--space-3) var(--space-4); border-radius: 22px; }
+    .text { gap: var(--space-2); padding-top: var(--space-2); }
+    .name { font-size: clamp(1.625rem, 1.3rem + 0.8vw, 2rem); }
+    .card:focus-visible { border-radius: 32px; }
+    /* Turned over: the text above, the panel at the lower right cut at its upper left, the disc below left. */
+    .flip-2 .card {
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas: "text text" ". art" "go art";
+      padding-top: var(--space-5);
+    }
+    .flip-2 .art { clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%, 0 34%); }
+    .flip-2 .go { align-self: end; margin: 0 0 var(--space-1); }
   }
   @media (min-width: 1024px) {
-    .under-3 .art { order: 2; border-radius: 18px 56px 18px 18px; }
-    .under-3 .card { grid-template-rows: 1fr auto; padding-top: var(--space-5); }
+    .flip-2 .card { grid-template-areas: "go art" ". art" "text text"; padding-top: var(--space-4); }
+    .flip-2 .art { clip-path: polygon(0 0, 100% 0, 100% 100%, 34% 100%, 0 66%); }
+    .flip-2 .go { align-self: start; margin: var(--space-1) 0 0; }
+    .flip-3 .card { grid-template-areas: "text text" ". art" "go art"; padding-top: var(--space-5); }
+    .flip-3 .art { clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%, 0 34%); }
+    .flip-3 .go { align-self: end; margin: 0 0 var(--space-1); }
   }
 </style>

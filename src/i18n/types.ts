@@ -110,6 +110,9 @@ export interface Dict {
   home: {
     hero: {
       eyebrow: string;
+      /** The lema split for the hero's type (serif, then sans bold); together they are pages.home.heading. */
+      headingLead: string;
+      headingStrong: string;
       lead: string;
       searchLabel: string;
       searchPlaceholder: string;
