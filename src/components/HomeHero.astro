@@ -41,11 +41,11 @@ if (!photo) throw new Error('HomeHero: one hero course');
     <figure class="composition" data-hero-courses>
       <div class="picture" aria-hidden="true">
         <div class="photo" data-demo-resource-id={photo.id}>
-          <CourseThumb resource={photo} label={thumbLabelOf(photo)} priority sizes="(min-width: 1024px) 600px, 100vw" />
+          <CourseThumb resource={photo} label={thumbLabelOf(photo)} priority sizes="(min-width: 1024px) 640px, 100vw" />
         </div>
-        <span class="disc"><Image class="symbol" src={symbol} alt="" width={56} densities={[1, 2]} format="png" loading="eager" /></span>
+        <span class="disc"><Image class="symbol" src={symbol} alt="" width={40} densities={[1, 2]} format="png" loading="eager" /></span>
       </div>
-      <figcaption>{h.compositionCaption} <span translate="no">{photo.title}</span> ({photo.provider}). <a href={routes.courses}>{h.compositionLink}{' '}<span aria-hidden="true">→</span></a></figcaption>
+      <figcaption><span>{h.compositionCaption} <span translate="no">{photo.curated?.plate ?? photo.title}</span>, <span translate="no">{photo.provider}</span>.</span> <a href={routes.courses}>{h.compositionLink}{' '}<span aria-hidden="true">→</span></a></figcaption>
     </figure>
   </div>
 </header>
@@ -53,20 +53,23 @@ if (!photo) throw new Error('HomeHero: one hero course');
 <style>
   .hero { padding-block: var(--space-6) var(--space-7); overflow: clip; }
   .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-7); align-items: center; }
+  /* A wide screen: 46/54, the photograph a little larger than the text, both on one centre line. */
   @media (min-width: 1024px) {
-    .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(3rem, 6vw, 6rem); }
+    .grid { grid-template-columns: minmax(0, 46fr) minmax(0, 54fr); gap: clamp(2.5rem, 4.5vw, 4.5rem); }
     .hero { padding-block: var(--space-7); }
   }
 
   /* The promise: the serif line, then the bold sans line, at one size (the McGill pairing). */
-  .eyebrow { margin-bottom: var(--space-5); }
-  h1 { font-size: clamp(var(--fs-hero), 14vw, 4.75rem); line-height: 0.98; letter-spacing: -0.035em; }
+  .eyebrow { margin-bottom: var(--space-4); }
+  /* The two faces at one size: the serif line a touch looser, the sans line set tighter and a step lighter
+     than bold, so the pair reads as one title rather than two weights fighting. */
+  h1 { font-size: clamp(var(--fs-hero), 14vw, 4.75rem); line-height: 1; }
   .h-serif, .h-strong { display: block; }
-  .h-serif { font-family: var(--serif); font-weight: 400; }
-  .h-strong { font-family: var(--sans); font-weight: 650; letter-spacing: -0.03em; }
-  @media (min-width: 640px) and (max-width: 1023px) { h1 { font-size: clamp(4.5rem, 3rem + 5vw, 6rem); } }
-  @media (min-width: 1024px) { h1 { font-size: min(5.75rem, 6.2vw); } }
-  .lead { margin-top: var(--space-5); max-width: 30ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
+  .h-serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.025em; }
+  .h-strong { margin-top: 0.02em; font-family: var(--sans); font-weight: 600; letter-spacing: -0.04em; }
+  @media (min-width: 640px) and (max-width: 1023px) { h1 { font-size: clamp(5rem, 2.5rem + 7vw, 6rem); } }
+  @media (min-width: 1024px) { h1 { font-size: clamp(4.75rem, 1.5rem + 4.6vw, 5.5rem); } }
+  .lead { margin-top: var(--space-4); max-width: 30ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--muted); }
 
   /* The search: one wide field on paper, the glass inside, the action at its end. */
   .search {
@@ -75,14 +78,16 @@ if (!photo) throw new Error('HomeHero: one hero course');
     align-items: center;
     gap: var(--space-2);
     max-width: 34rem;
+    min-height: 60px;
     margin-top: var(--space-6);
-    padding: 6px 6px 6px var(--space-4);
+    padding: 6px 6px 6px 18px;
     border: 1px solid var(--rule-strong);
     border-radius: 999px;
     background: var(--raised);
     box-shadow: 0 1px 0 rgb(29 33 37 / 0.03), 0 12px 32px -24px rgb(29 33 37 / 0.35);
     transition: border-color var(--t-ui), box-shadow var(--t-ui);
   }
+  .search:hover { border-color: var(--muted); }
   .search:focus-within { border-color: var(--action); box-shadow: 0 0 0 3px var(--tint-brand); }
   .search :global(.glass) { flex: none; color: var(--muted); }
   .search input {
@@ -99,7 +104,7 @@ if (!photo) throw new Error('HomeHero: one hero course');
   .search input:focus { outline: none; }
   .search button {
     flex: none;
-    min-height: 44px;
+    min-height: 48px;
     padding-inline: var(--space-5);
     border: 0;
     border-radius: 999px;
@@ -120,7 +125,7 @@ if (!photo) throw new Error('HomeHero: one hero course');
     .search button { padding-inline: var(--space-4); }
   }
 
-  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); margin-top: var(--space-6); }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-6); margin-top: var(--space-5); }
   .primary {
     display: inline-flex;
     align-items: center;
@@ -139,40 +144,44 @@ if (!photo) throw new Error('HomeHero: one hero course');
     display: inline-flex;
     align-items: center;
     min-height: 48px;
-    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-    font-weight: 500;
+    font-size: 1.125rem;
+    font-weight: 560;
     color: var(--action);
     text-decoration: underline;
-    text-decoration-thickness: 3px;
-    text-underline-offset: 0.3em;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
     transition: text-underline-offset var(--t-ui) var(--ease), color var(--t-ui);
   }
-  .secondary:hover { color: var(--action-hover); text-underline-offset: 0.42em; }
+  .secondary:hover { color: var(--action-hover); text-underline-offset: 0.45em; }
 
   /* The photograph: one large picture with square corners; the wine disc over its edge. */
   .composition { margin: 0; }
   .picture { position: relative; }
+  /* 5:4 keeps the stage, the screen and the hall whole (the source is 3:2); a phone takes 4:3. */
   .photo :global(.thumb) { aspect-ratio: 4 / 3; border-radius: 2px; }
   .photo :global([data-duration]) { display: none; }
+  /* The brand's seal: small, inside the lower corner of the picture, away from what it shows and from the
+     search beside it at every width. */
   .disc {
     position: absolute;
-    left: var(--space-4);
-    bottom: var(--space-4);
+    left: var(--space-3);
+    bottom: var(--space-3);
     display: grid;
     place-items: center;
-    width: clamp(64px, 16vw, 104px);
+    width: 56px;
     aspect-ratio: 1;
     border-radius: 50%;
     background: var(--brand);
-    box-shadow: 0 10px 30px -12px rgb(29 33 37 / 0.55);
+    box-shadow: 0 0 0 4px var(--paper), 0 10px 24px -14px rgb(29 33 37 / 0.6);
   }
-  .disc :global(.symbol) { width: 52%; height: auto; }
+  .disc :global(.symbol) { width: 54%; height: auto; }
   @media (min-width: 640px) and (max-width: 1023px) { .photo :global(.thumb) { aspect-ratio: 16 / 9; } }
   @media (min-width: 1024px) {
-    .photo :global(.thumb) { aspect-ratio: 1; }
-    .disc { left: calc(-1 * clamp(40px, 3.6vw, 52px)); bottom: auto; top: 58%; }
+    .photo :global(.thumb) { aspect-ratio: 5 / 4; }
+    .disc { width: 64px; left: var(--space-4); bottom: var(--space-4); }
   }
-  figcaption { margin-top: var(--space-3); font-size: var(--fs-small); color: var(--muted); }
+  /* One quiet line: what the picture is, and the way to every course. */
+  figcaption { display: flex; flex-wrap: wrap; gap: 0 var(--space-3); margin-top: var(--space-3); font-size: 0.8125rem; color: var(--muted); }
   figcaption a { font-weight: 560; white-space: nowrap; }
 
   @media (prefers-reduced-motion: no-preference) {

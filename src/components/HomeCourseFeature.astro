@@ -1,28 +1,31 @@
 ---
-// One featured course on the Home (V2), after the ART Course reference: an immersive portrait card. The
-// course's supplied photograph fills it under a dark veil (only a photograph: a graphic with its own lettering
-// is never covered with ours); without one, a solid ground of the brand (wine or ink) carrying the faint signs
-// of the course's area (src/lib/area-signs.ts), never an invented picture. Over it, as the reference sets its
-// display type: the course's track, subject or path large in the serif (thumbLabelOf, the label the library's
-// covers already use), the official title, the institution;
-// its paths, format and language; at the foot the institution's round avatar and, when the source states one,
-// the duration in a dark chip. No view count, rating, progress or listeners: the Academy has none. One link, the
-// title's, stretched over the card, out to the source in a new tab (the same contract as CourseCard).
+// One featured course on the Home (V2, after the ART Course reference; V2.1 refined): a portrait card where
+// the course leads. With a supplied photograph (only a photograph: a graphic with its own lettering is never
+// covered with ours), the picture fills the card and a veil darkens only its lower part, where the text sits.
+// Without one, the soft ground of the course's area (src/lib/area-signs.ts, the colour the area cards use)
+// with the area's signs faint at the top, never an invented picture and never a second dark card.
+// The type, in one order: a short editorial kicker (thumbLabelOf, the label the library's covers already
+// use), the official title in the serif, the institution with its round avatar, and one line of facts (its
+// paths, format and language). A duration the source states sits as a chip in the top corner. No view count,
+// rating, progress or listeners: the Academy has none. One link, the title's, stretched over the card, out to
+// the source in a new tab (the same contract as CourseCard).
 import { Image } from 'astro:assets';
 import CourseAvatar from './CourseAvatar.astro';
 import type { CourseCardData } from '../lib/course-library';
-import { AREA_SIGNS } from '../lib/area-signs';
+import { AREA_SIGNS, AREA_TONE } from '../lib/area-signs';
 import { resourceImages } from '../lib/resource-images';
 import { OBJECTIVES, SUBJECTS } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
-interface Props { card: CourseCardData; index: number }
-const { card, index } = Astro.props;
+interface Props { card: CourseCardData }
+const { card } = Astro.props;
 const { resource: r } = card;
 const l = t.resource;
 const image = r.curated?.image?.kind === 'photo' ? r.curated.image : undefined;
-// Without a photograph, the ground carries the signs of the course's area, faint, never a picture.
-const signs = !image && r.subject ? AREA_SIGNS[SUBJECTS[r.subject].area] : [];
+const area = r.subject ? SUBJECTS[r.subject].area : undefined;
+// Without a photograph, the ground and the signs of the course's area; a course without a subject keeps sand.
+const tone = image ? null : area ? AREA_TONE[area] : 'sand';
+const signs = !image && area ? AREA_SIGNS[area] : [];
 const chip = r.duration ? `${r.duration.value} ${l.units[r.duration.unit]}` : null;
 const facts = [
   card.paths.map((path) => OBJECTIVES[path].label).join(', '),
@@ -30,14 +33,14 @@ const facts = [
   r.language === 'pt' ? null : l.languages[r.language],
 ].filter((fact): fact is string => Boolean(fact));
 ---
-<li class:list={['feature', image ? 'has-photo' : index % 2 ? 'ground-ink' : 'ground-wine']} data-resource-id={r.id} data-format={r.format} data-subject={r.subject} data-paths={r.paths.join(' ')}>
+<li class:list={['feature', image ? 'has-photo' : `cover tone-${tone}`]} data-resource-id={r.id} data-format={r.format} data-subject={r.subject} data-paths={r.paths.join(' ')}>
   <div class="media" aria-hidden="true">
     {image && (
       <Image
         src={resourceImages[image.id]}
         alt=""
         widths={[360, 540, 720]}
-        sizes="(min-width: 1100px) 290px, (min-width: 600px) 42vw, 76vw"
+        sizes="(min-width: 1100px) 290px, (min-width: 600px) 42vw, 78vw"
         loading="lazy"
         decoding="async"
         style={image.position ? `object-position: ${image.position}` : undefined}
@@ -45,79 +48,78 @@ const facts = [
     )}
     {signs.length > 0 && <div class="signs">{signs.map((sign) => <span data-sign={sign}></span>)}</div>}
   </div>
-  <div class="over">
-    <p class="label" aria-hidden="true">{card.thumbLabel}</p>
+  {chip && <span class="chip">{chip}</span>}
+  <div class="text">
+    <p class="kicker" aria-hidden="true">{card.thumbLabel}</p>
     <h3 class="title">
       <a href={r.url} target="_blank" rel="noopener noreferrer"><span translate="no">{r.title}</span><span class="sr-only"> ({l.newTab})</span></a>
     </h3>
-    <p class="by" translate="no">{r.provider}</p>
+    <p class="by"><CourseAvatar provider={r.provider} /><span translate="no">{r.provider}</span></p>
     <p class="facts">{facts.join(' · ')}</p>
-  </div>
-  <div class="foot">
-    <CourseAvatar provider={r.provider} />
-    {chip && <span class="chip">{chip}</span>}
   </div>
 </li>
 
 <style>
   .feature {
     position: relative;
-    display: grid;
-    grid-template-rows: 1fr auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     aspect-ratio: 3 / 4;
     overflow: hidden;
-    border-radius: 26px;
-    color: var(--on-brand);
+    border-radius: 24px;
     isolation: isolate;
     transition: transform var(--t-ui) var(--ease), box-shadow var(--t-ui) var(--ease);
   }
-  .ground-wine { background: var(--brand); }
   /* Under a photograph, ink: if the picture never loads, the white type still reads. */
-  .has-photo { background: var(--ink); }
-  .ground-ink { background: var(--ink); }
+  .has-photo { background: var(--ink); color: var(--on-brand); }
+  .cover { color: var(--ink); box-shadow: inset 0 0 0 1px rgb(29 33 37 / 0.06); }
+  .tone-sky { background: var(--sky); --deep: var(--sky-deep); }
+  .tone-blush { background: var(--blush); --deep: var(--blush-deep); }
+  .tone-sage { background: var(--sage); --deep: var(--sage-deep); }
+  .tone-cream { background: var(--cream); --deep: var(--cream-deep); }
+  .tone-peach { background: var(--peach); --deep: var(--peach-deep); }
+  .tone-sand { background: var(--sand); --deep: var(--sand-deep); }
+
   .media { position: absolute; inset: 0; z-index: -1; }
   .media :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 500ms var(--ease); }
-  /* The veil: dark at the top for the display type, clear in the middle, dark again at the foot. */
+  /* The veil only where the text sits: the picture stays clear above. */
   .has-photo .media::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgb(29 33 37 / 0.86) 0%, rgb(29 33 37 / 0.5) 42%, rgb(29 33 37 / 0.2) 62%, rgb(29 33 37 / 0.8) 100%);
+    background: linear-gradient(180deg, rgb(29 33 37 / 0) 18%, rgb(29 33 37 / 0.62) 46%, rgb(29 33 37 / 0.92) 100%);
   }
-  .over { display: grid; align-content: start; gap: var(--space-2); padding: var(--space-5) var(--space-5) 0; }
-  .label {
-    font-family: var(--serif);
-    font-size: clamp(1.875rem, 1.5rem + 1vw, 2.375rem);
-    font-weight: 420;
-    line-height: 0.98;
-    letter-spacing: -0.025em;
-    text-wrap: balance;
+  /* The signs of the area on a cover, in the deeper tone, in the upper half. Generated content: pure decoration. */
+  .signs { position: absolute; inset: 0 0 48% 0; display: grid; grid-template-columns: repeat(3, 1fr); place-items: center; padding: var(--space-5) var(--space-4) 0; font-family: var(--serif); font-size: clamp(1.75rem, 1.4rem + 1vw, 2.375rem); line-height: 1; color: var(--deep); }
+  .signs span::before { content: attr(data-sign); }
+  .signs span:nth-child(3n + 2) { translate: 0 0.4em; }
+  .signs span:nth-child(even) { font-style: italic; }
+
+  .chip {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgb(29 33 37 / 0.82);
+    color: var(--on-brand);
+    font-size: 0.75rem;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
   }
-  .title { margin-top: var(--space-2); font-family: var(--sans); font-size: 1rem; font-weight: 600; line-height: 1.3; letter-spacing: 0; }
+  .text { display: grid; gap: var(--space-2); padding: var(--space-5); }
+  .kicker { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
+  .cover .kicker { color: var(--action); opacity: 1; }
+  .title { font-family: var(--serif); font-size: clamp(1.3125rem, 1.15rem + 0.4vw, 1.5rem); font-weight: 440; line-height: 1.12; letter-spacing: -0.015em; text-wrap: balance; }
   .title a { color: inherit; text-decoration: none; }
   .title a::after { content: ''; position: absolute; inset: 0; z-index: 1; }
   .title a:focus-visible { outline: none; }
   .feature:has(a:focus-visible) { outline: 3px solid var(--action); outline-offset: 4px; }
-  .by { font-size: 0.875rem; color: var(--on-brand-muted); }
-  .has-photo .by { color: var(--on-brand); opacity: 0.9; }
-  .foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-4) var(--space-4) var(--space-4) var(--space-5); }
-  .facts { font-size: 0.8125rem; line-height: 1.35; color: var(--on-brand-muted); }
-  .has-photo .facts { color: var(--on-brand); opacity: 0.85; }
-  /* The signs of the area on a ground without a photograph: large, faint, in the lower half. */
-  .signs { position: absolute; inset: 42% 0 0; display: grid; grid-template-columns: repeat(3, 1fr); place-items: center; padding: var(--space-4); font-family: var(--serif); font-size: clamp(2rem, 1.6rem + 1.2vw, 2.75rem); line-height: 1; color: var(--on-brand); opacity: 0.16; }
-  .signs span::before { content: attr(data-sign); }
-  .signs span:nth-child(3n + 2) { translate: 0 0.45em; }
-  .signs span:nth-child(even) { font-style: italic; }
-  .chip {
-    flex: none;
-    padding: 4px 12px;
-    border-radius: 999px;
-    background: var(--ink);
-    color: var(--on-brand);
-    font-size: 0.75rem;
-    font-weight: 650;
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
-  }
-  .feature:hover { transform: translateY(-4px); box-shadow: 0 28px 48px -30px rgb(29 33 37 / 0.6); }
-  .feature:hover .media :global(img) { transform: scale(1.04); }
+  .by { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-1); font-size: 0.875rem; font-weight: 560; }
+  .by :global(.avatar) { width: 26px; height: 26px; }
+  .facts { font-size: 0.8125rem; line-height: 1.35; opacity: 0.85; }
+  .cover .facts { color: var(--muted); opacity: 1; }
+  .feature:hover { transform: translateY(-3px); box-shadow: 0 24px 44px -30px rgb(29 33 37 / 0.55); }
+  .feature:hover .media :global(img) { transform: scale(1.03); }
 </style>

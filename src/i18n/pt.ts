@@ -257,14 +257,15 @@ export const pt: Dict = {
       searchSubmit: 'Buscar',
       primary: 'Explorar cursos',
       secondary: 'Escolher meu caminho',
-      compositionCaption: 'Imagem do curso',
-      compositionLink: 'Ver a biblioteca de cursos',
+      compositionCaption: 'Foto do curso',
+      compositionLink: 'Ver todos os cursos',
     },
     areas: {
       eyebrow: 'Explore por área e matéria',
       heading: 'O que você quer estudar?',
       lead: 'As matérias como na escola. Cada uma reúne o que estudar e onde praticar.',
       subjects: (n) => (n === 1 ? '1 matéria' : `${n} matérias`),
+      swipe: 'Deslize para ver as seis áreas',
     },
     tracks: {
       eyebrow: 'Trilhas de aprendizagem',
@@ -277,6 +278,7 @@ export const pt: Dict = {
         uerj: 'Comece pelas regras oficiais e pratique com questões de provas anteriores.',
       },
       steps: (n) => `${n} etapas`,
+      first: 'Primeiros passos',
       more: (n) => (n === 1 ? 'e mais 1 etapa' : `e mais ${n} etapas`),
       links: { enem: 'Abrir o guia do ENEM', uerj: 'Abrir o guia da UERJ', track: 'Abrir a trilha' },
     },
@@ -332,6 +334,7 @@ export const pt: Dict = {
       heading: 'Explore novas possibilidades.',
       lead: 'Cursos gratuitos da biblioteca, conferidos na fonte e escolhidos pelos editores.',
       all: 'Explorar todos os cursos',
+      swipe: 'Deslize para ver os quatro cursos',
     },
   },
   about: {

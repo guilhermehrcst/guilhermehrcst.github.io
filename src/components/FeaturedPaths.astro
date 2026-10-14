@@ -1,5 +1,6 @@
 ---
-// "Comece por um caminho pronto." (Home V2: compact, the steps on a rail): at most three ready paths, each real and complete. The ENEM and UERJ
+// "Comece por um caminho pronto." (Home V2; V2.1: the objective first, in a tinted head, then the first real
+// steps with the first one marked, then the way in, aligned across the three): at most three ready paths, each real and complete. The ENEM and UERJ
 // guides, with their own sections as steps (resolveGuide, the same data as their pages), and the first
 // technology track, with its courses in order (resourcesByIds fails the build on an unknown id).
 // Nothing is filled in for the design: a step is a section or a course that exists today.
@@ -53,48 +54,63 @@ const SHOWN = 3;
 <div class="paths">
   {paths.map((path) => (
     <article class:list={['path', `tone-${path.tone}`]} data-featured={path.id} aria-labelledby={`trilha-${path.id}`}>
-      <p class="kind">{path.kind} · {f.steps(path.steps.length)}</p>
-      <h3 id={`trilha-${path.id}`}>{path.title}</h3>
-      <p class="why">{path.why}</p>
-      <ol class="steps" role="list">
-        {path.steps.slice(0, SHOWN).map((step, i) => (
-          <li><span class="n" aria-hidden="true">{i + 1}</span><span translate={path.noTranslate ? 'no' : undefined}>{step}</span></li>
-        ))}
-      </ol>
-      {path.steps.length > SHOWN && <p class="more">{f.more(path.steps.length - SHOWN)}</p>}
-      <a href={path.href}>{path.link}{' '}<span aria-hidden="true">→</span></a>
+      <div class="top">
+        <p class="kind">{path.kind} · {f.steps(path.steps.length)}</p>
+        <h3 id={`trilha-${path.id}`}>{path.title}</h3>
+        <p class="why">{path.why}</p>
+      </div>
+      <div class="body">
+        <p class="first">{f.first}</p>
+        <ol class="steps" role="list">
+          {path.steps.slice(0, SHOWN).map((step, i) => (
+            <li><span class="n" aria-hidden="true">{i + 1}</span><span translate={path.noTranslate ? 'no' : undefined}>{step}</span></li>
+          ))}
+        </ol>
+        {path.steps.length > SHOWN && <p class="more">{f.more(path.steps.length - SHOWN)}</p>}
+        <a href={path.href}>{path.link}{' '}<span aria-hidden="true">→</span></a>
+      </div>
     </article>
   ))}
 </div>
 
 <style>
   .paths { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
-  @media (min-width: 900px) { .paths { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  /* Three columns share two rows (subgrid): every head ends, and every list starts, on one line. */
+  @media (min-width: 900px) {
+    .paths { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto 1fr; gap: 0 var(--space-5); }
+    .paths > .path { display: grid; grid-row: span 2; grid-template-rows: subgrid; }
+  }
 
-  /* A ready path: a paper card with the kind, the title, one line of why, and its first steps on a rail. */
+  /* A ready path: a paper card; its head on the path's tint holds the objective, its body the first steps. */
   .path {
-    display: grid;
-    grid-template-rows: auto auto auto 1fr auto auto;
-    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     background: var(--raised);
     border: 1px solid var(--rule);
     border-radius: var(--radius-lg);
     transition: border-color var(--t-ui), box-shadow var(--t-ui);
   }
   .path:hover { border-color: var(--rule-strong); box-shadow: 0 16px 32px -26px rgb(29 33 37 / 0.4); }
-  .tone-brand { --dot: var(--brand); }
-  .tone-sand { --dot: var(--cream-deep); }
-  .tone-ink { --dot: var(--sage-deep); }
-  .kind { display: flex; align-items: center; gap: var(--space-2); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-  .kind::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--dot); }
-  h3 { margin-top: var(--space-2); font-family: var(--serif); font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.625rem); font-weight: 460; line-height: 1.1; letter-spacing: -0.015em; }
-  .why { margin-top: var(--space-2); font-size: var(--fs-small); color: var(--muted); }
-  .steps { position: relative; display: grid; gap: var(--space-2); margin-top: var(--space-4); align-self: start; }
-  .steps::before { content: ''; position: absolute; left: 0.6875rem; top: 0.5rem; bottom: 0.5rem; width: 1px; background: var(--rule-strong); }
-  .steps li { position: relative; display: flex; align-items: baseline; gap: var(--space-3); font-size: 0.9375rem; line-height: 1.4; }
-  .n { flex: none; display: inline-grid; place-items: center; width: 1.375rem; height: 1.375rem; border: 1px solid var(--rule-strong); border-radius: 50%; background: var(--raised); font-size: 0.6875rem; font-weight: 650; font-variant-numeric: tabular-nums; color: var(--ink); }
-  .more { margin-top: var(--space-2); padding-left: calc(1.375rem + var(--space-3)); font-size: 0.8125rem; color: var(--muted); }
-  .path > a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; margin-top: var(--space-3); font-weight: 560; }
-  .path > a span { transition: transform var(--t-ui) var(--ease); }
-  .path > a:hover span { transform: translateX(3px); }
+  .tone-brand { --head: var(--blush); }
+  .tone-sand { --head: var(--cream); }
+  .tone-ink { --head: var(--sage); }
+  .top { display: grid; gap: var(--space-2); padding: var(--space-5) var(--space-5) var(--space-4); background: var(--head); }
+  .kind { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--action); }
+  h3 { font-family: var(--serif); font-size: clamp(1.5rem, 1.3rem + 0.6vw, 1.75rem); font-weight: 440; line-height: 1.08; letter-spacing: -0.02em; }
+  .why { font-size: var(--fs-small); line-height: 1.5; color: var(--muted); }
+  .body { display: flex; flex: 1; flex-direction: column; padding: var(--space-4) var(--space-5) var(--space-5); }
+  .first { margin-bottom: var(--space-3); font-size: 0.75rem; font-weight: 650; color: var(--muted); }
+  /* The steps: numbered discs joined by a short line between them, never past the last. The first is marked. */
+  .steps { display: grid; gap: var(--space-3); }
+  .steps li { position: relative; display: flex; align-items: flex-start; gap: var(--space-3); font-size: 0.9375rem; line-height: 1.4; }
+  .steps li:not(:last-child)::before { content: ''; position: absolute; left: 0.75rem; top: 1.75rem; bottom: calc(-1 * var(--space-3) + 0.25rem); width: 1px; background: var(--rule-strong); }
+  .n { flex: none; display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; margin-top: -0.05rem; border: 1px solid var(--rule-strong); border-radius: 50%; background: var(--raised); font-size: 0.6875rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .steps li:first-child .n { border-color: var(--action); background: var(--action); color: var(--on-action); }
+  .steps li:first-child { font-weight: 560; }
+  .more { margin-top: var(--space-3); padding-left: calc(1.5rem + var(--space-3)); font-size: 0.8125rem; color: var(--muted); }
+  /* The way in, at the foot of every card, so the three line up. */
+  .body > a { display: inline-flex; align-items: center; gap: 0.35em; align-self: flex-start; min-height: 44px; margin-top: auto; padding-top: var(--space-4); font-weight: 600; }
+  .body > a span { transition: transform var(--t-ui) var(--ease); }
+  .body > a:hover span { transform: translateX(3px); }
 </style>
