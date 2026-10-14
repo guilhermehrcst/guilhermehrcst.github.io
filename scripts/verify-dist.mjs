@@ -50,21 +50,28 @@ const REDIRECTS = {
 /** Routes of the former personal site that are gone: they fall through to the 404 (spec §8.4, Q2). */
 const GONE = ['/resume/', '/pt/curriculo/'];
 
-/** The header navigation (V0.5): Cursos and Materiais, the "Explorar" menu (the six paths and nothing
- *  else), then search, a magnifying glass named "Buscar" for assistive tech. In this order. */
-const EXPLORE_MENU = [
-  ['/ensino-fundamental/', 'Ensino Fundamental'],
-  ['/ensino-medio/', 'Ensino Médio'],
-  ['/vestibulares/', 'Vestibular'],
-  ['/pre-militar/', 'Pré-Militar'],
-  ['/ensino-superior/', 'Ensino Superior'],
-  ['/tecnologia/', 'Tecnologia'],
+/** The global navigation (V1): the six paths in the owner's order (it differs from PATHS on purpose), each a
+ *  button with its short name that opens a menu titled with its full name: Cursos, Livros, Provas, then the
+ *  path's own page. Search after them, a magnifying glass named "Buscar" for assistive tech. */
+const NAV = [
+  ['ensino-fundamental', 'Fundamental', 'Ensino Fundamental'],
+  ['ensino-medio', 'Médio', 'Ensino Médio'],
+  ['pre-militar', 'Pré-Militar', 'Pré-Militar'],
+  ['vestibulares', 'Vestibular', 'Vestibular'],
+  ['ensino-superior', 'Superior', 'Ensino Superior'],
+  ['tecnologia', 'Tecnologia', 'Tecnologia'],
 ];
-const HEADER_NAV = [
-  ['/cursos/', 'Cursos'],
-  ['/materiais/', 'Materiais'],
-  ['/buscar/', 'Buscar'],
-];
+const NAV_TYPES = ['cursos', 'livros', 'provas'];
+/** Where each kind of a path lands: its library, filtered by the URL (the view is the fragment). */
+const VIEW_HREF = (type, path) => (type === 'cursos' ? `/cursos/?caminho=${path}#cursos-${path}` : `/materiais/?caminho=${path}&tipo=${type}#${type}-${path}`);
+/** What each kind is, read from a library's items: Provas are past exams and simulados (practice never is);
+ *  Livros are references an editor classified (data-book); Cursos are the course library. */
+const PROVA_FORMATS = ['past-exam', 'simulator'];
+/** The page of each path and exam, and the path it belongs to in the header. */
+const NAV_PATH_OF = { '/enem/': 'vestibulares', '/uerj/': 'vestibulares', ...Object.fromEntries(NAV.map(([id]) => [`/${id}/`, id])) };
+/** What the header's menus offer, page by page (path -> type -> count or null), compared at the end with
+ *  what the libraries really hold. */
+const NAV_OFFERS = new Map();
 /** The two libraries (V0.5): which formats each lists. A hand-written mirror of src/lib/libraries.ts. */
 const LIBRARIES = {
   '/cursos/': ['course', 'track', 'playlist', 'lessons', 'lesson'],
@@ -111,7 +118,7 @@ const FOOTER_PAGES = [
   ...PATHS, '/enem/', '/uerj/',
   '/materias/', '/materias/matematica/', '/materias/portugues/', '/materias/redacao/', '/materias/fisica/', '/materias/quimica/',
   '/materias/biologia/', '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
-  '/materias/ingles/', '/materias/espanhol/', '/buscar/', '/sobre/',
+  '/materias/ingles/', '/materias/espanhol/', '/cursos/', '/materiais/', '/buscar/', '/sobre/',
 ];
 const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
 const meta = (html, attr, name) => new RegExp(`<meta ${attr}="${name}" content="([^"]*)"`).exec(html)?.[1];
@@ -290,39 +297,75 @@ function checkShell(path, html) {
     if (!new RegExp(`href="${page}"[^>]*>[^<]*</a>\\s*<span\\b[^>]*\\sdata-path-state[^>]*>Em preparação</span>`).test(footer)) fail(path, `the footer marks ${page} as in preparation`);
   }
   if (!/<img\b[^>]*src="\/_astro\/lockup-white\.[^"]+"[^>]*alt="Pexis Academy"|<img\b[^>]*alt="Pexis Academy"[^>]*src="\/_astro\/lockup-white\./.test(footer)) fail(path, 'the footer shows the official lockup');
-  // The header is the institutional wine (checked in the stylesheet below), with the Explorar menu and the
-  // direct links in order, and a mobile menu that reaches the same places. No JavaScript: native <details>.
+  // The header is the institutional wine (checked in the stylesheet below): the six paths in order, each a
+  // button that opens its menu (a native popover: no JavaScript), then search; and a compact Menu (a native
+  // <details>) that reaches the same places, then the two libraries.
   const nav = /<nav\b[^>]*aria-label="Principal"[^>]*>([\s\S]*?)<\/nav>/.exec(header)?.[1];
   if (!nav) { fail(path, 'main navigation (aria-label="Principal") missing'); return; }
-  const menu = /<details\b[^>]*data-menu="explorar"[^>]*>([\s\S]*?)<\/details>/.exec(nav)?.[1] ?? '';
-  if (!/<summary\b[^>]*>\s*Explorar\b/.test(menu)) fail(path, 'the Explorar menu is a <summary> named "Explorar"');
-  const linkItems = (fragment) => [...fragment.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)]
-    .map((m) => [m[1], m[2].replace(/<span class="tag"[\s\S]*?<\/span>/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/ →$/, '').trim()]);
-  const menuHrefs = hrefsIn(menu);
-  if (JSON.stringify(menuHrefs) !== JSON.stringify(EXPLORE_MENU.map((i) => i[0]))) fail(path, `Explorar menu ${menuHrefs.join(',')}`);
-  // The order of the line: Cursos, Materiais, Explorar, search.
-  const order = [...nav.matchAll(/<a\b[^>]*href="([^"]+)"|<details\b[^>]*data-menu="explorar"/g)].filter((m) => !EXPLORE_MENU.some(([href]) => href === m[1])).map((m) => m[1] ?? 'explorar');
-  if (JSON.stringify(order) !== JSON.stringify(['/cursos/', '/materiais/', 'explorar', '/buscar/'])) fail(path, `header order ${order.join(',')}`);
-  const direct = linkItems(nav.replace(/<details\b[\s\S]*?<\/details>/, ''));
-  if (JSON.stringify(direct) !== JSON.stringify(HEADER_NAV)) fail(path, `header navigation ${JSON.stringify(direct)}`);
-  // Search is an icon: its name comes from text hidden for sight, never from the glyph.
+  if (/<details\b/.test(nav)) fail(path, 'the line\'s menus are popovers, not <details>');
+  const textOf = (fragment) => decode(fragment.replace(/<span class="sr-only"[\s\S]*?<\/span>/g, '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim().replace(/ →$/, '');
+  const buttons = [...nav.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)];
+  const line = buttons.map((m) => [/\spopovertarget="menu-([^"]+)"/.exec(m[1])?.[1], textOf(m[2])]);
+  if (JSON.stringify(line) !== JSON.stringify(NAV.map(([id, label]) => [id, label]))) fail(path, `header line ${JSON.stringify(line)}`);
+  for (const m of buttons) if (!/type="button"/.test(m[1])) fail(path, 'a menu button is type="button"');
+  // The current path: its page or an exam inside it, marked on its button and on no other.
+  const marked = buttons.filter((m) => /aria-current="true"/.test(m[1])).map((m) => /data-path="([^"]+)"/.exec(m[1])?.[1]);
+  if (JSON.stringify(marked) !== JSON.stringify(NAV_PATH_OF[path] ? [NAV_PATH_OF[path]] : [])) fail(path, `the header marks ${marked.join(',') || 'no path'}`);
+  // Search follows the six, and is an icon whose name comes from text hidden for sight, never the glyph.
+  if (nav.lastIndexOf('<button') > nav.search(/\sdata-search-link[\s>]/)) fail(path, 'search follows the six paths');
   for (const m of header.matchAll(/<a\b[^>]*\sdata-search-link[^>]*>([\s\S]*?)<\/a>/g)) {
     if (!/<svg\b[^>]*aria-hidden="true"/.test(m[1]) || !/<span class="sr-only"[^>]*>Buscar<\/span>/.test(m[1])) fail(path, 'the search icon is decorative and its link is named "Buscar"');
   }
-  if (!/<p class="panel-label"[^>]*>Escolha seu caminho<\/p>/.test(menu)) fail(path, 'the Explorar menu is titled "Escolha seu caminho"');
+  if ((header.match(/\sdata-search-link[\s>]/g) ?? []).length !== 2) fail(path, 'search is in the bar at every width');
+  // A menu's entries, in order: a link to its view with a count, or "Em preparação" and no link; then the
+  // path's own page.
+  const readMenu = (where, id, name, body) => {
+    const offers = {};
+    const entries = [...body.matchAll(/<(a|p)\b([^>]*\sdata-entry="([^"]+)"[^>]*)>([\s\S]*?)<\/\1>/g)];
+    if (JSON.stringify(entries.map((m) => m[3])) !== JSON.stringify(NAV_TYPES)) fail(path, `${where} ${id}: entries ${entries.map((m) => m[3]).join(',')}`);
+    for (const [, tag, attributes, type, inner] of entries) {
+      if (tag === 'a') {
+        const href = decode(/\shref="([^"]+)"/.exec(attributes)?.[1] ?? '');
+        if (href !== VIEW_HREF(type, id)) fail(path, `${where} ${id} ${type} links ${href}`);
+        const count = Number(/<span class="count"[^>]*>(\d+)<\/span>/.exec(inner)?.[1] ?? NaN);
+        if (!(count > 0)) fail(path, `${where} ${id} ${type}: a link shows how many it holds`);
+        if (/Em preparação/.test(inner)) fail(path, `${where} ${id} ${type}: a link is not in preparation`);
+        offers[type] = count;
+      } else {
+        if (!/<span class="state"[^>]*>Em preparação<\/span>/.test(inner)) fail(path, `${where} ${id} ${type}: no link says "Em preparação"`);
+        if (/<a\b/.test(inner)) fail(path, `${where} ${id} ${type}: in preparation, no link`);
+        offers[type] = null;
+      }
+    }
+    const links = hrefsIn(body).map(decode);
+    const explore = [...body.matchAll(/<a\b[^>]*class="explore"[^>]*>([\s\S]*?)<\/a>/g)];
+    if (explore.length !== 1 || links.at(-1) !== `/${id}/` || textOf(explore[0][1]) !== `Explorar ${name}`) fail(path, `${where} ${id}: ends with "Explorar ${name}" to /${id}/`);
+    return offers;
+  };
+  const offers = {};
+  for (const [id, , name] of NAV) {
+    const panel = new RegExp(`<div\\b[^>]*\\sid="menu-${id}"[^>]*>([\\s\\S]*?)<a\\b[^>]*class="explore"[\\s\\S]*?<\\/a>`).exec(nav);
+    if (!panel || !/\spopover[\s>=]/.test(panel[0].slice(0, panel[0].indexOf('>')))) { fail(path, `the menu of ${id} is a popover`); continue; }
+    if (!new RegExp(`<p class="panel-label"[^>]*>${name}</p>`).test(panel[1])) fail(path, `the menu of ${id} is titled "${name}"`);
+    offers[id] = readMenu('menu', id, name, panel[0]);
+  }
+  const mobile = /<details\b[^>]*data-menu="mobile"[^>]*>([\s\S]*)<\/details>\s*<\/div>\s*<\/div>\s*<\/header>/.exec(header)?.[1] ?? '';
+  if (!/^\s*<summary\b/.test(mobile)) fail(path, 'the compact menu is a <details> with a <summary>');
+  const sheetPaths = [...mobile.matchAll(/<details\b[^>]*data-menu="mobile-([^"]+)"[^>]*>([\s\S]*?)<\/details>/g)];
+  if (JSON.stringify(sheetPaths.map((m) => m[1])) !== JSON.stringify(NAV.map(([id]) => id))) fail(path, `the compact menu ${sheetPaths.map((m) => m[1]).join(',')}`);
+  for (const [, id, body] of sheetPaths) {
+    const name = NAV.find(([n]) => n === id)?.[2] ?? id;
+    if (!/^\s*<summary\b/.test(body)) fail(path, `the compact menu's ${id} opens by a <summary>`);
+    if (JSON.stringify(readMenu('compact menu', id, name, body)) !== JSON.stringify(offers[id])) fail(path, `the compact menu offers ${id} differently`);
+  }
+  const libraries = /<div class="sheet-libraries"[\s\S]*?<\/div>/.exec(mobile)?.[0] ?? '';
+  if (JSON.stringify(hrefsIn(libraries)) !== JSON.stringify(['/cursos/', '/materiais/'])) fail(path, `the compact menu's libraries ${hrefsIn(libraries).join(',')}`);
+  NAV_OFFERS.set(path, offers);
   for (const m of header.matchAll(/<a\b([^>]*)>/g)) {
     const href = /href="([^"]+)"/.exec(m[1])?.[1] ?? '';
     const current = /aria-current="page"/.test(m[1]);
     if (current !== (href === path)) fail(path, `aria-current on ${href} should be ${href === path}`);
   }
-  const mobile = /<details\b[^>]*data-menu="mobile"[^>]*>([\s\S]*?)<\/details>/.exec(header)?.[1] ?? '';
-  if (!/<summary\b/.test(mobile)) fail(path, 'the mobile menu is a <details> with a <summary>');
-  const mobileHrefs = hrefsIn(mobile);
-  const expected = ['/cursos/', '/materiais/', ...EXPLORE_MENU.map(([href]) => href)];
-  if (JSON.stringify(mobileHrefs) !== JSON.stringify(expected)) fail(path, `the mobile menu ${mobileHrefs.join(',')}`);
-  if (!/<details\b[^>]*data-menu="mobile-explorar"[^>]*>\s*<summary\b[^>]*>\s*Explorar caminhos/.test(mobile)) fail(path, 'the mobile menu holds the paths under "Explorar caminhos"');
-  // Search stays one tap away on a phone, outside the menu.
-  if ((header.match(/\sdata-search-link[\s>]/g) ?? []).length !== 2) fail(path, 'search is in the bar at every width');
 }
 
 /* Product rules: what each page promises. --------------------------------------------------------- */
@@ -346,6 +389,16 @@ function checkResources(path, html) {
   return items;
 }
 
+/** How many of a library's items serve a path as one kind of content, read from the page alone: on /cursos/
+ *  every course; on /materiais/ a prova is a past exam or a simulado, a livro an item an editor marked. */
+function libraryHolds(page, html, type, id) {
+  const items = [...html.matchAll(/<li\b([^>]*\sdata-resource-id="[^"]+"[^>]*)>/g)].map((m) => [m[0], m[1]]);
+  const serves = (item) => resourceAttr(item, 'data-paths').split(' ').includes(id);
+  if (type === 'cursos') return page === '/cursos/' ? items.filter(serves).length : 0;
+  if (type === 'provas') return items.filter((item) => serves(item) && PROVA_FORMATS.includes(resourceAttr(item, 'data-format'))).length;
+  return items.filter((item) => serves(item) && resourceAttr(item, 'data-format') === 'reference' && /\sdata-book="(livro|apostila|leitura)"/.test(item[1])).length;
+}
+
 /** /cursos/ (V0.6): one grid of course cards, each with its 16:9 thumbnail (a local image or the Academy's
  *  frame), and path filters that are native radios: "Todos" first and checked, then only paths that hold a
  *  course, in the approved order, each counting what it shows. A card links to its source or, with a
@@ -362,18 +415,19 @@ function checkCourseLibrary(path, html, resources) {
   for (const id of COURSE_PAGES.map((page) => page.split('/')[2])) {
     if (!resources.some(([, attributes, body]) => attributes.includes(`data-resource-id="${id}"`) && body.includes(`href="/cursos/${id}/"`))) fail(path, `the card of ${id} leads to its page`);
   }
-  const fieldset = /<fieldset\b[^>]*\sdata-course-filters[\s\S]*?<\/fieldset>/.exec(html)?.[0] ?? '';
-  const radios = [...fieldset.matchAll(/<input\b([^>]*)>/g)].map((m) => m[1]);
-  const values = radios.map((a) => /\svalue="([^"]+)"/.exec(a)?.[1]);
-  if (!radios.every((a) => /type="radio"/.test(a) && /name="caminho"/.test(a))) fail(path, 'the course filters are radios of one group');
-  if (values[0] !== 'tudo' || !/\schecked/.test(radios[0] ?? '')) fail(path, '"Tudo" comes first and is chosen');
-  if (radios.slice(1).some((a) => /\schecked/.test(a))) fail(path, 'only "Tudo" starts chosen');
-  if (JSON.stringify(values.slice(1)) !== JSON.stringify(COURSE_FILTERS)) fail(path, `course filters ${values.slice(1).join(',')}`);
-  if (/class="n"/.test(fieldset)) fail(path, 'the course filters carry no counts (V0.7)');
-  // A path with no course answers with its empty state; a path with courses never shows one.
+  // The filters are links (Global Navigation V1): "Tudo" to the whole library, then each path's view, the
+  // URL the header uses. No form state: a filter is a shareable address.
+  const filters = /<nav\b[^>]*\sdata-course-filters[\s\S]*?<\/nav>/.exec(html)?.[0] ?? '';
+  if (/<input\b/.test(filters)) fail(path, 'the course filters are links, not form controls');
+  const chips = hrefsIn(filters).map(decode);
+  if (JSON.stringify(chips) !== JSON.stringify(['/cursos/', ...COURSE_FILTERS.map((p) => VIEW_HREF('cursos', p))])) fail(path, `course filters ${chips.join(',')}`);
+  if (/class="n"/.test(filters)) fail(path, 'the course filters carry no counts (V0.7)');
+  // Each path has its view; a path with no course answers with its empty state there; one with courses never does.
   for (const value of COURSE_FILTERS) {
+    const view = new RegExp(`<div\\b[^>]*\\sid="cursos-${value}"[^>]*>([\\s\\S]*?)</div>`).exec(html);
+    if (!view || !new RegExp(`data-view-path="${value}"`).test(view[0])) { fail(path, `no view for ${value}`); continue; }
     const shown = resources.filter((item) => resourceAttr(item, 'data-paths').split(' ').includes(value)).length;
-    const hasEmpty = new RegExp(`\\sdata-empty-for="${value}"`).test(html);
+    const hasEmpty = new RegExp(`\\sdata-empty-for="${value}"`).test(view[1]);
     if (shown === 0 && !hasEmpty) fail(path, `filter ${value} has no course and no empty state`);
     if (shown > 0 && hasEmpty) fail(path, `filter ${value} has courses and an empty state`);
   }
@@ -742,6 +796,16 @@ function checkProduct(path, html) {
       const groups = attrs(/<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '', /<section\b[^>]*\sid="formato-([^"]+)"/g);
       const present = LIBRARIES[path].filter((f) => resources.some((item) => resourceAttr(item, 'data-format') === f));
       if (JSON.stringify(groups) !== JSON.stringify(present)) fail(path, `library groups ${groups.join(',')}`);
+      // The header's Livros and Provas land here (Global Navigation V1): a view for each path and kind, which
+      // says when it holds nothing.
+      for (const type of ['livros', 'provas']) {
+        for (const [id] of NAV) {
+          const view = new RegExp(`<div\\b[^>]*\\sid="${type}-${id}"[^>]*>([\\s\\S]*?)</div>`).exec(html);
+          if (!view || !view[0].includes(`data-view-path="${id}"`) || !view[0].includes(`data-view-type="${type}"`)) { fail(path, `no view ${type}-${id}`); continue; }
+          const held = libraryHolds(path, html, type, id);
+          if ((held === 0) !== /\sdata-view-empty[\s>=]/.test(view[1])) fail(path, `view ${type}-${id} holds ${held}: its empty state disagrees`);
+        }
+      }
     }
   }
   if (COURSE_PAGES.includes(path)) {
@@ -868,6 +932,28 @@ for (const path of SECTION_NAV_PAGES) {
   const listed = Object.keys(LIBRARIES).flatMap((page) => [...(PAGE_RESOURCE_IDS.get(page) ?? [])]);
   if (new Set(listed).size !== listed.length) fail('/cursos/ /materiais/', 'a resource is in both libraries');
   if (JSON.stringify([...new Set(listed)].sort()) !== JSON.stringify([...elsewhere].sort())) fail('/cursos/ /materiais/', `the libraries list ${listed.length}, the site renders ${elsewhere.size}`);
+}
+
+/* The header offers what the libraries hold (Global Navigation V1): every page's menus agree, a kind links
+   to its view exactly when the library holds one for the path, and its count is what the view shows. Read
+   from the built pages, independently of src/lib/global-nav.ts. */
+{
+  const offers = [...NAV_OFFERS.values()].map((o) => JSON.stringify(o));
+  if (new Set(offers).size > 1) fail('header', 'the menus differ between pages');
+  const offer = NAV_OFFERS.get('/') ?? {};
+  const pages = Object.fromEntries(['/cursos/', '/materiais/'].map((page) => [page, existsSync(fileFor(page)) ? readFileSync(fileFor(page), 'utf8') : '']));
+  for (const [id] of NAV) {
+    for (const type of NAV_TYPES) {
+      const page = type === 'cursos' ? '/cursos/' : '/materiais/';
+      const held = PREPARING.includes(`/${id}/`) ? 0 : libraryHolds(page, pages[page], type, id);
+      const offered = offer[id]?.[type];
+      if ((offered ?? 0) !== held) fail('header', `${id} ${type}: the menu offers ${offered ?? 'nothing'}, ${page} holds ${held}`);
+    }
+  }
+  // A path in preparation holds nothing anywhere, so its menu and its views agree.
+  for (const page of PREPARING) for (const library of Object.values(pages)) {
+    if (new RegExp(`\\sdata-paths="[^"]*\\b${page.slice(1, -1)}\\b`).test(library)) fail(page, 'a path in preparation is served by a library item');
+  }
 }
 
 /* Resource anchors (V0.4 §5.4): every published resource has a search result, which opens the page that

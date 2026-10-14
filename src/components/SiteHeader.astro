@@ -1,93 +1,143 @@
 ---
-// The institutional header (V0.5): the brand wine, the official lockup in white, and four places:
-// Cursos and Materiais (the two libraries), the "Explorar" menu with the six paths, and search, as a
-// magnifying glass with its name for assistive tech. From 720px (iPad and up) all four sit on one line.
-// Below 720px: search and one "Menu" button, whose sheet holds Cursos, Materiais and "Explorar caminhos"
-// (the six paths). Every menu is a native <details>: keyboard operable and complete without JavaScript
-// (this page ships none). The cost, accepted: a menu closes by its own button, by choosing a link, or by
-// Tab leaving it open behind; not by Escape or a click outside.
+// The institutional header (Global Navigation V1): the brand wine, the official lockup in white, the six
+// paths in the owner's order (Fundamental, Médio, Pré-Militar, Vestibular, Superior, Tecnologia) and search,
+// as a magnifying glass with its name for assistive tech.
+// Each path is a button that opens its menu (Cursos, Livros, Provas, then the path's own page): a native
+// popover, so a click opens it, Escape, a click outside or another menu closes it, and following a link
+// loads another document, which closes it too. No JavaScript (this page ships none). Every kind of content
+// is counted from the published catalogue (src/lib/global-nav.ts); one with nothing published says
+// "Em preparação" and is not a link.
+// The line needs 1024px (an iPad held sideways and up), and a browser with popovers: below it, or without
+// them, search and one "Menu" button, whose sheet holds the six paths as an accordion of native <details>
+// (one open at a time), then the two libraries. The cost of the sheet, accepted: it closes by its own
+// button or by choosing a link, not by Escape or a tap outside.
 // The lockup is the official artwork (src/assets/brand), 46px tall: the smallest size at which "ACADEMY"
 // keeps 6px letters.
 import { Image } from 'astro:assets';
 import lockup from '../assets/brand/lockup-white.png';
+import ClipboardIcon from './icons/radix/ClipboardIcon.astro';
 import MagnifyingGlassIcon from './icons/radix/MagnifyingGlassIcon.astro';
-import { EXPLORE_MENU, HEADER_NAV, routes, sectionOf } from '../lib/routes';
-import { objectiveSummaryFor } from '../lib/superior-copy';
-import { PREPARING_PATHS } from '../lib/taxonomy';
+import ReaderIcon from './icons/radix/ReaderIcon.astro';
+import VideoIcon from './icons/radix/VideoIcon.astro';
+import { globalNav, navPathOf, type ContentType } from '../lib/global-nav';
+import { routes } from '../lib/routes';
 import { pt as t } from '../i18n/pt';
 
 const path = Astro.url.pathname;
-const section = sectionOf(path);
+const here = navPathOf(path);
 const current = (href: string) => (href === path ? 'page' : undefined);
-const items = EXPLORE_MENU.items.map((item) => ({
-  ...item,
-  what: objectiveSummaryFor(item.id),
-  preparing: PREPARING_PATHS.includes(item.id),
-}));
-const inSection = (href: string) => sectionOf(href) === section && section !== null;
+const menus = globalNav();
+const ICONS: Record<ContentType, typeof VideoIcon> = { cursos: VideoIcon, livros: ReaderIcon, provas: ClipboardIcon };
+const n = t.nav;
 ---
 <header class="site-header">
   <div class="wrap bar">
-    <a class="brand" href={routes.home} aria-label={t.nav.home} aria-current={current(routes.home)} data-brand>
+    <a class="brand" href={routes.home} aria-label={n.home} aria-current={current(routes.home)} data-brand>
       <Image src={lockup} alt="" height={46} densities={[1, 2, 3]} format="png" loading="eager" fetchpriority="high" />
     </a>
 
-    <!-- From 720px: the four places on one line. -->
-    <nav class="desktop" aria-label={t.nav.label}>
+    <!-- From 1024px, with popovers: the six paths and search on one line. -->
+    <nav class="desktop" aria-label={n.label}>
       <ul role="list" class="top">
-        {HEADER_NAV.map((item) => (
-          <li><a class:list={['link', inSection(item.href) && 'in-section']} href={item.href} aria-current={current(item.href)}>{item.label}</a></li>
+        {menus.map((menu) => (
+          <li>
+            <button
+              type="button"
+              class:list={['trigger', here === menu.id && 'in-section']}
+              popovertarget={`menu-${menu.id}`}
+              aria-current={here === menu.id ? 'true' : undefined}
+              data-path={menu.id}
+              style={`anchor-name: --nav-${menu.id}`}
+            >{menu.label}<span class="chev" aria-hidden="true"></span></button>
+            <div class="panel" id={`menu-${menu.id}`} popover data-menu={menu.id} style={`position-anchor: --nav-${menu.id}`}>
+              <p class="panel-label">{menu.name}</p>
+              <ul role="list" class="entries">
+                {menu.entries.map((entry) => {
+                  const Icon = ICONS[entry.type];
+                  const type = n.types[entry.type];
+                  return (
+                    <li>
+                      {entry.href ? (
+                        <a class="entry" href={entry.href} data-entry={entry.type}>
+                          <span class="icon"><Icon width={18} height={18} /></span>
+                          <span class="text"><span class="label">{type.label}<span class="sr-only"> {n.of(menu.name)}</span></span><span class="what">{type.what}</span></span>
+                          <span class="count" aria-hidden="true">{entry.count}</span><span class="sr-only">, {n.count(entry.count)}</span>
+                        </a>
+                      ) : (
+                        <p class="entry empty" data-entry={entry.type}>
+                          <span class="icon"><Icon width={18} height={18} /></span>
+                          <span class="text"><span class="label">{type.label}<span class="sr-only"> {n.of(menu.name)}</span></span><span class="what">{type.what}</span></span>
+                          <span class="state" data-entry-state>{t.preparing.label}</span>
+                        </p>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+              <a class="explore" href={menu.explore} aria-current={current(menu.explore)}>{n.explore(menu.name)}{' '}<span aria-hidden="true">→</span></a>
+            </div>
+          </li>
         ))}
         <li>
-          <details class="explore" data-menu="explorar">
-            <summary class:list={[section === 'explorar' && 'in-section']}>{EXPLORE_MENU.label}<span class="chev" aria-hidden="true"></span></summary>
-            <div class="panel">
-              <p class="panel-label">{t.nav.choose}</p>
-              <ul role="list" class="paths">
-                {items.map((item) => (
-                  <li>
-                    <a href={item.href} aria-current={current(item.href)}>
-                      <span class="name"><span class="label">{item.label}</span>{item.preparing && <span class="tag">{t.preparing.label}</span>}</span>
-                      <span class="what">{item.what}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </details>
-        </li>
-        <li>
-          <a class:list={['link', 'search', section === 'buscar' && 'in-section']} href={routes.search} aria-current={current(routes.search)} data-search-link>
-            <MagnifyingGlassIcon width={20} height={20} /><span class="sr-only">{t.nav.search}</span>
+          <a class:list={['link', 'search', path === routes.search && 'in-section']} href={routes.search} aria-current={current(routes.search)} data-search-link>
+            <MagnifyingGlassIcon width={20} height={20} /><span class="sr-only">{n.search}</span>
           </a>
         </li>
       </ul>
     </nav>
 
-    <!-- Below 720px: search, then one button for the rest. -->
+    <!-- Below 1024px, or without popovers: search, then one button for the rest. -->
     <div class="compact">
-      <a class:list={['link', 'search', section === 'buscar' && 'in-section']} href={routes.search} aria-current={current(routes.search)} data-search-link>
-        <MagnifyingGlassIcon width={20} height={20} /><span class="sr-only">{t.nav.search}</span>
+      <a class:list={['link', 'search', path === routes.search && 'in-section']} href={routes.search} aria-current={current(routes.search)} data-search-link>
+        <MagnifyingGlassIcon width={20} height={20} /><span class="sr-only">{n.search}</span>
       </a>
       <details class="mobile" data-menu="mobile">
-        <summary><span class="burger" aria-hidden="true"><i></i><i></i></span>{t.nav.menu}</summary>
-        <nav class="sheet" aria-label={t.nav.mobile}>
-          <p class="panel-label">{t.nav.mobile}</p>
+        <summary><span class="burger" aria-hidden="true"><i></i><i></i></span><span class="menu-label">{n.menu}</span></summary>
+        <nav class="sheet" aria-label={n.mobile}>
+          <p class="panel-label">{n.paths}</p>
           <ul role="list" class="sheet-list">
-            {HEADER_NAV.map((item) => (
-              <li><a href={item.href} aria-current={current(item.href)}>{item.label}</a></li>
+            {menus.map((menu) => (
+              <li>
+                <details class="sheet-path" name="caminho" data-menu={`mobile-${menu.id}`} data-path={menu.id} open={here === menu.id}>
+                  <summary class:list={[here === menu.id && 'in-section']}>
+                    <span class="sheet-name">{menu.name}{menu.preparing && <span class="tag">{t.preparing.label}</span>}</span>
+                    <span class="chev" aria-hidden="true"></span>
+                  </summary>
+                  <ul role="list" class="entries sheet-entries">
+                    {menu.entries.map((entry) => {
+                      const Icon = ICONS[entry.type];
+                      const type = n.types[entry.type];
+                      return (
+                        <li>
+                          {entry.href ? (
+                            <a class="entry" href={entry.href} data-entry={entry.type}>
+                              <span class="icon"><Icon width={18} height={18} /></span>
+                              <span class="text"><span class="label">{type.label}<span class="sr-only"> {n.of(menu.name)}</span></span><span class="what">{type.what}</span></span>
+                              <span class="count" aria-hidden="true">{entry.count}</span><span class="sr-only">, {n.count(entry.count)}</span>
+                            </a>
+                          ) : (
+                            <p class="entry empty" data-entry={entry.type}>
+                              <span class="icon"><Icon width={18} height={18} /></span>
+                              <span class="text"><span class="label">{type.label}<span class="sr-only"> {n.of(menu.name)}</span></span><span class="what">{type.what}</span></span>
+                              <span class="state" data-entry-state>{t.preparing.label}</span>
+                            </p>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <a class="explore" href={menu.explore} aria-current={current(menu.explore)}>{n.explore(menu.name)}{' '}<span aria-hidden="true">→</span></a>
+                </details>
+              </li>
             ))}
-            <li>
-              <details class="sheet-explore" data-menu="mobile-explorar">
-                <summary class:list={[section === 'explorar' && 'in-section']}>{t.nav.explorePaths}<span class="chev" aria-hidden="true"></span></summary>
-                <ul role="list" class="sheet-paths">
-                  {items.map((item) => (
-                    <li><a href={item.href} aria-current={current(item.href)}>{item.label}{item.preparing && <span class="tag">{t.preparing.label}</span>}</a></li>
-                  ))}
-                </ul>
-              </details>
-            </li>
           </ul>
+          <div class="sheet-libraries" data-sheet-libraries>
+            <p class="panel-label">{n.libraries}</p>
+            <ul role="list">
+              <li><a href={routes.courses} aria-current={current(routes.courses)}>{n.allCourses}</a></li>
+              <li><a href={routes.materials} aria-current={current(routes.materials)}>{n.allMaterials}</a></li>
+            </ul>
+          </div>
         </nav>
       </details>
     </div>
@@ -103,26 +153,44 @@ const inSection = (href: string) => sectionOf(href) === section && section !== n
     color: var(--on-brand);
     border-bottom: 1px solid var(--brand-deep);
   }
-  .bar { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 64px; }
+  /* The bar keeps clear of a notch when a phone is held sideways (the page covers the whole screen). */
+  .bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 64px;
+    padding-inline: max(var(--gutter), env(safe-area-inset-left)) max(var(--gutter), env(safe-area-inset-right));
+  }
   .brand { display: block; flex: none; padding-block: 9px; line-height: 0; }
   .brand :global(img) { display: block; width: auto; height: 46px; }
 
   /* Focus on the wine: the outline is white. */
   .site-header :global(:focus-visible) { outline-color: var(--on-brand); }
 
-  /* One line from 720px (iPad portrait and up); below it, search and the Menu button. */
+  /* One line from 1024px, where popovers exist; below it, or without them, search and the Menu button. A
+     browser without popovers would show every menu at once: it takes the sheet instead, which needs none. */
   .desktop { display: none; }
   .compact { display: flex; align-items: center; gap: var(--space-2); }
-  @media (min-width: 720px) { .desktop { display: block; } .compact { display: none; } }
-  .top { display: flex; align-items: center; gap: var(--space-1); }
-  .link, .explore > summary, .mobile > summary {
+  @media (min-width: 1024px) {
+    @supports selector(:popover-open) {
+      .desktop { display: block; }
+      .compact { display: none; }
+    }
+  }
+  .top { display: flex; align-items: center; gap: 2px; }
+  .trigger, .link, .mobile > summary {
     position: relative;
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
     min-height: 44px;
     padding-inline: var(--space-3);
+    border: 0;
     border-radius: var(--radius);
+    background: transparent;
+    font: inherit;
     font-size: 0.9375rem;
     font-weight: 500;
     white-space: nowrap;
@@ -133,13 +201,18 @@ const inSection = (href: string) => sectionOf(href) === section && section !== n
     transition: background var(--t-ui), color var(--t-ui);
   }
   summary::-webkit-details-marker { display: none; }
-  .link:hover, .explore > summary:hover, .explore[open] > summary { background: var(--brand-deep); color: var(--on-brand); }
+  /* Touch answers with the menu's own states, not the browser's blue flash. */
+  summary, .trigger { -webkit-tap-highlight-color: transparent; }
+  .sheet-path > summary:active { background: var(--surface); }
+  .trigger:hover, .link:hover { background: var(--brand-deep); color: var(--on-brand); }
+  /* Apart: a browser that does not know :popover-open drops the whole rule it is in. */
+  .trigger:has(+ .panel:popover-open) { background: var(--brand-deep); color: var(--on-brand); }
   /* Search: a square 44px target around the glass. */
   .search { justify-content: center; min-width: 44px; padding-inline: 0; }
   .search :global(svg) { display: block; }
-  /* The current page and its section: white, with a hairline under it. */
+  /* The current path (its page, an exam inside it, or its view of a library): white, with a hairline. */
   .link[aria-current='page'], .in-section { color: var(--on-brand); }
-  .link[aria-current='page']::after, .link.in-section::after, .explore > summary.in-section::after {
+  .link[aria-current='page']::after, .link.in-section::after, .trigger.in-section::after {
     content: '';
     position: absolute;
     left: var(--space-3);
@@ -149,39 +222,111 @@ const inSection = (href: string) => sectionOf(href) === section && section !== n
     background: var(--on-brand);
   }
   .search[aria-current='page']::after, .search.in-section::after { left: 12px; right: 12px; }
+  /* A library's view of a path marks that path too: the page is static, the view is its URL's fragment. */
+  :global(body:has([data-view-path='ensino-fundamental']:target)) .trigger[data-path='ensino-fundamental'],
+  :global(body:has([data-view-path='ensino-medio']:target)) .trigger[data-path='ensino-medio'],
+  :global(body:has([data-view-path='pre-militar']:target)) .trigger[data-path='pre-militar'],
+  :global(body:has([data-view-path='vestibulares']:target)) .trigger[data-path='vestibulares'],
+  :global(body:has([data-view-path='ensino-superior']:target)) .trigger[data-path='ensino-superior'],
+  :global(body:has([data-view-path='tecnologia']:target)) .trigger[data-path='tecnologia'] { color: var(--on-brand); }
+  :global(body:has([data-view-path='ensino-fundamental']:target)) .trigger[data-path='ensino-fundamental']::after,
+  :global(body:has([data-view-path='ensino-medio']:target)) .trigger[data-path='ensino-medio']::after,
+  :global(body:has([data-view-path='pre-militar']:target)) .trigger[data-path='pre-militar']::after,
+  :global(body:has([data-view-path='vestibulares']:target)) .trigger[data-path='vestibulares']::after,
+  :global(body:has([data-view-path='ensino-superior']:target)) .trigger[data-path='ensino-superior']::after,
+  :global(body:has([data-view-path='tecnologia']:target)) .trigger[data-path='tecnologia']::after {
+    content: '';
+    position: absolute;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: 6px;
+    height: 2px;
+    background: var(--on-brand);
+  }
   .chev { width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform var(--t-ui) var(--ease); }
   details[open] > summary > .chev { transform: translateY(2px) rotate(-135deg); }
+  .trigger:has(+ .panel:popover-open) > .chev { transform: translateY(2px) rotate(-135deg); }
 
-  /* The Explorar panel: paper under the wine, the six paths with one line each. */
-  /* The panel hangs from the header bar, aligned with the content's right edge: it never leaves the page. */
+  /* A path's menu: a small paper panel under its button, never a mega menu. Where anchor positioning exists
+     it hangs from the button (and turns left near the edge); elsewhere, from the bar's right edge. */
   .panel {
-    position: absolute;
-    top: calc(100% + 8px);
+    position: fixed;
+    inset: auto;
+    top: 72px;
     right: var(--gutter);
-    width: min(40rem, calc(100vw - 2 * var(--gutter)));
-    padding: var(--space-5);
+    width: min(24rem, calc(100vw - 2 * var(--gutter)));
+    max-height: calc(100dvh - 88px);
+    margin: 0;
+    padding: var(--space-4) var(--space-3) var(--space-3);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     background: var(--raised);
     color: var(--ink);
     border: 1px solid var(--rule);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-panel);
   }
-  .panel-label { margin-bottom: var(--space-2); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-  .paths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-1) var(--space-4); }
-  .paths a { display: grid; gap: 2px; min-height: 44px; padding: var(--space-3); border-radius: var(--radius); color: var(--ink); text-decoration: none; transition: background var(--t-ui); }
-  .paths a:hover { background: var(--surface); }
-  .paths a:hover .name { color: var(--action); }
-  .paths a[aria-current='page'] { background: var(--tint-brand); }
-  .name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-2); font-family: var(--serif); font-size: 1.1875rem; line-height: 1.2; }
-  .name .label { white-space: nowrap; }
-  .what { font-size: 0.8125rem; line-height: 1.4; color: var(--muted); }
-  .tag { font-family: var(--sans); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--action); }
-  .site-header .panel :global(:focus-visible) { outline-color: var(--action); }
+  @supports (position-area: block-end) {
+    .panel { top: auto; right: auto; position-area: block-end span-inline-end; margin-top: 8px; position-try-fallbacks: flip-inline; }
+  }
+  /* It eases in, and leaves at once: two menus never show together while one gives way to the other. */
+  @media (prefers-reduced-motion: no-preference) {
+    .panel { transition: opacity 140ms var(--ease), translate 140ms var(--ease); }
+    @starting-style { .panel:popover-open { opacity: 0; translate: 0 -4px; } }
+  }
+  .panel-label { margin: 0 var(--space-2) var(--space-2); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .entries { display: grid; gap: 2px; }
+  .entry {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 56px;
+    padding: var(--space-2);
+    border-radius: var(--radius);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  a.entry { transition: background var(--t-ui); }
+  a.entry:hover { background: var(--surface); }
+  a.entry:hover .label { color: var(--action); }
+  .icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--tint-sand); color: var(--ink); }
+  .icon :global(svg) { display: block; }
+  .text { display: grid; gap: 1px; min-width: 0; }
+  .label { font-size: 0.9375rem; font-weight: 600; line-height: 1.25; }
+  .what { font-size: 0.8125rem; line-height: 1.35; color: var(--muted); }
+  .count { min-width: 28px; padding: 1px 8px; border: 1px solid var(--rule-strong); border-radius: 999px; font-size: 0.75rem; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; color: var(--ink); }
+  /* Nothing published yet: the row stays, quiet, with its state instead of a count, and is not a link. */
+  .empty .icon { background: var(--surface); color: var(--muted); }
+  .empty .label { color: var(--muted); font-weight: 560; }
+  .state { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; color: var(--action); }
+  .explore {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    min-height: 44px;
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-2) 0;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9375rem;
+    font-weight: 560;
+    color: var(--action);
+    text-decoration: none;
+  }
+  .explore:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+  .explore[aria-current='page'] { color: var(--ink); }
+  .site-header .panel :global(:focus-visible), .site-header .sheet :global(:focus-visible) { outline-color: var(--action); }
 
-  /* Mobile: search and one button that opens a sheet under the header. */
+  /* The Menu button and its sheet under the header. */
   .mobile > summary { color: var(--on-brand); padding-inline: var(--space-3) var(--space-4); border: 1px solid var(--brand-line); }
   .mobile > summary:hover, .mobile[open] > summary { background: var(--brand-deep); }
   .burger { display: grid; gap: 5px; width: 18px; }
+  /* The narrowest phones (320px, the reflow width): the lockup keeps its size, so the button keeps only its
+     icon, a 44px square still named "Menu" for assistive tech. */
+  @media (max-width: 359px) {
+    .mobile > summary { justify-content: center; width: 44px; padding-inline: 0; }
+    .menu-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  }
   .burger i { display: block; height: 1.5px; background: currentColor; transition: transform var(--t-ui) var(--ease); }
   .mobile[open] .burger i:first-child { transform: translateY(3.25px) rotate(45deg); }
   .mobile[open] .burger i:last-child { transform: translateY(-3.25px) rotate(-45deg); }
@@ -190,44 +335,55 @@ const inSection = (href: string) => sectionOf(href) === section && section !== n
     left: 0;
     right: 0;
     top: 100%;
-    max-height: calc(100dvh - 64px);
+    max-height: calc(100dvh - 65px);
     overflow-y: auto;
-    padding: var(--space-5) var(--gutter) var(--space-6);
+    overscroll-behavior: contain;
+    padding: var(--space-5) max(var(--gutter), env(safe-area-inset-right)) calc(var(--space-6) + env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
     background: var(--raised);
     color: var(--ink);
     border-bottom: 1px solid var(--rule);
     box-shadow: var(--shadow-panel);
   }
-  .sheet-list { display: grid; border-top: 1px solid var(--rule); }
+  .sheet > .panel-label, .sheet-libraries .panel-label { margin-inline: 0; }
+  .sheet-list { display: grid; max-width: 40rem; border-top: 1px solid var(--rule); }
   .sheet-list > li { border-bottom: 1px solid var(--rule); }
-  .sheet-list > li > a, .sheet-explore > summary {
+  .sheet-path > summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
-    min-height: 52px;
+    min-height: 56px;
     color: var(--ink);
-    text-decoration: none;
     font-family: var(--serif);
     font-size: 1.25rem;
     cursor: pointer;
     list-style: none;
   }
-  .sheet-list a[aria-current='page'], .sheet-explore > summary.in-section { color: var(--action); }
-  .sheet-explore > summary .chev { margin-right: var(--space-2); }
-  .sheet-paths { display: grid; padding: 0 0 var(--space-3) var(--space-4); border-left: 2px solid var(--rule); margin-bottom: var(--space-3); }
-  .sheet-paths a { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 44px; color: var(--ink); text-decoration: none; font-size: 1.0625rem; }
-  .sheet-paths a:hover, .sheet-list > li > a:hover, .sheet-explore > summary:hover { color: var(--action); }
-  .sheet-paths a[aria-current='page'] { color: var(--action); font-weight: 560; }
-  .site-header .sheet :global(:focus-visible) { outline-color: var(--action); }
-  /* The course library (/cursos/, V0.7): the bar spans the page and aligns with the grid's edge. */
-  :global(html[data-bottom-nav]) .bar { max-width: none; padding-inline: var(--library-side, var(--gutter)); }
+  .sheet-path > summary:hover, .sheet-path > summary.in-section { color: var(--action); }
+  :global(body:has([data-view-path='ensino-fundamental']:target)) .sheet-path[data-path='ensino-fundamental'] > summary,
+  :global(body:has([data-view-path='ensino-medio']:target)) .sheet-path[data-path='ensino-medio'] > summary,
+  :global(body:has([data-view-path='pre-militar']:target)) .sheet-path[data-path='pre-militar'] > summary,
+  :global(body:has([data-view-path='vestibulares']:target)) .sheet-path[data-path='vestibulares'] > summary,
+  :global(body:has([data-view-path='ensino-superior']:target)) .sheet-path[data-path='ensino-superior'] > summary,
+  :global(body:has([data-view-path='tecnologia']:target)) .sheet-path[data-path='tecnologia'] > summary { color: var(--action); }
+  .sheet-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-2); }
+  .tag { font-family: var(--sans); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--action); }
+  .sheet-path > summary .chev { flex: none; margin-right: var(--space-2); }
+  .sheet-entries { padding-bottom: var(--space-1); }
+  .sheet-path .explore { margin: 0 0 var(--space-3); padding-top: var(--space-1); border-top: 0; }
+  .sheet-libraries { margin-top: var(--space-6); }
+  .sheet-libraries ul { display: flex; flex-wrap: wrap; gap: 0 var(--space-5); }
+  .sheet-libraries a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 560; }
+  .sheet-libraries a[aria-current='page'] { color: var(--ink); }
+
+  /* The course library (/cursos/): the bar spans the page and aligns with the grid's edge. */
+  :global(html[data-bottom-nav]) .bar { max-width: none; padding-inline: max(var(--library-side, var(--gutter)), env(safe-area-inset-left)) max(var(--library-side, var(--gutter)), env(safe-area-inset-right)); }
   :global(html[data-bottom-nav]) .panel { right: var(--library-side, var(--gutter)); }
-  /* With the bottom navigation (below 1280px) the header keeps the lockup and search only: the bar
-     below carries Cursos, Materiais and Explorar, so nothing is offered twice. */
-  @media (max-width: 1279px) {
-    :global(html[data-bottom-nav]) .desktop,
-    :global(html[data-bottom-nav]) .mobile { display: none; }
-    :global(html[data-bottom-nav]) .compact { display: flex; }
+  /* With the bottom navigation (below 1024px), it already offers search and the two libraries: the header
+     keeps the lockup and the Menu, so nothing is offered twice, and the sheet stops above the bar. */
+  @media (max-width: 1023px) {
+    :global(html[data-bottom-nav]) .compact > .search,
+    :global(html[data-bottom-nav]) .sheet-libraries { display: none; }
+    :global(html[data-bottom-nav]) .sheet { max-height: calc(100dvh - 65px - 58px - env(safe-area-inset-bottom)); }
   }
 </style>

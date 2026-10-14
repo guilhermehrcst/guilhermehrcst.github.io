@@ -1,13 +1,20 @@
 ---
-// A library (V0.5): /cursos/ or /materiais/. The published catalogue, one section per format, as the same
-// cards the path pages use, each one linked to its provider. A view, never a second home: no card here
-// carries the #recurso-<id> anchor, which stays on the page that places the resource (src/lib/placement.ts).
+// A library (V0.5): /materiais/. The published catalogue, one section per format, as the same cards the path
+// pages use, each one linked to its provider. A view, never a second home: no card here carries the
+// #recurso-<id> anchor, which stays on the page that places the resource (src/lib/placement.ts).
+// Global Navigation V1: the header's Livros and Provas of each path land here, on a view named by the URL's
+// fragment (src/lib/global-nav.ts). The view titles itself and the page answers it in CSS (:target with
+// :has): only its kind's sections, only its path's resources, each listed once. A view with nothing
+// published says so. Where :has is not supported, the whole library shows and no view claims otherwise.
 import Base from '../layouts/Base.astro';
 import PageIntro from './PageIntro.astro';
 import ResourceList from './ResourceList.astro';
 import TrackSection from './TrackSection.astro';
+import { bookKindOf } from '../lib/books';
+import { libraryViews } from '../lib/global-nav';
 import { libraryGroups, type LibraryId } from '../lib/libraries';
 import { routes } from '../lib/routes';
+import { OBJECTIVES, PATH_ORDER } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
 interface Props { library: LibraryId }
@@ -15,14 +22,38 @@ const { library } = Astro.props;
 const c = t.pages[library];
 const l = t.library;
 const groups = libraryGroups(library);
+const views = libraryViews(library).filter((view) => view.type !== 'cursos');
 const other = library === 'cursos' ? 'materiais' : 'cursos';
 const otherHref = other === 'cursos' ? routes.courses : routes.materials;
+const servedBy = (resources: typeof groups[number]['resources']) =>
+  PATH_ORDER.filter((path) => resources.some((r) => r.paths.includes(path)));
 ---
 <Base title={c.title} description={c.description}>
   <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
-  <div data-library={library}>
+  <div class="lib" data-library={library}>
+    {views.map((view) => {
+      const name = OBJECTIVES[view.path].label;
+      const kind = view.type === 'cursos' ? null : view.type;
+      return kind && (
+        <div class="wrap view" id={view.id} data-view-path={view.path} data-view-type={view.type}>
+          <p class="view-kind">{t.nav.types[kind].label}</p>
+          <h2 class="view-title">{name}</h2>
+          <p class="view-line" data-view-empty={view.count === 0 || undefined}>{view.count > 0 ? `${t.nav.types[kind].what} · ${l.views.count(view.count)}` : l.views.empty[kind](name)}</p>
+          <p class="view-links">
+            <a href={routes.materials}>{l.views.all}</a>
+            <a href={routes.objective(view.path)}>{t.nav.explore(name)}{' '}<span aria-hidden="true">→</span></a>
+          </p>
+        </div>
+      );
+    })}
     {groups.map((group) => (
-      <TrackSection id={`formato-${group.format}`} title={l.groups[group.format]} why={l.count(group.resources.length)}>
+      <TrackSection
+        id={`formato-${group.format}`}
+        title={l.groups[group.format]}
+        why={l.count(group.resources.length)}
+        paths={servedBy(group.resources)}
+        bookPaths={servedBy(group.resources.filter((r) => bookKindOf(r.id) !== null))}
+      >
         <ResourceList resources={group.resources} />
       </TrackSection>
     ))}
@@ -40,4 +71,44 @@ const otherHref = other === 'cursos' ? routes.courses : routes.materials;
   .next { display: grid; gap: var(--space-3); padding-block: var(--space-6) var(--space-8); border-top: 1px solid var(--rule); }
   .note { max-width: var(--measure); color: var(--muted); }
   .other a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+
+  /* A view: the kind, the path in the serif, what it holds (or that nothing is published yet), and the way
+     back to the whole library and on to the path. Clear of the sticky header when the page opens on it. */
+  .view { display: none; scroll-margin-top: 80px; padding-block: var(--space-6) var(--space-2); }
+  .view-kind { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--action); }
+  .view-title { margin-top: var(--space-1); font-size: var(--fs-h2); }
+  .view-line { max-width: var(--measure); margin-top: var(--space-2); color: var(--muted); }
+  .view-links { display: flex; flex-wrap: wrap; gap: 0 var(--space-5); margin-top: var(--space-2); }
+  .view-links a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+
+  @supports selector(:has(*)) {
+    .view:target { display: block; }
+    /* In a view, the counts of the whole library would mislead, and the rule between sections leads nowhere. */
+    .lib:has(.view:target) :global(.why) { display: none; }
+    .lib:has(.view:target) :global(.track > .head) { padding-top: 0; border-top: 0; }
+    .lib:has(.view:target) :global(section.track) { padding-block: var(--space-5); }
+    /* Its kind: Provas are past exams and simulados; Livros are approved reading materials. */
+    .lib:has([data-view-type='provas']:target) :global(section[id^='formato-']:not(#formato-past-exam, #formato-simulator)),
+    .lib:has([data-view-type='livros']:target) :global(section[id^='formato-']:not(#formato-reference)),
+    .lib:has([data-view-type='livros']:target) :global(li[data-resource-id]:not([data-book])) { display: none; }
+    /* Its path: the resources that serve it, and only the sections that hold one. */
+    .lib:has([data-view-path='ensino-fundamental']:target) :global(li[data-resource-id]:not([data-paths~='ensino-fundamental'])),
+    .lib:has([data-view-path='ensino-medio']:target) :global(li[data-resource-id]:not([data-paths~='ensino-medio'])),
+    .lib:has([data-view-path='pre-militar']:target) :global(li[data-resource-id]:not([data-paths~='pre-militar'])),
+    .lib:has([data-view-path='vestibulares']:target) :global(li[data-resource-id]:not([data-paths~='vestibulares'])),
+    .lib:has([data-view-path='ensino-superior']:target) :global(li[data-resource-id]:not([data-paths~='ensino-superior'])),
+    .lib:has([data-view-path='tecnologia']:target) :global(li[data-resource-id]:not([data-paths~='tecnologia'])),
+    .lib:has([data-view-type='provas'][data-view-path='ensino-fundamental']:target) :global(section:not([data-group-paths~='ensino-fundamental'])),
+    .lib:has([data-view-type='provas'][data-view-path='ensino-medio']:target) :global(section:not([data-group-paths~='ensino-medio'])),
+    .lib:has([data-view-type='provas'][data-view-path='pre-militar']:target) :global(section:not([data-group-paths~='pre-militar'])),
+    .lib:has([data-view-type='provas'][data-view-path='vestibulares']:target) :global(section:not([data-group-paths~='vestibulares'])),
+    .lib:has([data-view-type='provas'][data-view-path='ensino-superior']:target) :global(section:not([data-group-paths~='ensino-superior'])),
+    .lib:has([data-view-type='provas'][data-view-path='tecnologia']:target) :global(section:not([data-group-paths~='tecnologia'])),
+    .lib:has([data-view-type='livros'][data-view-path='ensino-fundamental']:target) :global(section:not([data-book-paths~='ensino-fundamental'])),
+    .lib:has([data-view-type='livros'][data-view-path='ensino-medio']:target) :global(section:not([data-book-paths~='ensino-medio'])),
+    .lib:has([data-view-type='livros'][data-view-path='pre-militar']:target) :global(section:not([data-book-paths~='pre-militar'])),
+    .lib:has([data-view-type='livros'][data-view-path='vestibulares']:target) :global(section:not([data-book-paths~='vestibulares'])),
+    .lib:has([data-view-type='livros'][data-view-path='ensino-superior']:target) :global(section:not([data-book-paths~='ensino-superior'])),
+    .lib:has([data-view-type='livros'][data-view-path='tecnologia']:target) :global(section:not([data-book-paths~='tecnologia'])) { display: none; }
+  }
 </style>

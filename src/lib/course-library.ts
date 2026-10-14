@@ -36,12 +36,10 @@ export const courseCards = (resources: readonly PublishedLearningResource[] = pu
   }));
 
 /** The filters of the library (V0.7), in the order the owner set: every path, after "Tudo". A path that holds
- *  no course yet keeps its filter and answers with an empty state, never with a course it does not have. */
+ *  no course yet keeps its filter and answers with an empty state, never with a course it does not have
+ *  (its view, src/lib/global-nav.ts libraryViews, counts none). */
 export const COURSE_FILTER_ORDER: readonly PathId[] = ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar'];
 
-/** The paths whose filter has no course yet: they show the empty state. */
-export const emptyFilterPaths = (cards: readonly CourseCardData[] = courseCards()): PathId[] =>
-  COURSE_FILTER_ORDER.filter((path) => !cards.some((card) => card.paths.includes(path)));
 
 const MINOR = new Set(['de', 'da', 'do', 'das', 'dos', 'e', 'the', 'of', '+']);
 /** The initials of an institution, for its avatar when no official square mark exists: an acronym as it is

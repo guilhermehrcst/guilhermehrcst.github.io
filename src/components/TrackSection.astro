@@ -1,9 +1,11 @@
 ---
 // One section of a guide or a learning track: its title, why it matters, then its content (spec §6.5).
-interface Props { id: string; title: string; why?: string | undefined; track?: string | undefined; featured?: boolean }
-const { id, title, why, track, featured = false } = Astro.props;
+// In a library (Global Navigation V1), `paths` and `bookPaths` name the paths its resources serve, and those
+// its reading materials serve, so a filtered view can hide a section that holds nothing for its path.
+interface Props { id: string; title: string; why?: string | undefined; track?: string | undefined; featured?: boolean; paths?: readonly string[]; bookPaths?: readonly string[] }
+const { id, title, why, track, featured = false, paths, bookPaths } = Astro.props;
 ---
-<section class="track wrap" id={id} aria-labelledby={`${id}-title`} data-track={track} data-featured={featured || undefined}>
+<section class="track wrap" id={id} aria-labelledby={`${id}-title`} data-track={track} data-featured={featured || undefined} data-group-paths={paths?.join(' ')} data-book-paths={bookPaths?.join(' ')}>
   <div class="head">
     <h2 id={`${id}-title`}>{title}</h2>
     {why && <p class="why">{why}</p>}

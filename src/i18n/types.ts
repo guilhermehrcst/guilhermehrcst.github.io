@@ -36,14 +36,21 @@ export interface Dict {
   ogLocale: 'pt_BR';
   siteName: 'Pexis Academy';
   skip: string;
-  nav: { label: string; home: string; mobile: string; menu: string; paths: string; choose: string; explorePaths: string; search: string };
+  nav: {
+    label: string; home: string; mobile: string; menu: string; paths: string; search: string;
+    types: Record<'cursos' | 'livros' | 'provas', { label: string; what: string }>;
+    count: (n: number) => string;
+    explore: (name: string) => string;
+    of: (name: string) => string;
+    libraries: string; allCourses: string; allMaterials: string;
+  };
   breadcrumb: { label: string; home: string };
   footer: {
     subjects: string;
     verified: (date: string) => string;
     licenses: string;
     independence: string;
-    nav: { explore: string; search: string; about: string; verification: string };
+    nav: { courses: string; materials: string; explore: string; search: string; about: string; verification: string };
     about: string;
     formation: string;
     explore: string;
@@ -91,6 +98,7 @@ export interface Dict {
     all: string;
     empty: string;
     emptyPath: (path: string) => string;
+    view: (path: string, n: number) => string;
     search: string;
     page: { provider: string; facts: string; summary: string; modules: string; checked: (date: string) => string; open: string; watch: string; related: string; back: string };
   };
@@ -100,6 +108,7 @@ export interface Dict {
     count: (n: number) => string;
     note: string;
     other: Record<'cursos' | 'materiais', { label: string; text: string }>;
+    views: { all: string; count: (n: number) => string; empty: Record<'livros' | 'provas', (path: string) => string> };
   };
   superior: {
     note: string;

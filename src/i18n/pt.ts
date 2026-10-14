@@ -7,14 +7,32 @@ export const pt: Dict = {
   ogLocale: 'pt_BR',
   siteName: 'Pexis Academy',
   skip: 'Pular para o conteúdo',
-  nav: { label: 'Principal', home: 'Pexis Academy, página inicial', mobile: 'Menu principal', menu: 'Menu', paths: 'Caminhos', choose: 'Escolha seu caminho', explorePaths: 'Explorar caminhos', search: 'Buscar' },
+  nav: {
+    label: 'Principal',
+    home: 'Pexis Academy, página inicial',
+    mobile: 'Menu principal',
+    menu: 'Menu',
+    paths: 'Caminhos',
+    search: 'Buscar',
+    types: {
+      cursos: { label: 'Cursos', what: 'Cursos, playlists e videoaulas' },
+      livros: { label: 'Livros', what: 'Livros digitais, apostilas e leituras' },
+      provas: { label: 'Provas', what: 'Provas anteriores, simulados e gabaritos' },
+    },
+    count: (n) => (n === 1 ? '1 publicado' : `${n} publicados`),
+    explore: (name) => `Explorar ${name}`,
+    of: (name) => `de ${name}`,
+    libraries: 'Bibliotecas',
+    allCourses: 'Todos os cursos',
+    allMaterials: 'Todos os materiais',
+  },
   breadcrumb: { label: 'Você está em', home: 'Início' },
   footer: {
     subjects: 'Matérias',
     verified: (date) => `Recursos verificados em ${date}.`,
     licenses: 'Licenças',
     independence: 'A Pexis Academy é um produto da Pexis, independente das instituições cujos materiais indica.',
-    nav: { explore: 'Explorar', search: 'Buscar', about: 'Sobre', verification: 'Como verificamos' },
+    nav: { courses: 'Cursos', materials: 'Materiais', explore: 'Explorar', search: 'Buscar', about: 'Sobre', verification: 'Como verificamos' },
     about: 'Uma plataforma gratuita para estudar com direção: organiza, por caminho, área e matéria, materiais gratuitos verificados na fonte.',
     formation: 'Formação',
     explore: 'Explorar',
@@ -207,6 +225,7 @@ export const pt: Dict = {
     all: 'Tudo',
     empty: 'Ainda não há cursos publicados. Os primeiros chegam assim que forem verificados na fonte.',
     emptyPath: (path) => `Ainda não há cursos de ${path} publicados. Eles entram aqui assim que forem verificados na fonte.`,
+    view: (path, n) => `${path}: ${n === 1 ? '1 curso' : `${n} cursos`}`,
     search: 'Buscar nos cursos',
     page: {
       provider: 'Oferecido por',
@@ -227,6 +246,14 @@ export const pt: Dict = {
     other: {
       cursos: { label: 'Ver os cursos', text: 'Procurando cursos, trilhas e videoaulas?' },
       materiais: { label: 'Ver os materiais', text: 'Procurando exercícios, simulados e provas anteriores?' },
+    },
+    views: {
+      all: 'Ver todos os materiais',
+      count: (n) => (n === 1 ? '1 publicado' : `${n} publicados`),
+      empty: {
+        livros: (path) => `Ainda não há livros, apostilas ou leituras de ${path} publicados. Entram aqui assim que passarem pela verificação editorial.`,
+        provas: (path) => `Ainda não há provas anteriores ou simulados de ${path} publicados. Entram aqui assim que forem verificados na fonte.`,
+      },
     },
   },
   superior: {
