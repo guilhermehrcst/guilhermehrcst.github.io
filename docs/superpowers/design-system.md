@@ -26,6 +26,8 @@ The stack is Astro with plain CSS:
 | `--tint-brand` / `--tint-sand` | `#f6e9ea` / `#efe7da` | Quiet grounds. |
 | `--ink` / `--muted` | `#1d2125` / `#565c63` | Text and secondary text. |
 | `--rule` / `--rule-strong` | `#e2ddd4` / `#cfc8bb` | Hairlines. |
+| `--sage` `--peach` `--sky` `--cream` `--blush` `--sand` | `#d3e5c1` `#fbd2b6` `#cfe0f3` `#f3e2bb` `#f5d3d6` `#e8dcc6` | Home V2: the grounds of the six path cards (soft but present, after LabAcademy). Never an action colour. Ink ≥ 11.5:1, muted ≥ 4.8:1, measured. |
+| `--*-deep` | `#a8c98c` `#f3a97c` `#9cbde2` `#dfc07a` `#e3a3a9` `#cdb994` | Home V2: illustration panels and the area cards' ground, never under text (ink on them ≥ 7.7:1). |
 
 ### Measured contrast (`tests/contrast.test.ts`)
 
@@ -72,16 +74,17 @@ The stack is Astro with plain CSS:
 | `SiteFooter` | Wine, with the lockup at 64px. Columns: Institucional, Formação (exams under Vestibular), Matérias, Explorar, then a legal bar with the real licences and attribution. |
 | `PageIntro` | Surface band with a breadcrumb (Início → section), a wine eyebrow, a serif H1 and a lead. |
 | `PreparingNote` | The state of a path in preparation, said once ([data-preparing]). |
-| `ProductWindow` | A decorative window around real product data. It is `aria-hidden`, holds nothing focusable, and is captioned by a real link. |
-| `ObjectiveList` | Editorial index: number, serif name, one line, and real counts or "Em preparação". |
-| `LearningPath` | Five steps on a rail: vertical below 1180px, horizontal above. A pending step links nowhere. |
-| `OfficialSources` | Supplied third-party marks, shown whole, in a ruled panel. |
+| `HomeHero` (V2, McGill) | Editorial split: "Aprenda" in the serif and "com direção." in the sans bold (one h1), one line, the site search (`/buscar/?q=`, native GET), the library as a button and the paths as a large underlined wine link. Beside it one photograph with square corners (a real course, named in the caption) and the wine disc with the symbol over its edge. |
+| `HomePaths` + `PathArt` (V2, LabAcademy) | Wide cards on present soft grounds: an original illustration in a cut-corner panel at the top right, a white arrow disc opposite, an outlined pill with the real count or "Em preparação", the serif name and a line. The middle card of each row is turned over. On a phone, a compact row. |
+| `HomeCourseFeature` (V2, ART Course) | An immersive portrait card: the course photo under a dark veil, or a wine or ink ground with the area's signs; the label large in the serif, the title, the institution, the facts; the avatar and the stated duration at the foot. A staggered row. No invented metric. |
+| `HomeAreas` (V2, Prolingo) | Tall cards over a field of the area's signs (CSS generated content), a frosted panel with the name and the subjects as links, turned ±1.5° until hovered or focused. |
+| `OfficialSources` | Supplied third-party marks, shown whole, in a ruled panel (Home V2: the body of `#fontes`). |
 | `AreaList` | Editorial grid of areas, with subjects as 44px rows. |
 | `SectionNav` (V0.4) | In-page navigation of a long path page: ruled rows (label, one muted line), two columns from 768px, each leading to a section id. verify-dist checks it lists every section of the page, in order. |
 | `FeaturedResources` (V0.4) | A path's ten editorial highlights (`#destaques`, `[data-featured]`). Renders nothing until the path's selection is complete and valid; never on a path in preparation. |
 | `ResourceGroups` (V0.4) | Resources by what the student does: Para estudar, Para praticar (practice, past exams, simulators), Para consultar (reference). Empty groups are omitted. |
 
-**Cards** are used only where a unit is self-contained: an exam on Vestibular, a featured path, a mark.
+**Cards** are used only where a unit is self-contained: an exam on Vestibular, a featured path, a mark, and (Home V2) a path, a featured course and an area of the Home.
 Lists are ruled rows.
 
 **Buttons and links.**
@@ -92,7 +95,7 @@ Lists are ruled rows.
 
 ## Motion
 
-Only hover and focus transitions (180ms) and the hero's entrance. All of it is off under
+Only hover and focus transitions (180ms; on the Home V2 cards a 3–4px lift, a slight zoom of the illustration or photo, and the area cards straightening) and the hero's entrance. All of it is off under
 `prefers-reduced-motion` (global rule, checked in dist). There is no scroll hijacking, parallax or
 carousel.
 

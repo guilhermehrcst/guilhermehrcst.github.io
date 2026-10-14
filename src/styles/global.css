@@ -25,6 +25,21 @@
   --tint-brand: #f6e9ea;
   --tint-sand: #efe7da;
   --rule-strong: #cfc8bb;
+  /* Home V2: the grounds of the path cards (after the LabAcademy reference: soft, but present), each with a
+     deeper tone used only behind an illustration or a frosted panel, never under text. The wine stays the one
+     identity colour; these never carry an action. Text on the light tones is measured. */
+  --sage: #d3e5c1;
+  --sage-deep: #a8c98c;
+  --peach: #fbd2b6;
+  --peach-deep: #f3a97c;
+  --sky: #cfe0f3;
+  --sky-deep: #9cbde2;
+  --cream: #f3e2bb;
+  --cream-deep: #dfc07a;
+  --blush: #f5d3d6;
+  --blush-deep: #e3a3a9;
+  --sand: #e8dcc6;
+  --sand-deep: #cdb994;
 
   --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   /* Newsreader (OFL-1.1, self-hosted): the academic voice of the display type. Body text stays sans. */
