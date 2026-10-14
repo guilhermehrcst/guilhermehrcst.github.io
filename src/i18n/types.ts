@@ -82,6 +82,15 @@ export interface Dict {
     scope: string;
   };
   explore: { paths: string; areas: string };
+  /** /cursos/ (V0.6): the course grid and a course's own page. */
+  courseLibrary: {
+    catalogue: string;
+    filterLegend: string;
+    all: string;
+    empty: string;
+    search: string;
+    page: { provider: string; facts: string; summary: string; modules: string; checked: (date: string) => string; open: string; watch: string; related: string; back: string };
+  };
   /** /cursos/ and /materiais/ (V0.5): a group heading per format, the count line, and where to go next. */
   library: {
     groups: Record<LearningFormatId, string>;

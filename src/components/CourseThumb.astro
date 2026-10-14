@@ -1,0 +1,75 @@
+---
+// A course's 16:9 thumbnail (V0.6). One of the images supplied for the catalogue (curated.image, src/assets/
+// courses) when the record declares one: a photo fills the frame, a graphic is shown whole on paper, never
+// cut. Otherwise the Academy's own frame: the course's track, subject or path in Newsreader, and who offers
+// it. Decorative: the title beside it names the course, so the thumbnail is hidden from assistive tech.
+// Local files only: no request to a third party, ever.
+import { Image } from 'astro:assets';
+import { resourceImages } from '../lib/resource-images';
+import type { PublishedLearningResource } from '../lib/learning-resources';
+
+interface Props { resource: PublishedLearningResource; label: string; eager?: boolean; sizes?: string }
+const { resource: r, label, eager = false, sizes = '(min-width: 1100px) 360px, (min-width: 600px) 45vw, 92vw' } = Astro.props;
+const image = r.curated?.image;
+// A photo, or a graphic about as wide as the frame (its catalogue ratio), fills the frame at its declared
+// focal point, which trims the letterbox bars of the supplied files; a graphic of another shape (a poster)
+// is shown whole.
+const fill = image ? image.kind === 'photo' || (image.ratio ?? 0) >= 1.6 : false;
+// The frame's ground follows the course's first path: sand for Tecnologia and Ensino Superior, rose otherwise.
+const ground = r.paths.some((path) => path === 'tecnologia' || path === 'ensino-superior') ? 'sand' : 'rose';
+---
+<div class:list={['thumb', image ? (fill ? 'is-fill' : 'is-whole') : ['is-frame', ground]]} aria-hidden="true" data-thumb={image ? 'image' : 'frame'}>
+  {image ? (
+    <Image
+      src={resourceImages[image.id]}
+      alt=""
+      widths={[360, 540, 720, 1080]}
+      sizes={sizes}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      style={fill && image.position ? `object-position: ${image.position}` : undefined}
+    />
+  ) : (
+    <>
+      <span class="label">{label}</span>
+      <span class="by" translate="no">{r.provider}</span>
+    </>
+  )}
+</div>
+
+<style>
+  .thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    container-type: inline-size;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+  }
+  .thumb :global(img) { display: block; width: 100%; height: 100%; }
+  .is-fill :global(img) { object-fit: cover; }
+  .is-whole { background: var(--raised); }
+  .is-whole :global(img) { object-fit: contain; }
+
+  /* The Academy's frame: paper, a wine rule, the label set large, the provider small. */
+  .is-frame {
+    display: grid;
+    align-content: space-between;
+    padding: clamp(14px, 4%, 22px);
+    background: linear-gradient(90deg, var(--brand) 0 4px, transparent 4px), var(--tint-brand);
+  }
+  .is-frame.sand { background: linear-gradient(90deg, var(--brand) 0 4px, transparent 4px), var(--tint-sand); }
+  .label {
+    max-width: 14ch;
+    padding-left: 6px;
+    font-family: var(--serif);
+    font-size: clamp(1.375rem, 8.5cqi, 2.375rem);
+    font-weight: 460;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--brand);
+    text-wrap: balance;
+  }
+  .by { padding-left: 6px; font-size: clamp(0.8125rem, 3.6cqi, 0.9375rem); font-weight: 560; letter-spacing: 0.01em; color: var(--muted); }
+</style>
