@@ -37,9 +37,9 @@ test('L001: the Superior summary names the three fields shown, in the menu and o
   assert.equal(copy.objectiveSummaryFor?.('ensino-superior'), 'Materiais gratuitos de nível superior em Matemática, Computação e Psicologia.');
 });
 
-test('the "Explorar" menu reads the path summaries from the shared source, not the fixed text', async () => {
+test('the header states no path summary of its own, so it never repeats a stale claim about Superior (Global Navigation V1)', async () => {
   const { readFileSync } = await import('node:fs');
   const header = readFileSync(new URL('../src/components/SiteHeader.astro', import.meta.url), 'utf8');
-  assert.match(header, /objectiveSummaryFor\(item\.id\)/);
-  assert.doesNotMatch(header, /t\.home\.objectives\.items\[item\.id\]/);
+  assert.doesNotMatch(header, /t\.home\.objectives\.items/);
+  assert.doesNotMatch(header, /superior-copy|objectiveSummaryFor/);
 });

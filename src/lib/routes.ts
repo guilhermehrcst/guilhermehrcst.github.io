@@ -1,7 +1,7 @@
 // Every internal URL, derived from the taxonomy (spec §6.2). Pages never write an internal path by
 // hand: they ask here. URLs stay short and human; the technical grouping stays in the code.
 import { COURSE_PRESENTATIONS } from './course-presentations.ts';
-import { ACADEMIC_SUBJECTS, EXAM_ORDER, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECTS, type ObjectiveId, type SubjectId } from './taxonomy.ts';
+import { ACADEMIC_SUBJECTS, EXAM_ORDER, PATH_ORDER, PREPARING_PATHS, SUBJECTS, type ObjectiveId, type SubjectId } from './taxonomy.ts';
 
 const objective = (id: ObjectiveId): string => `/${id}/`;
 
@@ -59,28 +59,4 @@ export const LEGACY_REDIRECTS: Readonly<Record<string, string>> = {
   '/pt/cursos/enem/': objective('enem'),
   '/courses/uerj/': objective('uerj'),
   '/pt/cursos/uerj/': objective('uerj'),
-};
-
-/** The header (V0.5): Cursos and Materiais, the "Explorar" menu with the six paths, then search as an icon. */
-export const HEADER_NAV: readonly { label: string; href: string }[] = [
-  { label: 'Cursos', href: routes.courses },
-  { label: 'Materiais', href: routes.materials },
-];
-
-/** The header's "Explorar" menu: the six paths, in the approved order. Nothing else. */
-export const EXPLORE_MENU = {
-  label: 'Explorar',
-  items: PATH_ORDER.map((id) => ({ id, label: OBJECTIVES[id].label, href: objective(id) })),
-} as const;
-
-export type HeaderSection = 'cursos' | 'materiais' | 'explorar' | 'buscar';
-
-/** The header item a page belongs to: a library, search, or Explorar for the paths, the exams inside
- *  Vestibular and the subjects (the /materias/ hub is Explorar's own page). Null when none holds it. */
-export const sectionOf = (path: string): HeaderSection | null => {
-  if (path.startsWith(routes.courses)) return 'cursos';
-  if (path === routes.materials) return 'materiais';
-  if (path === routes.search) return 'buscar';
-  if ([...PATH_ORDER, ...EXAM_ORDER].some((id) => objective(id) === path) || path.startsWith(routes.subjectIndex)) return 'explorar';
-  return null;
 };

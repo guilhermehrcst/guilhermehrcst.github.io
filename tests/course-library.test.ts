@@ -4,7 +4,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { COURSE_FILTER_ORDER, courseCards, emptyFilterPaths, initialsOf, libraryCourses, thumbLabelOf } from '../src/lib/course-library.ts';
+import { COURSE_FILTER_ORDER, courseCards, initialsOf, libraryCourses, thumbLabelOf } from '../src/lib/course-library.ts';
+import { libraryViews } from '../src/lib/global-nav.ts';
 import { COURSE_PRESENTATIONS, presentationProblems, type CoursePresentation } from '../src/lib/course-presentations.ts';
 import { libraryGroups } from '../src/lib/libraries.ts';
 import { publishedResources, type PublishedLearningResource } from '../src/lib/learning-resources.ts';
@@ -41,17 +42,18 @@ test('the fallback label is an existing grouping: a track, a subject or a path',
   assert.equal(thumbLabelOf({ id: 'x', subject: null, paths: ['ensino-superior'] }), 'Ensino Superior');
 });
 
-test('the filters (V0.7): every path in the owner\'s order; an empty one answers with its empty state', () => {
+test('the filters (V0.7, URLs since Global Navigation V1): every path in the owner\'s order; an empty one answers with its empty state', () => {
   assert.deepEqual([...COURSE_FILTER_ORDER], ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar']);
   assert.deepEqual([...COURSE_FILTER_ORDER].sort(), [...PATH_ORDER].sort());
-  const empty = emptyFilterPaths(cards);
-  for (const path of COURSE_FILTER_ORDER) assert.equal(empty.includes(path), !cards.some((c) => c.paths.includes(path)), path);
-  assert.deepEqual(emptyFilterPaths([]), [...COURSE_FILTER_ORDER]);
+  // Each path's view counts exactly the cards that serve it; zero is the empty state.
+  const views = libraryViews('cursos');
+  for (const path of COURSE_FILTER_ORDER) assert.equal(views.find((v) => v.path === path)!.count, cards.filter((c) => c.paths.includes(path)).length, path);
+  assert.ok(libraryViews('cursos', []).every((v) => v.count === 0));
   assert.deepEqual(libraryCourses([]), []);
   const library = read('src/components/CourseLibrary.astro');
   for (const path of PATH_ORDER) {
-    assert.match(library, new RegExp(`#caminho-${path}:checked\\) \\.grid > :global\\(li:not\\(\\[data-paths~='${path}'\\]\\)\\)`), path);
-    assert.match(library, new RegExp(`#caminho-${path}:checked\\) \\.empty\\[data-empty-for='${path}'\\]`), path);
+    assert.match(library, new RegExp(`#cursos-${path}:target\\) \\.grid > :global\\(li:not\\(\\[data-paths~='${path}'\\]\\)\\)`), path);
+    assert.match(library, new RegExp(`#cursos-${path}:target\\) \\.chip\\[data-filter='${path}'\\] span`), path);
   }
   assert.doesNotMatch(library, /class="n"/, 'no counts in the chips');
   assert.match(read('scripts/verify-dist.mjs'), /const COURSE_FILTERS = \['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar'\];/);
@@ -77,7 +79,7 @@ test('one institutional theme: no dark mode, the bottom navigation on /cursos/ a
   }
   assert.match(read('src/layouts/Base.astro'), /<meta name="theme-color" content="#faf8f4">/);
   // The chosen chip is the brand red with white text; the bottom navigation marks its page in the brand red.
-  assert.match(read('src/components/CourseLibrary.astro'), /input:checked \+ label \{ background: var\(--brand\); color: var\(--on-brand\); \}/);
+  assert.match(read('src/components/CourseLibrary.astro'), /\.chip\[data-filter='pre-militar'\] span \{ background: var\(--brand\); color: var\(--on-brand\); \}/);
   assert.match(read('src/components/BottomNav.astro'), /a\[aria-current='page'\] \{ color: var\(--brand\);/);
 });
 

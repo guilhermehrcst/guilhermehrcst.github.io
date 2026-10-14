@@ -1,8 +1,9 @@
 ---
-// The video library's bottom navigation (V0.7), below 1280px: five real places of the Academy, icon over a
+// The video library's bottom navigation (V0.7), below 1024px: five real places of the Academy, icon over a
 // short label, the current one in the brand red under a short red rule. Fixed to the bottom edge above the safe area (iPhone, iPad), and the
-// page reserves its height so it never covers content. From 1280px the header carries the same places and
-// this bar is hidden. Native links: no JavaScript.
+// page reserves its height so it never covers content. From 1024px (Global Navigation V1) the header's full
+// line takes over and this bar is hidden; below it the header leaves search to this bar. Native links: no
+// JavaScript.
 import HomeIcon from './icons/radix/HomeIcon.astro';
 import VideoIcon from './icons/radix/VideoIcon.astro';
 import ReaderIcon from './icons/radix/ReaderIcon.astro';
@@ -68,7 +69,7 @@ const items = [
   a:focus-visible { outline: 2px solid var(--action); outline-offset: -4px; border-radius: 8px; }
   /* The page keeps room for the bar, so the last row of courses and the footer stay readable. */
   :global(html[data-bottom-nav]) :global(body) { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
-  @media (min-width: 1280px) {
+  @media (min-width: 1024px) {
     .bottom-nav { display: none; }
     :global(html[data-bottom-nav]) :global(body) { padding-bottom: 0; }
   }

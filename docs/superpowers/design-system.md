@@ -62,16 +62,18 @@ The stack is Astro with plain CSS:
   element (fixed twice in V0.3).
 - **Breakpoints.**
   - 640px: two columns appear.
-  - 900px: the header menus become desktop menus; editorial rows go to one line.
-  - 1024px: the hero becomes two columns.
+  - 900px: editorial rows go to one line.
+  - 1024px: the hero becomes two columns; the header shows its line of six paths (where popovers exist)
+    and the bottom navigation of /cursos/ gives way.
   - 1180px: five-column modules and the full footer.
 
 ## Components
 
 | Component | What it is |
 | --- | --- |
-| `SiteHeader` | Wine bar with the white lockup, 46px tall: the minimum size at which ACADEMY keeps 6px letters. "Explorar" is a `<details>` menu of the six paths plus "Todas as matérias", followed by four direct links. Below 900px, a single "Menu" `<details>`. `aria-current="page"` marks the current page; a hairline marks the section. Sticky, 65px, one row at every width. |
-| `SiteFooter` | Wine, with the lockup at 64px. Columns: Institucional, Formação (exams under Vestibular), Matérias, Explorar, then a legal bar with the real licences and attribution. |
+| `SiteHeader` (Global Navigation V1) | Wine bar with the white lockup, 46px tall: the minimum size at which ACADEMY keeps 6px letters. From 1024px, the six paths in the owner's order (Fundamental, Médio, Pré-Militar, Vestibular, Superior, Tecnologia), each a `<button popovertarget>` that opens a small paper menu anchored under it: Cursos, Livros, Provas (an icon, a line, the published count; "Em preparação" and no link when nothing is published), then "Explorar [caminho]". Escape, a click outside or another menu closes it. Search follows as a named icon. Below 1024px, or without popovers, a single "Menu" `<details>` sheet: the six paths as an accordion of `<details name>`, then the two libraries; at 320px the button keeps only its icon. `aria-current="true"` marks the current path's button (its page or an exam inside it); a library view marks it by `:target`. Sticky, 65px, no JavaScript. |
+| `SiteFooter` | Wine, with the lockup at 64px. Columns: Institucional, Formação (exams under Vestibular), Matérias, Explorar (Cursos and Materiais first: the general libraries), then a legal bar with the real licences and attribution. |
+| Library views (Global Navigation V1) | `/cursos/?caminho=X#cursos-X` and `/materiais/?caminho=X&tipo=provas#provas-X` (or `livros`): one static page per library, the view selected by the fragment and answered in CSS (`:target` with `:has`). The view titles itself and states an empty kind; the chips of /cursos/ are links to the same URLs. Provas are past exams and simulados, never practice; Livros are only references an editor classified in `src/lib/books.ts` (empty today). |
 | `PageIntro` | Surface band with a breadcrumb (Início → section), a wine eyebrow, a serif H1 and a lead. |
 | `PreparingNote` | The state of a path in preparation, said once ([data-preparing]). |
 | `HomeHero` (V2, McGill) | Editorial split: "Aprenda" in the serif and "com direção." in the sans bold (one h1), one line, the site search (`/buscar/?q=`, native GET), the library as a button and the paths as a large underlined wine link. Beside it one photograph with square corners (a real course, named in the caption) and the wine disc with the symbol over its edge. |
@@ -101,7 +103,8 @@ carousel.
 
 ## Barriers
 
-`scripts/verify-dist.mjs` checks the built site: the header and footer on the wine, the menus, the
+`scripts/verify-dist.mjs` checks the built site: the header and footer on the wine, the menus (and that
+every count and "Em preparação" in them agrees with what the libraries really hold), the
 breadcrumbs, the six paths, the preparing pages, the official lockup and icons, the contrast-relevant
 tokens, links and anchors.
 

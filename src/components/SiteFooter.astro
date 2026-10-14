@@ -1,8 +1,9 @@
 ---
 // The institutional footer (V0.3): the brand wine, closing every page. Institucional (the official
 // lockup, what the Academy is, when the catalogue was last verified, its independence), Formação (the six
-// paths, with Vestibular's exams under it), Matérias, Explorar, then a bar with the real licences and the
-// attribution of third-party names. Every link is a real page or anchor (verify-dist checks both, and that
+// paths, with Vestibular's exams under it), Matérias, Explorar (the two libraries first: since Global
+// Navigation V1 the header holds the paths, and the libraries are reached here, from the Home and from
+// search), then a bar with the real licences and the attribution of third-party names. Every link is a real page or anchor (verify-dist checks both, and that
 // the footer reaches every path, exam and subject). No legal policy is invented.
 import { Image } from 'astro:assets';
 import lockup from '../assets/brand/lockup-white.png';
@@ -52,6 +53,8 @@ const paths = PATH_ORDER.map((id) => ({
     <nav aria-label={f.explore}>
       <p class="label">{f.explore}</p>
       <ul role="list">
+        <li><a href={routes.courses}>{f.nav.courses}</a></li>
+        <li><a href={routes.materials}>{f.nav.materials}</a></li>
         <li><a href={routes.subjectIndex}>{f.nav.explore}</a></li>
         <li><a href={routes.search}>{f.nav.search}</a></li>
         <li><a href={routes.about}>{f.nav.about}</a></li>

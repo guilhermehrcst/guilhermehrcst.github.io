@@ -30,8 +30,8 @@ export const superiorCopyFor = (
   return t.superior.byAreas(names);
 };
 
-/** The one-line summary of a path, wherever it is shown (Home objectives, the "Explorar" menu). Superior
- *  follows its published groups; the other paths keep their fixed text. */
+/** The one-line summary of a path, wherever one is shown (the header shows none since Global Navigation
+ *  V1). Superior follows its published groups; the other paths keep their fixed text. */
 export const objectiveSummaryFor = (
   id: keyof typeof t.home.objectives.items,
   groups: readonly Pick<HigherEducationGroup, 'id' | 'label'>[] = HIGHER_EDUCATION_GROUPS,

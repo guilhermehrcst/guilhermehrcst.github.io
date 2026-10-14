@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { canonicalPaths, EXPLORE_MENU, HEADER_NAV, LEGACY_REDIRECTS, preparingPaths, routes, sectionOf } from '../src/lib/routes.ts';
+import { canonicalPaths, LEGACY_REDIRECTS, preparingPaths, routes } from '../src/lib/routes.ts';
 
 // Written out by hand on purpose: an independent barrier against an accidental change to routes.ts
 // (spec R10). scripts/verify-dist.mjs carries its own copy.
@@ -59,37 +59,3 @@ test('legacy routes redirect to existing canonical pages; the résumé is gone',
   assert.ok(!('/pt/curriculo/' in LEGACY_REDIRECTS));
 });
 
-test('the header (V0.5): Cursos, Materiais, then the Explorar menu with the six paths and nothing else', () => {
-  assert.deepEqual(HEADER_NAV.map((item) => [item.label, item.href]), [
-    ['Cursos', '/cursos/'],
-    ['Materiais', '/materiais/'],
-  ]);
-  assert.equal(EXPLORE_MENU.label, 'Explorar');
-  assert.deepEqual(EXPLORE_MENU.items.map((item) => [item.label, item.href]), [
-    ['Ensino Fundamental', '/ensino-fundamental/'],
-    ['Ensino Médio', '/ensino-medio/'],
-    ['Vestibular', '/vestibulares/'],
-    ['Pré-Militar', '/pre-militar/'],
-    ['Ensino Superior', '/ensino-superior/'],
-    ['Tecnologia', '/tecnologia/'],
-  ]);
-  assert.ok(!('all' in EXPLORE_MENU), 'the menu lists the six paths only');
-  assert.equal(routes.search, '/buscar/');
-  // Every destination of the header is a page that is built.
-  for (const href of [...HEADER_NAV, ...EXPLORE_MENU.items].map((i) => i.href)) {
-    assert.ok([...canonicalPaths(), ...preparingPaths()].includes(href), href);
-  }
-});
-
-test('a section of the header is current on its own page and on the pages inside it', () => {
-  assert.equal(sectionOf('/cursos/'), 'cursos');
-  assert.equal(sectionOf('/materiais/'), 'materiais');
-  assert.equal(sectionOf('/buscar/'), 'buscar');
-  for (const path of ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/pre-militar/', '/ensino-superior/', '/tecnologia/', '/materias/', '/materias/fisica/']) {
-    assert.equal(sectionOf(path), 'explorar', path);
-  }
-  assert.equal(sectionOf('/'), null);
-  assert.equal(sectionOf('/sobre/'), null);
-  // A legacy route that once meant "courses" is not the new library.
-  assert.equal(sectionOf('/pt/cursos/'), null);
-});
