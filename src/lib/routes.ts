@@ -1,5 +1,6 @@
 // Every internal URL, derived from the taxonomy (spec §6.2). Pages never write an internal path by
 // hand: they ask here. URLs stay short and human; the technical grouping stays in the code.
+import { COURSE_PRESENTATIONS } from './course-presentations.ts';
 import { ACADEMIC_SUBJECTS, EXAM_ORDER, OBJECTIVES, PATH_ORDER, PREPARING_PATHS, SUBJECTS, type ObjectiveId, type SubjectId } from './taxonomy.ts';
 
 const objective = (id: ObjectiveId): string => `/${id}/`;
@@ -25,6 +26,11 @@ export const routes = {
   /** The two libraries (header V0.5): every published resource, by what it is. */
   courses: '/cursos/',
   materials: '/materiais/',
+  /** A course's own page: only for a course with a presentation (src/lib/course-presentations.ts). */
+  course: (id: string): string => {
+    if (!COURSE_PRESENTATIONS.some((p) => p.id === id)) throw new Error(`routes: course ${id} has no page`);
+    return `/cursos/${id}/`;
+  },
 } as const;
 
 /** The indexable pages, in a stable order: each ready path, with Vestibular's exams right after it. */
@@ -35,6 +41,7 @@ export const canonicalPaths = (): string[] => [
   routes.subjectIndex,
   ...ACADEMIC_SUBJECTS.map(subject),
   routes.courses,
+  ...COURSE_PRESENTATIONS.map((p) => `/cursos/${p.id}/`),
   routes.materials,
   routes.search,
   routes.about,
@@ -71,7 +78,7 @@ export type HeaderSection = 'cursos' | 'materiais' | 'explorar' | 'buscar';
 /** The header item a page belongs to: a library, search, or Explorar for the paths, the exams inside
  *  Vestibular and the subjects (the /materias/ hub is Explorar's own page). Null when none holds it. */
 export const sectionOf = (path: string): HeaderSection | null => {
-  if (path === routes.courses) return 'cursos';
+  if (path.startsWith(routes.courses)) return 'cursos';
   if (path === routes.materials) return 'materiais';
   if (path === routes.search) return 'buscar';
   if ([...PATH_ORDER, ...EXAM_ORDER].some((id) => objective(id) === path) || path.startsWith(routes.subjectIndex)) return 'explorar';

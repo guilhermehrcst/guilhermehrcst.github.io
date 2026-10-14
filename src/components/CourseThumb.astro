@@ -1,0 +1,88 @@
+---
+// A course's 16:9 thumbnail (V0.7, the video library). One of the images supplied for the catalogue
+// (curated.image, src/assets/courses) when the record declares one: a photo, or a graphic about as wide as
+// the frame, fills it at its declared focal point; a graphic of another shape (a poster) is shown whole.
+// Otherwise the Academy's standard cover: light paper, the official white symbol on its brand-red plate, the
+// course's track, subject or path, and who offers it, small. A duration the source states sits in the bottom right corner, never
+// one that it does not. Decorative: the title beside it names the course. Local files only.
+import { Image } from 'astro:assets';
+import symbol from '../assets/brand/symbol-white.png';
+import { resourceImages } from '../lib/resource-images';
+import type { PublishedLearningResource } from '../lib/learning-resources';
+import { pt as t } from '../i18n/pt';
+
+interface Props { resource: PublishedLearningResource; label: string; eager?: boolean; sizes?: string }
+const { resource: r, label, eager = false, sizes = '(min-width: 1440px) 24vw, (min-width: 900px) 32vw, (min-width: 560px) 48vw, 100vw' } = Astro.props;
+const image = r.curated?.image;
+const fill = image ? image.kind === 'photo' || (image.ratio ?? 0) >= 1.6 : false;
+const duration = r.duration ? `${r.duration.value} ${t.resource.units[r.duration.unit]}` : null;
+---
+<div class:list={['thumb', image ? (fill ? 'is-fill' : 'is-whole') : 'is-cover']} data-thumb={image ? 'image' : 'frame'}>
+  <div class="art" aria-hidden="true">
+    {image ? (
+      <Image
+        src={resourceImages[image.id]}
+        alt=""
+        widths={[360, 540, 720, 1080]}
+        sizes={sizes}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        style={fill && image.position ? `object-position: ${image.position}` : undefined}
+      />
+    ) : (
+      <>
+        <span class="plate"><Image class="symbol" src={symbol} alt="" height={20} densities={[1, 2, 3]} format="png" /></span>
+        <span class="label">{label}</span>
+        <span class="by" translate="no">{r.provider}</span>
+      </>
+    )}
+  </div>
+  {duration && <span class="duration" data-duration>{duration}</span>}
+</div>
+
+<style>
+  .thumb { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: var(--surface); container-type: inline-size; }
+  .art { position: absolute; inset: 0; }
+  .art > :global(img) { display: block; width: 100%; height: 100%; }
+  .is-fill .art > :global(img) { object-fit: cover; }
+  .is-whole { background: var(--raised); box-shadow: inset 0 0 0 1px var(--rule); }
+  .is-whole .art > :global(img) { object-fit: contain; }
+
+  /* The Academy's cover: paper with a quiet brand tint, the symbol on its plate, one short line, who offers it. */
+  .is-cover .art {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    align-items: end;
+    padding: 7cqi 7cqi 6cqi;
+    background: radial-gradient(130% 120% at 100% 0%, var(--tint-brand) 0%, var(--surface) 62%);
+    box-shadow: inset 0 0 0 1px var(--rule);
+    border-radius: inherit;
+  }
+  .plate { display: grid; place-items: center; width: clamp(28px, 11cqi, 40px); aspect-ratio: 1; border-radius: 22%; background: var(--brand); }
+  .plate :global(.symbol) { display: block; width: 62%; height: auto; }
+  .label {
+    max-width: 18ch;
+    font-size: clamp(0.9375rem, 5.6cqi, 1.3125rem);
+    font-weight: 650;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .by { margin-top: 1.5cqi; font-size: clamp(0.6875rem, 3.4cqi, 0.8125rem); font-weight: 500; color: var(--muted); }
+
+  /* A stated duration, as a time stamp in the corner. */
+  .duration {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgb(29 33 37 / 0.86);
+    color: var(--on-brand);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

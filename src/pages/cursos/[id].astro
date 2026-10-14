@@ -1,0 +1,95 @@
+---
+// /cursos/<id>/ (V0.6): a course's own page, built only for a course with a presentation
+// (src/lib/course-presentations.ts). Breadcrumb and title, the 16:9 thumbnail, who offers it and its
+// verified facts, the summary read at the source, the modules only as the source lists them, one action
+// to the source, and related courses from the catalogue (same paths). A video is a link to YouTube,
+// never an embed: the page makes no request to a third party. No presentation, no page.
+import Base from '../../layouts/Base.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import CourseThumb from '../../components/CourseThumb.astro';
+import CourseCard from '../../components/CourseCard.astro';
+import ExternalLinkIcon from '../../components/icons/radix/ExternalLinkIcon.astro';
+import { courseCards } from '../../lib/course-library';
+import { COURSE_PRESENTATIONS, isYouTube, type CoursePresentation } from '../../lib/course-presentations';
+import { resourceDisplayFacts } from '../../lib/resource-display';
+import { routes } from '../../lib/routes';
+import { OBJECTIVES } from '../../lib/taxonomy';
+import { formatDate } from '../../lib/dates';
+import { pt as t } from '../../i18n/pt';
+
+export const getStaticPaths = () => {
+  const cards = courseCards();
+  return COURSE_PRESENTATIONS.map((presentation) => {
+    const card = cards.find((c) => c.resource.id === presentation.id);
+    if (!card) throw new Error(`cursos/[id]: ${presentation.id} is not a published course`);
+    return { params: { id: presentation.id }, props: { presentation, card } };
+  });
+};
+
+interface Props { presentation: CoursePresentation; card: ReturnType<typeof courseCards>[number] }
+const { presentation: p, card } = Astro.props;
+const r = card.resource;
+const c = t.courseLibrary.page;
+const { overview, access } = resourceDisplayFacts(r, t.resource);
+const youtube = isYouTube(r.url);
+const target = p.video ? `https://www.youtube.com/watch?v=${p.video.youtubeId}` : r.url;
+// Related: other courses that share a path, in catalogue order, at most three.
+const related = courseCards().filter((other) => other.resource.id !== r.id && other.paths.some((path) => card.paths.includes(path))).slice(0, 3);
+const description = p.summary.length > 157 ? `${p.summary.slice(0, 156).replace(/\s+\S*$/, '')}…` : p.summary;
+---
+<Base title={`${r.title} | Pexis Academy`} description={description}>
+  <PageIntro eyebrow={card.paths.map((path) => OBJECTIVES[path].label).join(' · ')} heading={r.title} lead={`${c.provider} ${r.provider}`} crumbs={[{ label: t.pages.cursos.heading, href: routes.courses }]} />
+  <article class="wrap course-page" data-course-page={r.id}>
+    <div class="media"><CourseThumb resource={r} label={card.thumbLabel} eager sizes="(min-width: 1100px) 680px, 92vw" /></div>
+    <div class="side">
+      <h2>{c.facts}</h2>
+      <p class="facts">{[...overview, ...access].join(' · ')}</p>
+      <a class="action" href={target} target="_blank" rel="noopener noreferrer">
+        {youtube || p.video ? c.watch : c.open}<ExternalLinkIcon /><span class="sr-only"> ({t.resource.newTab})</span>
+      </a>
+      <p class="checked">{c.checked(formatDate(p.checkedOn))}</p>
+    </div>
+    <section class="summary" aria-labelledby="resumo-title">
+      <h2 id="resumo-title">{c.summary}</h2>
+      <p>{p.summary}</p>
+      {p.modules && (
+        <>
+          <h3>{c.modules}</h3>
+          <ol class="modules">{p.modules.map((m) => <li>{m}</li>)}</ol>
+        </>
+      )}
+    </section>
+  </article>
+  {related.length > 0 && (
+    <section class="wrap related" aria-labelledby="relacionados-title">
+      <h2 id="relacionados-title">{c.related}</h2>
+      <ul class="grid" role="list" data-resource-list>
+        {related.map((other) => <CourseCard card={other} />)}
+      </ul>
+      <a class="back" href={routes.courses}>{c.back}{' '}<span aria-hidden="true">→</span></a>
+    </section>
+  )}
+</Base>
+
+<style>
+  .course-page { display: grid; gap: var(--space-6); padding-bottom: var(--space-7); }
+  @media (min-width: 1024px) { .course-page { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: start; } .summary { grid-column: 1; } }
+  .side { display: grid; gap: var(--space-4); align-content: start; }
+  .side h2, .summary h2, .related h2 { font-size: var(--fs-h3); }
+  .facts, .checked { color: var(--muted); }
+  .checked { font-size: var(--fs-small); }
+  .action {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+    min-height: 48px; padding-inline: var(--space-5); border-radius: var(--radius);
+    background: var(--action); color: var(--on-action); font-weight: 600; text-decoration: none;
+  }
+  .action:hover { background: var(--action-hover); color: var(--on-action); }
+  .summary { display: grid; gap: var(--space-3); max-width: var(--measure); }
+  .summary h3 { margin-top: var(--space-3); font-size: var(--fs-body); font-weight: 600; }
+  .modules { display: grid; gap: var(--space-2); padding-left: 1.4em; list-style: decimal; }
+  .related { display: grid; gap: var(--space-5); padding-block: var(--space-6) var(--space-8); border-top: 1px solid var(--rule); }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6) var(--space-5); }
+  @media (min-width: 600px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .back { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+</style>

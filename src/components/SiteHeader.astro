@@ -220,4 +220,14 @@ const inSection = (href: string) => sectionOf(href) === section && section !== n
   .sheet-paths a:hover, .sheet-list > li > a:hover, .sheet-explore > summary:hover { color: var(--action); }
   .sheet-paths a[aria-current='page'] { color: var(--action); font-weight: 560; }
   .site-header .sheet :global(:focus-visible) { outline-color: var(--action); }
+  /* The course library (/cursos/, V0.7): the bar spans the page and aligns with the grid's edge. */
+  :global(html[data-bottom-nav]) .bar { max-width: none; padding-inline: var(--library-side, var(--gutter)); }
+  :global(html[data-bottom-nav]) .panel { right: var(--library-side, var(--gutter)); }
+  /* With the bottom navigation (below 1280px) the header keeps the lockup and search only: the bar
+     below carries Cursos, Materiais and Explorar, so nothing is offered twice. */
+  @media (max-width: 1279px) {
+    :global(html[data-bottom-nav]) .desktop,
+    :global(html[data-bottom-nav]) .mobile { display: none; }
+    :global(html[data-bottom-nav]) .compact { display: flex; }
+  }
 </style>

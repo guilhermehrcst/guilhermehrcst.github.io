@@ -34,6 +34,8 @@ const pairs: [string, string, number][] = [
   // The menus open on paper panels under the wine header.
   ['ink', 'raised', 7], ['action', 'raised', 4.5],
   ['ink', 'tint-sand', 7], ['muted', 'tint-sand', 4.5],
+  // The course library (/cursos/, V0.7): chips and avatars on the surface, the chosen chip on the brand.
+  ['ink', 'surface', 7], ['muted', 'surface', 4.5], ['brand', 'raised', 7],
 ];
 for (const [fg, bg, min] of pairs) {
   test(`--${fg} on --${bg} is at least ${min}:1`, () => {

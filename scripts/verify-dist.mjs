@@ -9,6 +9,13 @@ import { join, relative, sep } from 'node:path';
 const DIST = new URL('../dist/', import.meta.url).pathname;
 const SITE = 'https://guilhermehrcst.github.io';
 
+/** The course filters (V0.7), in the owner's order, after "Tudo". A hand-written mirror of
+ *  COURSE_FILTER_ORDER in src/lib/course-library.ts. */
+const COURSE_FILTERS = ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar'];
+/** Course pages (V0.6): /cursos/<id>/ for each course with a presentation. A hand-written mirror of
+ *  COURSE_PRESENTATIONS in src/lib/course-presentations.ts; empty until a presentation is approved. */
+const COURSE_PAGES = [];
+
 /** The indexable pages (V0.3: each ready path, Vestibular's exams after it). */
 const CANONICAL = [
   '/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/pre-militar/', '/ensino-superior/', '/tecnologia/', '/materias/',
@@ -16,7 +23,7 @@ const CANONICAL = [
   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
   '/materias/ingles/', '/materias/espanhol/',
-  '/cursos/', '/materiais/',
+  '/cursos/', ...COURSE_PAGES, '/materiais/',
   '/buscar/', '/sobre/',
 ];
 
@@ -257,6 +264,10 @@ function checkUnique(list, what) {
 }
 
 function checkShell(path, html) {
+  // One identity, the institutional one (V0.7): no page declares a theme of its own. The bottom navigation
+  // belongs to /cursos/ alone.
+  if (/<html\b[^>]*\sdata-theme=/.test(html)) fail(path, 'the Academy has one theme: no data-theme');
+  if (/\sdata-bottom-nav[\s>=]/.test(html) !== (path === '/cursos/')) fail(path, 'the bottom navigation belongs to /cursos/ alone');
   if (!/<header\b/.test(html) || !/<footer\b/.test(html)) fail(path, 'header or footer landmark missing');
   // An id names one element: a second one makes anchors and aria references ambiguous.
   const ids = attrs(html.replace(/<(script|style)\b[\s\S]*?<\/\1>/g, ''), /<[a-z][^>]*\sid="([^"]+)"/g);
@@ -326,11 +337,51 @@ function checkResources(path, html) {
   for (const [, attributes, body] of items) {
     const id = /data-resource-id="([^"]+)"/.exec(attributes)?.[1] ?? '?';
     const links = [...body.matchAll(/<a\b([^>]*)>/g)];
-    if (links.length !== 1 || !/target="_blank"/.test(links[0][1])) fail(path, `resource ${id} needs exactly one outbound link`);
+    // One link: out to the source in a new tab, or (V0.6) to the course's own page when it has one.
+    const ownPage = links.length === 1 && /\shref="([^"]+)"/.exec(links[0][1])?.[1] === `/cursos/${id}/` && COURSE_PAGES.includes(`/cursos/${id}/`);
+    if (links.length !== 1 || (!ownPage && !/target="_blank"/.test(links[0][1]))) fail(path, `resource ${id} needs exactly one outbound link`);
     if (!/translate="no"/.test(body)) fail(path, `resource ${id}: the official title must carry translate="no"`);
-    if (!/class="sr-only"[^>]*>[^<]*nova aba/.test(body)) fail(path, `resource ${id}: the link must say it opens in a new tab`);
+    if (!ownPage && !/class="sr-only"[^>]*>[^<]*nova aba/.test(body)) fail(path, `resource ${id}: the link must say it opens in a new tab`);
   }
   return items;
+}
+
+/** /cursos/ (V0.6): one grid of course cards, each with its 16:9 thumbnail (a local image or the Academy's
+ *  frame), and path filters that are native radios: "Todos" first and checked, then only paths that hold a
+ *  course, in the approved order, each counting what it shows. A card links to its source or, with a
+ *  presentation, to its own page. */
+function checkCourseLibrary(path, html, resources) {
+  const grids = html.match(/<ul\b[^>]*\sdata-course-grid[\s>]/g) ?? [];
+  if (grids.length !== 1) fail(path, `one course grid (${grids.length})`);
+  for (const [, attributes, body] of resources) {
+    const id = /data-resource-id="([^"]+)"/.exec(attributes)?.[1];
+    if (!/\sdata-thumb="(image|frame)"/.test(body)) fail(path, `course ${id} has no thumbnail`);
+    const href = /<a\b[^>]*\shref="([^"]+)"/.exec(body)?.[1] ?? '';
+    if (href.startsWith('/') ? !COURSE_PAGES.includes(href) || href !== `/cursos/${id}/` : !/target="_blank"/.test(body)) fail(path, `course ${id} links ${href}`);
+  }
+  for (const id of COURSE_PAGES.map((page) => page.split('/')[2])) {
+    if (!resources.some(([, attributes, body]) => attributes.includes(`data-resource-id="${id}"`) && body.includes(`href="/cursos/${id}/"`))) fail(path, `the card of ${id} leads to its page`);
+  }
+  const fieldset = /<fieldset\b[^>]*\sdata-course-filters[\s\S]*?<\/fieldset>/.exec(html)?.[0] ?? '';
+  const radios = [...fieldset.matchAll(/<input\b([^>]*)>/g)].map((m) => m[1]);
+  const values = radios.map((a) => /\svalue="([^"]+)"/.exec(a)?.[1]);
+  if (!radios.every((a) => /type="radio"/.test(a) && /name="caminho"/.test(a))) fail(path, 'the course filters are radios of one group');
+  if (values[0] !== 'tudo' || !/\schecked/.test(radios[0] ?? '')) fail(path, '"Tudo" comes first and is chosen');
+  if (radios.slice(1).some((a) => /\schecked/.test(a))) fail(path, 'only "Tudo" starts chosen');
+  if (JSON.stringify(values.slice(1)) !== JSON.stringify(COURSE_FILTERS)) fail(path, `course filters ${values.slice(1).join(',')}`);
+  if (/class="n"/.test(fieldset)) fail(path, 'the course filters carry no counts (V0.7)');
+  // A path with no course answers with its empty state; a path with courses never shows one.
+  for (const value of COURSE_FILTERS) {
+    const shown = resources.filter((item) => resourceAttr(item, 'data-paths').split(' ').includes(value)).length;
+    const hasEmpty = new RegExp(`\\sdata-empty-for="${value}"`).test(html);
+    if (shown === 0 && !hasEmpty) fail(path, `filter ${value} has no course and no empty state`);
+    if (shown > 0 && hasEmpty) fail(path, `filter ${value} has courses and an empty state`);
+  }
+  // The bottom navigation: five real places, in order, the current one marked.
+  const bottom = /<nav\b[^>]*\sdata-bottom-nav[\s\S]*?<\/nav>/.exec(html)?.[0] ?? '';
+  if (JSON.stringify(hrefsIn(bottom)) !== JSON.stringify(['/', '/cursos/', '/materiais/', '/materias/', '/buscar/'])) fail(path, `bottom navigation ${hrefsIn(bottom).join(',')}`);
+  const current = [...bottom.matchAll(/<a\b([^>]*)>/g)].filter((m) => /aria-current="page"/.test(m[1])).map((m) => /href="([^"]+)"/.exec(m[1])?.[1]);
+  if (JSON.stringify(current) !== JSON.stringify(['/cursos/'])) fail(path, `bottom navigation marks ${current.join(',')}`);
 }
 
 /** The hrefs of the links inside the first element matching `open`, up to its closing `tag`. */
@@ -631,7 +682,8 @@ function checkProduct(path, html) {
     // shell of every page); with it, a hidden search form filters the same entries.
     const main = /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '';
     const linked = new Set(hrefsIn(main).map((h) => h.split('#')[0]));
-    for (const page of CANONICAL.filter((p) => !['/', '/buscar/', '/sobre/'].includes(p))) {
+    // A course's own page is reached from its card on /cursos/; the directory lists the course itself.
+    for (const page of CANONICAL.filter((p) => !['/', '/buscar/', '/sobre/', ...COURSE_PAGES].includes(p))) {
       if (!linked.has(page)) fail(path, `the directory does not reach ${page}`);
     }
     const entries = main.match(/<li\b[^>]*\sdata-search-entry[\s>=][^>]*>/g) ?? [];
@@ -685,9 +737,23 @@ function checkProduct(path, html) {
     if (ids.length === 0) fail(path, 'a library is never empty');
     for (const item of resources) if (!LIBRARIES[path].includes(resourceAttr(item, 'data-format'))) fail(path, `resource ${resourceAttr(item, 'data-resource-id')} is not of this library`);
     if (/\sid="recurso-/.test(html)) fail(path, 'a library carries no resource anchor');
-    const groups = attrs(/<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '', /<section\b[^>]*\sid="formato-([^"]+)"/g);
-    const present = LIBRARIES[path].filter((f) => resources.some((item) => resourceAttr(item, 'data-format') === f));
-    if (JSON.stringify(groups) !== JSON.stringify(present)) fail(path, `library groups ${groups.join(',')}`);
+    if (path === '/cursos/') checkCourseLibrary(path, html, resources);
+    else {
+      const groups = attrs(/<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '', /<section\b[^>]*\sid="formato-([^"]+)"/g);
+      const present = LIBRARIES[path].filter((f) => resources.some((item) => resourceAttr(item, 'data-format') === f));
+      if (JSON.stringify(groups) !== JSON.stringify(present)) fail(path, `library groups ${groups.join(',')}`);
+    }
+  }
+  if (COURSE_PAGES.includes(path)) {
+    // A course's own page: the breadcrumb goes through Cursos, one action out to the course's source, and the
+    // presentation's date; the course itself is never listed as one of its related courses.
+    const id = path.split('/')[2];
+    const crumbs = /<nav\b[^>]*\sdata-breadcrumb[^>]*>([\s\S]*?)<\/nav>/.exec(html)?.[1] ?? '';
+    if (JSON.stringify(hrefsIn(crumbs)) !== JSON.stringify(['/', '/cursos/'])) fail(path, `breadcrumb ${hrefsIn(crumbs).join(',')}`);
+    const article = /<article\b[^>]*\sdata-course-page="([^"]+)"[\s\S]*?<\/article>/.exec(html);
+    if (!article || article[1] !== id) fail(path, 'the page presents its own course');
+    else if ((article[0].match(/<a\b[^>]*target="_blank"/g) ?? []).length !== 1) fail(path, 'one action to the source');
+    if (resources.some((item) => resourceAttr(item, 'data-resource-id') === id)) fail(path, 'a course is not related to itself');
   }
   if (/^\/materias\/[a-z-]+\/$/.test(path)) checkSubject(path, html, resources);
   if (path === '/materias/') checkAreaGroups(path, /<main\b[\s\S]*<\/main>/.exec(html)?.[0] ?? '');
