@@ -42,8 +42,9 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
         <a class="all" href={routes.courses}>{t.home.courses.all}{' '}<span aria-hidden="true">→</span></a>
       </div>
       <ul class="courses" role="list" data-resource-list>
-        {featured.map((card, i) => <HomeCourseFeature card={card} index={i} />)}
+        {featured.map((card) => <HomeCourseFeature card={card} />)}
       </ul>
+      <p class="swipe swipe-courses" aria-hidden="true">{t.home.courses.swipe} <span>→</span></p>
     </div>
   </section>
 
@@ -107,12 +108,14 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
 </Base>
 
 <style>
-  .block { position: relative; padding-block: var(--space-7); }
-  /* A hairline between sections, inside the gutters: never a border on .wrap, whose padding is the gutter. */
-  .block + .block::before { content: ''; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: 1px; background: var(--rule); }
-  /* The featured courses sit on a quiet band across the page: the library, opened. No hairline at its edges. */
-  .band { background: var(--tint-sand); }
-  .band::before, .band + .block::before { display: none; }
+  /* V2.1 rhythm: about 96px between chapters on a wide screen, 72px on a tablet, 56px on a phone (two paddings
+     meet), 32px from a head to its content, smaller steps inside the cards. The sections are told apart by
+     their heads and grounds; a hairline marks only the quieter run at the end (sources, commitments, questions),
+     inside the gutters: never a border on .wrap, whose padding is the gutter. */
+  .block { position: relative; padding-block: clamp(1.75rem, 1.2rem + 2.2vw, 3rem); }
+  #curadoria::before, #perguntas::before { content: ''; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: 1px; background: var(--rule); }
+  /* The featured courses sit on a quiet band across the page: the library, opened. */
+  .band { background: var(--tint-sand); padding-block: clamp(2.25rem, 1.5rem + 2.8vw, 3.75rem); }
   /* A section's head: the eyebrow and the title, and beside them on a wide screen, one line of what follows. */
   .head { display: grid; gap: var(--space-3) var(--space-7); margin-bottom: var(--space-6); }
   .kicker { margin-bottom: var(--space-2); font-size: 0.75rem; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; color: var(--action); }
@@ -132,9 +135,12 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
   .courses > :global(li) { scroll-snap-align: start; }
   @media (min-width: 600px) { .courses { grid-auto-columns: 42%; gap: var(--space-5); } }
   @media (min-width: 1100px) {
-    .courses { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-inline: 0; padding: 0 0 var(--space-7); overflow: visible; }
-    .courses > :global(li:nth-child(odd)) { translate: 0 var(--space-7); }
+    .courses { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-inline: 0; padding: 0 0 var(--space-5); overflow: visible; }
+    .courses > :global(li:nth-child(odd)) { translate: 0 var(--space-5); }
   }
+  /* The cue under a sideways row: a phone and a tablet only (the row is whole on a wide screen). */
+  .swipe { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); font-size: 0.8125rem; font-weight: 560; color: var(--muted); }
+  @media (min-width: 1100px) { .swipe-courses { display: none; } }
   .all {
     display: inline-flex;
     align-items: center;
@@ -154,17 +160,19 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
   /* Commitments: three short promises, numbered; then the date of the last verification and the rules. */
   .commitments { display: grid; gap: var(--space-4); }
   @media (min-width: 900px) { .commitments { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); } }
-  .commitments li { display: grid; align-content: start; gap: var(--space-2); padding-top: var(--space-4); border-top: 2px solid var(--action); }
-  .commitments .n { font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--muted); }
-  .commitments h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 440; letter-spacing: -0.015em; }
-  .commitments p { max-width: 44ch; font-size: 0.9375rem; color: var(--muted); }
+  /* A hairline over each promise and a short wine mark at its start: the colour points, the line organises. */
+  .commitments li { position: relative; display: grid; align-content: start; gap: var(--space-3); padding-top: var(--space-5); border-top: 1px solid var(--rule-strong); }
+  .commitments li::before { content: ''; position: absolute; top: -1px; left: 0; width: 2rem; height: 2px; background: var(--action); }
+  .commitments .n { font-size: 0.75rem; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: 0.06em; color: var(--action); }
+  .commitments h3 { font-family: var(--serif); font-size: clamp(1.5rem, 1.3rem + 0.5vw, 1.75rem); font-weight: 440; line-height: 1.1; letter-spacing: -0.02em; }
+  .commitments p { max-width: 42ch; font-size: 0.9375rem; line-height: 1.6; color: var(--muted); }
   .proof { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-5); margin-top: var(--space-6); }
-  .stamp { display: inline-flex; align-items: center; gap: var(--space-2); padding: 0.3rem 0.75rem; border: 1px solid var(--rule-strong); border-radius: 999px; font-size: var(--fs-small); font-weight: 500; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--action); }
+  .stamp { display: inline-flex; align-items: center; gap: var(--space-2); font-size: 0.8125rem; color: var(--muted); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--action); }
 
   /* Questions: a narrow column of native disclosures; the marker is drawn, the state is the browser's. */
   .faq { display: grid; gap: var(--space-4); }
-  @media (min-width: 1024px) { .faq { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-7); } }
+  @media (min-width: 1024px) { .faq { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-7); } }
   .faq h2 { font-size: clamp(2rem, 1.5rem + 1.8vw, 3rem); font-weight: 420; line-height: 1.02; letter-spacing: -0.03em; }
   .questions { border-top: 1px solid var(--rule-strong); }
   details { border-bottom: 1px solid var(--rule); }
@@ -173,9 +181,11 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
-    min-height: 52px;
-    padding-block: var(--space-2);
+    min-height: 56px;
+    padding-block: var(--space-3);
+    font-size: 1.0625rem;
     font-weight: 560;
+    line-height: 1.35;
     cursor: pointer;
     list-style: none;
   }
@@ -191,7 +201,9 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
     transform: translateY(-25%) rotate(45deg);
     transition: transform var(--t-ui) var(--ease);
   }
-  details[open] summary::after { transform: translateY(25%) rotate(-135deg); }
+  details[open] summary::after { transform: translateY(25%) rotate(-135deg); border-color: var(--action); }
+  details[open] summary { color: var(--action); }
   summary:hover { color: var(--action); }
-  details p { max-width: 60ch; padding-bottom: var(--space-4); color: var(--muted); }
+  summary:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; border-radius: 4px; }
+  details p { max-width: 60ch; padding: 0 var(--space-6) var(--space-5) 0; line-height: 1.65; color: var(--muted); }
 </style>

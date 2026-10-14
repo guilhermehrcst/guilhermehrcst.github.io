@@ -30,7 +30,7 @@ test('the featured cards cover only with a photograph and invent no metric; ever
   const feature = read('src/components/HomeCourseFeature.astro');
   assert.match(feature, /r\.curated\?\.image\?\.kind === 'photo'/, 'a graphic with its own lettering is never covered');
   assert.match(feature, /target="_blank" rel="noopener noreferrer"/);
-  assert.match(feature, /\.has-photo \{ background: var\(--ink\); \}/, 'white type keeps a dark ground if the photo fails');
+  assert.match(feature, /\.has-photo \{ background: var\(--ink\);/, 'white type keeps a dark ground if the photo fails');
   assert.doesNotMatch(feature.replace(/^\/\/.*$/gm, ''), /listeners|ouvintes|progress|rating/i, 'no metric outside the comments');
   const { AREA_SIGNS } = await import('../src/lib/area-signs.ts');
   const { AREA_ORDER } = await import('../src/lib/taxonomy.ts');

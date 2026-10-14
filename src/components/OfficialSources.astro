@@ -51,25 +51,27 @@ const list = homeSources(Object.keys(providerMarks), publishedResources, publish
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
-  @media (min-width: 900px) { .marks { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  @media (min-width: 1280px) { .marks { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-  .mark :global(.brand) { --bs: 0.66; }
-  .mark.joint :global(.brand) { --bs: 0.5; }
+  /* V2.1: three columns by two rows from the tablet up, so every mark keeps an institutional size. */
+  @media (min-width: 760px) { .marks { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .mark :global(.brand) { --bs: 0.95; }
+  .mark.joint :global(.brand) { --bs: 0.72; }
+  @media (max-width: 759px) { .mark :global(.brand) { --bs: 0.75; } .mark.joint :global(.brand) { --bs: 0.55; } }
   .marks li { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin: 0 -1px -1px 0; }
   .marks a {
     display: grid;
     grid-template-rows: 1fr auto;
     gap: var(--space-3);
     height: 100%;
-    min-height: 6.5rem;
-    padding: var(--space-4);
+    min-height: 8rem;
+    padding: var(--space-5);
     text-decoration: none;
     color: var(--ink);
     transition: background var(--t-ui);
   }
   .marks a:hover { background: var(--surface); }
-  .mark { display: flex; align-items: center; min-width: 0; }
-  .count { font-size: 0.75rem; line-height: 1.35; color: var(--muted); }
+  /* One mark height for every cell: the marks share an optical baseline across a row. */
+  .mark { display: flex; align-items: center; min-width: 0; min-height: 44px; }
+  .count { font-size: 0.8125rem; line-height: 1.4; color: var(--muted); }
   .count span { display: inline-block; transition: transform var(--t-ui) var(--ease); }
   .marks a:hover .count { color: var(--action); }
   .marks a:hover .count span { transform: translateX(3px); }

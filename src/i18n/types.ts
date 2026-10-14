@@ -133,8 +133,9 @@ export interface Dict {
       exams: string;
       examLinks: { enem: string; uerj: string };
     };
-    courses: { eyebrow: string; heading: string; lead: string; all: string };
-    areas: { eyebrow: string; heading: string; lead: string; subjects: (n: number) => string };
+    /** swipe: the visible cue under a sideways row (phone, tablet), so the row never depends on a hidden gesture. */
+    courses: { eyebrow: string; heading: string; lead: string; all: string; swipe: string };
+    areas: { eyebrow: string; heading: string; lead: string; subjects: (n: number) => string; swipe: string };
     tracks: {
       eyebrow: string;
       heading: string;
@@ -143,6 +144,8 @@ export interface Dict {
       titles: { enem: string; uerj: string };
       why: { enem: string; uerj: string };
       steps: (n: number) => string;
+      /** The caption over a path's first steps (V2.1). */
+      first: string;
       more: (n: number) => string;
       links: { enem: string; uerj: string; track: string };
     };
