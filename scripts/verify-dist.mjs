@@ -100,7 +100,8 @@ const COURSE_HOSTS = [
 const OFFICIAL_HOSTS = ['www.gov.br', 'sistema.vestibular.uerj.br', 'www.revista.vestibular.uerj.br'];
 const EXTERNAL_HOSTS = new Set([...COURSE_HOSTS, ...OFFICIAL_HOSTS]);
 
-/** Pages that may run JavaScript. Every other page is complete, static HTML (spec §7). */
+/** Pages that may run JavaScript of their own, beside the header's menu-placement script (which every page
+ *  carries). Every other page is complete, static HTML (spec §7). */
 const SCRIPT_PAGES = new Set(['/buscar/']);
 
 /** The former personal site must leave no trace (spec §3, §9.2). The site's own origin is allowed only
@@ -185,17 +186,26 @@ function checkLinks(path, html) {
 }
 
 function checkScripts(path, html) {
-  const scripts = html.match(/<script\b[^>]*>/g) ?? [];
-  if (!SCRIPT_PAGES.has(path)) {
-    if (scripts.length) fail(path, 'content pages carry no JavaScript');
-    return;
-  }
-  // The one script of a page that has one: a first-party module (inlined or from /_astro/).
-  if (scripts.length !== 1 || !/type="module"/.test(scripts[0])) fail(path, `expected exactly one module script, found ${scripts.length}`);
-  for (const tag of scripts) {
-    const src = /\ssrc="([^"]+)"/.exec(tag)?.[1];
+  // Every script is a first-party module (inlined or from /_astro/). A page may run the header's placement
+  // script (Global Navigation hotfix) on every page, and the search page its own: nothing else.
+  const tags = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)];
+  const scripts = tags.map(([, attributes, inline]) => {
+    const src = /\ssrc="([^"]+)"/.exec(attributes)?.[1];
+    if (!/type="module"/.test(attributes)) fail(path, 'a script is a module');
     if (src && !src.startsWith('/_astro/')) fail(path, `script from outside the site: ${src}`);
+    return src ? (existsSync(fileFor(src)) ? readFileSync(fileFor(src), 'utf8') : '') : inline;
+  });
+  if (scripts.length !== (html.match(/<script\b/g) ?? []).length) fail(path, 'a script tag is not closed');
+  // The header's script is told apart by what it does: it places a popover when it toggles. It touches no network,
+  // storage or cookie, and loads nothing.
+  const placement = scripts.filter((code) => /beforetoggle/.test(code) && /getBoundingClientRect/.test(code));
+  if (placement.length !== 1) fail(path, `expected exactly one header placement script, found ${placement.length}`);
+  for (const code of placement) {
+    if (/\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource|localStorage|sessionStorage|indexedDB)\b|document\.cookie|\bimport\s*\(|importScripts/.test(code)) fail(path, 'the header script reaches for the network, storage or another script');
+    if (code.length > 2048) fail(path, `the header script is ${code.length} bytes: it only places six menus`);
   }
+  const others = scripts.length - placement.length;
+  if (others !== (SCRIPT_PAGES.has(path) ? 1 : 0)) fail(path, SCRIPT_PAGES.has(path) ? `expected exactly one module script beside the header's, found ${others}` : 'content pages carry no JavaScript but the header\'s');
 }
 
 /* Accessibility, structurally (spec §7): what can be read from the HTML without a browser. */
