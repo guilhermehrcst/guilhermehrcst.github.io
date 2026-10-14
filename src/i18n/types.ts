@@ -29,14 +29,14 @@ type StatePageCopy = { description: string; lead: string };
 export type PageKey =
   | 'home' | 'enem' | 'uerj' | 'ensino-medio' | 'vestibulares' | 'tecnologia'
   | 'ensino-fundamental' | 'pre-militar' | 'ensino-superior'
-  | 'materias' | 'buscar' | 'sobre' | 'notFound';
+  | 'materias' | 'buscar' | 'sobre' | 'notFound' | 'cursos' | 'materiais';
 
 export interface Dict {
   htmlLang: 'pt-BR';
   ogLocale: 'pt_BR';
   siteName: 'Pexis Academy';
   skip: string;
-  nav: { label: string; home: string; mobile: string; menu: string; paths: string };
+  nav: { label: string; home: string; mobile: string; menu: string; paths: string; choose: string; explorePaths: string; search: string };
   breadcrumb: { label: string; home: string };
   footer: {
     subjects: string;
@@ -82,6 +82,13 @@ export interface Dict {
     scope: string;
   };
   explore: { paths: string; areas: string };
+  /** /cursos/ and /materiais/ (V0.5): a group heading per format, the count line, and where to go next. */
+  library: {
+    groups: Record<LearningFormatId, string>;
+    count: (n: number) => string;
+    note: string;
+    other: Record<'cursos' | 'materiais', { label: string; text: string }>;
+  };
   superior: {
     note: string;
     groupsTitle: string;
@@ -149,7 +156,7 @@ export interface Dict {
   /** V0.4 Gate B: the general section of a path page (resources no subject, exam or field page shows). */
   pathResources: { other: { title: string; why: string }; general: { title: string; why: string }; stages: Record<'anos-iniciais' | 'anos-finais' | 'none', string> };
   search: {
-    label: string; placeholder: string; groups: Record<'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string;
+    label: string; placeholder: string; groups: Record<'biblioteca' | 'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso', string>; results: (n: number) => string; empty: string;
     /** V0.4 M4: the filters of the resources. */
     filters: { title: string; note: string; facets: Record<'caminho' | 'materia' | 'instituicao' | 'idioma' | 'formato', string>; clear: string; emptyFiltered: string };
     languages: Record<'pt' | 'en' | 'es', string>;

@@ -1,0 +1,43 @@
+---
+// A library (V0.5): /cursos/ or /materiais/. The published catalogue, one section per format, as the same
+// cards the path pages use, each one linked to its provider. A view, never a second home: no card here
+// carries the #recurso-<id> anchor, which stays on the page that places the resource (src/lib/placement.ts).
+import Base from '../layouts/Base.astro';
+import PageIntro from './PageIntro.astro';
+import ResourceList from './ResourceList.astro';
+import TrackSection from './TrackSection.astro';
+import { libraryGroups, type LibraryId } from '../lib/libraries';
+import { routes } from '../lib/routes';
+import { pt as t } from '../i18n/pt';
+
+interface Props { library: LibraryId }
+const { library } = Astro.props;
+const c = t.pages[library];
+const l = t.library;
+const groups = libraryGroups(library);
+const other = library === 'cursos' ? 'materiais' : 'cursos';
+const otherHref = other === 'cursos' ? routes.courses : routes.materials;
+---
+<Base title={c.title} description={c.description}>
+  <PageIntro eyebrow={c.eyebrow} heading={c.heading} lead={c.lead} />
+  <div data-library={library}>
+    {groups.map((group) => (
+      <TrackSection id={`formato-${group.format}`} title={l.groups[group.format]} why={l.count(group.resources.length)}>
+        <ResourceList resources={group.resources} />
+      </TrackSection>
+    ))}
+  </div>
+  <div class="wrap next">
+    <p class="note">{l.note}</p>
+    <p class="other">
+      {l.other[other].text}{' '}
+      <a href={otherHref}>{l.other[other].label}{' '}<span aria-hidden="true">→</span></a>
+    </p>
+  </div>
+</Base>
+
+<style>
+  .next { display: grid; gap: var(--space-3); padding-block: var(--space-6) var(--space-8); border-top: 1px solid var(--rule); }
+  .note { max-width: var(--measure); color: var(--muted); }
+  .other a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+</style>

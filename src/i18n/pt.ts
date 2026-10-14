@@ -7,7 +7,7 @@ export const pt: Dict = {
   ogLocale: 'pt_BR',
   siteName: 'Pexis Academy',
   skip: 'Pular para o conteúdo',
-  nav: { label: 'Principal', home: 'Pexis Academy, página inicial', mobile: 'Menu principal', menu: 'Menu', paths: 'Caminhos' },
+  nav: { label: 'Principal', home: 'Pexis Academy, página inicial', mobile: 'Menu principal', menu: 'Menu', paths: 'Caminhos', choose: 'Escolha seu caminho', explorePaths: 'Explorar caminhos', search: 'Buscar' },
   breadcrumb: { label: 'Você está em', home: 'Início' },
   footer: {
     subjects: 'Matérias',
@@ -85,6 +85,20 @@ export const pt: Dict = {
       eyebrow: 'Explorar',
       heading: 'Explorar',
       lead: 'Comece por um caminho ou vá direto a uma matéria. Tudo com recursos gratuitos e verificados na fonte.',
+    },
+    cursos: {
+      title: 'Cursos | Pexis Academy',
+      description: 'Cursos gratuitos, trilhas, playlists e videoaulas selecionados pela Pexis Academy e verificados na fonte, de universidades e instituições reconhecidas.',
+      eyebrow: 'Biblioteca',
+      heading: 'Cursos',
+      lead: 'Cursos gratuitos, trilhas, playlists e videoaulas para estudar do começo ao fim, cada um verificado na fonte.',
+    },
+    materiais: {
+      title: 'Materiais | Pexis Academy',
+      description: 'Exercícios, simulados, provas anteriores e materiais de referência gratuitos selecionados pela Pexis Academy e verificados na fonte.',
+      eyebrow: 'Biblioteca',
+      heading: 'Materiais',
+      lead: 'Exercícios, simulados, provas anteriores e materiais de referência para praticar e consultar, cada um verificado na fonte.',
     },
     buscar: {
       title: 'Buscar | Pexis Academy',
@@ -186,6 +200,15 @@ export const pt: Dict = {
     scope: 'Esta área não oferece treinamento físico, avaliação médica nem simulados.',
   },
   explore: { paths: 'Caminhos', areas: 'Áreas e matérias' },
+  library: {
+    groups: { course: 'Cursos gratuitos', track: 'Trilhas', playlist: 'Playlists', lessons: 'Séries de aulas', lesson: 'Aulas', practice: 'Exercícios e prática', simulator: 'Simulados', 'past-exam': 'Provas anteriores', reference: 'Materiais de referência' },
+    count: (n) => (n === 1 ? '1 recurso' : `${n} recursos`),
+    note: 'Cada recurso abre no site da instituição que o oferece. Para estudar com um percurso, comece por um caminho em Explorar.',
+    other: {
+      cursos: { label: 'Ver os cursos', text: 'Procurando cursos, trilhas e videoaulas?' },
+      materiais: { label: 'Ver os materiais', text: 'Procurando exercícios, simulados e provas anteriores?' },
+    },
+  },
   superior: {
     note: 'Por enquanto, Matemática e Computação: são as áreas em que já verificamos cursos universitários gratuitos. Outras áreas do conhecimento entram à medida que verificarmos cursos na fonte.',
     groupsTitle: 'Áreas',
@@ -336,7 +359,7 @@ export const pt: Dict = {
   search: {
     label: 'Buscar na Pexis Academy',
     placeholder: 'Matéria, prova, trilha ou curso',
-    groups: { objetivo: 'Caminhos e provas', area: 'Áreas', materia: 'Matérias', trilha: 'Trilhas de tecnologia', recurso: 'Recursos' },
+    groups: { biblioteca: 'Bibliotecas', objetivo: 'Caminhos e provas', area: 'Áreas', materia: 'Matérias', trilha: 'Trilhas de tecnologia', recurso: 'Recursos' },
     results: (n) => (n === 1 ? '1 resultado' : `${n} resultados`),
     empty: 'Nada encontrado. Tente outra palavra, ou explore pelas áreas.',
     filters: {

@@ -10,10 +10,11 @@ const CANONICAL = [
   '/materias/fisica/', '/materias/quimica/', '/materias/biologia/',
   '/materias/historia/', '/materias/geografia/', '/materias/filosofia/', '/materias/sociologia/',
   '/materias/ingles/', '/materias/espanhol/',
+  '/cursos/', '/materiais/',
   '/buscar/', '/sobre/',
 ];
 
-test('the 23 canonical routes, exactly and in a stable order', () => {
+test('the 25 canonical routes, exactly and in a stable order', () => {
   assert.deepEqual(canonicalPaths(), CANONICAL);
   assert.deepEqual(canonicalPaths(), canonicalPaths());
 });
@@ -58,7 +59,11 @@ test('legacy routes redirect to existing canonical pages; the résumé is gone',
   assert.ok(!('/pt/curriculo/' in LEGACY_REDIRECTS));
 });
 
-test('the header navigation, in order: the Explorar menu, then four direct links (V0.3)', () => {
+test('the header (V0.5): Cursos, Materiais, then the Explorar menu with the six paths and nothing else', () => {
+  assert.deepEqual(HEADER_NAV.map((item) => [item.label, item.href]), [
+    ['Cursos', '/cursos/'],
+    ['Materiais', '/materiais/'],
+  ]);
   assert.equal(EXPLORE_MENU.label, 'Explorar');
   assert.deepEqual(EXPLORE_MENU.items.map((item) => [item.label, item.href]), [
     ['Ensino Fundamental', '/ensino-fundamental/'],
@@ -68,20 +73,23 @@ test('the header navigation, in order: the Explorar menu, then four direct links
     ['Ensino Superior', '/ensino-superior/'],
     ['Tecnologia', '/tecnologia/'],
   ]);
-  assert.deepEqual([EXPLORE_MENU.all.label, EXPLORE_MENU.all.href], ['Todas as matérias', '/materias/']);
-  assert.deepEqual(HEADER_NAV.map((item) => [item.label, item.href]), [
-    ['Vestibular', '/vestibulares/'],
-    ['Pré-Militar', '/pre-militar/'],
-    ['Tecnologia', '/tecnologia/'],
-    ['Buscar', '/buscar/'],
-  ]);
+  assert.ok(!('all' in EXPLORE_MENU), 'the menu lists the six paths only');
+  assert.equal(routes.search, '/buscar/');
+  // Every destination of the header is a page that is built.
+  for (const href of [...HEADER_NAV, ...EXPLORE_MENU.items].map((i) => i.href)) {
+    assert.ok([...canonicalPaths(), ...preparingPaths()].includes(href), href);
+  }
 });
 
 test('a section of the header is current on its own page and on the pages inside it', () => {
-  assert.equal(sectionOf('/vestibulares/'), '/vestibulares/');
-  assert.equal(sectionOf('/enem/'), '/vestibulares/');
-  assert.equal(sectionOf('/uerj/'), '/vestibulares/');
-  assert.equal(sectionOf('/materias/fisica/'), '/materias/');
-  assert.equal(sectionOf('/tecnologia/'), '/tecnologia/');
+  assert.equal(sectionOf('/cursos/'), 'cursos');
+  assert.equal(sectionOf('/materiais/'), 'materiais');
+  assert.equal(sectionOf('/buscar/'), 'buscar');
+  for (const path of ['/ensino-fundamental/', '/ensino-medio/', '/vestibulares/', '/enem/', '/uerj/', '/pre-militar/', '/ensino-superior/', '/tecnologia/', '/materias/', '/materias/fisica/']) {
+    assert.equal(sectionOf(path), 'explorar', path);
+  }
+  assert.equal(sectionOf('/'), null);
   assert.equal(sectionOf('/sobre/'), null);
+  // A legacy route that once meant "courses" is not the new library.
+  assert.equal(sectionOf('/pt/cursos/'), null);
 });

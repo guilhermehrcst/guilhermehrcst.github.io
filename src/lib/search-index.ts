@@ -11,7 +11,7 @@ import { AREA_ORDER, AREAS, EXAM_ORDER, EXAM_PARENT, OBJECTIVES, PATH_ORDER, PAT
 import { resourceFacets, type Facets } from './search-filter.ts';
 import { placementOf, type Placeable, type PlacementContextResource } from './placement.ts';
 
-export type SearchKind = 'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso';
+export type SearchKind = 'biblioteca' | 'objetivo' | 'area' | 'materia' | 'trilha' | 'recurso';
 
 export interface SearchEntry {
   id: string;
@@ -67,6 +67,8 @@ export const anchorPlan = (
 };
 
 export const buildSearchIndex = (): SearchEntry[] => [
+  entry('biblioteca', 'cursos', 'Cursos', routes.courses, 'Biblioteca', ['cursos gratuitos', 'trilhas', 'playlists', 'videoaulas', 'aulas']),
+  entry('biblioteca', 'materiais', 'Materiais', routes.materials, 'Biblioteca', ['exercicios', 'simulados', 'provas anteriores', 'referencia']),
   ...PATH_ORDER.map((id) => entry('objetivo', id, OBJECTIVES[id].label, routes.objective(id), PREPARING_PATHS.includes(id) ? 'Caminho em preparação' : 'Caminho')),
   ...EXAM_ORDER.map((id) => entry('objetivo', id, OBJECTIVES[id].label, routes.objective(id), OBJECTIVES[EXAM_PARENT[id]].label, ['vestibular', 'prova'])),
   ...AREA_ORDER.map((id) => entry('area', id, AREAS[id].label, `${routes.subjectIndex}#area-${id}`, 'Área',
