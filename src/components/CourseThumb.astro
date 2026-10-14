@@ -11,8 +11,8 @@ import { resourceImages } from '../lib/resource-images';
 import type { PublishedLearningResource } from '../lib/learning-resources';
 import { pt as t } from '../i18n/pt';
 
-interface Props { resource: PublishedLearningResource; label: string; eager?: boolean; sizes?: string }
-const { resource: r, label, eager = false, sizes = '(min-width: 1440px) 24vw, (min-width: 900px) 32vw, (min-width: 560px) 48vw, 100vw' } = Astro.props;
+interface Props { resource: PublishedLearningResource; label: string; eager?: boolean; priority?: boolean; sizes?: string }
+const { resource: r, label, eager = false, priority = false, sizes = '(min-width: 1440px) 24vw, (min-width: 900px) 32vw, (min-width: 560px) 48vw, 100vw' } = Astro.props;
 const image = r.curated?.image;
 const fill = image ? image.kind === 'photo' || (image.ratio ?? 0) >= 1.6 : false;
 const duration = r.duration ? `${r.duration.value} ${t.resource.units[r.duration.unit]}` : null;
@@ -25,7 +25,8 @@ const duration = r.duration ? `${r.duration.value} ${t.resource.units[r.duration
         alt=""
         widths={[360, 540, 720, 1080]}
         sizes={sizes}
-        loading={eager ? 'eager' : 'lazy'}
+        loading={eager || priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : undefined}
         decoding="async"
         style={fill && image.position ? `object-position: ${image.position}` : undefined}
       />

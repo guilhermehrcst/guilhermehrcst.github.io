@@ -249,21 +249,23 @@ export const pt: Dict = {
   home: {
     hero: {
       eyebrow: 'Gratuito para estudar · Conferido na fonte',
-      lead: 'Cursos e materiais gratuitos, organizados por objetivo, para você saber por onde começar.',
+      lead: 'Encontre cursos e materiais gratuitos para aprender no seu ritmo.',
       searchLabel: 'Buscar na Pexis Academy',
       searchPlaceholder: 'O que você quer aprender?',
       searchSubmit: 'Buscar',
       primary: 'Explorar cursos',
-      secondary: 'Escolher um caminho',
+      secondary: 'Escolher meu caminho',
       compositionCaption: 'Cursos publicados na biblioteca da Academy.',
       compositionLink: 'Ver a biblioteca de cursos',
     },
     areas: {
-      heading: 'Explore por área',
+      eyebrow: 'Explore por área e matéria',
+      heading: 'O que você quer estudar?',
       lead: 'As matérias como na escola. Cada uma reúne o que estudar e onde praticar.',
       subjects: (n) => (n === 1 ? '1 matéria' : `${n} matérias`),
     },
     tracks: {
+      eyebrow: 'Trilhas de aprendizagem',
       heading: 'Comece por um caminho pronto.',
       lead: 'Guias e trilhas com as etapas em ordem.',
       kinds: { guide: 'Guia', track: 'Trilha' },
@@ -277,11 +279,12 @@ export const pt: Dict = {
       links: { enem: 'Abrir o guia do ENEM', uerj: 'Abrir o guia da UERJ', track: 'Abrir a trilha' },
     },
     curation: {
+      eyebrow: 'Compromisso',
       heading: 'Nossos compromissos',
       lead: 'O que a Pexis Academy garante em cada indicação.',
       verified: (date) => `Catálogo verificado em ${date}`,
       commitments: [
-        { title: 'Gratuito para estudar', body: 'Todo conteúdo de estudo indicado é gratuito, sem período de teste nem link de afiliado. Alguns pedem uma conta gratuita na fonte.' },
+        { title: 'Gratuito para estudar', body: 'Todo conteúdo de estudo indicado é gratuito, sem período de teste nem link de afiliado. Certificados, quando existem, são de quem publica e podem ser pagos.' },
         { title: 'Conferido na fonte', body: 'Cada recurso é conferido na página de quem o publica antes de entrar, com a data registrada.' },
         { title: 'Independente', body: 'A Academy não produz aulas e não tem parceria com as instituições que indica. Os nomes e as marcas são delas.' },
       ],
@@ -299,6 +302,7 @@ export const pt: Dict = {
       ],
     },
     objectives: {
+      eyebrow: 'Escolha seu caminho',
       heading: 'Qual é o seu objetivo?',
       lead: 'Seis caminhos, da escola à universidade e à tecnologia.',
       items: {
@@ -313,16 +317,19 @@ export const pt: Dict = {
         [`${resources} ${resources === 1 ? 'recurso' : 'recursos'}`, tracks && `${tracks} ${tracks === 1 ? 'trilha' : 'trilhas'}`].filter(Boolean).join(' · '),
     },
     sources: {
-      heading: 'Instituições que publicam os cursos indicados',
+      eyebrow: 'Instituições e fontes',
+      heading: 'Quem publica os cursos indicados',
+      lead: 'Cada indicação leva à página oficial de quem a publica. Os nomes e as marcas são das instituições.',
       count: (resources, page) => `${resources} ${resources === 1 ? 'curso' : 'cursos'} em ${page}`,
       countAreas: (resources, areas) => `${resources} ${resources === 1 ? 'curso' : 'cursos'} em ${areas.length > 1 ? `${areas.slice(0, -1).join(', ')} e ${areas.at(-1)}` : areas[0]}`,
       exams: 'Para as provas, a fonte é quem as aplica:',
       examLinks: { enem: 'INEP, no guia do ENEM', uerj: 'Vestibular Estadual UERJ, no guia da UERJ' },
     },
     courses: {
-      heading: 'Cursos em destaque',
-      lead: 'Uma amostra da biblioteca, escolhida pelos editores.',
-      all: 'Ver todos os cursos',
+      eyebrow: 'Cursos em destaque',
+      heading: 'Explore novas possibilidades.',
+      lead: 'Cursos gratuitos da biblioteca, conferidos na fonte e escolhidos pelos editores.',
+      all: 'Explorar todos os cursos',
     },
   },
   about: {

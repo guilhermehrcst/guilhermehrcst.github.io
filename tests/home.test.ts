@@ -1,10 +1,10 @@
-// The Home (Home V1): it answers what to learn, where the content is and how to start, from the published
+// The Home (Home V1, V2): it answers what to learn, where the content is and how to start, from the published
 // catalogue only. The featured courses are an editorial list of ids, never a second catalogue; the search is
 // the site's own (/buscar/?q=); nothing promises what the catalogue does not keep.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
-import { FEATURED_COURSE_IDS, HERO_COURSE_IDS, featuredCourses, heroCourses, homeCourseProblems } from '../src/lib/home-featured.ts';
+import { FEATURED_COURSE_IDS, HERO_COURSE_IDS, featuredCourses, heroCourses, homeCourseProblems, sharedHomeCourses } from '../src/lib/home-featured.ts';
 import { publishedResources } from '../src/lib/learning-resources.ts';
 import { libraryOf } from '../src/lib/libraries.ts';
 import { GATEB_NEW_RESOURCES } from '../src/lib/staging-gateb.ts';
@@ -19,6 +19,20 @@ test('the Home courses are published courses of the library, three or four, with
   assert.deepEqual(heroCourses().map((r) => r.id), [...HERO_COURSE_IDS]);
   // The records themselves, not copies.
   for (const r of featuredCourses()) assert.equal(r, publishedResources.find((p) => p.id === r.id));
+  // V2: the large tile of the hero is a photograph, and no course is shown twice on the Home.
+  assert.equal(heroCourses()[0]!.curated?.image?.kind, 'photo');
+  assert.deepEqual(sharedHomeCourses(), []);
+  assert.deepEqual(sharedHomeCourses(['cs50x'], ['cs50x', 'fluencia']), ['cs50x']);
+});
+
+test('the path illustrations are original drawings: no image, no link, decorative, colours from tokens', () => {
+  const art = read('src/components/PathArt.astro');
+  assert.doesNotMatch(art, /<image\b|<img\b|href=|xlink|url\(|@import/, 'nothing loaded or linked from elsewhere');
+  assert.match(art, /<svg class="path-art" viewBox="0 0 240 160" aria-hidden="true" focusable="false"/);
+  for (const path of ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar']) {
+    assert.match(art, new RegExp(`path === '${path}'`), `${path} has its drawing`);
+  }
+  assert.match(read('src/components/HomePaths.astro'), /<PathArt path=\{id\} \/>/);
 });
 
 test('an id that is not a published course is refused', () => {
@@ -45,7 +59,7 @@ test('the Home keeps its promise: the lema, and no claim the catalogue does not 
   assert.equal(pt.pages.home.heading, 'Aprenda com direção.');
   const copy = JSON.stringify(pt.home);
   assert.doesNotMatch(copy, /Em português · Fontes oficiais/i, 'not every course is in Portuguese nor every source official');
-  assert.doesNotMatch(copy, /patrocin|parceir[oa]s? oficia|endoss/i);
+  assert.doesNotMatch(copy, /patroc[ií]n|parceir[oa]s? oficia|endoss/i);
   assert.ok(pt.home.curation.commitments.some((c) => /Independente/.test(c.title)));
 });
 
@@ -57,10 +71,10 @@ test('the paths on the Home are counted from the catalogue, never typed', () => 
   assert.doesNotMatch(paths, /\b\d+ recursos\b/);
 });
 
-test('the long learning demo is gone; its components with it', () => {
+test('the long learning demo is gone; the sections keep their order (V2 restores #fontes)', () => {
   for (const file of ['HeroDemo', 'LearningPath', 'ProductWindow']) assert.ok(!existsSync(new URL(`../src/components/${file}.astro`, import.meta.url)), file);
   const page = read('src/pages/index.astro');
-  const order = [...page.matchAll(/<section class="wrap block" id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(order, ['objetivo', 'cursos', 'trilhas', 'areas', 'curadoria', 'perguntas']);
+  const order = [...page.matchAll(/<section class="[^"]*\bblock\b[^"]*" id="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(order, ['objetivo', 'cursos', 'trilhas', 'areas', 'fontes', 'curadoria', 'perguntas']);
   assert.match(page, /featuredCourses\(\)/);
 });

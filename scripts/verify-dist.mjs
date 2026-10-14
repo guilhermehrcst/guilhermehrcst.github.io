@@ -399,7 +399,7 @@ const DEMO_RESOURCE_IDS = new Set();
 const PUBLISHED_RESOURCE_IDS = new Set();
 /** Each search result for a resource, and the page#anchor it opens (V0.4 M4). */
 const SEARCH_RESOURCE_TARGETS = new Map();
-/** Institution filters the Home's institutions (#curadoria, Home V1) lead to (V0.4 QA P1-RC1); each must work on the built search. */
+/** Institution filters the Home's institutions (#fontes, Home V2) lead to (V0.4 QA P1-RC1); each must work on the built search. */
 const HOME_SEARCH_FILTERS = new Set();
 /** The distinct resources each page renders, and the count the Home prints for each path (V0.4 §5.3). */
 const PAGE_RESOURCE_IDS = new Map();
@@ -445,6 +445,9 @@ function checkHome(path, html, resources) {
     for (const page of PREPARING) {
       if (!new RegExp(`href="${page}"[^>]*>[\\s\\S]*?Em preparação[\\s\\S]*?</a>`).test(objective)) fail(path, `#objetivo marks ${page} as in preparation`);
     }
+    // Each path card carries its original illustration (Home V2), decorative: hidden, never focusable.
+    const arts = objective.match(/<svg\b[^>]*\sclass="path-art[^"]*"[^>]*>/g) ?? [];
+    if (arts.length !== PATHS.length || arts.some((svg) => !/aria-hidden="true"/.test(svg) || !/focusable="false"/.test(svg))) fail(path, `#objetivo has ${arts.length} decorative illustrations`);
   }
   // Featured courses: three or four published courses of the library, as its own cards, and the way to all.
   const courses = sectionOf(html, /<section\b[^>]*\sid="cursos"/) ?? '';
@@ -468,30 +471,32 @@ function checkHome(path, html, resources) {
   const areas = sectionOf(html, /<section\b[^>]*\sid="areas"/);
   if (!areas) fail(path, 'section#areas missing');
   else checkAreaGroups(path, areas);
-  // Commitments: the verification date, the rules (/sobre/), and the institutions, each leading to its courses
-  // on this site. Never a partner, a sponsor or an endorsement (docs/superpowers/research/2026-10-11-official-brands.md).
+  // Commitments: the verification date and the rules (/sobre/).
   const curation = sectionOf(html, /<section\b[^>]*\sid="curadoria"/) ?? '';
   if (!hrefsIn(curation).includes('/sobre/')) fail(path, '#curadoria must lead to /sobre/');
   if (!/<time datetime="\d{4}-\d{2}-\d{2}"/.test(curation)) fail(path, '#curadoria states the verification date');
-  const cells = [...curation.matchAll(/<li\b[^>]*\sdata-institution="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
-  if (cells.length < 3) fail(path, `#curadoria shows ${cells.length} institutions`);
+  // Institutions (Home V2, its own section again): each leading to its courses on this site. Never a partner,
+  // a sponsor or an endorsement (docs/superpowers/research/2026-10-11-official-brands.md).
+  const sources = sectionOf(html, /<section\b[^>]*\sid="fontes"/) ?? '';
+  const cells = [...sources.matchAll(/<li\b[^>]*\sdata-institution="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g)];
+  if (cells.length < 3) fail(path, `#fontes shows ${cells.length} institutions`);
   for (const [, name, body] of cells) {
     const links = hrefsIn(body);
     const filtered = /^\/buscar\/\?instituicao=([a-z0-9-]+)$/.exec(links[0] ?? '');
     if (filtered) HOME_SEARCH_FILTERS.add(filtered[1]);
-    if (links.length !== 1 || !(/^\/[^#]*#[\w-]+$/.test(links[0]) || filtered)) fail(path, `#curadoria ${name} links ${links.join(',') || 'nowhere'}`);
+    if (links.length !== 1 || !(/^\/[^#]*#[\w-]+$/.test(links[0]) || filtered)) fail(path, `#fontes ${name} links ${links.join(',') || 'nowhere'}`);
   }
   const plain = main.replace(/<[^>]+>/g, ' ');
   // Nor a feature the product does not have (V0.2 brief): no tutor, no saved progress, no Academy certificate.
-  const claim = /parceir|patrocin|apoiad|endoss|oficial da pexis|tutor|progresso salvo|salvamos|certificado da (pexis|academy)/i.exec(plain);
+  const claim = /parceir|patroc[ií]n|apoiad|endoss|oficial da pexis|tutor|progresso salvo|salvamos|certificado da (pexis|academy)/i.exec(plain);
   if (claim) fail(path, `the Home claims an association ("${claim[0]}")`);
   // Nor a promise the catalogue does not keep: not every course is in Portuguese, not every source is official.
   const overclaim = /em português · fontes oficiais|todos os cursos (são|estão) em português|apenas fontes oficiais/i.exec(plain);
   if (overclaim) fail(path, `the Home overclaims ("${overclaim[0]}")`);
 
-  // The order is fixed and closed: no section joins without a written reason (Home V1).
+  // The order is fixed and closed: no section joins without a written reason (Home V1; V2 restores #fontes).
   const sections = attrs(main, /<section\b[^>]*\sid="([^"]+)"/g);
-  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'cursos', 'trilhas', 'areas', 'curadoria', 'perguntas'])) fail(path, `Home sections ${sections.join(',')}`);
+  if (JSON.stringify(sections) !== JSON.stringify(['objetivo', 'cursos', 'trilhas', 'areas', 'fontes', 'curadoria', 'perguntas'])) fail(path, `Home sections ${sections.join(',')}`);
   if (main.search(/<h1[\s>]/) > main.search(/<section\b/)) fail(path, 'the hero (with the h1) comes first');
   if ((main.match(/<section\b/g) ?? []).length !== sections.length) fail(path, 'every Home section has an id');
   // Questions as native disclosure (no JavaScript): each a <details> with its <summary>.
@@ -878,7 +883,7 @@ for (const path of CANONICAL) {
   }
 }
 
-/* An institution link (#curadoria) to the search filtered by institution must be a filter the built search page offers, and
+/* An institution link (#fontes) to the search filtered by institution must be a filter the built search page offers, and
    that filter must list results on more than one page (the reason it is used instead of a track link). */
 {
   const search = existsSync(fileFor('/buscar/')) ? readFileSync(fileFor('/buscar/'), 'utf8') : '';

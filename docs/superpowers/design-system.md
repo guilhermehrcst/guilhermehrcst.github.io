@@ -26,6 +26,8 @@ The stack is Astro with plain CSS:
 | `--tint-brand` / `--tint-sand` | `#f6e9ea` / `#efe7da` | Quiet grounds. |
 | `--ink` / `--muted` | `#1d2125` / `#565c63` | Text and secondary text. |
 | `--rule` / `--rule-strong` | `#e2ddd4` / `#cfc8bb` | Hairlines. |
+| `--sage` `--peach` `--sky` `--cream` `--blush` (+ `--tint-sand`) | `#e4ecdd` `#f9e1d2` `#dfe9f4` `#f6edd8` `#f7e4e5` | Home V2: the soft grounds of the six path cards. Never an action colour. Text on them is measured. |
+| `--*-deep` | `#c3d4b8` `#f1c4a6` `#bdd0e6` `#e7d6ae` `#ebc8cb` `#dccdb5` | Home V2: the panel and details of a path illustration only, never under text. |
 
 ### Measured contrast (`tests/contrast.test.ts`)
 
@@ -72,16 +74,17 @@ The stack is Astro with plain CSS:
 | `SiteFooter` | Wine, with the lockup at 64px. Columns: Institucional, Formação (exams under Vestibular), Matérias, Explorar, then a legal bar with the real licences and attribution. |
 | `PageIntro` | Surface band with a breadcrumb (Início → section), a wine eyebrow, a serif H1 and a lead. |
 | `PreparingNote` | The state of a path in preparation, said once ([data-preparing]). |
-| `ProductWindow` | A decorative window around real product data. It is `aria-hidden`, holds nothing focusable, and is captioned by a real link. |
+| `HomeHero` (V2) | Editorial split: the lema in a large serif, one line, the site search (`/buscar/?q=`, native GET form) and two ways in; beside it a bento of a real course photograph, the brand plate and a second real course, each named by title and institution. `aria-hidden`, captioned by a link to `/cursos/`. |
+| `HomePaths` + `PathArt` (V2) | The six paths as cards on soft grounds, each with an original geometric illustration (no photograph, no third-party artwork), the count from the catalogue or "Em preparação". The panels alternate above and below the text on a checkerboard; on a phone a card is a compact row. |
+| `HomeAreas` (V2) | The six areas as a typographic index: number, serif name, subjects as links. Deliberately not cards, so it never repeats the paths. |
 | `ObjectiveList` | Editorial index: number, serif name, one line, and real counts or "Em preparação". |
-| `LearningPath` | Five steps on a rail: vertical below 1180px, horizontal above. A pending step links nowhere. |
-| `OfficialSources` | Supplied third-party marks, shown whole, in a ruled panel. |
+| `OfficialSources` | Supplied third-party marks, shown whole, in a ruled panel (Home V2: the body of `#fontes`). |
 | `AreaList` | Editorial grid of areas, with subjects as 44px rows. |
 | `SectionNav` (V0.4) | In-page navigation of a long path page: ruled rows (label, one muted line), two columns from 768px, each leading to a section id. verify-dist checks it lists every section of the page, in order. |
 | `FeaturedResources` (V0.4) | A path's ten editorial highlights (`#destaques`, `[data-featured]`). Renders nothing until the path's selection is complete and valid; never on a path in preparation. |
 | `ResourceGroups` (V0.4) | Resources by what the student does: Para estudar, Para praticar (practice, past exams, simulators), Para consultar (reference). Empty groups are omitted. |
 
-**Cards** are used only where a unit is self-contained: an exam on Vestibular, a featured path, a mark.
+**Cards** are used only where a unit is self-contained: an exam on Vestibular, a featured path, a mark, and (Home V2) a path of the Home with its illustration.
 Lists are ruled rows.
 
 **Buttons and links.**
@@ -92,7 +95,7 @@ Lists are ruled rows.
 
 ## Motion
 
-Only hover and focus transitions (180ms) and the hero's entrance. All of it is off under
+Only hover and focus transitions (180ms; on the Home V2 cards a 2px lift and a slight zoom of the illustration) and the hero's entrance. All of it is off under
 `prefers-reduced-motion` (global rule, checked in dist). There is no scroll hijacking, parallax or
 carousel.
 

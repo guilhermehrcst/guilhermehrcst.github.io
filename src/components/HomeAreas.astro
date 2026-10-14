@@ -1,16 +1,18 @@
 ---
-// "Explore por área" on the Home (Home V1): the six areas of the taxonomy as a compact grid, each with its
-// subjects as small links to their real pages, in order. /materias/ keeps its full list (AreaList.astro).
-// verify-dist reads each [data-area] element: no nested div inside it.
+// "O que você quer estudar?" on the Home (V2): the six areas of the taxonomy as a typographic index, not as
+// cards, so it never repeats the paths above it (the paths answer "for what", the areas "what"). One ruled row
+// per area: its number, its name in a large serif, and its subjects as links to their real pages, in order.
+// /materias/ keeps its full list (AreaList.astro). verify-dist reads each [data-area] element: no nested div.
 import { routes } from '../lib/routes';
 import { AREA_ORDER, AREAS, SUBJECTS, subjectsOf } from '../lib/taxonomy';
 
 const areas = AREA_ORDER.map((id) => ({ id, label: AREAS[id].label, subjects: subjectsOf(id) }));
 ---
-<ul class="areas" role="list">
-  {areas.map((area) => (
+<ol class="areas" role="list">
+  {areas.map((area, i) => (
     <li>
       <div class="area" data-area={area.id}>
+        <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
         <h3 class="name">{area.label}</h3>
         <ul class="subjects" role="list">
           {area.subjects.map((id) => <li><a href={routes.subject(id)}>{SUBJECTS[id].label}</a></li>)}
@@ -18,28 +20,38 @@ const areas = AREA_ORDER.map((id) => ({ id, label: AREAS[id].label, subjects: su
       </div>
     </li>
   ))}
-</ul>
+</ol>
 
 <style>
-  .areas { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
-  @media (min-width: 560px) { .areas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1024px) { .areas { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); } }
-  .area { display: grid; align-content: start; gap: var(--space-3); height: 100%; padding: var(--space-4) var(--space-5) var(--space-5); border-radius: var(--radius-lg); background: var(--surface); }
-  .name { font-family: var(--serif); font-size: 1.375rem; font-weight: 460; letter-spacing: -0.01em; }
-  .subjects { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .areas { border-top: 1px solid var(--rule-strong); }
+  .areas > li + li { border-top: 1px solid var(--rule); }
+  .area {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: var(--space-2) var(--space-3);
+    align-items: baseline;
+    padding-block: var(--space-4);
+  }
+  .n { font-size: 0.8125rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
+  .name { font-family: var(--serif); font-size: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem); font-weight: 420; line-height: 1.05; letter-spacing: -0.02em; transition: color var(--t-ui); }
+  .area:hover .name { color: var(--action); }
+  .subjects { grid-column: 2; display: flex; flex-wrap: wrap; gap: 0 var(--space-1); margin-left: calc(-1 * var(--space-3)); }
   .subjects a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    padding-inline: var(--space-4);
-    border: 1px solid var(--rule-strong);
+    padding-inline: var(--space-3);
     border-radius: 999px;
-    background: var(--raised);
     color: var(--ink);
     font-size: 0.9375rem;
     font-weight: 500;
     text-decoration: none;
-    transition: border-color var(--t-ui), color var(--t-ui);
+    transition: background var(--t-ui), color var(--t-ui);
   }
-  .subjects a:hover { border-color: var(--action); color: var(--action); }
+  .subjects a:hover { background: var(--surface); color: var(--action); }
+  /* A wide screen: the number, the name and the subjects on one line. */
+  @media (min-width: 900px) {
+    .area { grid-template-columns: 3rem minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: var(--space-5); padding-block: var(--space-5); }
+    .subjects { grid-column: auto; justify-content: flex-start; }
+  }
 </style>

@@ -1,8 +1,10 @@
 ---
-// The Home (Home V1) answers three questions fast: what can I learn here (the search and the six paths),
-// where is the content (a sample of the course library, the areas), how do I start (ready paths). Order:
-// hero, paths, featured courses, ready paths, areas, commitments, questions. The Home lists courses only in
-// #cursos, a small editorial sample from the published library (src/lib/home-featured.ts), never a copy.
+// The Home (V2) answers three questions fast: what can I learn here (the search and the six paths), where is
+// the content (a sample of the course library, the areas), how do I start (ready paths); then who publishes
+// it and what the Academy promises. Order: hero, paths, featured courses, ready paths, areas, institutions,
+// commitments, questions. The Home lists courses only in #cursos, a small editorial sample from the published
+// library (src/lib/home-featured.ts), never a copy. Each section opens with the same head: a wine eyebrow,
+// the serif title and one line of what follows.
 import Base from '../layouts/Base.astro';
 import HomeHero from '../components/HomeHero.astro';
 import HomePaths from '../components/HomePaths.astro';
@@ -27,43 +29,55 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
 
   <section class="wrap block" id="objetivo" aria-labelledby="objetivo-title">
     <div class="head">
-      <h2 id="objetivo-title">{t.home.objectives.heading}</h2>
-      <p>{t.home.objectives.lead}</p>
+      <div><p class="kicker">{t.home.objectives.eyebrow}</p><h2 id="objetivo-title">{t.home.objectives.heading}</h2></div>
+      <p class="lead">{t.home.objectives.lead}</p>
     </div>
     <HomePaths />
   </section>
 
-  <section class="wrap block" id="cursos" aria-labelledby="cursos-title">
-    <div class="head">
-      <h2 id="cursos-title">{t.home.courses.heading}</h2>
-      <p>{t.home.courses.lead}</p>
+  <section class="block band" id="cursos" aria-labelledby="cursos-title">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="kicker">{t.home.courses.eyebrow}</p><h2 id="cursos-title">{t.home.courses.heading}</h2></div>
+        <div class="side">
+          <p class="lead">{t.home.courses.lead}</p>
+          <a class="all" href={routes.courses}>{t.home.courses.all}{' '}<span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+      <ul class="courses" role="list" data-resource-list>
+        {featured.map((card) => <CourseCard card={card} />)}
+      </ul>
     </div>
-    <ul class="courses" role="list" data-resource-list>
-      {featured.map((card) => <CourseCard card={card} />)}
-    </ul>
-    <p class="all"><a href={routes.courses}>{t.home.courses.all}{' '}<span aria-hidden="true">→</span></a></p>
   </section>
 
   <section class="wrap block" id="trilhas" aria-labelledby="trilhas-title">
     <div class="head">
-      <h2 id="trilhas-title">{t.home.tracks.heading}</h2>
-      <p>{t.home.tracks.lead}</p>
+      <div><p class="kicker">{t.home.tracks.eyebrow}</p><h2 id="trilhas-title">{t.home.tracks.heading}</h2></div>
+      <p class="lead">{t.home.tracks.lead}</p>
     </div>
     <FeaturedPaths />
   </section>
 
   <section class="wrap block" id="areas" aria-labelledby="areas-title">
     <div class="head">
-      <h2 id="areas-title">{t.home.areas.heading}</h2>
-      <p>{t.home.areas.lead}</p>
+      <div><p class="kicker">{t.home.areas.eyebrow}</p><h2 id="areas-title">{t.home.areas.heading}</h2></div>
+      <p class="lead">{t.home.areas.lead}</p>
     </div>
     <HomeAreas />
   </section>
 
+  <section class="wrap block" id="fontes" aria-labelledby="fontes-title">
+    <div class="head">
+      <div><p class="kicker">{t.home.sources.eyebrow}</p><h2 id="fontes-title">{t.home.sources.heading}</h2></div>
+      <p class="lead">{t.home.sources.lead}</p>
+    </div>
+    <OfficialSources />
+  </section>
+
   <section class="wrap block" id="curadoria" aria-labelledby="curadoria-title">
     <div class="head">
-      <h2 id="curadoria-title">{cur.heading}</h2>
-      <p>{cur.lead}</p>
+      <div><p class="kicker">{cur.eyebrow}</p><h2 id="curadoria-title">{cur.heading}</h2></div>
+      <p class="lead">{cur.lead}</p>
     </div>
     <ol class="commitments" role="list">
       {cur.commitments.map((item, i) => (
@@ -78,7 +92,6 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
       <p class="stamp"><span class="dot" aria-hidden="true"></span><time datetime={VERIFIED_ON}>{cur.verified(formatDate(VERIFIED_ON))}</time></p>
       <p class="more"><a href={routes.about}>{cur.more}{' '}<span aria-hidden="true">→</span></a></p>
     </div>
-    <OfficialSources />
   </section>
 
   <section class="wrap block" id="perguntas" aria-labelledby="perguntas-title">
@@ -97,12 +110,18 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
 </Base>
 
 <style>
-  .block { padding-block: var(--space-6); }
-  .block + .block { border-top: 1px solid var(--rule); }
-  /* A section's head: the title, and beside it on a wide screen, one line of what follows. */
-  .head { display: grid; gap: var(--space-2) var(--space-7); margin-bottom: var(--space-5); }
-  .head h2 { font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.375rem); max-width: 20ch; }
-  .head p { max-width: 44ch; color: var(--muted); }
+  .block { position: relative; padding-block: var(--space-7); }
+  /* A hairline between sections, inside the gutters: never a border on .wrap, whose padding is the gutter. */
+  .block + .block::before { content: ''; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: 1px; background: var(--rule); }
+  /* The featured courses sit on a quiet band across the page: the library, opened. No hairline at its edges. */
+  .band { background: var(--tint-sand); }
+  .band::before, .band + .block::before { display: none; }
+  /* A section's head: the eyebrow and the title, and beside them on a wide screen, one line of what follows. */
+  .head { display: grid; gap: var(--space-3) var(--space-7); margin-bottom: var(--space-6); }
+  .kicker { margin-bottom: var(--space-2); font-size: 0.75rem; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; color: var(--action); }
+  .head h2 { font-size: clamp(2rem, 1.5rem + 1.8vw, 3rem); font-weight: 420; line-height: 1.02; letter-spacing: -0.03em; max-width: 18ch; }
+  .head .lead { max-width: 44ch; color: var(--muted); }
+  .side { display: grid; gap: var(--space-3); justify-items: start; }
   @media (min-width: 1024px) { .head { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; } }
 
   /* Featured courses: the library's cards; a sideways row on a phone, two columns on a tablet, four wide. */
@@ -110,25 +129,38 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
   .courses::-webkit-scrollbar { display: none; }
   .courses > :global(li) { scroll-snap-align: start; }
   @media (min-width: 600px) { .courses { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-4); margin-inline: 0; padding-inline: 0; overflow: visible; } }
-  @media (min-width: 1100px) { .courses { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-  .all { margin-top: var(--space-5); }
-  .all a, .more a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
+  @media (min-width: 1100px) { .courses { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-5); } }
+  .all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    min-height: 44px;
+    padding-inline: var(--space-5);
+    border-radius: 999px;
+    background: var(--action);
+    color: var(--on-action);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background var(--t-ui);
+  }
+  .all:hover { background: var(--action-hover); color: var(--on-action); }
+  .more a { display: inline-flex; align-items: center; gap: 0.35em; min-height: 44px; font-weight: 560; }
 
   /* Commitments: three short promises, numbered; then the date of the last verification and the rules. */
   .commitments { display: grid; gap: var(--space-4); }
   @media (min-width: 900px) { .commitments { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); } }
   .commitments li { display: grid; align-content: start; gap: var(--space-2); padding-top: var(--space-4); border-top: 2px solid var(--action); }
   .commitments .n { font-size: var(--fs-small); font-variant-numeric: tabular-nums; color: var(--muted); }
-  .commitments h3 { font-family: var(--serif); font-size: 1.375rem; font-weight: 460; letter-spacing: -0.01em; }
+  .commitments h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 440; letter-spacing: -0.015em; }
   .commitments p { max-width: 44ch; font-size: 0.9375rem; color: var(--muted); }
-  .proof { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-5); margin-block: var(--space-5) var(--space-6); }
+  .proof { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-5); margin-top: var(--space-6); }
   .stamp { display: inline-flex; align-items: center; gap: var(--space-2); padding: 0.3rem 0.75rem; border: 1px solid var(--rule-strong); border-radius: 999px; font-size: var(--fs-small); font-weight: 500; }
   .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--action); }
 
   /* Questions: a narrow column of native disclosures; the marker is drawn, the state is the browser's. */
   .faq { display: grid; gap: var(--space-4); }
   @media (min-width: 1024px) { .faq { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-7); } }
-  .faq h2 { font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.375rem); }
+  .faq h2 { font-size: clamp(2rem, 1.5rem + 1.8vw, 3rem); font-weight: 420; line-height: 1.02; letter-spacing: -0.03em; }
   .questions { border-top: 1px solid var(--rule-strong); }
   details { border-bottom: 1px solid var(--rule); }
   summary {

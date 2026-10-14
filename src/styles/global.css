@@ -25,6 +25,20 @@
   --tint-brand: #f6e9ea;
   --tint-sand: #efe7da;
   --rule-strong: #cfc8bb;
+  /* Home V2: the soft grounds of the path cards (sage, peach, light blue, cream, a very soft pink, sand),
+     each with a deeper tone used only behind and inside its illustration, never under text. The wine stays
+     the one identity colour; these never carry an action. Text on the light tones is measured. */
+  --sage: #e4ecdd;
+  --sage-deep: #c3d4b8;
+  --peach: #f9e1d2;
+  --peach-deep: #f1c4a6;
+  --sky: #dfe9f4;
+  --sky-deep: #bdd0e6;
+  --cream: #f6edd8;
+  --cream-deep: #e7d6ae;
+  --blush: #f7e4e5;
+  --blush-deep: #ebc8cb;
+  --sand-deep: #dccdb5;
 
   --sans: 'Google Sans Flex Variable', 'Google Sans Flex', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   /* Newsreader (OFL-1.1, self-hosted): the academic voice of the display type. Body text stays sans. */

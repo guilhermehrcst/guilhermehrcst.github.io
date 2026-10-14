@@ -119,18 +119,21 @@ export interface Dict {
       compositionCaption: string;
       compositionLink: string;
     };
-    objectives: { heading: string; lead: string; items: Record<PathId, string>; facts: (resources: number, tracks?: number) => string };
+    objectives: { eyebrow: string; heading: string; lead: string; items: Record<PathId, string>; facts: (resources: number, tracks?: number) => string };
     sources: {
+      eyebrow: string;
       heading: string;
+      lead: string;
       count: (resources: number, page: string) => string;
       /** An institution whose courses span pages: every area, in catalogue order. */
       countAreas: (resources: number, areas: readonly string[]) => string;
       exams: string;
       examLinks: { enem: string; uerj: string };
     };
-    courses: { heading: string; lead: string; all: string };
-    areas: { heading: string; lead: string; subjects: (n: number) => string };
+    courses: { eyebrow: string; heading: string; lead: string; all: string };
+    areas: { eyebrow: string; heading: string; lead: string; subjects: (n: number) => string };
     tracks: {
+      eyebrow: string;
       heading: string;
       lead: string;
       kinds: { guide: string; track: string };
@@ -140,7 +143,7 @@ export interface Dict {
       more: (n: number) => string;
       links: { enem: string; uerj: string; track: string };
     };
-    curation: { heading: string; lead: string; verified: (date: string) => string; commitments: { title: string; body: string }[]; more: string };
+    curation: { eyebrow: string; heading: string; lead: string; verified: (date: string) => string; commitments: { title: string; body: string }[]; more: string };
     faq: { heading: string; items: { q: string; a: string }[] };
   };
   about: {

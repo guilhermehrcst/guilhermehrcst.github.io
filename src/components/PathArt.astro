@@ -1,0 +1,110 @@
+---
+// The illustration of a path card on the Home (V2): an original geometric drawing, made for the Academy, of
+// what the path is about. No photograph, no person, no third-party artwork. Fundamental: shapes and a pencil.
+// Médio: an open book. Vestibular: an answer sheet. Superior: a university facade. Tecnologia: a code window.
+// Pré-Militar: a compass (direction). Decorative: the card's name says what it is. The colours are tokens:
+// the bodies on --raised, the details in the card's --deep tone, one accent in the brand wine.
+import type { PathId } from '../lib/taxonomy';
+
+interface Props { path: PathId }
+const { path } = Astro.props;
+---
+<svg class="path-art" viewBox="0 0 240 160" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  {path === 'ensino-fundamental' && (
+    <g>
+      <rect class="k" x="34" y="138" width="150" height="6" rx="3" />
+      <rect class="w" x="40" y="88" width="50" height="50" rx="9" />
+      <rect class="w" x="96" y="88" width="50" height="50" rx="9" />
+      <rect class="w" x="68" y="34" width="50" height="50" rx="9" />
+      <circle class="d" cx="65" cy="113" r="12" />
+      <path class="d" d="M121 100 L134 124 H108 Z" />
+      <rect class="a" x="82" y="48" width="22" height="22" rx="3" />
+      <g transform="rotate(-62 186 92)">
+        <rect class="d" x="138" y="84" width="12" height="16" rx="3" />
+        <rect class="a" x="149" y="84" width="64" height="16" />
+        <path class="w" d="M213 84 L232 92 L213 100 Z" />
+        <path class="k" d="M226 89.5 L232 92 L226 94.5 Z" />
+      </g>
+    </g>
+  )}
+  {path === 'ensino-medio' && (
+    <g>
+      <path class="k" d="M30 128 C66 120 100 124 120 140 C140 124 174 120 210 128 V134 C174 126 140 130 120 146 C100 130 66 126 30 134 Z" />
+      <path class="w" d="M120 40 C100 28 64 26 34 32 V124 C64 118 100 120 120 134 Z" />
+      <path class="w" d="M120 40 C140 28 176 26 206 32 V124 C176 118 140 120 120 134 Z" />
+      <path class="line" d="M120 42 V132" />
+      <path class="line" d="M50 52 H104 M50 66 H104 M50 80 H96 M50 94 H104 M50 108 H88" />
+      <path class="line" d="M136 52 H170 M136 66 H190 M136 80 H186 M136 94 H190 M136 108 H160" />
+      <path class="a" d="M176 26 H190 V66 L183 58 L176 66 Z" />
+    </g>
+  )}
+  {path === 'vestibulares' && (
+    <g transform="rotate(-4 120 82)">
+      <rect class="w" x="58" y="16" width="124" height="132" rx="10" />
+      <rect class="d" x="74" y="30" width="58" height="8" rx="4" />
+      <rect class="d" x="140" y="30" width="26" height="8" rx="4" />
+      {[0, 1, 2, 3].map((row) => (
+        [0, 1, 2, 3, 4].map((col) => (
+          <circle
+            class={col === [1, 3, 0, 2][row] ? 'a' : 'ring'}
+            cx={84 + col * 18}
+            cy={60 + row * 22}
+            r="6"
+          />
+        ))
+      ))}
+    </g>
+  )}
+  {path === 'ensino-superior' && (
+    <g>
+      <rect class="k" x="30" y="140" width="180" height="8" rx="2" />
+      <path class="w" d="M120 18 L200 58 H40 Z" />
+      <circle class="a" cx="120" cy="44" r="7" />
+      <rect class="w" x="44" y="62" width="152" height="10" rx="2" />
+      <rect class="w" x="54" y="78" width="20" height="50" rx="2" />
+      <rect class="w" x="88" y="78" width="20" height="50" rx="2" />
+      <rect class="w" x="132" y="78" width="20" height="50" rx="2" />
+      <rect class="w" x="166" y="78" width="20" height="50" rx="2" />
+      <rect class="w" x="40" y="130" width="160" height="10" rx="2" />
+    </g>
+  )}
+  {path === 'tecnologia' && (
+    <g>
+      <rect class="w" x="34" y="22" width="172" height="118" rx="12" />
+      <circle class="a" cx="54" cy="40" r="4.5" />
+      <circle class="d" cx="68" cy="40" r="4.5" />
+      <circle class="d" cx="82" cy="40" r="4.5" />
+      <path class="line" d="M34 56 H206" />
+      <rect class="a" x="52" y="70" width="44" height="9" rx="4.5" />
+      <rect class="d" x="102" y="70" width="58" height="9" rx="4.5" />
+      <rect class="d" x="66" y="88" width="78" height="9" rx="4.5" />
+      <rect class="d" x="66" y="106" width="40" height="9" rx="4.5" />
+      <rect class="a" x="112" y="106" width="30" height="9" rx="4.5" />
+      <rect class="d" x="52" y="124" width="26" height="9" rx="4.5" />
+      <rect class="k" x="150" y="87" width="4" height="12" rx="1" />
+    </g>
+  )}
+  {path === 'pre-militar' && (
+    <g>
+      <circle class="w" cx="120" cy="80" r="62" />
+      <circle class="ring" cx="120" cy="80" r="50" />
+      <path class="d" d="M120 80 L168 72 L178 80 L168 88 Z" />
+      <path class="d" d="M120 80 L72 72 L62 80 L72 88 Z" />
+      <path class="d" d="M120 80 L128 128 L120 138 L112 128 Z" />
+      <path class="a" d="M120 80 L128 32 L120 22 L112 32 Z" />
+      <circle class="w" cx="120" cy="80" r="7" />
+      <circle class="ring-k" cx="120" cy="80" r="7" />
+    </g>
+  )}
+</svg>
+
+<style>
+  .path-art { display: block; width: 100%; height: 100%; }
+  .w { fill: var(--raised); }
+  .d { fill: var(--deep); }
+  .a { fill: var(--brand); }
+  .k { fill: var(--ink); opacity: 0.14; }
+  .line { fill: none; stroke: var(--deep); stroke-width: 3; stroke-linecap: round; }
+  .ring { fill: none; stroke: var(--deep); stroke-width: 2.5; }
+  .ring-k { fill: none; stroke: var(--ink); stroke-width: 2; opacity: 0.5; }
+</style>

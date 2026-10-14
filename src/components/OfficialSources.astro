@@ -1,6 +1,6 @@
 ---
-// The institutions whose free courses the Academy points to (Home V1: a compact block of "Nossos
-// compromissos"), as their own supplied marks (ProviderMark, unmodified), each leading to its courses on this site: the track that holds its
+// The institutions whose free courses the Academy points to (Home V2: the body of "Instituições e fontes",
+// whose heading the page sets), as their own supplied marks (ProviderMark, unmodified), each leading to its courses on this site: the track that holds its
 // first course, or, when its courses span pages, the search filtered by that institution (homeSources). Only providers
 // with published, verified resources appear (institutions()); the brands still being verified are recorded
 // in docs/superpowers/research/2026-10-11-official-brands.md and are not shown. Never a partner or a sponsor:
@@ -22,7 +22,6 @@ const list = homeSources(Object.keys(providerMarks), publishedResources, publish
 }));
 ---
 <div class="sources">
-  <h3>{s.heading}</h3>
   <ul class="marks" role="list">
     {list.map((item) => (
       <li data-institution={item.provider}>
@@ -43,7 +42,6 @@ const list = homeSources(Object.keys(providerMarks), publishedResources, publish
 
 <style>
   .sources { display: grid; gap: var(--space-4); }
-  h3 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   /* Equal cells, one height for every mark, so none reads larger. */
   .marks {
     display: grid;
