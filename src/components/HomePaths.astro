@@ -1,19 +1,21 @@
 ---
-// "Escolha seu caminho" on the Home (V2), after the LabAcademy reference: the six paths as wide coloured cards.
-// Each: its own ground, an original illustration (PathArt) in a cut-corner panel of the deeper tone at the top
-// right, a white disc with an arrow at the top left, then the path in the serif, one line of what it holds,
-// and an outlined pill with what it really holds today (counted from the published catalogue at build time,
-// objectiveFacts, never typed; "Em preparação" for a path in preparation). V2.1: the name leads, the state
-// follows the description. The middle card of each
-// row is turned over (text above, panel below), as the reference does, so six cards never read as six
-// identical boxes. The whole card is the link. On a phone a card is a compact row. /materias/ keeps its
-// editorial index (ObjectiveList.astro).
+// "Qual é o seu objetivo?" on the Home (V2.2, after LabAcademy's cards and Prolingo's warmth): the six paths as
+// one system of cards, in the order of the header's line (HOME_PATH_ORDER). Every card reads the same way, top
+// to bottom: its art (PathArt: an original editorial composition) in a rounded panel of the path's deep tone,
+// the path's name in the serif, one line of what it holds, and, last and quietest, what it really holds today
+// (counted from the published catalogue at build time, objectiveFacts, never typed; "Em preparação" for a path
+// in preparation). The way in is a discreet disc at the card's lower right, the same place in all six. The whole card
+// is the one link; the art and the disc are decorative. No card turns over: the order of reading never changes.
+// The rows are a subgrid, so the names, the descriptions and the labels of the cards of one row line up even when
+// a name or a line wraps. On a phone a card is a row: the art on the left, the text beside it.
+// /materias/ keeps its editorial index (ObjectiveList.astro).
 import PathArt from './PathArt.astro';
 import ArrowTopRightIcon from './icons/radix/ArrowTopRightIcon.astro';
+import { HOME_PATH_ORDER } from '../lib/home-featured';
 import { objectiveFacts } from '../lib/learning-library';
 import { routes } from '../lib/routes';
 import { superiorCopyFor } from '../lib/superior-copy';
-import { OBJECTIVES, PATH_ORDER, PREPARING_PATHS, type PathId } from '../lib/taxonomy';
+import { OBJECTIVES, PREPARING_PATHS, type PathId } from '../lib/taxonomy';
 import { pt as t } from '../i18n/pt';
 
 const o = t.home.objectives;
@@ -29,22 +31,17 @@ const TONE: Record<PathId, string> = {
 };
 ---
 <ul class="paths" role="list">
-  {PATH_ORDER.map((id, i) => {
+  {HOME_PATH_ORDER.map((id) => {
     const facts = objectiveFacts(id);
     const preparing = PREPARING_PATHS.includes(id);
-    // Turned over: the middle card of each row (three columns), or cards 2-3 of every four (two columns).
-    const flip3 = i % 3 === 1;
-    const flip2 = i % 4 === 1 || i % 4 === 2;
     return (
-      <li class:list={[flip2 && 'flip-2', flip3 && 'flip-3']}>
+      <li>
         <a href={routes.objective(id)} data-path-count={preparing ? undefined : facts.resources} class:list={['card', `tone-${TONE[id]}`, preparing && 'preparing']}>
-          <span class="go" aria-hidden="true"><ArrowTopRightIcon width={18} height={18} /></span>
           <span class="art"><PathArt path={id} /></span>
-          <span class="text">
-            <span class="name">{OBJECTIVES[id].label}</span>
-            <span class="what">{id === 'ensino-superior' ? superior.objective : o.items[id]}</span>
-            <span class="pill">{preparing ? t.preparing.label : o.facts(facts.resources, facts.tracks)}</span>
-          </span>
+          <span class="go" aria-hidden="true"><ArrowTopRightIcon width={18} height={18} /></span>
+          <span class="name">{OBJECTIVES[id].label}</span>
+          <span class="what">{id === 'ensino-superior' ? superior.objective : o.items[id]}</span>
+          <span class="pill">{preparing ? t.preparing.label : o.facts(facts.resources, facts.tracks)}</span>
         </a>
       </li>
     );
@@ -52,9 +49,11 @@ const TONE: Record<PathId, string> = {
 </ul>
 
 <style>
-  .paths { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
-  @media (min-width: 640px) { .paths { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); } }
-  @media (min-width: 1024px) { .paths { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); } }
+  .paths { --gap: clamp(14px, 1.7vw, 24px); display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  /* Two columns where a card keeps a comfortable measure (an iPad held upright), three where three fit without
+     shrinking the type (an iPad held sideways and a laptop). */
+  @media (min-width: 640px) { .paths { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); } }
+  @media (min-width: 1080px) { .paths { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
   .tone-peach { --ground: var(--peach); --deep: var(--peach-deep); }
   .tone-sky { --ground: var(--sky); --deep: var(--sky-deep); }
@@ -63,99 +62,111 @@ const TONE: Record<PathId, string> = {
   .tone-sage { --ground: var(--sage); --deep: var(--sage-deep); }
   .tone-sand { --ground: var(--sand); --deep: var(--sand-deep); }
 
-  /* A phone: a compact row, the text beside a small cut-corner panel. */
+  /* Without subgrid: a column of the same four parts, the label pushed to the foot. */
+  .paths > li { display: grid; }
   .card {
+    --art-h: 150px;
     position: relative;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 96px;
-    grid-template-areas: "text art";
-    align-items: center;
-    gap: var(--space-4);
-    height: 100%;
-    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-5);
-    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 28px;
     background: var(--ground);
     color: var(--ink);
     text-decoration: none;
-    transition: transform var(--t-ui) var(--ease), box-shadow var(--t-ui) var(--ease);
   }
-  .art {
-    grid-area: art;
+  .pill { margin-top: auto; }
+  /* With subgrid: the four rows are the grid's, so a row of cards shares one height for its art, its names,
+     its lines and its labels. The gutters between cards stay the grid's; inside a card there are none. */
+  @supports (grid-template-rows: subgrid) {
+    .paths > li { grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; }
+    .card { display: grid; grid-row: 1 / -1; grid-template-rows: subgrid; grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+    .pill { margin-top: 0; }
+  }
+
+  /* The art: a rounded panel of the path's deep tone, inset in the card. */
+  .art { display: block; height: var(--art-h); margin: 10px 10px 0; border-radius: 20px; background: var(--deep); overflow: hidden; }
+  .art :global(.path-art) { display: block; width: 100%; height: 100%; }
+
+  /* The way in: a small paper disc at the card's lower right corner, level with the label, the same in all six
+     (on a phone, at the top right of the words). The art stays clear of it. */
+  .go {
+    position: absolute;
+    right: 18px;
+    bottom: 16px;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--raised);
+    color: var(--ink);
+    box-shadow: 0 6px 16px -8px rgb(29 33 37 / 0.45);
+  }
+
+  /* The words: the name leads, in the serif, large; the line under it, quiet; the label last. */
+  .name {
     display: block;
-    aspect-ratio: 1;
-    padding: 10px;
-    border-radius: 18px;
-    background: var(--deep);
-    overflow: hidden;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 34% 100%, 0 66%);
+    margin: 20px 22px 0;
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 1.35rem + 0.95vw, 2.125rem);
+    font-weight: 440;
+    line-height: 1.05;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
   }
-  .art :global(.path-art) { transition: transform 400ms var(--ease); }
-  .text { grid-area: text; display: grid; justify-items: start; gap: var(--space-1); min-width: 0; }
+  .what { display: block; margin: 8px 22px 0; max-width: 40ch; font-size: 0.9375rem; line-height: 1.48; color: var(--muted); text-wrap: pretty; }
   .pill {
     display: inline-flex;
     align-items: center;
-    margin-top: var(--space-2);
-    padding: 2px 10px;
+    justify-self: start;
+    margin-inline: 22px;
+    margin-block-end: 22px;
+    padding: 2px 11px;
     border: 1px solid var(--ink);
     border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 600;
-    line-height: 1.4;
+    line-height: 1.5;
   }
+  @supports (grid-template-rows: subgrid) { .pill { margin-block-start: 16px; align-self: start; } }
+  @supports not (grid-template-rows: subgrid) { .pill { margin-block-start: 16px; } }
   .preparing .pill { border-color: var(--action); color: var(--action); }
-  .name { font-family: var(--serif); font-size: 1.5rem; font-weight: 440; line-height: 1.05; letter-spacing: -0.02em; }
-  .what { font-size: var(--fs-small); line-height: 1.45; color: var(--muted); }
-  .go { display: none; }
 
-  .card:hover { box-shadow: 0 18px 36px -28px rgb(29 33 37 / 0.45); transform: translateY(-2px); }
-  .card:hover .art :global(.path-art) { transform: scale(1.03); }
-  .card:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; border-radius: 24px; }
+  .card:focus-visible { outline: 3px solid var(--action); outline-offset: 3px; }
 
-  /* A tablet and up: a wide card. The panel at the top right, cut at its lower left corner; the arrow disc at
-     the top left; the pill, the name and the line along the bottom. */
-  @media (min-width: 640px) {
-    .card {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-      grid-template-rows: auto 1fr auto;
-      grid-template-areas: "go art" ". art" "text text";
-      align-items: start;
-      gap: var(--space-4) var(--space-4);
-      padding: var(--space-4) var(--space-4) var(--space-5) var(--space-5);
-      border-radius: 32px;
-    }
-    .go {
-      grid-area: go;
-      display: grid;
-      place-items: center;
-      width: 48px;
-      height: 48px;
-      margin-top: var(--space-1);
-      border-radius: 50%;
-      background: var(--raised);
-      color: var(--ink);
-      transition: background var(--t-ui), color var(--t-ui), transform var(--t-ui) var(--ease);
-    }
-    .card:hover .go { background: var(--action); color: var(--on-action); transform: translate(2px, -2px); }
-    .art { aspect-ratio: 6 / 5; padding: var(--space-3) var(--space-4); border-radius: 22px; }
-    .text { gap: var(--space-2); padding-top: var(--space-1); }
-    .what { max-width: 36ch; }
-    .name { font-size: clamp(1.625rem, 1.3rem + 0.8vw, 2rem); }
-    .card:focus-visible { border-radius: 32px; }
-    /* Turned over: the text above, the panel at the lower right cut at its upper left, the disc below left. */
-    .flip-2 .card {
-      grid-template-rows: auto 1fr auto;
-      grid-template-areas: "text text" ". art" "go art";
-      padding-top: var(--space-5);
-    }
-    .flip-2 .art { clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%, 0 34%); }
-    .flip-2 .go { align-self: end; margin: 0 0 var(--space-1); }
+  /* A row of cards (a phone): the art on the left for the full height of the card, the words beside it. */
+  @media (max-width: 639px) {
+    .card { --art-h: auto; grid-template-columns: clamp(108px, 34vw, 142px) minmax(0, 1fr); border-radius: 24px; }
+    .art { grid-column: 1; grid-row: 1 / -1; height: auto; min-height: 172px; margin: 10px 0 10px 10px; border-radius: 18px; }
+    .go { top: 14px; right: 14px; bottom: auto; width: 36px; height: 36px; }
+    .name, .what, .pill { grid-column: 2; margin-inline: 16px 14px; }
+    .name { margin-top: 18px; margin-right: 56px; font-size: 1.5rem; }
+    .what { font-size: 0.875rem; }
+    .pill { margin-block-end: 18px; }
   }
-  @media (min-width: 1024px) {
-    .flip-2 .card { grid-template-areas: "go art" ". art" "text text"; padding-top: var(--space-4); }
-    .flip-2 .art { clip-path: polygon(0 0, 100% 0, 100% 100%, 34% 100%, 0 66%); }
-    .flip-2 .go { align-self: start; margin: var(--space-1) 0 0; }
-    .flip-3 .card { grid-template-areas: "text text" ". art" "go art"; padding-top: var(--space-5); }
-    .flip-3 .art { clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%, 0 34%); }
-    .flip-3 .go { align-self: end; margin: 0 0 var(--space-1); }
+
+  /* The narrowest phones (320px, the reflow width): a row would leave the words a sliver, so the card is a
+     column again, the art on top, shorter, and the way in back at the lower right. */
+  @media (max-width: 359px) {
+    .card { grid-template-columns: minmax(0, 1fr); }
+    .art { grid-column: 1; grid-row: auto; height: 128px; min-height: 0; margin: 10px 10px 0; border-radius: 18px; }
+    .name, .what, .pill { grid-column: 1; margin-inline: 20px; }
+    .name { margin-top: 18px; margin-right: 20px; }
+    .pill { margin-block-end: 20px; }
+    .go { top: auto; bottom: 16px; right: 18px; width: 40px; height: 40px; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card { transition: transform var(--t-ui) var(--ease), box-shadow var(--t-ui) var(--ease); }
+    .go { transition: background var(--t-ui), color var(--t-ui), transform var(--t-ui) var(--ease); }
+    .art :global(.path-art) { transition: transform 500ms var(--ease); }
+  }
+  /* Hover (and focus) is discreet: the card lifts a little, the disc takes the wine, the art leans in. */
+  .card:hover { box-shadow: 0 22px 40px -30px rgb(29 33 37 / 0.5); }
+  .card:hover .go, .card:focus-visible .go { background: var(--action); color: var(--on-action); }
+  @media (prefers-reduced-motion: no-preference) {
+    .card:hover { transform: translateY(-2px); }
+    .card:hover .go { transform: translate(2px, -2px); }
+    .card:hover .art :global(.path-art) { transform: scale(1.025); }
   }
 </style>

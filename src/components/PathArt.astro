@@ -1,110 +1,365 @@
 ---
-// The illustration of a path card on the Home (V2): an original geometric drawing, made for the Academy, of
-// what the path is about. No photograph, no person, no third-party artwork. Fundamental: shapes and a pencil.
-// Médio: an open book. Vestibular: an answer sheet. Superior: a university facade. Tecnologia: a code window.
-// Pré-Militar: a compass (direction). Decorative: the card's name says what it is. The colours are tokens:
-// the bodies on --raised, the details in the card's --deep tone, one accent in the brand wine.
+// The art of a path card on the Home (V2.2): six original compositions, made for the Academy, one art
+// direction. No photograph, no person, no third-party artwork, nothing loaded or linked. Each is a small still
+// life of what the path is about, cut from paper on the path's own deep tone: a soft disc of its pale tone
+// behind, objects in paper white and ink with a flat offset shadow, the brand wine as the one accent, and the
+// other pastel tones as supporting colours. The objects overlap and sit off the centre, so each reads as a
+// scene, not as an icon in a box.
+//   Fundamental: a notebook with "Aa", a pencil, alphabet blocks.   Médio: a stack of books, a flask, a graph.
+//   Pré-Militar: a checklist on a clipboard, a stopwatch, rising chevrons.   Vestibular: an answer sheet, the
+//   exam booklet, a pencil, a tick.   Superior: a columned facade, books and a mortarboard.
+//   Tecnologia: a code window, a wireframe, a cursor.
+// The drawing is wider than the panel is tall (400 x 220) and is cropped to fit (slice): the main objects stay
+// in the middle 180 units, so the same drawing serves the wide panel of a desktop card and the narrow one of a
+// phone. Decorative: the card's name says what it is. Colours are tokens only (src/styles/global.css).
 import type { PathId } from '../lib/taxonomy';
 
 interface Props { path: PathId }
 const { path } = Astro.props;
+
+/** A four-pointed sparkle centred on (x, y). */
+const spark = (x: number, y: number, r: number): string =>
+  `M${x} ${y - r} L${x + r * 0.28} ${y - r * 0.28} L${x + r} ${y} L${x + r * 0.28} ${y + r * 0.28} L${x} ${y + r} L${x - r * 0.28} ${y + r * 0.28} L${x - r} ${y} L${x - r * 0.28} ${y - r * 0.28} Z`;
+/** Each scene is centred in the panel by one rule: its main objects are drawn around the x of FOCUS[path], and
+ *  this group moves that x to the middle (200) and scales the scene, so the still life sits inside the panel with
+ *  air around it. Props beyond the main objects fill the sides of a wide panel; a narrow one (a phone) crops
+ *  them. The disc and the dots behind it do not move. */
+const FOCUS: Record<PathId, number> = {
+  'ensino-fundamental': 232,
+  'ensino-medio': 224,
+  'pre-militar': 228,
+  vestibulares: 216,
+  'ensino-superior': 200,
+  tecnologia: 214,
+};
+const scene = `translate(200 112) scale(0.93) translate(${-FOCUS[path]} -118)`;
+const dots = [0, 1, 2, 3, 4, 5].flatMap((col) => [0, 1, 2].map((row) => [22 + col * 13, 26 + row * 13] as const));
+const ticks = Array.from({ length: 12 }, (_, i) => i);
 ---
-<svg class="path-art" viewBox="0 0 240 160" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+<svg class="path-art" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <circle class="g" cx="200" cy="118" r="102" />
+  <circle class="ring" cx="200" cy="118" r="118" />
+  {dots.map(([x, y]) => <circle class="dot" cx={x} cy={y} r="1.8" />)}
+  <g class="zoom"><g transform={scene}>
+
   {path === 'ensino-fundamental' && (
     <g>
-      <rect class="k" x="34" y="138" width="150" height="6" rx="3" />
-      <rect class="w" x="40" y="88" width="50" height="50" rx="9" />
-      <rect class="w" x="96" y="88" width="50" height="50" rx="9" />
-      <rect class="w" x="68" y="34" width="50" height="50" rx="9" />
-      <circle class="d" cx="65" cy="113" r="12" />
-      <path class="d" d="M121 100 L134 124 H108 Z" />
-      <rect class="a" x="82" y="48" width="22" height="22" rx="3" />
-      <g transform="rotate(-62 186 92)">
-        <rect class="d" x="138" y="84" width="12" height="16" rx="3" />
-        <rect class="a" x="149" y="84" width="64" height="16" />
-        <path class="w" d="M213 84 L232 92 L213 100 Z" />
-        <path class="k" d="M226 89.5 L232 92 L226 94.5 Z" />
+      <path class="p soft" d={spark(112, 56, 9)} />
+      <g transform="rotate(-8 90 150)">
+        <path class="sh" d="M66 156 L128 130 L102 184 L92 164 Z" />
+        <path class="p" d="M60 150 L122 124 L96 178 L86 158 Z" />
+        <path class="g" d="M86 158 L96 178 L104 160 Z" />
+        <path class="ln" d="M86 158 L122 124" />
+      </g>
+      <g transform="rotate(-6 384 182)">
+        <rect class="sh" x="344" y="176" width="92" height="20" rx="3" />
+        <rect class="cr" x="340" y="170" width="92" height="20" rx="3" />
+        <path class="tk" d="M352 170 V178 M364 170 V182 M376 170 V178 M388 170 V182 M400 170 V178 M412 170 V182" />
+      </g>
+      <path class="p soft" d={spark(338, 52, 7)} />
+      <g transform="rotate(-7 186 118)">
+        <rect class="sh" x="134" y="48" width="118" height="148" rx="8" />
+        <rect class="p" x="128" y="40" width="118" height="148" rx="8" />
+        <rect class="d" x="128" y="40" width="16" height="148" rx="8" />
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => <rect class="k" x="130" y={54 + i * 20} width="16" height="6" rx="3" />)}
+        <path class="rule" d="M160 112 H234 M160 134 H234 M160 156 H234 M160 178 H234" />
+        <text class="serif" x="158" y="100" font-size="56">Aa</text>
+        <path class="a" d={spark(222, 62, 11)} />
+      </g>
+      <g transform="rotate(8 292 160)">
+        <rect class="sh" x="268" y="136" width="52" height="52" rx="8" />
+        <rect class="p" x="264" y="130" width="52" height="52" rx="8" />
+        <text class="serif strong a-fill" x="290" y="170" font-size="40" text-anchor="middle">B</text>
+      </g>
+      <g transform="rotate(-10 320 100)">
+        <rect class="k" x="300" y="78" width="40" height="40" rx="7" />
+        <text class="serif p-fill" x="320" y="108" font-size="30" text-anchor="middle">1</text>
+      </g>
+      <g transform="translate(-90 16) rotate(-14 300 150)">
+        <rect class="sh" x="240" y="148" width="90" height="20" rx="3" />
+        <rect class="cr" x="234" y="140" width="86" height="20" />
+        <rect class="hi" x="234" y="146" width="86" height="3" />
+        <rect class="k" x="226" y="140" width="10" height="20" />
+        <rect class="a" x="214" y="140" width="14" height="20" rx="4" />
+        <path class="wood" d="M320 140 L350 150 L320 160 Z" />
+        <path class="k" d="M341 146.8 L350 150 L341 153.2 Z" />
       </g>
     </g>
   )}
+
   {path === 'ensino-medio' && (
     <g>
-      <path class="k" d="M30 128 C66 120 100 124 120 140 C140 124 174 120 210 128 V134 C174 126 140 130 120 146 C100 130 66 126 30 134 Z" />
-      <path class="w" d="M120 40 C100 28 64 26 34 32 V124 C64 118 100 120 120 134 Z" />
-      <path class="w" d="M120 40 C140 28 176 26 206 32 V124 C176 118 140 120 120 134 Z" />
-      <path class="line" d="M120 42 V132" />
-      <path class="line" d="M50 52 H104 M50 66 H104 M50 80 H96 M50 94 H104 M50 108 H88" />
-      <path class="line" d="M136 52 H170 M136 66 H190 M136 80 H186 M136 94 H190 M136 108 H160" />
-      <path class="a" d="M176 26 H190 V66 L183 58 L176 66 Z" />
+      <ellipse class="orbit" cx="214" cy="66" rx="58" ry="17" transform="rotate(-24 214 66)" />
+      <ellipse class="orbit" cx="214" cy="66" rx="58" ry="17" transform="rotate(24 214 66)" />
+      <path class="p soft" d={spark(118, 62, 9)} />
+      <g transform="rotate(-8 90 150)">
+        <rect class="sh" x="72" y="126" width="46" height="60" rx="6" />
+        <rect class="k" x="66" y="120" width="46" height="60" rx="6" />
+        <rect class="g" x="72" y="126" width="34" height="14" rx="3" />
+        {[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => <rect class={r === 2 && c === 2 ? 'a' : 'p soft'} x={73 + c * 11.5} y={147 + r * 10.5} width="8.5" height="7.5" rx="2" />))}
+      </g>
+      <path class="sh" d="M358 112 L428 180 H358 Z" />
+      <path class="g" d="M352 106 L422 174 H352 Z" />
+      <path class="d" d="M364 134 L394 164 H364 Z" />
+      <path class="p soft" d={spark(316, 40, 7)} />
+      <rect class="sh" x="118" y="164" width="176" height="34" rx="5" />
+      <rect class="k" x="112" y="156" width="176" height="34" rx="5" />
+      <rect class="p" x="126" y="166" width="62" height="14" rx="3" />
+      <rect class="a" x="254" y="156" width="14" height="34" />
+      <rect class="sh" x="134" y="130" width="148" height="30" rx="5" />
+      <rect class="a" x="128" y="124" width="148" height="30" rx="5" />
+      <rect class="p soft" x="142" y="134" width="46" height="10" rx="2" />
+      <rect class="p soft" x="236" y="124" width="10" height="30" />
+      <g transform="rotate(-4 200 108)">
+        <rect class="sh" x="144" y="102" width="124" height="26" rx="5" />
+        <rect class="p" x="138" y="96" width="124" height="26" rx="5" />
+        <rect class="d" x="150" y="105" width="56" height="8" rx="2" />
+        <rect class="g" x="212" y="105" width="30" height="8" rx="2" />
+      </g>
+      <path class="p" d="M205 40 H223 V64 L248 96 H180 L205 64 Z" />
+      <path class="a" d="M190 82 H238 L248 96 H180 Z" />
+      <rect class="k" x="200" y="36" width="28" height="7" rx="3" />
+      <circle class="p" cx="210" cy="72" r="3.2" />
+      <circle class="p" cx="219" cy="60" r="2.4" />
+      <g transform="translate(-26 0) rotate(7 330 100)">
+        <rect class="sh" x="292" y="58" width="84" height="98" rx="7" />
+        <rect class="p" x="286" y="52" width="84" height="98" rx="7" />
+        <path class="axis" d="M300 134 V70 M300 134 H356" />
+        <path class="curve" d="M302 126 C318 122 324 90 340 84 S352 78 356 74" />
+        <circle class="a" cx="318" cy="112" r="3.5" />
+        <circle class="a" cx="340" cy="84" r="3.5" />
+        <path class="rule" d="M314 140 H350" />
+      </g>
     </g>
   )}
-  {path === 'vestibulares' && (
-    <g transform="rotate(-4 120 82)">
-      <rect class="w" x="58" y="16" width="124" height="132" rx="10" />
-      <rect class="d" x="74" y="30" width="58" height="8" rx="4" />
-      <rect class="d" x="140" y="30" width="26" height="8" rx="4" />
-      {[0, 1, 2, 3].map((row) => (
-        [0, 1, 2, 3, 4].map((col) => (
-          <circle
-            class={col === [1, 3, 0, 2][row] ? 'a' : 'ring'}
-            cx={84 + col * 18}
-            cy={60 + row * 22}
-            r="6"
-          />
-        ))
-      ))}
-    </g>
-  )}
-  {path === 'ensino-superior' && (
-    <g>
-      <rect class="k" x="30" y="140" width="180" height="8" rx="2" />
-      <path class="w" d="M120 18 L200 58 H40 Z" />
-      <circle class="a" cx="120" cy="44" r="7" />
-      <rect class="w" x="44" y="62" width="152" height="10" rx="2" />
-      <rect class="w" x="54" y="78" width="20" height="50" rx="2" />
-      <rect class="w" x="88" y="78" width="20" height="50" rx="2" />
-      <rect class="w" x="132" y="78" width="20" height="50" rx="2" />
-      <rect class="w" x="166" y="78" width="20" height="50" rx="2" />
-      <rect class="w" x="40" y="130" width="160" height="10" rx="2" />
-    </g>
-  )}
-  {path === 'tecnologia' && (
-    <g>
-      <rect class="w" x="34" y="22" width="172" height="118" rx="12" />
-      <circle class="a" cx="54" cy="40" r="4.5" />
-      <circle class="d" cx="68" cy="40" r="4.5" />
-      <circle class="d" cx="82" cy="40" r="4.5" />
-      <path class="line" d="M34 56 H206" />
-      <rect class="a" x="52" y="70" width="44" height="9" rx="4.5" />
-      <rect class="d" x="102" y="70" width="58" height="9" rx="4.5" />
-      <rect class="d" x="66" y="88" width="78" height="9" rx="4.5" />
-      <rect class="d" x="66" y="106" width="40" height="9" rx="4.5" />
-      <rect class="a" x="112" y="106" width="30" height="9" rx="4.5" />
-      <rect class="d" x="52" y="124" width="26" height="9" rx="4.5" />
-      <rect class="k" x="150" y="87" width="4" height="12" rx="1" />
-    </g>
-  )}
+
   {path === 'pre-militar' && (
     <g>
-      <circle class="w" cx="120" cy="80" r="62" />
-      <circle class="ring" cx="120" cy="80" r="50" />
-      <path class="d" d="M120 80 L168 72 L178 80 L168 88 Z" />
-      <path class="d" d="M120 80 L72 72 L62 80 L72 88 Z" />
-      <path class="d" d="M120 80 L128 128 L120 138 L112 128 Z" />
-      <path class="a" d="M120 80 L128 32 L120 22 L112 32 Z" />
-      <circle class="w" cx="120" cy="80" r="7" />
-      <circle class="ring-k" cx="120" cy="80" r="7" />
+      <path class="p soft" d={spark(108, 58, 9)} />
+      <rect class="sh" x="374" y="92" width="4" height="96" />
+      <rect class="k" x="372" y="86" width="4" height="96" />
+      <path class="a" d="M376 88 L418 100 L376 114 Z" />
+      <ellipse class="sh" cx="376" cy="184" rx="14" ry="4" />
+      <path class="p soft" d={spark(340, 48, 7)} />
+      <g transform="rotate(-4 182 120)">
+        <rect class="sh" x="126" y="48" width="124" height="160" rx="10" />
+        <rect class="k" x="120" y="40" width="124" height="160" rx="10" />
+        <rect class="p" x="130" y="58" width="104" height="132" rx="4" />
+        <rect class="d" x="156" y="30" width="52" height="24" rx="7" />
+        <circle class="k" cx="182" cy="43" r="4" />
+        <rect class="d" x="142" y="70" width="60" height="9" rx="4.5" />
+        {[0, 1, 2, 3].map((i) => (
+          <g>
+            <rect class={i < 2 ? 'a' : 'box'} x="142" y={92 + i * 25} width="17" height="17" rx="4" />
+            {i < 2 && <path class="tick" d={`M146 ${101 + i * 25} L150 ${105 + i * 25} L156 ${97 + i * 25}`} />}
+            <rect class="g" x="168" y={96 + i * 25} width={[58, 48, 62, 40][i]} height="9" rx="4.5" />
+          </g>
+        ))}
+      </g>
+      <circle class="sh" cx="296" cy="136" r="46" />
+      <circle class="p" cx="290" cy="128" r="46" />
+      <rect class="k" x="281" y="74" width="18" height="10" rx="3" />
+      <path class="wedge" d="M290 128 L290 98 A30 30 0 0 1 320 128 Z" />
+      <circle class="ringk" cx="290" cy="128" r="36" />
+      {ticks.map((i) => {
+        const a = (i * Math.PI) / 6;
+        const r1 = 30, r2 = i % 3 === 0 ? 24 : 27;
+        return <path class="tk" d={`M${290 + Math.sin(a) * r1} ${128 - Math.cos(a) * r1} L${290 + Math.sin(a) * r2} ${128 - Math.cos(a) * r2}`} />;
+      })}
+      <path class="hand" d="M290 128 L304 108" />
+      <circle class="k" cx="290" cy="128" r="4.5" />
+      <g class="chev">
+        <path class="chev-k" d="M42 176 L66 160 L90 176" />
+        <path class="chev-k" d="M42 156 L66 140 L90 156" />
+        <path class="chev-a" d="M42 136 L66 120 L90 136" />
+      </g>
     </g>
   )}
+
+  {path === 'vestibulares' && (
+    <g>
+      <path class="p soft" d={spark(112, 60, 9)} />
+      <g transform="rotate(-12 70 170)">
+        <rect class="sh" x="48" y="160" width="54" height="26" rx="5" />
+        <rect class="p" x="44" y="154" width="54" height="26" rx="5" />
+        <rect class="a" x="44" y="154" width="22" height="26" rx="5" />
+      </g>
+      <circle class="p" cx="372" cy="78" r="22" />
+      <text class="serif" x="372" y="89" font-size="32" text-anchor="middle">?</text>
+      <path class="p soft" d={spark(344, 150, 7)} />
+      <g transform="rotate(7 250 108)">
+        <rect class="sh" x="202" y="44" width="100" height="132" rx="7" />
+        <rect class="a" x="196" y="38" width="100" height="132" rx="7" />
+        <rect class="p" x="210" y="54" width="72" height="38" rx="3" />
+        <rect class="k" x="218" y="64" width="40" height="7" rx="3.5" />
+        <rect class="g" x="218" y="77" width="26" height="6" rx="3" />
+        <path class="rule-p" d="M210 112 H282 M210 126 H282 M210 140 H266" />
+      </g>
+      <g transform="rotate(-5 160 118)">
+        <rect class="sh" x="114" y="50" width="128" height="150" rx="8" />
+        <rect class="p" x="108" y="44" width="128" height="150" rx="8" />
+        <rect class="d" x="124" y="60" width="52" height="8" rx="4" />
+        <rect class="g" x="124" y="74" width="32" height="6" rx="3" />
+        {[0, 1, 2, 3, 4].flatMap((row) => [0, 1, 2, 3, 4].map((col) => (
+          <circle class={row === 2 && col === 0 ? 'a' : col === [1, 3, 0, 2, 4][row] ? 'k' : 'bub'} cx={133 + col * 21} cy={106 + row * 20} r="6.5" />
+        )))}
+      </g>
+      <g transform="rotate(-38 304 168)">
+        <rect class="sh" x="250" y="166" width="96" height="18" rx="3" />
+        <rect class="cr2" x="246" y="158" width="90" height="18" />
+        <rect class="hi" x="246" y="163" width="90" height="3" />
+        <rect class="k" x="238" y="158" width="10" height="18" />
+        <rect class="a" x="226" y="158" width="14" height="18" rx="4" />
+        <path class="wood" d="M336 158 L366 167 L336 176 Z" />
+        <path class="k" d="M358 164.4 L366 167 L358 169.6 Z" />
+      </g>
+      <circle class="a" cx="306" cy="50" r="20" />
+      <path class="tick" d="M297 50 L304 57 L316 43" />
+    </g>
+  )}
+
+  {path === 'ensino-superior' && (
+    <g>
+      <path class="p soft" d={spark(332, 50, 9)} />
+      <g transform="translate(-40 0) rotate(-10 70 170)">
+        <rect class="sh" x="42" y="164" width="68" height="20" rx="10" />
+        <rect class="p" x="38" y="158" width="68" height="20" rx="10" />
+        <ellipse class="g" cx="106" cy="168" rx="5" ry="10" />
+        <rect class="a" x="62" y="156" width="8" height="24" />
+      </g>
+      <rect class="g" x="330" y="190" width="94" height="5" rx="2" />
+      <rect class="k" x="338" y="126" width="16" height="64" />
+      <rect class="a" x="356" y="110" width="16" height="80" />
+      <rect class="p" x="374" y="130" width="16" height="60" />
+      <g transform="rotate(14 400 188)"><rect class="d" x="394" y="134" width="16" height="56" /></g>
+      <path class="p soft" d={spark(100, 66, 7)} />
+      <path class="sh" d="M222 40 L314 82 H136 Z" />
+      <path class="p" d="M214 34 L304 76 H124 Z" />
+      <circle class="a" cx="214" cy="60" r="7" />
+      <rect class="p" x="128" y="80" width="172" height="10" rx="2" />
+      {[0, 1, 2, 3].map((i) => (
+        <g>
+          <rect class="sh" x={146 + i * 40 + 5} y="97" width="18" height="62" rx="2" />
+          <rect class="p" x={146 + i * 40} y="92" width="18" height="62" rx="2" />
+          <path class="flute" d={`M${146 + i * 40 + 6} 98 V150 M${146 + i * 40 + 12} 98 V150`} />
+        </g>
+      ))}
+      <rect class="p" x="122" y="156" width="184" height="8" rx="2" />
+      <rect class="g" x="114" y="164" width="200" height="8" rx="2" />
+      <rect class="p" x="106" y="172" width="216" height="9" rx="2" />
+      <g transform="translate(16 0)">
+      <rect class="sh" x="64" y="154" width="130" height="32" rx="5" />
+      <rect class="k" x="58" y="148" width="130" height="32" rx="5" />
+      <rect class="p" x="70" y="157" width="50" height="14" rx="3" />
+      <rect class="a" x="156" y="148" width="14" height="32" />
+      <rect class="sh" x="76" y="124" width="104" height="26" rx="5" />
+      <rect class="a" x="70" y="118" width="104" height="26" rx="5" />
+      <rect class="p soft" x="82" y="127" width="40" height="8" rx="2" />
+      <path class="capk" d="M106 112 V96 Q132 108 158 96 V112 Q132 124 106 112 Z" />
+      <path class="capk" d="M80 94 L132 74 L184 94 L132 114 Z" />
+      <path class="strand" d="M132 94 L176 98 V120" />
+      <circle class="a" cx="176" cy="124" r="4.5" />
+      </g>
+    </g>
+  )}
+
+  {path === 'tecnologia' && (
+    <g>
+      <path class="p soft" d={spark(108, 60, 9)} />
+      <text class="sans p-fill" x="50" y="158" font-size="50" transform="rotate(-8 50 158)">{'{ }'}</text>
+      <rect class="sh" x="358" y="156" width="44" height="44" rx="8" />
+      <rect class="k" x="352" y="150" width="44" height="44" rx="8" />
+      <rect class="a" x="362" y="160" width="24" height="24" rx="4" />
+      {[0, 1, 2].map((i) => <rect class="g" x={359 + i * 12} y="144" width="5" height="7" rx="1" />)}
+      {[0, 1, 2].map((i) => <rect class="g" x={359 + i * 12} y="193" width="5" height="7" rx="1" />)}
+      <path class="trace" d="M300 150 H336 V118 H372 M300 172 H340 V172 H352" />
+      <circle class="node" cx="372" cy="118" r="4" />
+      <circle class="node" cx="356" cy="196" r="4" />
+      <g transform="translate(-24 0) rotate(5 298 74)">
+        <rect class="sh" x="254" y="40" width="104" height="76" rx="9" />
+        <rect class="p" x="248" y="34" width="104" height="76" rx="9" />
+        <rect class="d" x="248" y="34" width="104" height="16" rx="9" />
+        <rect class="d" x="248" y="42" width="104" height="8" />
+        <rect class="g" x="260" y="60" width="38" height="36" rx="5" />
+        <rect class="d" x="306" y="62" width="34" height="7" rx="3.5" />
+        <rect class="g" x="306" y="76" width="26" height="6" rx="3" />
+        <rect class="a" x="306" y="88" width="20" height="8" rx="4" />
+      </g>
+      <rect class="sh" x="118" y="72" width="190" height="124" rx="11" />
+      <rect class="k" x="110" y="64" width="190" height="124" rx="11" />
+      <circle class="a" cx="127" cy="80" r="4.5" />
+      <circle class="g" cx="141" cy="80" r="4.5" />
+      <circle class="p" cx="155" cy="80" r="4.5" />
+      <path class="sep" d="M110 94 H300" />
+      <rect class="p dim" x="124" y="106" width="8" height="6" rx="2" />
+      <rect class="a" x="146" y="106" width="42" height="9" rx="4.5" />
+      <rect class="p" x="194" y="106" width="60" height="9" rx="4.5" />
+      <rect class="p dim" x="124" y="124" width="8" height="6" rx="2" />
+      <rect class="g" x="160" y="124" width="70" height="9" rx="4.5" />
+      <rect class="d" x="236" y="124" width="30" height="9" rx="4.5" />
+      <rect class="p dim" x="124" y="142" width="8" height="6" rx="2" />
+      <rect class="p" x="160" y="142" width="48" height="9" rx="4.5" />
+      <rect class="a" x="214" y="142" width="44" height="9" rx="4.5" />
+      <rect class="p dim" x="124" y="160" width="8" height="6" rx="2" />
+      <rect class="g" x="146" y="160" width="30" height="9" rx="4.5" />
+      <rect class="p" x="182" y="160" width="24" height="9" rx="4.5" />
+      <rect class="a" x="146" y="176" width="9" height="4" rx="1" />
+      <circle class="a" cx="122" cy="70" r="20" />
+      <text class="sans p-fill" x="122" y="76" font-size="17" text-anchor="middle">&lt;/&gt;</text>
+      <path class="cursor" d="M274 140 L274 176 L283 167 L290 182 L298 178 L291 164 L304 164 Z" />
+    </g>
+  )}
+  </g></g>
 </svg>
 
 <style>
   .path-art { display: block; width: 100%; height: 100%; }
-  .w { fill: var(--raised); }
+  /* A narrow panel (a phone card, where the art sits beside the words) shows the same scene smaller, so the whole
+     still life fits and nothing is cut at its sides. */
+  .zoom { transform-origin: 200px 112px; }
+  @media (min-width: 360px) and (max-width: 639px) { .zoom { transform: scale(0.76); } }
+  /* The palette of the drawing: the path's own tones (--ground the pale one, --deep the deep one, set by the
+     card), paper white, ink and the wine. Supporting colours are the other pastel tones, never new colours. */
+  .g { fill: var(--ground); }
   .d { fill: var(--deep); }
+  .p { fill: var(--raised); }
+  .k { fill: var(--ink); }
   .a { fill: var(--brand); }
-  .k { fill: var(--ink); opacity: 0.14; }
-  .line { fill: none; stroke: var(--deep); stroke-width: 3; stroke-linecap: round; }
-  .ring { fill: none; stroke: var(--deep); stroke-width: 2.5; }
-  .ring-k { fill: none; stroke: var(--ink); stroke-width: 2; opacity: 0.5; }
+  .soft { opacity: 0.7; }
+  .dim { opacity: 0.32; }
+  .sh { fill: var(--ink); opacity: 0.14; }
+  .dot { fill: var(--raised); opacity: 0.55; }
+  .ring { fill: none; stroke: var(--raised); stroke-width: 1.6; opacity: 0.5; }
+  .orbit { fill: none; stroke: var(--raised); stroke-width: 1.6; opacity: 0.6; }
+  .rule { fill: none; stroke: var(--ground); stroke-width: 2.4; stroke-linecap: round; }
+  .rule-p { fill: none; stroke: var(--ground); stroke-width: 2.4; stroke-linecap: round; opacity: 0.9; }
+  .axis { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; }
+  .curve { fill: none; stroke: var(--brand); stroke-width: 3.2; stroke-linecap: round; }
+  .flute { fill: none; stroke: var(--ground); stroke-width: 2; stroke-linecap: round; }
+  .sep { fill: none; stroke: var(--raised); stroke-width: 1.4; opacity: 0.22; }
+  .trace { fill: none; stroke: var(--raised); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
+  .node { fill: var(--raised); }
+  .tick { fill: none; stroke: var(--raised); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .box { fill: none; stroke: var(--ink); stroke-width: 2.2; }
+  .bub { fill: none; stroke: var(--deep); stroke-width: 2; }
+  .wedge { fill: var(--brand); opacity: 0.2; }
+  .ringk { fill: none; stroke: var(--ink); stroke-width: 3; }
+  .tk { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; }
+  .hand { fill: none; stroke: var(--brand); stroke-width: 4; stroke-linecap: round; }
+  .chev-k, .chev-a { fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+  .chev-k { stroke: var(--ink); }
+  .chev-a { stroke: var(--brand); }
+  /* Pencils: a yellow body (a pastel tone), a paper-white wood tip with its lead, paper-white highlight. */
+  .cr { fill: var(--cream-deep); }
+  .cr2 { fill: var(--cream-deep); }
+  .wood { fill: var(--raised); }
+  .hi { fill: var(--raised); opacity: 0.4; }
+  .capk { fill: var(--ink); stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+  .strand { fill: none; stroke: var(--brand); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .cursor { fill: var(--raised); stroke: var(--ink); stroke-width: 2.2; stroke-linejoin: round; }
+  .serif { font-family: var(--serif); font-weight: 460; fill: var(--ink); }
+  .sans { font-family: var(--sans); font-weight: 700; }
+  .strong { font-weight: 600; }
+  .a-fill { fill: var(--brand); }
+  .p-fill { fill: var(--raised); }
 </style>
