@@ -40,11 +40,49 @@ test('the featured cards cover only with a photograph and invent no metric; ever
 test('the path illustrations are original drawings: no image, no link, decorative, colours from tokens', () => {
   const art = read('src/components/PathArt.astro');
   assert.doesNotMatch(art, /<image\b|<img\b|href=|xlink|url\(|@import/, 'nothing loaded or linked from elsewhere');
-  assert.match(art, /<svg class="path-art" viewBox="0 0 240 160" aria-hidden="true" focusable="false"/);
+  assert.match(art, /<svg class="path-art" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"/);
   for (const path of ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'ensino-superior', 'tecnologia', 'pre-militar']) {
     assert.match(art, new RegExp(`path === '${path}'`), `${path} has its drawing`);
   }
   assert.match(read('src/components/HomePaths.astro'), /<PathArt path=\{id\} \/>/);
+});
+
+test('the six path cards read in the order of the header, from a list of their own (V2.2)', async () => {
+  const { HOME_PATH_ORDER } = await import('../src/lib/home-featured.ts');
+  const { NAV_PATHS } = await import('../src/lib/global-nav.ts');
+  const { PATH_ORDER } = await import('../src/lib/taxonomy.ts');
+  assert.deepEqual([...HOME_PATH_ORDER], ['ensino-fundamental', 'ensino-medio', 'pre-militar', 'vestibulares', 'ensino-superior', 'tecnologia']);
+  assert.deepEqual([...HOME_PATH_ORDER], [...NAV_PATHS], 'the page and the header read alike');
+  assert.deepEqual([...HOME_PATH_ORDER].sort(), [...PATH_ORDER].sort(), 'every path once');
+  // The taxonomy's own order orders other pages (filters, footer, sitemap): the Home does not change it.
+  assert.deepEqual([...PATH_ORDER], ['ensino-fundamental', 'ensino-medio', 'vestibulares', 'pre-militar', 'ensino-superior', 'tecnologia']);
+  const paths = read('src/components/HomePaths.astro');
+  assert.match(paths, /\{HOME_PATH_ORDER\.map\(\(id\) => \{/);
+  assert.doesNotMatch(paths, /(?<!HOME_)PATH_ORDER\.map/);
+});
+
+test('every path card has one structure, in one reading order, and one link (V2.2)', () => {
+  const paths = read('src/components/HomePaths.astro');
+  const markup = paths.slice(paths.indexOf('<ul class="paths"'), paths.indexOf('</ul>'));
+  // The same four parts, in order, for every card: art, the way in, the name, the line, the label.
+  const parts = [...markup.matchAll(/<span class="(art|go|name|what|pill)"/g)].map((m) => m[1]);
+  assert.deepEqual(parts, ['art', 'go', 'name', 'what', 'pill']);
+  assert.equal((markup.match(/<a\b/g) ?? []).length, 1, 'one link per card, nothing inside it that is a link or a button');
+  assert.doesNotMatch(markup, /<button\b/);
+  // No card turns over, and nothing cuts the art with a polygon.
+  assert.doesNotMatch(paths, /flip|clip-path|rotate\(/);
+  // The disc and the art are decorative; the words are the link's name.
+  assert.match(markup, /<span class="go" aria-hidden="true">/);
+  // Hover and the arrow's move are for readers who accept motion; nothing loops.
+  assert.match(paths, /@media \(prefers-reduced-motion: no-preference\) \{\s*\.card:hover \{ transform: translateY\(-2px\); \}/);
+  assert.doesNotMatch(paths, /@keyframes|animation:/);
+  assert.match(paths, /\.card:focus-visible \{ outline: 3px solid var\(--action\); outline-offset: 3px; \}/);
+  // The rows are shared by a row of cards, so names, lines and labels line up; and a column on a phone.
+  assert.match(paths, /grid-template-rows: subgrid/);
+  assert.match(paths, /@media \(min-width: 1080px\) \{ \.paths \{ grid-template-columns: repeat\(3, minmax\(0, 1fr\)\); \} \}/);
+  assert.match(paths, /@media \(min-width: 640px\) \{ \.paths \{ grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  // Colours and type come from the tokens only.
+  assert.doesNotMatch(paths.slice(paths.indexOf('<style>')), /#[0-9a-f]{3,8}\b|font-family: (?!var\()/i);
 });
 
 test('an id that is not a published course is refused', () => {

@@ -2,9 +2,18 @@
 // name a published course of the library (src/lib/libraries.ts); the records, their titles, providers and
 // facts come from the catalogue itself. An unknown, unpublished or non-course id fails the build: the Home
 // never shows what the library does not hold, and never the same course twice (the two lists are disjoint).
+// V2.2 adds the order of the six path cards, the one thing here that is not about courses.
 // No asset imports: this module runs under Node's test runner.
 import { publishedResources, type PublishedLearningResource } from './learning-resources.ts';
 import { libraryOf } from './libraries.ts';
+import type { PathId } from './taxonomy.ts';
+
+/** The order of the six path cards on the Home ("Qual é o seu objetivo?", V2.2): the order of the header's line
+ *  (Fundamental, Médio, Pré-Militar, Vestibular, Superior, Tecnologia), so the page and the navigation read
+ *  alike. It is the Home's own list, typed and kept here on purpose: PATH_ORDER (src/lib/taxonomy.ts) orders
+ *  other pages (the course filters, the footer, the sitemap) and stays as it is. A test holds the two orders
+ *  that must agree (this one and the header's NAV_PATHS) and that every path appears once. */
+export const HOME_PATH_ORDER = ['ensino-fundamental', 'ensino-medio', 'pre-militar', 'vestibulares', 'ensino-superior', 'tecnologia'] as const satisfies readonly PathId[];
 
 /** The hero's photograph (V2, after the McGill reference: one large picture): a course whose supplied image
  *  is a photograph, named in the caption by its title and institution. */

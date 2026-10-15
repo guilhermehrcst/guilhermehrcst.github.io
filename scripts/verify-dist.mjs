@@ -72,6 +72,10 @@ const NAV_PATH_OF = { '/enem/': 'vestibulares', '/uerj/': 'vestibulares', ...Obj
 /** What the header's menus offer, page by page (path -> type -> count or null), compared at the end with
  *  what the libraries really hold. */
 const NAV_OFFERS = new Map();
+
+/** The order of the six path cards on the Home (V2.2): the header's line, not the taxonomy's. Written out by
+ *  hand, independent of HOME_PATH_ORDER (src/lib/home-featured.ts), which it must equal. */
+const HOME_PATHS = ['/ensino-fundamental/', '/ensino-medio/', '/pre-militar/', '/vestibulares/', '/ensino-superior/', '/tecnologia/'];
 /** The two libraries (V0.5): which formats each lists. A hand-written mirror of src/lib/libraries.ts. */
 const LIBRARIES = {
   '/cursos/': ['course', 'track', 'playlist', 'lessons', 'lesson'],
@@ -501,7 +505,7 @@ function checkHome(path, html, resources) {
   else {
     if (!/<h2[^>]*>Qual é o seu objetivo\?<\/h2>/.test(objective)) fail(path, '#objetivo must ask "Qual é o seu objetivo?"');
     const hrefs = hrefsIn(objective);
-    if (JSON.stringify(hrefs) !== JSON.stringify(PATHS)) fail(path, `#objetivo links ${hrefs.join(',')}`);
+    if (JSON.stringify(hrefs) !== JSON.stringify(HOME_PATHS)) fail(path, `#objetivo links ${hrefs.join(',')}`);
     for (const [, href, n, body] of objective.matchAll(/<a\b[^>]*\shref="([^"]+)"[^>]*\sdata-path-count="(\d+)"[^>]*>([\s\S]*?)<\/a>/g)) {
       if (!new RegExp(`>${n} recursos?\\b`).test(body)) fail(path, `#objetivo ${href} prints a count other than ${n}`);
       HOME_PATH_COUNTS.set(href, Number(n));

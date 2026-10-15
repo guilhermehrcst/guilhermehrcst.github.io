@@ -28,7 +28,7 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
   <HomeHero />
 
   <section class="wrap block" id="objetivo" aria-labelledby="objetivo-title">
-    <div class="head">
+    <div class="head head-stack">
       <div><p class="kicker">{t.home.objectives.eyebrow}</p><h2 id="objetivo-title">{t.home.objectives.heading}</h2></div>
       <p class="lead">{t.home.objectives.lead}</p>
     </div>
@@ -126,6 +126,9 @@ const featured = featuredCourses().map((r) => cards.find((card) => card.resource
 
   /* Featured courses (after ART Course): the title at the left, the way to all at the right; the cards in one
      staggered row (the first and third lower, so the others read raised), sideways on a phone and a tablet. */
+  /* The paths' head (V2.2): the title with its line right under it, on one reading width, at every width. */
+  .head.head-stack { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); margin-bottom: var(--space-5); }
+  .head-stack .lead { max-width: 46ch; font-size: var(--fs-lead); line-height: 1.45; }
   .head-art { grid-template-columns: minmax(0, 1fr); align-items: end; }
   .head-art .lead { margin-top: var(--space-3); }
   .head-art .all { justify-self: start; }
